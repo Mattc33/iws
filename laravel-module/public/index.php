@@ -58,3 +58,14 @@ $response = $kernel->handle(
 $response->send();
 
 $kernel->terminate($request, $response);
+
+/*
+*/
+// Test database connection
+try {
+    DB::connection()->getPdo();
+    echo "<script>console.info('db connection successful')</script>";
+} catch (\Exception $e) {
+    die("<script>console.warn('Alert: db connection unsuccessful')</script>");
+}
+
