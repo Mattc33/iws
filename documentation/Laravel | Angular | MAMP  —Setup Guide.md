@@ -225,7 +225,7 @@ If you want to run your project in MAMP instead, launch the MAMP server and navi
 
 ---
 
-### Step 5. Configure your desktop
+### Step 5. Configure your database
 
 Go to your `.env` file in your root laravel project dir
 
@@ -240,7 +240,24 @@ DB_USERNAME=homestead
 DB_PASSWORD=secret
 ```
 
+and also in ../config/database.php; change the nessacary entries here
 
+```php
+        'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),//change db host, using local here
+            'port' => env('DB_PORT', '8889'), //change the port
+            'database' => env('DB_DATABASE', 'carriers'), //db name
+            'username' => env('DB_USERNAME', 'root'), //default -u is root
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+```
 
 ---
 

@@ -60,8 +60,8 @@ $response->send();
 $kernel->terminate($request, $response);
 
 /*
+Test database connection
 */
-// Test database connection
 try {
     DB::connection()->getPdo();
     echo "<script>console.info('db connection successful')</script>";
