@@ -2,19 +2,19 @@
 
 [TOC]
 
-## What is Laravel
 
-## What is Angular
 
-## What is MAMP
+## Setup
 
-## The Setup:
+---
 
 Source: https://telliott.io/node/969
 
 ---
 
 ### Step 1. PHP version check
+
+---
 
 > Make sure the PHP version installed on the command line is the same version installed on  MAMP.
 
@@ -66,6 +66,8 @@ Use the terminal,
 
 ### Step 2. Configure Composer
 
+---
+
 Setup the PHP package manager. Change to any working directory, we will move the download later.
 
 ```terminal
@@ -99,6 +101,8 @@ composer
 ---
 
 ### Step 3. Install using Composer, Set up your environment
+
+---
 
 #### Laravel Only
 
@@ -211,6 +215,8 @@ if you run into this error
 
 ### Step 4. Configure Laravel Site in MAMP
 
+---
+
 Go to MAMP -> Prefernces -> Web Server -> Click on the folder icon next to `Document Root:`
 
 -> Point to your larval project's public folder for example
@@ -221,11 +227,11 @@ Go to MAMP -> Prefernces -> Web Server -> Click on the folder icon next to `Docu
 
 If you want to run your project in MAMP instead, launch the MAMP server and navigate to the local `localhost:8888` 
 
-
-
 ---
 
 ### Step 5. Configure your database
+
+---
 
 Go to your `.env` file in your root laravel project dir
 
@@ -262,6 +268,8 @@ and also in ../config/database.php; change the nessacary entries here
 ---
 
 ## Resources
+
+---
 
 - https://laravel-angular.io/
 
