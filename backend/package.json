@@ -1,0 +1,24 @@
+{
+      "name": "AngularTutEmployee",
+      "version": "0.0.0",
+      "description": "Middleware to respond to HTTPRequests and ",
+      "main": "server.js",
+      "dependencies": {
+            "body-parser": "^1.15.2",
+            "express": "^4.14.0",
+            "mssql": "^3.3.0",
+            "mysql": "^2.15.0"
+      },
+      "scripts": {
+            "start": "node server.js"
+      },
+      "devDependencies": {
+            "grunt": "^1.0.1",
+            "grunt-contrib-watch": "^1.0.0",
+            "grunt-execute": "^0.2.2"
+      },
+      "author": {
+            "name": "Matt Chan",
+            "email": "m.chan@obietechnologies.com"
+      }
+}

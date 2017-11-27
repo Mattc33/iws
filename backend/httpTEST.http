@@ -1,0 +1,31 @@
+@host = http://localhost:5000
+###
+GET {{host}}/ HTTP/1
+Content-Type: application/json
+
+###
+POST {{host}}/ HTTP/1
+Content-Type: application/json
+
+{
+	"name": "powernet Global",
+	"address": "123 fake lane faketown, fakestate 12345",
+	"phone_number": "1234567890",
+	"taxable": "1",
+	"tier_number": "3",
+	"two_digit_unique_code": "01"
+}
+
+###
+PUT {{host}}/ HTTP/1
+Content-Type: application/json
+
+{
+    "rowID": "10",
+	"column": "taxable",
+	"value": "0"
+}
+
+###
+PUT {{host}}/ HTTP/1
+Content-Type: application/json
