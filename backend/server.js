@@ -1,8 +1,9 @@
 // Initiallising node modules
-var express = require("express");
-var bodyParser = require("body-parser");
-var mysql = require("mysql");
-var app = express(); 
+const express = require("express");
+const bodyParser = require("body-parser");
+const mysql = require("mysql");
+
+const app = express(); 
 
 // Body Parser Middleware
 app.use(bodyParser.json()); 
@@ -21,7 +22,7 @@ app.use(function (req, res, next) {
 });
 
 // DB connection
-var conn = mysql.createConnection({
+let conn = mysql.createConnection({
     server: 'localhost',
     port: '8889',
     user: 'root',
@@ -30,105 +31,53 @@ var conn = mysql.createConnection({
 });
 
 //Begin Listening
-app.listen(5000);
-console.log('server live');
+app.listen('5000', () => {
+    console.log('server live on http://localhost:5000');
+});
 
 /* 
-QUERIES & ROUTING
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ROUTING
 */
 
 // const
 const tableName = 'carriers';
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-// Select table
-getTable = function(callback) {
-    conn.query('SELECT * FROM ' +tableName+ ' ', (err,rows) => {
-        if (err) {
-            callback(err, null);
-        } else {
-            var toJSON = JSON.stringify(rows);
-            callback(null, toJSON);
-        }
-    });
-}
-
-/* Select Table Callback */
-var getTableData;
-getTable(function(err, content) {
-    if (err) {
-        console.log(err);
-        return next("Mysql error, check your query");
-    } else {
-        getTableData = content;
-    }
+// GET Routing => select whole table
+app.get('/gettabledata/', (req, res) => {
+    let sql = 'SELECT * FROM ' + tableName;
+    let query = conn.query(sql, (err, results) => {
+        if(err) throw err;
+        console.log(results);
+        res.send(results);
+    }); 
 });
 
-// GET Routing
-app.get('/', function (req, res) {
-    res.send(getTableData);
+// POST Routing => insert row
+app.post('/insertrow/', (req, res) => {
+    let sql = `INSERT INTO ${tableName} (name, address, phone_number, taxable, tier_number, two_digit_unique_code) VALUES ('${req.body.name}', '${req.body.address}', '${req.body.phone_number}', '${req.body.taxable}', '${req.body.tier_number}', '${req.body.two_digit_unique_code}')`;
+    let query = conn.query(sql, (err, results) => {
+        if(err) throw err;
+        console.log(results);
+        res.send('row inserted');
+    }); 
 });
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-// Insert Row into Table
-insertRow = function(name, address, phone_number, taxable, tier_number, two_digit_unique_code) {
-
-    conn.query("INSERT INTO " + tableName + " (name, address, phone_number, taxable, tier_number, two_digit_unique_code) VALUES ('" 
-    + name + "', '"
-    + address + "', '" 
-    + phone_number + "', '" 
-    + taxable + "', '" 
-    + tier_number + "', '" 
-    + two_digit_unique_code +   "');" , (err,rows) => {
-        if (err) {
-            throw err;
-        } else {
-            return;
-        }
-    });
-};
-
-// POST Routing
-app.post('/', function(req , res){
-    var name = req.body.name;
-    var address = req.body.address;
-    var phone_number = req.body.phone_number;
-    var taxable = req.body.taxable;
-    var tier_number = req.body.tier_number;
-    var two_digit_unique_code = req.body.two_digit_unique_code;
-
-    console.log(name + address + phone_number + taxable + tier_number + two_digit_unique_code);
-
-    insertRow(name, address, phone_number, taxable, tier_number, two_digit_unique_code);
-
-    res.send(getTableData);
+// DELETE Routing => delete row by ID
+app.del('/deleterow/', (req, res) => {
+    let sql = `DELETE FROM ${tableName} WHERE id = '${req.body.id}'`;
+    let query = conn.query(sql, (err, results) => {
+        if(err) throw err;
+        console.log(results);
+        res.send('row deleted');
+    }); 
 });
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-// Update specific field in Table example1
-updateTable = function(column, value, rowID) {
-    conn.query( "UPDATE " + tableName + " SET " + column + " = '" + value + "' WHERE ID = " + rowID, (err,rows) => {
-        if (err){
-            throw err;
-        } else{
-            return;
-        }
-    });
-};
-
-// PUT Routing
-app.put('/', function(req, res){
-    var column = req.body.column;
-    var value = req.body.value;
-    var rowID = req.body.rowID;
-
-    console.log(column + value + rowID);
-
-    updateTable(column, value, rowID);
-
-    res.send(getTableData);
+// PUT Routing => update specific item in table
+app.put('/updateitem/', (req, res) => {
+    let sql = `UPDATE ${tableName} SET ${req.body.column} = '${req.body.value}' WHERE id = '${req.body.rowID}'`;
+    let query = conn.query(sql, (err, results) => {
+        if(err) throw err;
+        console.log(results);
+        res.send('item updated');
+    }); 
 });

@@ -1,14 +1,14 @@
 @host = http://localhost:5000
 ###
-GET {{host}}/ HTTP/1
+GET {{host}}/gettabledata HTTP/1
 Content-Type: application/json
 
 ###
-POST {{host}}/ HTTP/1
+POST {{host}}/insertrow HTTP/1
 Content-Type: application/json
 
 {
-	"name": "powernet Global",
+	"name": "carrier test 2",
 	"address": "123 fake lane faketown, fakestate 12345",
 	"phone_number": "1234567890",
 	"taxable": "1",
@@ -17,15 +17,19 @@ Content-Type: application/json
 }
 
 ###
-PUT {{host}}/ HTTP/1
+PUT {{host}}/updateitem HTTP/1
 Content-Type: application/json
 
 {
-    "rowID": "10",
-	"column": "taxable",
-	"value": "0"
+    "rowID": "13",
+	"column": "tier_number",
+	"value": "4"
 }
 
 ###
-PUT {{host}}/ HTTP/1
+DELETE {{host}}/deleterow HTTP/1
 Content-Type: application/json
+
+{
+	"id": "12"
+}
