@@ -1,0 +1,30 @@
+
+nav{
+    min-height: 100vh; width: 230px;
+    position: fixed;
+    margin-top: 50px;
+
+    background-color: #272728;
+
+    .header, .link{
+        color: white;
+    }
+
+    .header{
+        min-height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+
+        border-bottom: .5px dotted white;
+
+        i {
+            margin-right: 5px;
+            margin-left: 40px;
+        }
+    }
+
+    .header:hover{
+        cursor: pointer;
+    }
+    
+}

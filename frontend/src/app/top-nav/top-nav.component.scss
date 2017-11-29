@@ -1,0 +1,32 @@
+
+header {
+    min-height: 50px; width: 100vw;
+    position: fixed;
+
+    background-color: #F39C12;
+
+    .app-title {
+        min-height: 50px; min-width: 230px;
+        position: fixed; 
+
+        background-color: #DB8B0B; 
+
+        text-align: center; line-height: 50px; font-size: 20px;
+        color: white;
+
+        span{
+            font-weight: bold;
+        }
+
+    }
+
+    .account-container {
+        min-height: 50px; min-width: 200px;
+        position: fixed; 
+        right: 0;
+    }
+
+    .account-container:hover {
+        background-color: #e5b443;
+    }
+}

@@ -1,20 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { GetCarriersTableService } from './get-carriers-table.service';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent {
 
-  public activities$: Observable<any>;
+  sayHello = 'hello';
 
-  constructor(private activityService: GetCarriersTableService) { }
-
-  ngOnInit() {
-      this.activities$ = this.activityService.getActivities();
-  }
 }
