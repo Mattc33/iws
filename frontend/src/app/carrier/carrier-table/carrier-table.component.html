@@ -1,0 +1,28 @@
+<section>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">PhoneNumber</th>
+                    <th scope="col">Taxable</th>
+                    <th scope="col">Tier Number</th>
+                    <th scope="col">Two Digit Code</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let carrier of carriers">
+                <td> <input type="checkbox"></td>
+                <td>{{carrier.id}}</td>      
+                <td>{{carrier.name}}</td>
+                <td>{{carrier.address}}</td>    
+                <td>{{carrier.phone_number}}</td>    
+                <td>{{carrier.taxable}}</td>   
+                <td>{{carrier.tier_number}}</td>   
+                <td>{{carrier.two_digit_unique_code}}</td>                  
+            </tr>
+            </tbody>
+        </table>
+</section>

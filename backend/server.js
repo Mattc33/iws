@@ -63,7 +63,7 @@ app.post('/insertrow/', (req, res) => {
 });
 
 // DELETE Routing => delete row by ID
-app.del('/deleterow/', (req, res) => {
+app.delete('/deleterow/', (req, res) => {
     let sql = `DELETE FROM ${tableName} WHERE id = '${req.body.id}'`;
     let query = conn.query(sql, (err, results) => {
         if(err) throw err;
