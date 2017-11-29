@@ -10,19 +10,21 @@
                     <th scope="col">Taxable</th>
                     <th scope="col">Tier Number</th>
                     <th scope="col">Two Digit Code</th>
+                    <th scope="col">Contact</th>
                 </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let carrier of carriers">
-                <td> <input type="checkbox"></td>
-                <td>{{carrier.id}}</td>      
-                <td>{{carrier.name}}</td>
-                <td>{{carrier.address}}</td>    
-                <td>{{carrier.phone_number}}</td>    
-                <td>{{carrier.taxable}}</td>   
-                <td>{{carrier.tier_number}}</td>   
-                <td>{{carrier.two_digit_unique_code}}</td>                  
-            </tr>
+                <tr *ngFor="let carrier of carriers">
+                    <td><input type="checkbox"></td>
+                    <td>{{carrier.id}}</td>      
+                    <td>{{carrier.name}}</td>
+                    <td>{{carrier.address}}</td>    
+                    <td>{{carrier.phone_number}}</td>    
+                    <td>{{carrier.taxable ? "Yes":"No"}}</td>   
+                    <td>{{carrier.tier_number}}</td>   
+                    <td>{{carrier.two_digit_unique_code}}</td>     
+                    <td><button type="button" class="btn btn-info">get-Info</button></td>             
+                </tr>
             </tbody>
         </table>
 </section>
