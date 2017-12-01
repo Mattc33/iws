@@ -1,30 +1,40 @@
 <section>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col"><i class="fa fa-wrench" aria-hidden="true"></i></th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">PhoneNumber</th>
-                    <th scope="col">Taxable</th>
-                    <th scope="col">Tier Number</th>
-                    <th scope="col">Two Digit Code</th>
-                    <th scope="col">Contact</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let carrier of carriers">
-                    <td><input type="checkbox"></td>
-                    <td>{{carrier.id}}</td>      
-                    <td>{{carrier.name}}</td>
-                    <td>{{carrier.address}}</td>    
-                    <td>{{carrier.phone_number}}</td>    
-                    <td>{{carrier.taxable ? "Yes":"No"}}</td>   
-                    <td>{{carrier.tier_number}}</td>   
-                    <td>{{carrier.two_digit_unique_code}}</td>     
-                    <td><button type="button" class="btn btn-info">get-Info</button></td>             
-                </tr>
-            </tbody>
-        </table>
+    <!-- Global Search -->
+    <div class="ui-inputgroup">
+        <span class="ui-inputgroup-addon"><i class="fa fa-search"></i></span>
+        <input #gb type="text" pInputText placeholder="Global Search...">         
+    </div>
+
+    <!-- Table -->
+    <p-dataTable [value]="carriers" [globalFilter]="gb" [editable]="true">
+
+        <!-- ID -->
+        <p-column field="id" header="ID" [sortable]="true"></p-column>
+
+        <!-- Date -->
+        <p-column field="date" header="Date Inserted" [sortable]="true"></p-column>
+
+        <!-- Carrier Name -->
+        <p-column 
+            field="name" 
+            header="Name" 
+            [filter]="true" filterPlaceholder="Search"
+            [sortable]="true"
+            [editable]="true"
+        ></p-column>
+
+        <!-- Address -->
+        <p-column 
+            field="address" 
+            header="Address" 
+            [filter]="true" filterPlaceholder="Search"
+            [sortable]="true" 
+            [editable]="true" [style]="{'overflow':'visible' }"
+        ></p-column>
+
+        <p-column field="phone_number" header="Phone#" [editable]="true"></p-column>
+        <p-column field="taxable" header="Taxable" [editable]="true"></p-column>
+        <p-column field="tier_number" header="Tier#" [editable]="true"></p-column>
+        <p-column field="two_digit_unique_code" header="Two Digit Code" [editable]="true"></p-column>
+    </p-dataTable>
 </section>

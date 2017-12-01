@@ -1,4 +1,22 @@
 section {
     margin-left: 30px;
     margin-right: 30px;
+
+    .ui-inputgroup{
+        width: auto; 
+        margin-bottom: 10px;
+
+        span{
+            width: 30px; height: 30px;
+            border: 1px solid #000000;
+        }
+
+        input{
+            width: 30%; height: 30px;
+        }
+    }
+}
+
+.fa-search:before {
+    height: 30px;
 }

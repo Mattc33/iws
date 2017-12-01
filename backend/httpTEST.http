@@ -8,7 +8,7 @@ POST {{host}}/insertrow HTTP/1
 Content-Type: application/json
 
 {
-	"name": "carrier test 2",
+	"name": "carrier test 4",
 	"address": "123 fake lane faketown, fakestate 12345",
 	"phone_number": "1234567890",
 	"taxable": "1",
@@ -22,8 +22,8 @@ Content-Type: application/json
 
 {
     "rowID": "13",
-	"column": "tier_number",
-	"value": "4"
+	"column": "name",
+	"value": "Carrier test 1"
 }
 
 ###
