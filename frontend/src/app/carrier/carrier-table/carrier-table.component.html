@@ -1,40 +1,93 @@
 <section>
-    <!-- Global Search -->
-    <div class="ui-inputgroup">
-        <span class="ui-inputgroup-addon"><i class="fa fa-search"></i></span>
-        <input #gb type="text" pInputText placeholder="Global Search...">         
+
+    <form>
+        <input type="text" [(ngModel)]="name" name="name" required/>
+        <input type="text" [(ngModel)]="address" name="address" required/>
+        <input type="text" [(ngModel)]="phone_number" name="phone number" required/>
+        <input type="text" [(ngModel)]="taxable" name="taxable" required/>
+        <input type="text" [(ngModel)]="tier_number" name="tier number" required/>
+        <input type="text" [(ngModel)]="two_digit_unique_code" name="Two Digit Code" required/>
+        <button (click)="onTestPost(name, address, phone_number, taxable, tier_number, two_digit_unique_code)"> Test Post </button>
+    </form>
+
+    <hr>
+
+    <div class="ui-widget-header">
+        <input #gb type="text" placeholder="Global Filter">
     </div>
 
     <!-- Table -->
-    <p-dataTable [value]="carriers" [globalFilter]="gb" [editable]="true">
-
+    <p-dataTable [value]="carriers" [responsive]="true" 
+    [editable]="true" (onEdit)="onEdit($event)" (onEditComplete)="onEditComplete($event)"
+    tableStyleClass="carrierTable"
+    scrollable="true" scrollHeight="70vh"
+    [globalFilter]="gb"
+    >
         <!-- ID -->
-        <p-column field="id" header="ID" [sortable]="true"></p-column>
+        <p-column field="id" header="ID" 
+            [sortable]="true"
+            >
+            <ng-template let-col let-carrier="rowData" pTemplate="body">
+                <span> {{ carrier.id }} </span>
+            </ng-template>
+        </p-column>
 
         <!-- Date -->
-        <p-column field="date" header="Date Inserted" [sortable]="true"></p-column>
+        <p-column field="date" header="Date Inserted"
+            [sortable]="true"
+            >
+            <ng-template let-col let-carrier="rowData" pTemplate="body">
+                    <span> {{ carrier.date | date: 'medium' }} </span>
+            </ng-template>
+        </p-column>
 
         <!-- Carrier Name -->
-        <p-column 
-            field="name" 
-            header="Name" 
-            [filter]="true" filterPlaceholder="Search"
+        <p-column field="name" header="Name"    
             [sortable]="true"
             [editable]="true"
-        ></p-column>
+            >
+            <ng-template let-col let-carrier="rowData" pTemplate="body">
+                    <span id="test"> {{ carrier.name }} </span>
+            </ng-template>  
+        </p-column>
 
         <!-- Address -->
-        <p-column 
-            field="address" 
-            header="Address" 
-            [filter]="true" filterPlaceholder="Search"
+        <p-column field="address" header="Address" 
             [sortable]="true" 
-            [editable]="true" [style]="{'overflow':'visible' }"
-        ></p-column>
+            [editable]="true">
+            <ng-template let-col let-carrier="rowData" pTemplate="body">
+                    <span> {{ carrier.address }} </span>
+            </ng-template>  
+        </p-column>
 
-        <p-column field="phone_number" header="Phone#" [editable]="true"></p-column>
-        <p-column field="taxable" header="Taxable" [editable]="true"></p-column>
-        <p-column field="tier_number" header="Tier#" [editable]="true"></p-column>
+        <!-- Phone number -->
+        <p-column field="phone_number" header="Phone Number" 
+            [editable]="true"
+            >
+            <ng-template let-col let-carrier="rowData" pTemplate="body">
+                <span> {{ carrier.phone_number }} </span>
+            </ng-template>  
+        </p-column>
+
+
+        <p-column field="taxable" header="Taxable" 
+        [editable]="true"
+
+        >
+        <ng-template let-col let-carrier="rowData" pTemplate="body">
+            <span> {{ carrier.taxable ? "Yes" : "No" }} </span>
+        </ng-template>  
+        </p-column>
+
+        <p-column field="tier_number" header="Tier Number" [editable]="true" [sortable]="true"></p-column>
+
         <p-column field="two_digit_unique_code" header="Two Digit Code" [editable]="true"></p-column>
+
+        <p-column field="delete" header="Delete Row">
+            <ng-template let-col let-carrier="rowData" pTemplate="body" let-ri="rowIndex">
+                    <span> <button (click)="delete(ri)" >Delete</button> </span>
+            </ng-template>  
+        </p-column>
+
     </p-dataTable>
 </section>

@@ -8,12 +8,12 @@ POST {{host}}/insertrow HTTP/1
 Content-Type: application/json
 
 {
-	"name": "carrier test 4",
+	"name": "Tmobile",
 	"address": "123 fake lane faketown, fakestate 12345",
 	"phone_number": "1234567890",
-	"taxable": "1",
-	"tier_number": "3",
-	"two_digit_unique_code": "01"
+	"taxable": "0",
+	"tier_number": "1",
+	"two_digit_unique_code": "02"
 }
 
 ###
@@ -31,5 +31,5 @@ DELETE {{host}}/deleterow HTTP/1
 Content-Type: application/json
 
 {
-	"id": "12"
+	"id": "73"
 }

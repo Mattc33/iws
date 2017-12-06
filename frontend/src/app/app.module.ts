@@ -1,12 +1,12 @@
 // Core Modules
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule} from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes, RouterLinkActive } from '@angular/router';
 
 // UI Library: PrimeNG
-import { DataTableModule, SharedModule } from 'primeng/primeng';
+import { DataTableModule, SharedModule, ButtonModule } from 'primeng/primeng';
 
 // Main UI components
 import { AppComponent } from './app.component';
@@ -36,11 +36,11 @@ import { MetricsComponent } from './metrics/metrics.component';
   [ 
     AppComponent, SideNavComponent, TopNavComponent, CarrierComponent, 
     CarrierUiComponent, CarrierTableComponent, DashboardComponent, RatesComponent, 
-    AccountsComponent, MetricsComponent
+    AccountsComponent, MetricsComponent,
   ],
   imports: 
   [ 
-    BrowserModule, HttpModule, DataTableModule,
+    BrowserModule, HttpModule, DataTableModule, SharedModule, ButtonModule, FormsModule,
     RouterModule.forRoot([
       {path: '', component: DashboardComponent},
       {path: 'dashboard', component: DashboardComponent},
