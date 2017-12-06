@@ -27,7 +27,7 @@ export class CarrierTableComponent implements OnInit {
       );
   }
 
-  onTestPost(name, address, phone_number, taxable, tier_number, two_digit_unique_code): void {
+  onPostRow(name, address, phone_number, taxable, tier_number, two_digit_unique_code): void {
     const body = {
       name: name,
       address: address,
@@ -41,13 +41,22 @@ export class CarrierTableComponent implements OnInit {
       .subscribe(result => console.log(result));
   }
 
+  onEditComplete(e) {
+    console.log('on edit complete event fired');
+
+  }
+
+  onCellClick(ri) {
+    console.log(ri);
+  }
+
   // ri = row index
-  delete(ri): void {
+  onDeleteRow(ri): void {
     const getId = this.carriers[ri].id;
     this.carrierService.delDeleteRow(getId)
       .subscribe(
         result => console.log(result));
   }
 
-  
+
 }

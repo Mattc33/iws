@@ -23,7 +23,7 @@ export class CarrierService {
     headers: Headers;
     options: RequestOptions;
 
-    constructor(private _http: Http) {
+    constructor(private http: Http) {
         this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
         this.options = new RequestOptions({ headers: this.headers });
     }
@@ -34,7 +34,7 @@ export class CarrierService {
     // .catch(will catch errors and trigger _serverError method)
     getCarriers(): Observable<Carrier[]> {
         let url = 'http://localhost:5000/gettabledata';
-        return this._http
+        return this.http
             .get(url)
             .map(res => <Carrier[]> res.json())
             .do(data => console.log('server data:', data))
@@ -43,7 +43,7 @@ export class CarrierService {
 
     postAddRow(param: any): Observable<any> {
         const url = 'http://localhost:5000/insertrow/';
-        return this._http
+        return this.http
             .post(url, param, this.options)
             .catch(this._serverError);
     }
@@ -62,7 +62,7 @@ export class CarrierService {
             body : body
         });
 
-        return this._http
+        return this.http
             .delete(url, options)
             .catch(this._serverError);
     }

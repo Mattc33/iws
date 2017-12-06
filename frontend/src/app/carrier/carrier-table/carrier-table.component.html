@@ -7,7 +7,7 @@
         <input type="text" [(ngModel)]="taxable" name="taxable" required/>
         <input type="text" [(ngModel)]="tier_number" name="tier number" required/>
         <input type="text" [(ngModel)]="two_digit_unique_code" name="Two Digit Code" required/>
-        <button (click)="onTestPost(name, address, phone_number, taxable, tier_number, two_digit_unique_code)"> Test Post </button>
+        <button (click)="onPostRow(name, address, phone_number, taxable, tier_number, two_digit_unique_code)"> Test Post </button>
     </form>
 
     <hr>
@@ -17,8 +17,8 @@
     </div>
 
     <!-- Table -->
-    <p-dataTable [value]="carriers" [responsive]="true" 
-    [editable]="true" (onEdit)="onEdit($event)" (onEditComplete)="onEditComplete($event)"
+    <p-dataTable [value]="carriers" [responsive]="true" [immutable]="false"
+    [editable]="true" (onEditComplete)="onEditComplete($event)"
     tableStyleClass="carrierTable"
     scrollable="true" scrollHeight="70vh"
     [globalFilter]="gb"
@@ -46,8 +46,8 @@
             [sortable]="true"
             [editable]="true"
             >
-            <ng-template let-col let-carrier="rowData" pTemplate="body">
-                    <span id="test"> {{ carrier.name }} </span>
+            <ng-template let-col let-carrier="rowData" pTemplate="body" let-ri="rowIndex">
+                    <span (click)="onCellClick(ri)" > {{ carrier.name }} </span>
             </ng-template>  
         </p-column>
 
@@ -69,23 +69,24 @@
             </ng-template>  
         </p-column>
 
-
+        <!-- Taxable -->
         <p-column field="taxable" header="Taxable" 
         [editable]="true"
-
         >
         <ng-template let-col let-carrier="rowData" pTemplate="body">
             <span> {{ carrier.taxable ? "Yes" : "No" }} </span>
         </ng-template>  
         </p-column>
 
+        <!-- Tier Number -->
         <p-column field="tier_number" header="Tier Number" [editable]="true" [sortable]="true"></p-column>
 
+        <!-- Two Digit Unique Code -->
         <p-column field="two_digit_unique_code" header="Two Digit Code" [editable]="true"></p-column>
 
         <p-column field="delete" header="Delete Row">
             <ng-template let-col let-carrier="rowData" pTemplate="body" let-ri="rowIndex">
-                    <span> <button (click)="delete(ri)" >Delete</button> </span>
+                    <span> <button (click)="onDeleteRow(ri)"> Delete </button> </span>
             </ng-template>  
         </p-column>
 

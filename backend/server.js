@@ -69,7 +69,7 @@ app.delete('/deleterow/', (req, res) => {
 
 // PUT Routing => update specific item in table
 app.put('/updateitem/', (req, res) => {
-    let sql = `UPDATE ${tableName} SET ${req.body.column} = '${req.body.value}' WHERE id = '${req.body.rowID}'`;
+    let sql = `UPDATE ${tableName} SET ${req.body.column} = '${req.body.value}' WHERE id = '${req.body.id}'`;
     let query = conn.query(sql, (err, results) => {
         if(err) throw err;
         console.log(results);

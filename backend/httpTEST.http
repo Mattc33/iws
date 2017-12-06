@@ -21,7 +21,7 @@ PUT {{host}}/updateitem HTTP/1
 Content-Type: application/json
 
 {
-    "rowID": "13",
+    "id": "13",
 	"column": "name",
 	"value": "Carrier test 1"
 }
