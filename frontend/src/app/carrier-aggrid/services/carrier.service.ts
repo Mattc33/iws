@@ -1,42 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Carrier } from '../models/carrier.model';
 
-import { cloneDeep } from 'lodash';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class CarrierAggridService {
-    stocksUrl: string = 'http://localhost:5000/';
+    stocksUrl = 'http://localhost:5000/';
     rowData: any[];
 
-    constructor(private http: Http) {
-    }
+    constructor(private http: Http) {}
 
-    // provides the initial (or current state) of the data
-    initialLoad(): any {
+    initialLoad(): Observable<Carrier[]> {
         return this.http.get(this.stocksUrl + 'gettabledata')
             .map(res => res.json())
             .catch(this.handleError);
-    }
-
-    // only returns the changed data rows
-    byRowupdates(): any {
-        return Observable.create((observer) => {
-            const interval = setInterval(() => {
-                let changes = [];
-
-                observer.next(changes);
-            }, 1000);
-
-            return () => clearInterval(interval);
-        });
-    }
-
-    // Figure out what this is for later
-    extractData(res: Response) : any{
-        let body = res.json();
-        // https://lodash.com/docs#cloneDeep
-        return cloneDeep(this.rowData);
     }
 
     handleError(error: any): any {

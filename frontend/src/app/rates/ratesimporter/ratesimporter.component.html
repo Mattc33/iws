@@ -1,0 +1,63 @@
+<mat-horizontal-stepper> <!-- linear -->
+
+<!-- Choose Carrier Step -->
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Choose Carrier</ng-template>
+        <mat-form-field>
+            <mat-select placeholder="Carrier" formControlName="firstCtrl">
+              <mat-option *ngFor="let carrier of carrierNames" [value]="carrier.value">
+                {{carrier.viewValue}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext (click)="getCarrierName()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+<!-- Choose Tier Step -->
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Choose Tier</ng-template>
+        <mat-form-field>
+            <mat-select placeholder="Tier" formControlName="secondCtrl">
+              <mat-option *ngFor="let tier of tierNames" [value]="tier.value">
+                {{tier.viewValue}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext (click)="getTierName()" >Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+<!-- Upload CSV/Excel Step -->   
+    <mat-step>
+    <ng-template matStepLabel>Upload</ng-template>
+      <app-fileuploader></app-fileuploader>
+    <div>
+    <button mat-button matStepperPrevious>Back</button>  
+    <button mat-button matStepperNext>Next</button>
+    </div>
+    </mat-step>
+
+<!-- Details & Finalize  -->
+    <mat-step>
+    <ng-template matStepLabel>Review, Submit</ng-template>
+    <div class="details">
+    Your Selected Carrier is: <span>{{ carrierName }}</span>
+    Your Selected Tier is: <span>{{ tierName }}</span>
+
+    Press Submit to complete rates upload.
+    </div>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>  
+      <button mat-button >Submit</button>
+    </div>
+    </mat-step>
+
+</mat-horizontal-stepper>

@@ -1,13 +1,22 @@
 // Core Modules
-import { BrowserModule} from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Routes, RouterLinkActive } from '@angular/router';
 
 // UI Library: PrimeNG
-import { DataTableModule, SharedModule, ButtonModule } from 'primeng/primeng';
+import { DataTableModule, SharedModule, ButtonModule, FileUploadModule } from 'primeng/primeng';
+
+// UI Library: Angular Materials
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule, MatButtonModule, MatInputModule, MatStepperModule, MatSelectModule } from '@angular/material';
+import { MatCheckboxModule, MatIconModule} from '@angular/material';
+import { MatRadioModule } from '@angular/material/radio';
+
+// ----------------------------------------------------------------------------
 
 // Main UI components
 import { AppComponent } from './app.component';
@@ -30,6 +39,9 @@ import { CarrierAggridTableComponent } from './carrier-aggrid/carrier-aggrid-tab
 
 // Rates
 import { RatesComponent } from './rates/rates.component';
+import { RatesimporterComponent } from './rates/ratesimporter/ratesimporter.component';
+import { RatesTableComponent } from './rates/rates-table/rates-table.component';
+import { FileuploaderComponent } from './rates/ratesimporter/fileuploader/fileuploader.component';
 
 // Accounts
 import { AccountsComponent } from './accounts/accounts.component';
@@ -44,17 +56,22 @@ import { MetricsComponent } from './metrics/metrics.component';
     DashboardComponent,
     CarrierComponent, CarrierUiComponent, CarrierTableComponent, 
     CarrierAggridComponent, CarrierAggridTableComponent,
-    RatesComponent, 
+    RatesComponent, RatesimporterComponent, RatesTableComponent,
     AccountsComponent, 
-    MetricsComponent,
+    MetricsComponent, FileuploaderComponent, 
   ],
   imports: 
-  [ 
+  [
+    // Core Angular Modules
     BrowserModule, HttpModule, HttpClientModule,
-    FormsModule,
-    DataTableModule,
+    FormsModule, CommonModule, ReactiveFormsModule,
+    // Angular Materials Modules
+    BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
+    MatRadioModule, MatIconModule,
+    // Prime Ng Modules
+    DataTableModule, SharedModule, ButtonModule, FileUploadModule,
+    // Larger 3rd party module
     AgGridModule.withComponents([ ]),
-    SharedModule, ButtonModule,
     RouterModule.forRoot([
       {path: '', component: DashboardComponent},
       {path: 'dashboard', component: DashboardComponent},

@@ -5,6 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './carrier-ui.component.html',
   styleUrls: ['./carrier-ui.component.scss']
 })
-export class CarrierUiComponent{
+export class CarrierUiComponent {
 
 }

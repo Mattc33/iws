@@ -58,5 +58,4 @@ export class CarrierTableComponent implements OnInit {
         result => console.log(result));
   }
 
-
 }

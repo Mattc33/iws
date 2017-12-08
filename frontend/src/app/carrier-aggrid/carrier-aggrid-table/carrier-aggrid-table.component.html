@@ -1,5 +1,21 @@
-<section>
-    <ag-grid-angular 
-        class="ag-theme-material" [gridOptions]="gridOptions">
+<section id="grid-wrapper">
+    <mat-form-field>
+        <textarea matInput placeholder=""></textarea>
+    </mat-form-field>
+
+    <hr>
+    
+    <ag-grid-angular class="ag-theme-material"
+    [columnDefs]="columnDefs" [rowData]="rowData"
+    [enableFilter]="true" [floatingFilter]="true" 
+    [enableSorting]="true"
+    [enableColResize]="true"
+    [singleClickEdit]="true" [stopEditingWhenGridLosesFocus]="true"
+    [pagination]="true" [paginationAutoPageSize]="true"
+
+    (gridReady)="onGridReady($event)"
+    (gridSizeChanged)="onGridSizeChanged($event)"
+    >
     </ag-grid-angular>
 </section>
+

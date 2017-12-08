@@ -28,6 +28,12 @@ let conn = mysql.createConnection({
     database: 'carrier_info'
 });
 
+//Begin Listening
+app.listen('5000', () => {
+    console.log('server live on http://localhost:5000');
+});
+
+
 /* 
 ROUTING
 */
@@ -75,9 +81,4 @@ app.put('/updateitem/', (req, res) => {
         console.log(results);
         res.send('item updated');
     }); 
-});
-
-//Begin Listening
-app.listen('5000', () => {
-    console.log('server live on http://localhost:5000');
 });
