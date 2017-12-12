@@ -1,2 +1,12 @@
+    <div class="uploadInputContainer">
+    <label>
+        <input type="file" name="csv" required id="upload-csv" ng2FileSelect [uploader]="uploader"/>
+        <span>Upload Rates...</span>
+    </label>
+    </div>
+    <div>
+        <button mat-button matStepperPrevious>Back</button>  
+        <button mat-button matStepperNext (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Next</button>
+    </div>
 
-<input type="file" (change)="changeListener($event)" #input />
+

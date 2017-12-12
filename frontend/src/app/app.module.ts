@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes, RouterLinkActive } from '@angular/router';
+import { FileSelectDirective } from 'ng2-file-upload';
 
 // UI Library: PrimeNG
 import { DataTableModule, SharedModule, ButtonModule, FileUploadModule } from 'primeng/primeng';
@@ -41,7 +42,7 @@ import { CarrierAggridTableComponent } from './carrier-aggrid/carrier-aggrid-tab
 import { RatesComponent } from './rates/rates.component';
 import { RatesimporterComponent } from './rates/ratesimporter/ratesimporter.component';
 import { RatesTableComponent } from './rates/rates-table/rates-table.component';
-import { FileuploaderComponent } from './rates/ratesimporter/fileuploader/fileuploader.component';
+import { FileUploaderComponent } from './rates/ratesimporter/fileuploader/fileuploader.component';
 
 // Accounts
 import { AccountsComponent } from './accounts/accounts.component';
@@ -58,7 +59,7 @@ import { MetricsComponent } from './metrics/metrics.component';
     CarrierAggridComponent, CarrierAggridTableComponent,
     RatesComponent, RatesimporterComponent, RatesTableComponent,
     AccountsComponent, 
-    MetricsComponent, FileuploaderComponent, 
+    MetricsComponent, FileUploaderComponent, FileSelectDirective,
   ],
   imports: 
   [

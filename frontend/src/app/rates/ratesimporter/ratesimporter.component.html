@@ -30,20 +30,16 @@
         </mat-form-field>
         <div>
           <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext (click)="getTierName()" >Next</button>
+          <button mat-button matStepperNext (click)="getTierName()">Next</button>
         </div>
       </form>
     </mat-step>
 
 <!-- Upload CSV/Excel Step -->   
-    <mat-step>
-    <ng-template matStepLabel>Upload</ng-template>
-      <app-fileuploader></app-fileuploader>
-    <div>
-    <button mat-button matStepperPrevious>Back</button>  
-    <button mat-button matStepperNext>Next</button>
-    </div>
-    </mat-step>
+<mat-step>
+  <ng-template matStepLabel>Upload</ng-template>
+    <app-fileuploader></app-fileuploader>
+  </mat-step>
 
 <!-- Details & Finalize  -->
     <mat-step>

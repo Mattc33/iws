@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatStepper, MatRadioButton } from '@angular/material';
 
+import { FileUploaderComponent } from './fileuploader/fileuploader.component';
+
 @Component({
   selector: 'app-ratesimporter',
   templateUrl: './ratesimporter.component.html',

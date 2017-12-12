@@ -1,0 +1,24 @@
+.uploadInputContainer {
+    height: 65px;
+}
+
+label {
+    cursor: pointer;
+    display: inline-block;
+    border: 2px dashed rgb(103, 58, 183); color: rgb(77, 77, 79); font-weight: bold;
+    height: 45px; width: 180px;
+    line-height: 45px; text-align: center;
+ }
+
+ label:hover {
+     background-color: #E0E0E0;
+ }
+ 
+#upload-csv {
+    position: fixed;
+    top: -1000px;
+}
+
+button {
+    border: 1px solid black;
+}

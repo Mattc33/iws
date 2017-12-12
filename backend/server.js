@@ -2,6 +2,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
+const multer = require("multer");
 
 const app = express(); 
 
@@ -9,13 +10,11 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); 
 
-
 // CORS Middleware
 app.use(function (req, res, next) {
-    // Enabling CORS 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, contentType,Content-Type, Accept, Authorization");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
 });
 

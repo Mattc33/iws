@@ -1,36 +1,43 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
+
+const URL = 'http://localhost:3000/public/uploads';
 
 @Component({
-  selector: 'app-fileuploader',
-  templateUrl: './fileuploader.component.html',
-  styleUrls: ['./fileuploader.component.scss']
+    selector: 'app-fileuploader',
+    templateUrl: './fileuploader.component.html',
+    styleUrls: ['./fileuploader.component.scss']
 })
-export class FileuploaderComponent {
 
-  constructor(public http: Http) {}
+export class FileUploaderComponent implements OnInit {
 
-  fileChange(event): void {
-      const fileList: FileList = event.target.files;
-      if (fileList.length > 0) {
-          const file = fileList[0];
+    public uploader = new FileUploader({
+        url: URL,
+        itemAlias: 'csv',
+        allowedMimeType: ['text/csv'],
+    });
 
-          const formData = new FormData();
-          formData.append('file', file, file.name);
+    ngOnInit() {
+       this.uploader.onAfterAddingFile = (file) => {
+           file.withCredentials = false;
+        };
 
-          const headers = new Headers();
+        this.uploader.onWhenAddingFileFailed = (fileItem) => {
+            alert(`Upload Failed, please add a .csv file only you uploaded a ${fileItem.type}`);
+            console.log('fail', fileItem);
+        };
 
-          headers.append('Authorization', 'Bearer ' + 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9....');
-          const options = new RequestOptions({headers: headers});
+        console.log('hello');
 
-          this.http.post('https://api.mysite.com/uploadfile', formData, options)
-               .map(res => res.json())
-               .catch(error => Observable.throw(error))
-               .subscribe(
-                   data => console.log('success'),
-                   error => console.log(error)
-               );
-      }
-  }
+        // this.uploader.onBuildItemForm = function(fileItem, form) {
+        //     form.append('myvar', 'myval');
+        //     return { fileItem, form };
+        // };
+
+        // this.uploader.queue[0].upload();
+
+       this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
+            console.log('CSVUpload:uploaded:', item, status, response);
+        };
+    }
 }
