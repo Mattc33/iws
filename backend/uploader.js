@@ -2,10 +2,10 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const csv = require('csvtojson'); 
+const mysql = require("mysql");
 
 const app = express(); 
 const port = 3000;
-let gjson = [];
 
 // CORS Middleware
 app.use(function (req, res, next) {
@@ -17,6 +17,7 @@ app.use(function (req, res, next) {
 
 // Storage Engine
 // multer takes 2 args, destination and the file name fn
+// multer tut -> https://www.youtube.com/watch?v=9Qzmri1WaaE
 const storage = multer.diskStorage({
     destination: './public/uploads/',
     // Which takes args in the request, file, and callback
@@ -50,33 +51,82 @@ app.post('/public/uploads', (req, res) => {
 });
 
 // Method takes in the fileName as a param, and converts the csv file to JSON format saved on disk
-function processCSV(fileName) {
-    const csvFilePath='/Users/m.chan/workspace/iws/backend/public/uploads/' + fileName;   
-    console.log(csvFilePath);
+function processCSV(fileName, carrier, level) {
+    const csvFilePath = '/Users/m.chan/workspace/iws/backend/public/uploads/' + fileName; /* log => */ console.log(csvFilePath);
+    let innerArray = [];
+    let nestedArray = [];
 
-    csv()
+    // https://www.npmjs.com/package/csvtojson#parameters
+    csv({
+        noheader: true,
+        trim: true,
+        workerNum: 4,
+    })
         .fromFile(csvFilePath)
-        .on('json',( json, rowIndex ) => {
-            console.log( json );
-            gjson = json;
-            for( i=0; i<rowIndex.length; i++ ){
-                sendAsRes( gjson );
+        .on('json',( jsonObj ) => {
+
+            let carrier = 'carrier';
+            innerArray.push(carrier);
+
+            let level = 'level';
+            innerArray.push(level);
+
+            let prefix = jsonObj.field2;
+            innerArray.push(prefix);
+
+            let buy_rate = jsonObj.field3;
+            buy_rate = buy_rate.replace(/\$/g, '');
+            innerArray.push(buy_rate);
+
+            let sell_rate = jsonObj.field3;
+            sell_rate = sell_rate.replace(/\$/g, '');
+            innerArray.push(sell_rate);
+        })
+        .on('done',( err ) => {
+            // turn array into a nested array in this loop
+            for (var i = 0; i < innerArray.length; i+=5) {
+                // Adds i and i+1-4 as a new array to the result array
+                nestedArray.push([innerArray[i], innerArray[i+1], innerArray[i+2], innerArray[i+3], innerArray[i+4]]);
             }
-        })
-        .on('done',( error ) => {
-            console.log( error );
-        })
+
+            // splice first 3 arrays in nestedArray that contains header info
+            nestedArray.splice(0,3);
+            console.log(nestedArray);
+
+            // trigger method to insert nestedArray into SQL
+            insertNestedArray(nestedArray);
+            // trigger method to upload sell_rate column by 5%
+            updateSellRate(1.05);
+        });
 }
 
-function sendAsRes() {
-    app.get('/json/', (req, res) => {
-        res.send(gjson);
+// DB Conn
+let conn = mysql.createConnection({
+    server: 'localhost',
+    port: '8889',
+    user: 'root',
+    password: 'root',
+    database: 'TEST_iws'
+});
+
+//SQL
+const table = 'raw_rate_cards';
+
+function insertNestedArray(nestedArray) {
+    let sql = `INSERT INTO ${table} (carrier_name, level_name, prefix, buy_rate, sell_rate) VALUES ?`;
+    let query = conn.query(sql, [nestedArray], function(err)  {
+        if(err) throw err;
     });
 }
 
-sendAsRes();
+function updateSellRate(percentInc) {
+    let sql = `UPDATE ${table} SET sell_rate=sell_rate*${percentInc}`;
+    let query = conn.query(sql, (err, result) => {
+        if(err) throw err;
+    });
+}
 
 // Start the node server
 app.listen(port, () => 
-    console.log(`Server started on port ${port}`)
+    console.log(`Uploader Server started on port ${port}`)
 );

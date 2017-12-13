@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Directive } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatStepper, MatRadioButton } from '@angular/material';
 
 import { FileUploaderComponent } from './fileuploader/fileuploader.component';
 
+
 @Component({
   selector: 'app-ratesimporter',
   templateUrl: './ratesimporter.component.html',
-  styleUrls: ['./ratesimporter.component.scss']
+  styleUrls: ['./ratesimporter.component.scss'],
 })
 
 export class RatesimporterComponent implements OnInit {
+
+  // To access child component methods and data, to call use .f
+  @ViewChild(FileUploaderComponent) fileUploaderComponent;
 
   // Form Group var
   firstFormGroup: FormGroup;
@@ -19,15 +23,15 @@ export class RatesimporterComponent implements OnInit {
   // Values being passed into service
   completedRates = [];
   carrierName: string;
-  tierName: string;
+  levelName: string;
 
   carrierNames = [
     {value: 'PowerNet Global', viewValue: 'PowerNet Global'},
     {value: 'VoxBeam', viewValue: 'VoxBeam'},
   ];
 
-  tierNames = [
-    {value: 'No Tier', viewValue: 'No Tier'},
+  levelNames = [
+    {value: 'No Tier', viewValue: 'No Level'},
     {value: 'Silver', viewValue: 'Silver'},
     {value: 'Gold', viewValue: 'Gold'},
     {value: 'Platinum', viewValue: 'Platinum'},
@@ -50,7 +54,7 @@ export class RatesimporterComponent implements OnInit {
   }
 
   getTierName() {
-    this.tierName = this.getInputValues('secondCtrl');
+    this.levelName = this.getInputValues('secondCtrl');
   }
 
   getInputValues(controllerName) {
@@ -61,9 +65,9 @@ export class RatesimporterComponent implements OnInit {
     }
 
     if(controllerName === 'secondCtrl') {
-      let tierNameValue = this.secondFormGroup.get(controllerName).value;
-      console.log(tierNameValue);
-      return tierNameValue;
+      let levelNameValue = this.secondFormGroup.get(controllerName).value;
+      console.log(levelNameValue);
+      return levelNameValue;
     }
   }
 }

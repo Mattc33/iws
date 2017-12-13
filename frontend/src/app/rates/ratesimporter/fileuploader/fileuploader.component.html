@@ -6,7 +6,9 @@
     </div>
     <div>
         <button mat-button matStepperPrevious>Back</button>  
-        <button mat-button matStepperNext (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Next</button>
+        <button mat-button matStepperNext [disabled]="!uploader.getNotUploadedItems().length">Next</button>
     </div>
+
+
 
 

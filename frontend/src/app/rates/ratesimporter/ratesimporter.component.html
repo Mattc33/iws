@@ -1,4 +1,4 @@
-<mat-horizontal-stepper> <!-- linear -->
+<mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
 
 <!-- Choose Carrier Step -->
     <mat-step [stepControl]="firstFormGroup">
@@ -22,9 +22,9 @@
       <form [formGroup]="secondFormGroup">
         <ng-template matStepLabel>Choose Tier</ng-template>
         <mat-form-field>
-            <mat-select placeholder="Tier" formControlName="secondCtrl">
-              <mat-option *ngFor="let tier of tierNames" [value]="tier.value">
-                {{tier.viewValue}}
+            <mat-select placeholder="Level" formControlName="secondCtrl">
+              <mat-option *ngFor="let level of levelNames" [value]="level.value">
+                {{level.viewValue}}
               </mat-option>
             </mat-select>
         </mat-form-field>
@@ -52,7 +52,8 @@
     </div>
     <div>
       <button mat-button matStepperPrevious>Back</button>  
-      <button mat-button >Submit</button>
+      <!-- We imported the uploader method from the child fileUploaderComponent -->
+      <button mat-button (click)="fileUploaderComponent.uploader.uploadAll()">Submit</button>
     </div>
     </mat-step>
 
