@@ -21,10 +21,10 @@ app.use(function (req, res, next) {
 // DB connection
 let conn = mysql.createConnection({
     server: 'localhost',
-    port: '8889',
+    port: '3306',
     user: 'root',
-    password: 'root',
-    database: 'carrier_info'
+    password: '123',
+    database: 'raw_rate_card_db'
 });
 
 //Begin Listening
@@ -38,7 +38,7 @@ ROUTING
 */
 
 // const
-const tableName = 'carriers';
+const tableName = 'carrier';
 
 // GET Routing => select whole table
 app.get('/gettabledata/', (req, res) => {
@@ -52,7 +52,8 @@ app.get('/gettabledata/', (req, res) => {
 
 // POST Routing => insert row
 app.post('/insertrow/', (req, res) => {
-    let sql = `INSERT INTO ${tableName} (name, address, phone_number, taxable, tier_number, two_digit_unique_code) VALUES ('${req.body.name}', '${req.body.address}', '${req.body.phone_number}', '${req.body.taxable}', '${req.body.tier_number}', '${req.body.two_digit_unique_code}')`;
+    let sql = `INSERT INTO ${tableName} (carrier_name, email, address, phone_number, taxable, tier_number, two_digit_unique_code) VALUES 
+    ('${req.body.name}', '${req.body.email}', '${req.body.address}', '${req.body.phone_number}', '${req.body.taxable}', '${req.body.tier_number}', '${req.body.two_digit_unique_code}')`;
     let query = conn.query(sql, (err, results) => {
         if(err) throw err;
         console.log(req.body.name);

@@ -38,6 +38,9 @@ export class CarrierService {
     postAddRow(param: any): Observable<any> {
         const url = 'http://localhost:5000/insertrow/';
 
+        console.log('after service');
+        console.log(param);
+
         return this.http
             .post(url, param, this.options)
             .catch(this.handleError);
@@ -58,7 +61,21 @@ export class CarrierService {
         });
 
         return this.http
-            .delete(url, options)
+            .delete(url, this.options)
+            .catch(this.handleError);
+    }
+
+    // I need the row ID, the column, and the current value of that particular field. 3 things
+    putEditField(param: any): Observable<any> {
+        const url = 'http://localhost:5000/updateitem/';
+        const headers = new Headers({ 'Content-Type': 'application/json' });
+        const options = new RequestOptions({
+            headers: headers,
+            body: param,
+        });
+
+        return this.http
+            .put(url, param, options)
             .catch(this.handleError);
     }
 

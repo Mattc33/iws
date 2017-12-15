@@ -27,13 +27,12 @@
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput placeholder="Two Digit Code" formControlName="two_digit_code"> 
+            <input matInput placeholder="Two Digit Code" formControlName="two_digit_unique_code"> 
         </mat-form-field>
     </div>
 
     <div mat-dialog-actions>
         <button mat-button type="submit" [disabled]="!addCarrierFormGroup.valid" (click)="onNoClick()">Ok</button>
-        <button mat-button (click)="onNoClick()" tabindex="1">No Thanks</button>
     </div>
 </form>
 

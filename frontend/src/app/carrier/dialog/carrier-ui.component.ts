@@ -51,7 +51,7 @@ export class AddCarrierDialogComponent {
         phone_number: [null, Validators.required],
         taxable: [null, Validators.required],
         tier_number: [null, Validators.required],
-        two_digit_code: [null, Validators.required],
+        two_digit_unique_code: [null, Validators.required],
       });
     }
 
@@ -64,8 +64,11 @@ export class AddCarrierDialogComponent {
       phone_number: post.phone_number,
       taxable: post.taxable,
       tier_number: post.tier_number,
-      two_digit_code: post.two_digit_code,
+      two_digit_unique_code: post.two_digit_unique_code,
     };
+
+    console.log('after input');
+    console.log(body);
 
     this.carrierService.postAddRow(body)
       .subscribe(result => console.log(result));

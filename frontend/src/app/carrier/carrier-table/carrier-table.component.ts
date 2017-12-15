@@ -49,11 +49,11 @@ export class CarrierTableComponent implements OnInit {
         return [
             // ID
             {
-                headerName: 'ID', field: 'id',
+                headerName: 'ID', field: 'carrier_id',
             },
             // Name
             {
-                headerName: 'Name', field: 'name',
+                headerName: 'Name', field: 'carrier_name',
                 editable: true,
             },
             // Phone Number
