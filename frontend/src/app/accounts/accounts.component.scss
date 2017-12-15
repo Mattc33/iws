@@ -1,12 +1,11 @@
-// accounts.component.scss
-
-@import '../_global-var';
 
 section {
-    height: 100%; width: auto;
-    margin-left: $section-margin-left; margin-top: 50px;
+    width: 85%; height: auto;
+    margin-top: 50px; margin-left: 230px;
 
+    position: fixed;
     background-color: white;
+    overflow: hidden;
 
     header {
         margin-left: 30px;

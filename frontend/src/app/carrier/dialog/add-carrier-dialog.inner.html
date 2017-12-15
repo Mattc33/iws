@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Add Carrier</h2>
+
+<form [formGroup]="addCarrierFormGroup" (ngSubmit)="addCarrier(addCarrierFormGroup.value)">
+    <div mat-dialog-content>  
+        <mat-form-field>
+            <input matInput placeholder="Name" formControlName="name">
+        </mat-form-field>
+        
+        <mat-form-field>            
+            <input matInput placeholder="Email" formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Address" formControlName="address">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Phone Number" formControlName="phone_number">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Taxable"  formControlName="taxable">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Tier Number" formControlName="tier_number">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Two Digit Code" formControlName="two_digit_code"> 
+        </mat-form-field>
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-button type="submit" [disabled]="!addCarrierFormGroup.valid" (click)="onNoClick()">Ok</button>
+        <button mat-button (click)="onNoClick()" tabindex="1">No Thanks</button>
+    </div>
+</form>
+
+<!-- 
+    [mat-dialog-close]
+    [disabled]="!addCarrierFormGroup.valid"
+ -->

@@ -1,13 +1,12 @@
-// dashboard.component.scss
-
-@import '../_global-var';
 
 section {
-    height: 100%; 
-    margin-top: 50px;
-    margin-left: 220px;
+    width: 85%; height: auto;
+    margin-top: 50px; margin-left: 230px;
 
+    position: fixed;
     background-color: white;
+    overflow: hidden;
+
 
     header {
         margin-left: 30px;

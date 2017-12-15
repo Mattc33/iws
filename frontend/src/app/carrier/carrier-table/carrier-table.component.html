@@ -1,94 +1,15 @@
-<section>
+<section id="grid-wrapper">
+    <ag-grid-angular class="ag-theme-material"
+    [columnDefs]="columnDefs" [rowData]="rowData"
+    [floatingFilter]="true" 
+    [enableSorting]="true"
+    [enableColResize]="true"
+    [singleClickEdit]="true" [stopEditingWhenGridLosesFocus]="true"
+    [pagination]="true" [paginationAutoPageSize]="true"
 
-    <form>
-        <input type="text" [(ngModel)]="name" name="name" required/>
-        <input type="text" [(ngModel)]="address" name="address" required/>
-        <input type="text" [(ngModel)]="phone_number" name="phone number" required/>
-        <input type="text" [(ngModel)]="taxable" name="taxable" required/>
-        <input type="text" [(ngModel)]="tier_number" name="tier number" required/>
-        <input type="text" [(ngModel)]="two_digit_unique_code" name="Two Digit Code" required/>
-        <button (click)="onPostRow(name, address, phone_number, taxable, tier_number, two_digit_unique_code)"> Test Post </button>
-    </form>
-
-    <hr>
-
-    <div class="ui-widget-header">
-        <input #gb type="text" placeholder="Global Filter">
-    </div>
-
-    <!-- Table -->
-    <p-dataTable [value]="carriers" [responsive]="true" [immutable]="false"
-    [editable]="true" (onEditComplete)="onEditComplete($event)"
-    tableStyleClass="carrierTable"
-    scrollable="true" scrollHeight="70vh"
-    [globalFilter]="gb"
+    (gridReady)="onGridReady($event)"
+    (gridSizeChanged)="onGridSizeChanged($event)"
     >
-        <!-- ID -->
-        <p-column field="id" header="ID" 
-            [sortable]="true"
-            >
-            <ng-template let-col let-carrier="rowData" pTemplate="body">
-                <span> {{ carrier.id }} </span>
-            </ng-template>
-        </p-column>
-
-        <!-- Date -->
-        <p-column field="date" header="Date Inserted"
-            [sortable]="true"
-            >
-            <ng-template let-col let-carrier="rowData" pTemplate="body">
-                    <span> {{ carrier.date | date: 'medium' }} </span>
-            </ng-template>
-        </p-column>
-
-        <!-- Carrier Name -->
-        <p-column field="name" header="Name"    
-            [sortable]="true"
-            [editable]="true"
-            >
-            <ng-template let-col let-carrier="rowData" pTemplate="body" let-ri="rowIndex">
-                    <span (click)="onCellClick(ri)" > {{ carrier.name }} </span>
-            </ng-template>  
-        </p-column>
-
-        <!-- Address -->
-        <p-column field="address" header="Address" 
-            [sortable]="true" 
-            [editable]="true">
-            <ng-template let-col let-carrier="rowData" pTemplate="body">
-                    <span> {{ carrier.address }} </span>
-            </ng-template>  
-        </p-column>
-
-        <!-- Phone number -->
-        <p-column field="phone_number" header="Phone Number" 
-            [editable]="true"
-            >
-            <ng-template let-col let-carrier="rowData" pTemplate="body">
-                <span> {{ carrier.phone_number }} </span>
-            </ng-template>  
-        </p-column>
-
-        <!-- Taxable -->
-        <p-column field="taxable" header="Taxable" 
-        [editable]="true"
-        >
-        <ng-template let-col let-carrier="rowData" pTemplate="body">
-            <span> {{ carrier.taxable ? "Yes" : "No" }} </span>
-        </ng-template>  
-        </p-column>
-
-        <!-- Tier Number -->
-        <p-column field="tier_number" header="Tier Number" [editable]="true" [sortable]="true"></p-column>
-
-        <!-- Two Digit Unique Code -->
-        <p-column field="two_digit_unique_code" header="Two Digit Code" [editable]="true"></p-column>
-
-        <p-column field="delete" header="Delete Row">
-            <ng-template let-col let-carrier="rowData" pTemplate="body" let-ri="rowIndex">
-                    <span> <button (click)="onDeleteRow(ri)"> Delete </button> </span>
-            </ng-template>  
-        </p-column>
-
-    </p-dataTable>
+    </ag-grid-angular>
 </section>
+

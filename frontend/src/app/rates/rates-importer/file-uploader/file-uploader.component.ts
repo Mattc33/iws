@@ -6,8 +6,8 @@ const URL = 'http://localhost:3000/public/uploads';
 
 @Component({
     selector: 'app-fileuploader',
-    templateUrl: './fileuploader.component.html',
-    styleUrls: ['./fileuploader.component.scss'],
+    templateUrl: './file-uploader.component.html',
+    styleUrls: ['./file-uploader.component.scss'],
 })
 
 export class FileUploaderComponent implements OnInit {

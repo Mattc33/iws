@@ -2,13 +2,13 @@ import { Component, OnInit, ViewChild, Directive } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatStepper, MatRadioButton } from '@angular/material';
 
-import { FileUploaderComponent } from './fileuploader/fileuploader.component';
+import { FileUploaderComponent } from './file-uploader/file-uploader.component';
 
 
 @Component({
-  selector: 'app-ratesimporter',
-  templateUrl: './ratesimporter.component.html',
-  styleUrls: ['./ratesimporter.component.scss'],
+  selector: 'app-rates-importer',
+  templateUrl: './rates-importer.component.html',
+  styleUrls: ['./rates-importer.component.scss'],
 })
 
 export class RatesimporterComponent implements OnInit {
@@ -48,7 +48,7 @@ export class RatesimporterComponent implements OnInit {
     });
   }
 
-  // Get Form Values
+  // Get Form Values, feeds into getInputValues method
   getCarrierName() {
     this.carrierName = this.getInputValues('firstCtrl');
   }
@@ -57,15 +57,16 @@ export class RatesimporterComponent implements OnInit {
     this.levelName = this.getInputValues('secondCtrl');
   }
 
+  // assigns the value of the input to carrierNameValue; return
   getInputValues(controllerName) {
-    if(controllerName === 'firstCtrl') {
-      let carrierNameValue = this.firstFormGroup.get(controllerName).value;
+    if (controllerName === 'firstCtrl') {
+      const carrierNameValue = this.firstFormGroup.get(controllerName).value;
       console.log(carrierNameValue);
       return carrierNameValue;
     }
 
-    if(controllerName === 'secondCtrl') {
-      let levelNameValue = this.secondFormGroup.get(controllerName).value;
+    if (controllerName === 'secondCtrl') {
+      const levelNameValue = this.secondFormGroup.get(controllerName).value;
       console.log(levelNameValue);
       return levelNameValue;
     }
