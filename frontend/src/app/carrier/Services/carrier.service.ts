@@ -10,7 +10,7 @@ import 'rxjs/add/operator/do';
 
 @Injectable()
 export class CarrierService {
-    url = 'http://localhost:5000/';
+    url = 'http://172.20.13.129:8943/';
     rowData: any[];
     headers: Headers;
     options: RequestOptions;
@@ -28,18 +28,14 @@ export class CarrierService {
     our view components can later .subscribe to the data
     */
     initialLoad(): Observable<Carrier[]> {
-        return this.http.get(this.url + 'gettabledata/')
+        return this.http.get(this.url + 'carriers/')
             .map(res => res.json())
             .catch(this.handleError)
-            .do(data => console.log('server data:', data))
-            .catch(this.handleError);
+            .do(data => console.log('server data:', data));
     }
 
     postAddRow(param: any): Observable<any> {
-        const url = 'http://localhost:5000/insertrow/';
-
-        console.log('after service');
-        console.log(param);
+        const url = 'http://localhost:5000/api/carrier/insertrow/';
 
         return this.http
             .post(url, param, this.options)
@@ -48,34 +44,19 @@ export class CarrierService {
 
     delDeleteRow(param: any): Observable<any> {
         // Creating request with appropriate headers/body for delete
-        const url = 'http://localhost:5000/deleterow';
-        const body = JSON.stringify(
-            {
-              'id': param,
-            }
-        );
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        const options = new RequestOptions({
-            headers: headers,
-            body : body
-        });
+        const url = 'http://localhost:5000/api/carrier/deleterow';
 
         return this.http
-            .delete(url, this.options)
+            .put(url, param, this.options)
             .catch(this.handleError);
     }
 
     // I need the row ID, the column, and the current value of that particular field. 3 things
     putEditField(param: any): Observable<any> {
-        const url = 'http://localhost:5000/updateitem/';
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        const options = new RequestOptions({
-            headers: headers,
-            body: param,
-        });
+        const url = 'http://localhost:5000/api/carrier/updateitem/';
 
         return this.http
-            .put(url, param, options)
+            .put(url, param)
             .catch(this.handleError);
     }
 

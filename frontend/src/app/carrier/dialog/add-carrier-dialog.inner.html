@@ -1,42 +1,55 @@
 <h2 mat-dialog-title>Add Carrier</h2>
 
-<form [formGroup]="addCarrierFormGroup" (ngSubmit)="addCarrier(addCarrierFormGroup.value)">
-    <div mat-dialog-content>  
-        <mat-form-field>
-            <input matInput placeholder="Name" formControlName="name">
-        </mat-form-field>
-        
-        <mat-form-field>            
-            <input matInput placeholder="Email" formControlName="email">
-        </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Address" formControlName="address">
-        </mat-form-field>
+<form [formGroup]="addCarrierFormGroup" class="example-form" (ngSubmit)="addCarrier(addCarrierFormGroup.value)">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Name" formControlName="name">
+      <mat-error *ngIf="addCarrierFormGroup.controls.name.hasError('required') 
+      || addCarrierFormGroup.controls.name.hasError('pattern')">{{on_getErrorNameMessage()}}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Phone Number" formControlName="phone_number">
-        </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Email" formControlName="email">
+      <mat-error *ngIf="addCarrierFormGroup.controls.email.hasError('required') 
+      || addCarrierFormGroup.controls.email.hasError('pattern')">{{on_getErrorEmailMessage()}}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Taxable"  formControlName="taxable">
-        </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Address" formControlName="address">
+      <mat-error *ngIf="addCarrierFormGroup.controls.address.hasError('required')">{{on_getErrorAddressMessage()}}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Tier Number" formControlName="tier_number">
-        </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Phone Number" formControlName="phone">
+      <mat-error *ngIf="addCarrierFormGroup.controls.phone.hasError('required')
+      || addCarrierFormGroup.controls.phone.hasError('pattern')">{{on_getErrorPhoneMessage()}}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-            <input matInput placeholder="Two Digit Code" formControlName="two_digit_unique_code"> 
-        </mat-form-field>
-    </div>
+    <mat-form-field class="example-full-width">
+      <mat-select matInput placeholder="Taxable" formControlName="taxable">
+        <mat-option *ngFor="let taxable of taxableOptions" [value]="taxable.value">
+          {{taxable.viewValue}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="addCarrierFormGroup.controls.taxable.hasError('required')"> You must select a Taxable </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-select matInput placeholder="Tier" formControlName="tier">
+        <mat-option *ngFor="let tier of tierOptions" [value]="tier.value">
+          {{tier.viewValue}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="addCarrierFormGroup.controls.tier.hasError('required')"> You must select a Tier </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Code" formControlName="code">
+      <mat-error *ngIf="addCarrierFormGroup.controls.tier.hasError('required')
+      || addCarrierFormGroup.controls.tier.hasError('pattern')">{{on_getErrorCodeMessage()}}</mat-error>
+    </mat-form-field>
 
     <div mat-dialog-actions>
         <button mat-button type="submit" [disabled]="!addCarrierFormGroup.valid" (click)="onNoClick()">Ok</button>
-    </div>
+    </div>    
 </form>
-
-<!-- 
-    [mat-dialog-close]
-    [disabled]="!addCarrierFormGroup.valid"
- -->

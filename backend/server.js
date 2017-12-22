@@ -7,7 +7,7 @@ const multer = require("multer");
 const app = express(); 
 
 // Body Parser Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
 
 // CORS Middleware
@@ -21,9 +21,9 @@ app.use(function (req, res, next) {
 // DB connection
 let conn = mysql.createConnection({
     server: 'localhost',
-    port: '3306',
+    port: '8889',
     user: 'root',
-    password: '123',
+    password: 'root',
     database: 'raw_rate_card_db'
 });
 
@@ -41,7 +41,7 @@ ROUTING
 const tableName = 'carrier';
 
 // GET Routing => select whole table
-app.get('/gettabledata/', (req, res) => {
+app.get('/api/carrier/gettabledata/', (req, res) => {
     let sql = 'SELECT * FROM ' + tableName;
     let query = conn.query(sql, (err, results) => {
         if(err) throw err;
@@ -51,9 +51,9 @@ app.get('/gettabledata/', (req, res) => {
 });
 
 // POST Routing => insert row
-app.post('/insertrow/', (req, res) => {
+app.post('/api/carrier/insertrow/', (req, res) => {
     let sql = `INSERT INTO ${tableName} (carrier_name, email, address, phone_number, taxable, tier_number, two_digit_unique_code) VALUES 
-    ('${req.body.name}', '${req.body.email}', '${req.body.address}', '${req.body.phone_number}', '${req.body.taxable}', '${req.body.tier_number}', '${req.body.two_digit_unique_code}')`;
+    ('${req.body.name}', '${req.body.email}', '${req.body.address}', '${req.body.phone}', '${req.body.taxable}', '${req.body.tier}', '${req.body.code}')`;
     let query = conn.query(sql, (err, results) => {
         if(err) throw err;
         console.log(req.body.name);
@@ -63,8 +63,8 @@ app.post('/insertrow/', (req, res) => {
 });
 
 // DELETE Routing => delete row by ID
-app.delete('/deleterow/', (req, res) => {
-    let sql = `DELETE FROM ${tableName} WHERE id = '${req.body.id}'`;
+app.put('/api/carrier/deleterow/', (req, res) => {
+    let sql = `DELETE FROM ${tableName} WHERE carrier_id = '${req.body.id}'`;
     let query = conn.query(sql, (err, results) => {
         if(err) throw err;
         console.log(req.body.id);
@@ -74,8 +74,8 @@ app.delete('/deleterow/', (req, res) => {
 });
 
 // PUT Routing => update specific item in table
-app.put('/updateitem/', (req, res) => {
-    let sql = `UPDATE ${tableName} SET ${req.body.column} = '${req.body.value}' WHERE id = '${req.body.id}'`;
+app.put('/api/carrier/updateitem/', (req, res) => {
+    let sql = `UPDATE ${tableName} SET carrier_name = '${req.body.name}', email = '$(req.body.email)' WHERE carrier_id = $(req.body.carrier_id)`;
     let query = conn.query(sql, (err, results) => {
         if(err) throw err;
         console.log(results);

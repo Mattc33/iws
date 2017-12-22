@@ -1,6 +1,6 @@
 .buttongroup {
 
-    margin-top: 10px; margin-left: 10px;
+    margin-top: 10px; margin-left: 30px;
 
     button {
         font-size: 12px;
@@ -19,4 +19,12 @@
         // color: #721c24;
     }
 
+}
+
+mat-form-field {
+    margin-bottom: 4%;
+}
+
+mat-dialog-title {
+    text-align: center;
 }

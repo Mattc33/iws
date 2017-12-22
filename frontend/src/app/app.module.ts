@@ -1,6 +1,7 @@
 // Core Modules
 // import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
@@ -29,8 +30,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { CarrierComponent } from './carrier/carrier.component';
 import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.component';
-import { CarrierService } from './carrier/services/carrier.service';
 import { CarrierUiComponent, AddCarrierDialogComponent } from './carrier/dialog/carrier-ui.component';
+import { DelCarrierDialogComponent } from './carrier/dialog/carrier-ui.component';
+
+import { CarrierService } from './carrier/services/carrier.service';
+import { TableService } from './carrier/services/table.service';
 
 // Rates
 import { RatesComponent } from './rates/rates.component';
@@ -47,14 +51,14 @@ import { AccountsComponent } from './accounts/accounts.component';
     AppComponent,
     SideNavComponent, TopNavComponent,
     DashboardComponent,
-    CarrierComponent, CarrierTableComponent, CarrierUiComponent, AddCarrierDialogComponent,
+    CarrierComponent, CarrierTableComponent, CarrierUiComponent, AddCarrierDialogComponent, DelCarrierDialogComponent,
     RatesComponent, RatesimporterComponent, RatesTableComponent, FileUploaderComponent, FileSelectDirective,
     AccountsComponent,
   ],
   imports:
   [
     // Core Angular Modules
-    HttpModule, HttpClientModule,
+    HttpModule, HttpClientModule, BrowserModule,
     FormsModule, CommonModule, ReactiveFormsModule,
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
@@ -69,9 +73,9 @@ import { AccountsComponent } from './accounts/accounts.component';
       {path: 'accounts', component: AccountsComponent},
     ])
   ],
-  providers: [ CarrierService ], // Applications services
-  bootstrap: [ AppComponent ], // Add in dialog
-  entryComponents: [ AddCarrierDialogComponent] , // Add in dialog
+  providers: [ CarrierService, TableService ], // Applications services
+  bootstrap: [ AppComponent ],
+  entryComponents: [ AddCarrierDialogComponent, DelCarrierDialogComponent ] , // Add in dialog
 })
 
 export class AppModule { }
