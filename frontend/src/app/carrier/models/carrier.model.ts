@@ -5,9 +5,8 @@ export interface Carrier {
     id: number;
     name: string;
     address: string;
-    phone_number: number;
+    phone: string;
     taxable: boolean;
-    tier_number: number;
-    two_digit_unique_code: string;
-    date: Date;
+    tier: string;
+    code: number;
 }

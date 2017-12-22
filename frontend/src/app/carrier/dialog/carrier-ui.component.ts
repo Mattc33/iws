@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, AnimationKeyframe } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+
 import { CarrierService } from '../services/carrier.service';
 import { TableService } from '../services/table.service';
 
@@ -62,8 +63,8 @@ export class AddCarrierDialogComponent implements OnInit {
   codePattern = '^[a-zA-Z0-9]{2}';
 
   taxableOptions = [
-    {value: 0, viewValue: 'No'},
-    {value: 1, viewValue: 'Yes'},
+    {value: false, viewValue: 'No'},
+    {value: true, viewValue: 'Yes'},
   ];
 
   tierOptions = [
@@ -98,7 +99,9 @@ export class AddCarrierDialogComponent implements OnInit {
 
   // POST method, sending carrier info to server
   addCarrier(post) {
-    const form_carrierObj = {
+
+
+  const carrierModel = {
       code: post.code,
       name: post.name,
       email: post.email,
@@ -109,10 +112,10 @@ export class AddCarrierDialogComponent implements OnInit {
     };
 
     // Send carrierObj to shared service
-    this.tableService.changeCarrierObj(form_carrierObj);
+    this.tableService.changeCarrierObj(carrierModel);
 
     // send to carrier service as http
-    this.carrierService.postAddRow(form_carrierObj)
+    this.carrierService.postAddRow(carrierModel)
       .subscribe(result => console.log(result));
     }
 
@@ -180,15 +183,13 @@ export class DelCarrierDialogComponent implements OnInit {
   }
 
   delCarrier() {
-    console.log(this.data.rowID);
 
-    const body = {
-      id: this.data.rowID,
-    };
+    let x = this.data.rowID;
+    console.log('-------------  ' + x);
 
     if (this.data.rowID !== 0) {
       // subscribe to carrier service del rout+e
-      this.carrierService.delDeleteRow(body)
+      this.carrierService.delDeleteRow(this.data.rowID)
         .subscribe(result => console.log(result));
 
       // pass 1 true to carrier-table for row deletion

@@ -82,12 +82,12 @@ export class CarrierTableComponent implements OnInit {
         return [
             // Name
             {
-                headerName: 'Name', field: 'carrier_name',
+                headerName: 'Name', field: 'name',
                 editable: true,
             },
             // Phone Number
             {
-                headerName: 'Phone Number', field: 'phone_number',
+                headerName: 'Phone Number', field: 'phone',
                 editable: true
             },
             // Email
@@ -107,12 +107,12 @@ export class CarrierTableComponent implements OnInit {
             },
             // Tier Number
             {
-                headerName: 'Tier Number', field: 'tier_number',
+                headerName: 'Tier Number', field: 'tier',
                 editable: true
             },
             // Two Digit Code
             {
-                headerName: 'Two Digit Code', field: 'two_digit_unique_code',
+                headerName: 'Two Digit Code', field: 'code',
                 editable: true
             },
         ];
@@ -126,7 +126,7 @@ export class CarrierTableComponent implements OnInit {
     // On row selection pass rowID property to TableService
     on_SelectionChanged() {
         const selectedRows = this.gridApi.getSelectedRows();
-        this.rowID = selectedRows[0].carrier_id;
+        this.rowID = selectedRows[0].id;
         console.log(this.rowID);
 
         this.tableService.changeRowID( this.rowID );
@@ -143,13 +143,13 @@ export class CarrierTableComponent implements OnInit {
 
     on_AddRow() {
         const addCarrierToRow = {
-            two_digit_unique_code: this.carrierObj['code'],
-            carrier_name: this.carrierObj['name'],
+            code: this.carrierObj['code'],
+            name: this.carrierObj['name'],
             email: this.carrierObj['email'],
-            phone_number: this.carrierObj['phone'],
+            phone: this.carrierObj['phone'],
             address: this.carrierObj['address'],
             taxable: this.carrierObj['taxable'],
-            tier_number: this.carrierObj['tier']
+            tier: this.carrierObj['tier']
         };
 
         if ( this.carrierObj['name'] !== '' ) {
@@ -159,19 +159,26 @@ export class CarrierTableComponent implements OnInit {
         }
     }
 
+    // When cell edit event closes call update
     on_CellValueChanged(params: any) {
+        const id = params.data.id;
+        let taxable = params.data.taxable;
+            if (taxable === 'false') {
+                taxable = false;
+            } else {
+                taxable = true;
+            }
         const row_carrierObj = {
-            code: params.data.two_digit_unique_code,
-            name: params.data.carrier_name,
+            code: params.data.code,
+            name: params.data.name,
             email: params.data.email,
-            phone: params.data.phone_number,
+            phone: params.data.phone,
             address: params.data.address,
-            taxable: params.data.taxable,
-            tier: params.data.tier_number,
-            carrier_id: params.data.carrier_id,
+            taxable: taxable,
+            tier: params.data.tier,
           };
 
-        this.carrierService.putEditField(row_carrierObj)
+        this.carrierService.putEditField(row_carrierObj, id)
             .subscribe(result => console.log(result));
     }
 
