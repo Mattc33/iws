@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Carrier } from '../models/carrier.model';
 
 // Observable operators
 import 'rxjs/add/operator/map';
@@ -9,7 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 
 @Injectable()
-export class CarrierService {
+export class RateCardsService {
     url = 'http://172.20.13.129:8943/';
     rowData: any[];
     headers: Headers;
@@ -20,36 +19,36 @@ export class CarrierService {
         this.options = new RequestOptions({ headers: this.headers });
     }
 
-    /*
-    initialLoad() is returning an obj of type Observable that is an array defined in Carriers Model as an obj
-    we .map is as json format then return the data
-    .do(logs the json object to console)
-    .catch(will catch errors and trigger handleError method)
-    our view components can later .subscribe to the data
-    */
-    initialLoad(): Observable<Carrier[]> {
+    // For Add Rate Card dropdown, needs name and id
+    get_CarrierNames(): Observable<any> {
         return this.http.get(this.url + 'carriers/')
             .map(res => res.json())
             .catch(this.handleError)
             .do(data => console.log('server data:', data));
     }
 
-    postAddRow(param: any): Observable<any> {
+    get_RateCard(): Observable<any> {
+        return this.http.get(this.url + 'ratecards/')
+            .map(res => res.json())
+            .catch(this.handleError)
+            .do(data => console.log('server data', data));
+    }
+
+    post_AddRateCard(param: any): Observable<any> {
         return this.http
-            .post(this.url + 'carriers/', param, this.options)
+            .post(this.url + 'ratecards/', param, this.options)
             .catch(this.handleError);
     }
 
-    delDeleteRow(param: any): Observable<any> {
+    del_DeleteRateCard(param: any): Observable<any> {
         return this.http
-            .delete(this.url + 'carriers/' + param)
+            .delete(this.url + 'ratecards/' + param)
             .catch(this.handleError);
     }
 
-    // I need the row ID, the column, and the current value of that particular field. 3 things
-    putEditField(param: any, id: number): Observable<any> {
+    put_EditField(param: any, id: number): Observable<any> {
         return this.http
-            .put(this.url + 'carriers/' + id, param)
+            .put(this.url + 'ratecards/' + id, param)
             .catch(this.handleError);
     }
 

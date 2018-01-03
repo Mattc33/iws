@@ -62,7 +62,6 @@ export class CarrierTableComponent implements OnInit {
                 this.on_AddRow();
             }
         });
-
     }
 
     // on grid initialisation, grap the APIs and auto resize the columns to fit the available space
@@ -98,6 +97,7 @@ export class CarrierTableComponent implements OnInit {
             // Address
             {
                 headerName: 'Address', field: 'address',
+                width: 300,
                 editable: true
             },
             // Taxable
@@ -175,7 +175,7 @@ export class CarrierTableComponent implements OnInit {
             phone: params.data.phone,
             address: params.data.address,
             taxable: taxable,
-            tier: params.data.tier,
+            tier: parseInt(params.data.tier),
           };
 
         this.carrierService.putEditField(row_carrierObj, id)

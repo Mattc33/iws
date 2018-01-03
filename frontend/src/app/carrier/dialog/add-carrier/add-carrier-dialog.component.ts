@@ -2,63 +2,20 @@ import { Component, Inject, OnInit, AnimationKeyframe } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
-import { CarrierService } from '../services/carrier.service';
-import { TableService } from '../services/table.service';
+import { CarrierService } from '../../services/carrier.service';
+import { TableService } from '../../services/table.service';
+import { CarrierUiComponent } from './../../carrier-ui/carrier-ui.component';
 
-@Component({
-  selector: 'app-carrier-ui',
-  templateUrl: './carrier-ui.component.html',
-  styleUrls: ['./carrier-ui.component.scss'],
-})
-
-export class CarrierUiComponent implements OnInit {
-
-  rowID: number;
-
-  constructor(private tableService: TableService, public dialog: MatDialog ) {}
-
-  ngOnInit() {
-    this.tableService.currentRowID.subscribe(receivedRowID => this.rowID = receivedRowID);
-  }
-
-  openDialogAdd(): any {
-    const dialogRef = this.dialog.open(AddCarrierDialogComponent, {
-      width: '300px',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  } // end openDialogAdd
-
-  openDialogDel(): any {
-    const dialogRef = this.dialog.open(DelCarrierDialogComponent, {
-      data: { rowID: this.rowID },
-      width: '250px',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }// end openDialogDel
-
-}
-
-/*
-Dialog component
-addCarrier
-*/
 @Component({
     selector: 'app-add-carrier-dialog-inner',
-    templateUrl: './add-carrier-dialog.inner.html',
-    styleUrls: ['./carrier-ui.component.scss'],
+    templateUrl: './add-carrier-dialog.component.html',
+    styleUrls: [],
     providers: [ CarrierService ],
   })
 export class AddCarrierDialogComponent implements OnInit {
 
-  namePattern = '^[a-zA-Z]+$';
   emailPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+';
-  //phonePattern = '^[0-9]+$';
+  // phonePattern = '^[0-9]+$';
   taxablePattern = '^[0-1]+$';
   codePattern = '^[a-zA-Z0-9]{2}';
 
@@ -80,7 +37,7 @@ export class AddCarrierDialogComponent implements OnInit {
 
   // Form controllers
   addCarrierFormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.pattern(this.namePattern)]),
+    name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.pattern(this.emailPattern)]),
     address: new FormControl('', [Validators.required]),
     // tslint:disable-next-line:max-line-length
@@ -99,19 +56,17 @@ export class AddCarrierDialogComponent implements OnInit {
 
   // POST method, sending carrier info to server
   addCarrier(post) {
-
-
-  const carrierModel = {
-      code: post.code,
-      name: post.name,
-      email: post.email,
-      phone: post.phone,
-      address: post.address,
-      taxable: post.taxable,
-      tier: post.tier,
+    const carrierModel = {
+        code: post.code,
+        name: post.name,
+        email: post.email,
+        phone: post.phone,
+        address: post.address,
+        taxable: post.taxable,
+        tier: post.tier,
     };
 
-    // Send carrierObj to shared service
+    // Send carrierObj to shared service for table component
     this.tableService.changeCarrierObj(carrierModel);
 
     // send to carrier service as http
@@ -127,7 +82,6 @@ export class AddCarrierDialogComponent implements OnInit {
     // Validation Handling
     on_getErrorNameMessage() {
       return this.addCarrierFormGroup.get('name').hasError('required') ? 'You must enter a Name' :
-      this.addCarrierFormGroup.get('name').hasError('pattern') ? 'Not a valid Name' :
       '';
     }
 
@@ -153,55 +107,3 @@ export class AddCarrierDialogComponent implements OnInit {
       '';
     }
   }
-
-/*
-Dialog component
-delCarrier
-*/
-@Component({
-  selector: 'app-del-carrier-dialog-inner',
-  templateUrl: './del-carrier-dialog.inner.html',
-  providers: [ CarrierService ],
-})
-export class DelCarrierDialogComponent implements OnInit {
-
-  addCarrierFormGroup: FormGroup;
-  post: any;
-
-  ifDialog: number;
-
-  constructor(
-    public dialogRef: MatDialogRef <CarrierUiComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private carrierService: CarrierService,
-    private tableService: TableService,
-  ) {
-  }
-
-  ngOnInit() {
-    this.tableService.currentIfDialog.subscribe(receivedRowID => this.ifDialog = receivedRowID);
-  }
-
-  delCarrier() {
-
-    let x = this.data.rowID;
-    console.log('-------------  ' + x);
-
-    if (this.data.rowID !== 0) {
-      // subscribe to carrier service del rout+e
-      this.carrierService.delDeleteRow(this.data.rowID)
-        .subscribe(result => console.log(result));
-
-      // pass 1 true to carrier-table for row deletion
-      this.tableService.changeIfDialog(1);
-    } else {
-      return;
-    }
-  }
-
-  // On method call close dialog
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-}

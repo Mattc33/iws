@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RatesimporterComponent } from './ratesimporter.component';
+import { RatesTableComponent } from './rates-table.component';
 
-describe('RatesimporterComponent', () => {
-  let component: RatesimporterComponent;
-  let fixture: ComponentFixture<RatesimporterComponent>;
+describe('RatesTableComponent', () => {
+  let component: RatesTableComponent;
+  let fixture: ComponentFixture<RatesTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RatesimporterComponent ]
+      declarations: [ RatesTableComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RatesimporterComponent);
+    fixture = TestBed.createComponent(RatesTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

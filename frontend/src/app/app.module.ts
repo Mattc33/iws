@@ -15,10 +15,9 @@ import { MatFormFieldModule, MatButtonModule, MatInputModule, MatStepperModule, 
 import { MatCheckboxModule, MatIconModule, MatRadioModule, MatDialogModule } from '@angular/material';
 
 /* --------------------------------------------------------------------------------------------------------------------------------------
-
    -------------------------------------------------------------------------------------------------------------------------------------- */
 
-// Main UI components
+// Main components
 import { AppComponent } from './app.component';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
@@ -30,20 +29,31 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { CarrierComponent } from './carrier/carrier.component';
 import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.component';
-import { CarrierUiComponent, AddCarrierDialogComponent } from './carrier/dialog/carrier-ui.component';
-import { DelCarrierDialogComponent } from './carrier/dialog/carrier-ui.component';
+import { CarrierUiComponent } from './carrier/carrier-ui/carrier-ui.component';
+
+import { AddCarrierDialogComponent } from './carrier/dialog/add-carrier/add-carrier-dialog.component';
+import { DelCarrierDialogComponent } from './carrier/dialog/del-carrier/del-carrier-dialog.component';
 
 import { CarrierService } from './carrier/services/carrier.service';
 import { TableService } from './carrier/services/table.service';
 
+// Rate Cards
+import { RateCardsComponent } from './rate-cards/rate-cards.component';
+import { RateCardsUiComponent } from './rate-cards/rate-cards-ui/rate-cards-ui.component';
+import { RateCardsTableComponent } from './rate-cards/rate-cards-table/rate-cards-table.component';
+import { FileUploaderComponent } from './rate-cards/dialog/upload-rates/file-uploader/file-uploader.component';
+
+import { UploadRatesDialogComponent } from './rate-cards/dialog/upload-rates/upload-rates-dialog.component';
+import { AddRateCardDialogComponent } from './rate-cards/dialog/add-rate-cards/add-rate-cards-dialog.component';
+
+import { RateCardsService } from './rate-cards/services/rate-cards.service';
+
 // Rates
-import { RatesComponent } from './rates/rates.component';
-import { RatesimporterComponent } from './rates/rates-importer/rates-importer.component';
-import { RatesTableComponent } from './rates/rates-table/rates-table.component';
-import { FileUploaderComponent } from './rates/rates-importer/file-uploader/file-uploader.component';
+
 
 // Accounts
 import { AccountsComponent } from './accounts/accounts.component';
+import { RatesTableComponent } from './rates-table/rates-table.component';
 
 @NgModule({
   declarations:
@@ -52,7 +62,9 @@ import { AccountsComponent } from './accounts/accounts.component';
     SideNavComponent, TopNavComponent,
     DashboardComponent,
     CarrierComponent, CarrierTableComponent, CarrierUiComponent, AddCarrierDialogComponent, DelCarrierDialogComponent,
-    RatesComponent, RatesimporterComponent, RatesTableComponent, FileUploaderComponent, FileSelectDirective,
+    RateCardsComponent, RateCardsTableComponent, FileUploaderComponent, FileSelectDirective, RateCardsUiComponent,
+    AddRateCardDialogComponent, UploadRatesDialogComponent,
+    RatesTableComponent,
     AccountsComponent,
   ],
   imports:
@@ -63,19 +75,22 @@ import { AccountsComponent } from './accounts/accounts.component';
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule,
-    // Larger 3rd party module
+    //
     AgGridModule.withComponents([ ]),
     RouterModule.forRoot([
       {path: '', component: DashboardComponent},
       {path: 'dashboard', component: DashboardComponent},
       {path: 'carrier', component: CarrierComponent},
-      {path: 'rates', component: RatesComponent},
+      {path: 'rates', component: RateCardsComponent},
+      {path: 'rates-table', component: RatesTableComponent},
       {path: 'accounts', component: AccountsComponent},
     ])
   ],
   providers: [ CarrierService, TableService ], // Applications services
   bootstrap: [ AppComponent ],
-  entryComponents: [ AddCarrierDialogComponent, DelCarrierDialogComponent ] , // Add in dialog
+  entryComponents: [ AddCarrierDialogComponent, DelCarrierDialogComponent,
+    AddRateCardDialogComponent, UploadRatesDialogComponent
+  ] , // Add in dialog
 })
 
 export class AppModule { }
