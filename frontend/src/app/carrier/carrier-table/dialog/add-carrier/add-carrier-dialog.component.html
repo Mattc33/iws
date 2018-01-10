@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>Add Carrier</h2>
+
+
+<form [formGroup]="addCarrierFormGroup" class="example-form" (ngSubmit)="click_addCarrier(addCarrierFormGroup.value)">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Name" formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Email" formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Address" formControlName="address">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Phone Number" formControlName="phone">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-select matInput placeholder="Taxable" formControlName="taxable">
+        <mat-option *ngFor="let taxable of taxableOptions" [value]="taxable.value">
+          {{taxable.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-select matInput placeholder="Tier" formControlName="tier">
+        <mat-option *ngFor="let tier of tierOptions" [value]="tier.value">
+          {{tier.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Code" formControlName="code">
+    </mat-form-field>
+
+    <div mat-dialog-actions>
+        <button mat-button type="submit" [disabled]="!addCarrierFormGroup.valid">Ok</button>
+    </div>    
+</form>

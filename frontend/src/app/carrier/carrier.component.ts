@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { CarrierService } from './services/carrier.service';
 
 @Component({
   selector: 'app-carrier',
@@ -9,13 +8,10 @@ import { CarrierService } from './services/carrier.service';
 
 export class CarrierComponent implements OnInit {
 
-  constructor(private carrierService: CarrierService) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
-  // ri = row index
-  onDeleteRow(): void {
-  }
 
 }

@@ -1,14 +1,14 @@
-import { Component, ViewEncapsulation, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { CarrierService } from '../services/carrier.service';
-import { TableService } from './../services/table.service';
-
-import { GridOptions, GridApi } from 'ag-grid';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { GridApi } from 'ag-grid';
 import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
 
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
+import { DelCarrierDialogComponent } from '../carrier-table/dialog/del-carrier/del-carrier-dialog.component';
+import { AddCarrierDialogComponent } from '../carrier-table/dialog/add-carrier/add-carrier-dialog.component';
+
+import { CarrierService } from './../services/carrier.api.service';
+import { CarrierSharedService } from './../services/carrier.shared.service';
+
 
 @Component({
   selector: 'app-carrier-table',
@@ -30,49 +30,34 @@ export class CarrierTableComponent implements OnInit {
     private gridApi: GridApi;
     private columnApi: ColumnApi;
 
-    // passData
+    // pass Data using shared service
     rowID: number;
-    ifDialog: number;
-
-    carrierObj: {};
 
     // inject your service
-    constructor( private carrierService: CarrierService, private tableService: TableService, private cd: ChangeDetectorRef ) {
+    constructor( private carrierService: CarrierService, private carrierSharedService: CarrierSharedService,  
+    private dialog: MatDialog) {
         this.columnDefs = this.createColumnDefs();
         this.rowSelection = 'single';
     }
 
-    // On ngOnInit lifecycle hook set local var rowID to the value from the observable currentRowID
     ngOnInit() {
-        // Pass row id from row selection to delete dialog
-        this.tableService.currentRowID.subscribe( receivedRowID => this.rowID = receivedRowID );
+        // set initial row data
+        this.get_InitializeRows();
+        this.carrierSharedService.currentRowID.subscribe( giveRowID => this.rowID = giveRowID );
+    }
 
-        // subscribe to the response from delete dialog, if changeDetection call method to del row
-        this.tableService.currentIfDialog.subscribe( receivedIfDialog => {
-            this.ifDialog = receivedIfDialog;
-            this.cd.markForCheck(); {
-                this.on_RemoveRowOnDialogComfirm();
-            }
-        });
-
-        // subcsribe to response from add dialog, if changeDetection call method to add row
-        this.tableService.currentCarrierObj.subscribe( receivedCarrierObj => {
-            this.carrierObj = receivedCarrierObj;
-            this.cd.markForCheck(); {
-                this.on_AddRow();
-            }
-        });
+    get_InitializeRows() {
+        this.carrierService.get_initialLoad()
+        .subscribe(
+            data =>  this.rowData = data,
+            error =>  console.log(error)
+        );
     }
 
     // on grid initialisation, grap the APIs and auto resize the columns to fit the available space
     on_GridReady(params): void {
         this.gridApi = params.api;
         this.columnApi = params.columnApi;
-        this.carrierService.initialLoad()
-        .subscribe(
-            data => { this.rowData = data; params.api.setRowData(data); },
-            error => { console.log(error); }
-        );
         this.gridApi.sizeColumnsToFit();
     }
 
@@ -123,44 +108,27 @@ export class CarrierTableComponent implements OnInit {
         params.api.sizeColumnsToFit();
     }
 
+    aggrid_addRow(obj) {
+        this.gridApi.updateRowData({ add: [obj] });
+    }
+
     // On row selection pass rowID property to TableService
     on_SelectionChanged() {
         const selectedRows = this.gridApi.getSelectedRows();
         this.rowID = selectedRows[0].id;
-        console.log(this.rowID);
-
-        this.tableService.changeRowID( this.rowID );
+        console.log('id of row selected ---> ' + this.rowID);
     }
 
-    on_RemoveRowOnDialogComfirm() {
-        // If dialog yes is clicked ifDialog is now = 1 from table service, then call ag grid delete row method
-        if ( this.ifDialog === 1 ) {
+    aggrid_delRow(boolean) {
+        if (boolean === true) {
             this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
         } else {
             return;
         }
     }
 
-    on_AddRow() {
-        const addCarrierToRow = {
-            code: this.carrierObj['code'],
-            name: this.carrierObj['name'],
-            email: this.carrierObj['email'],
-            phone: this.carrierObj['phone'],
-            address: this.carrierObj['address'],
-            taxable: this.carrierObj['taxable'],
-            tier: this.carrierObj['tier']
-        };
-
-        if ( this.carrierObj['name'] !== '' ) {
-            this.gridApi.updateRowData({ add: [addCarrierToRow] });
-        } else {
-            return;
-        }
-    }
-
     // When cell edit event closes call update
-    on_CellValueChanged(params: any) {
+    aggrid_onCellValueChanged(params: any) {
         const id = params.data.id;
         let taxable = params.data.taxable;
             if (taxable === 'false') {
@@ -168,7 +136,7 @@ export class CarrierTableComponent implements OnInit {
             } else {
                 taxable = true;
             }
-        const row_carrierObj = {
+        const carrierObj = {
             code: params.data.code,
             name: params.data.name,
             email: params.data.email,
@@ -178,8 +146,44 @@ export class CarrierTableComponent implements OnInit {
             tier: parseInt(params.data.tier),
           };
 
-        this.carrierService.putEditField(row_carrierObj, id)
-            .subscribe(result => console.log(result));
+        this.carrierService.put_EditCarrier(carrierObj, id)
+        .subscribe(resp => console.log(resp));
     }
+
+    // put_editCarrier(carrierObj, id) {
+    //     this.carrierService.put_EditCarrier(carrierObj, id)
+    //     .subscribe(resp => console.log(resp));
+    // }
+
+    openDialogAdd() {
+        const dialogRef = this.dialog.open(AddCarrierDialogComponent, {});
+
+        const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
+            // do something with event data
+            this.aggrid_addRow(data);
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
+            console.log('The dialog was closed');
+        });
+    } // end openDialogAdd UploadRatesDialog
+
+    openDialogDel() {
+        // assign new rowID prop
+        this.carrierSharedService.changeRowID(this.rowID);
+
+        const dialogRef = this.dialog.open(DelCarrierDialogComponent, {});
+
+        const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
+            // do something with event data
+            this.aggrid_delRow(data);
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            // sub.unsubscribe();
+            console.log('The dialog was closed');
+        });
+    } // end openDialogAdd UploadRatesDialog
 
 } // end class

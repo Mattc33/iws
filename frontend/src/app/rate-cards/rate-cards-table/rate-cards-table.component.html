@@ -1,15 +1,25 @@
-<ag-grid-angular class="ag-theme-material"
-[columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
-[rowSelection]="rowSelection" 
-[stopEditingWhenGridLosesFocus]="true" 
-[floatingFilter]="true"
-[enableSorting]="true"
-[enableColResize]="true" 
-[pagination]="true" [paginationAutoPageSize]="true"
+<section id="grid-wrapper">
+    <ag-grid-angular class="ag-theme-material"
+    [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+    [rowSelection]="rowSelection" (selectionChanged)="on_SelectionChanged($event)"
+    [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
+    [floatingFilter]="true"
+    [enableSorting]="true"
+    [enableColResize]="true" (gridSizeChanged)="on_GridSizeChanged($event)"
+    [pagination]="true" [paginationAutoPageSize]="true"
 
-[enableCellChangeFlash]="true"
+    [enableCellChangeFlash]="true"
 
->
-</ag-grid-angular>
+    (gridReady)="on_GridReady($event)"
+    >
+    </ag-grid-angular>
 
-<!-- (gridSizeChanged)="on_GridSizeChanged($event)" (gridReady)="on_GridReady($event)"  (selectionChanged)="on_SelectionChanged($event)" -->
+    <button mat-button class="add" (click)="openDialogAdd()"> Add Rate Card </button>
+    <button mat-button class="del" (click)="openDialogDel()"> Delete Selected Rate Card </button>
+    <button mat-button class="upload" (click)="openDialogUpload()" > Upload Rates </button>
+</section>
+
+
+
+
+

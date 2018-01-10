@@ -12,4 +12,5 @@ export class RateCardsComponent implements OnInit {
   ngOnInit() {
   }
 
+
 }

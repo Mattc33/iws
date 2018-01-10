@@ -1,5 +1,5 @@
 <section id="grid-wrapper">
-    <ag-grid-angular class="ag-theme-material" 
+    <ag-grid-angular class="ag-theme-material"
     [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
     [rowSelection]="rowSelection" (selectionChanged)="on_SelectionChanged($event)"
     [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
@@ -14,10 +14,5 @@
     >
     </ag-grid-angular>
 
-    <button mat-button class="add" (click)="openDialogAdd()"> Add New Carrier </button>
-    <button mat-button class="del" (click)="openDialogDel()"> Delete Selected Carrier </button>
+    <button mat-button class="del" (click)="openDialogDel()"> Delete Selected Rate</button>
 </section>
-
-<!-- [singleClickEdit]="true" -->
-
-
