@@ -128,7 +128,7 @@ export class AddRateCardDialogComponent implements OnInit {
 
         // Pass new rateCardObj as body to API
         this.rateCardsService.post_AddRateCard(body)
-        .subscribe(resp => console.log(resp));
+        .subscribe(res => console.log(res));
     }
 
     // emit event to parent Table Component containing row object

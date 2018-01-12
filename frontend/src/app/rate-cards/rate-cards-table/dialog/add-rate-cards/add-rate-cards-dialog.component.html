@@ -34,16 +34,16 @@
     <!-- Details & Finalize  -->
       <mat-step>
       <ng-template matStepLabel>Review, Submit</ng-template>
-      <div class="details">
-      <b>Carrier Name:</b> {{ on_getCarrierName() }} <br><br>
-      <b>Carrier Id:</b> {{ currentCarrierId }} <br><br>
-      <b>Rate card Name:</b> {{ currentRateCardName }} <br><br>
-      Press Submit to add new rate card. <br><br>
-      </div>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>  
-        <button mat-button (click)="click_addRateCard()">Submit</button>
-      </div>
+        <div class="details">
+        <b>Carrier Name:</b> {{ on_getCarrierName() }} <br><br>
+        <b>Carrier Id:</b> {{ currentCarrierId }} <br><br>
+        <b>Rate card Name:</b> {{ currentRateCardName }} <br><br>
+        Press Submit to add new rate card. <br><br>
+        </div>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>  
+          <button mat-button (click)="click_addRateCard()">Submit</button>
+        </div>
       </mat-step>
 
         <!-- (click)="post_addRateCard()" -->

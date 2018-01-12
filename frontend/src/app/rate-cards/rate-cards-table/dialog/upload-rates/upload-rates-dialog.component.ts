@@ -1,11 +1,14 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+
+import { PapaParseService } from 'ngx-papaparse';
 
 import { RateCardsTableComponent } from './../../rate-cards-table.component';
 
 import { RateCardsService } from '../../../services/rate-cards.api.service';
 import { RateCardsSharedService } from '../../../services/rate-cards.shared.service';
+import { RatesService } from '../../../../rates/services/rates.api.service';
 
 @Component({
   selector: 'app-upload-rates',
@@ -15,73 +18,187 @@ import { RateCardsSharedService } from '../../../services/rate-cards.shared.serv
 export class UploadRatesDialogComponent implements OnInit {
 
     // Form Group var
-    firstFormGroup: FormGroup;
-    secondFormGroup: FormGroup;
-    thirdFormGroup: FormGroup;
+    firstFormGroup: FormGroup; secondFormGroup: FormGroup; thirdFormGroup: FormGroup;
 
     // Var
-    carrierInfo = [];
-    carrierNames = [];
-    rateCardInfo = [];
-    rateCardNames = [];
+    rateCardNames = []; // rate cards obj populated by API
+    currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
+    carrierNames = []; // carrier obj populated by API
+
+    // Insert Rates Props
+    rateCardID: number;
+    rateObj = [];
+    fileName: string;
+    disableUploadBoolean = true;
 
     constructor(public dialogRef: MatDialogRef <RateCardsTableComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    private formBuilder: FormBuilder, private rateCardsService: RateCardsService) {}
+    private papa: PapaParseService,
+    private formBuilder: FormBuilder, private rateCardsService: RateCardsService, private ratesService: RatesService) {}
 
     ngOnInit() {
         this.firstFormGroup = this.formBuilder.group({
-        firstCtrl: ['', Validators.required]
+            firstCtrl: ['', Validators.required]
         });
         this.secondFormGroup = this.formBuilder.group({
-        secondCtrl: [''],
-        name: ['', Validators.required],
+            secondCtrl: ['', Validators.required],
+        });
+        this.thirdFormGroup = this.formBuilder.group({
+            thirdCtrl: [''],
         });
 
-        this.get_carrierName();
+        this.get_carrier();
+        this.get_rateCard();
     }
 
-    get_carrierName() {
+    get_rateCard(): void {
         // subscribe to service and get carrier names
         this.rateCardsService.get_RateCard()
         .subscribe(
             data => {
                 console.log(data);
-                this.extractCarrierNames(data); // pass data as arg into private func
+                this.rateCardNames = data; //*
             },
             error => { console.log(error); },
         );
     }
 
-    // loop through json object and push obj into Arr {value: name, viewValue: name}
-    extractCarrierNames(data): void {
-        for ( let i = 0; i < data.length ; i++) {
-            this.carrierNames.push( { carrier_name: data[i].carrier_name, rate_card_name: data[i].name, id: data[i].id }, );
+    get_carrier(): void {
+        this.rateCardsService.get_CarrierNames()
+        .subscribe(
+            data => {
+                console.log(data);
+                this.carrierNames = data;
+            },
+            error => { console.log(error); }
+        );
+    }
+
+    // Get list of rate cards based on carrier selection on step 1 next click
+    currentRateCardList(): void {
+        const currentCarrier = this.input_getCarrierName();
+        const currentRateCardNames = [];
+
+        for ( let i = 0; i < this.rateCardNames.length; i++) {
+            if ( this.rateCardNames[i].carrier_name === currentCarrier ) {
+                currentRateCardNames.push( {name: this.rateCardNames[i].name}, );
+            }
+        }
+        this.currentRateCardNames = currentRateCardNames;
+    }
+
+    input_getRateCardName(): string {
+        const rateCardName = this.secondFormGroup.get('secondCtrl').value;
+        return rateCardName;
+    }
+
+    input_getCarrierName(): string {
+        const carrierName = this.firstFormGroup.get('firstCtrl').value;
+        return carrierName;
+    }
+
+    getRateCardId() {
+        const rateCardNameFromInput = this.input_getRateCardName();
+        const rateCardNameFromArr = this.rateCardNames;
+        let rateCardId: number;
+
+        for (let i = 0; i < rateCardNameFromArr.length; i++) {
+            if ( rateCardNameFromInput === rateCardNameFromArr[i].name) {
+                rateCardId = rateCardNameFromArr[i].id;
+            }
+        }
+        return rateCardId;
+    }
+
+    // Parse csv string into JSON
+    papaParse(csvFile): void {
+        this.papa.parse(csvFile, {
+            fastMode: true,
+            complete: (results) => {
+                console.log('Parsed: ', results);
+                const data = results.data;
+                this.profileSorter(data);
+                console.log(this.rateObj);
+            }
+        });
+    }
+
+    profileSorter(data) {
+        if (this.input_getCarrierName() === 'PowerNet Global') {
+            this.powerNetGlobalProfile(data);
+        }
+        if (this.input_getCarrierName() === 'VoxBeam') {
+            this.voxBeamProfile(data);
+        } else {
+            return;
         }
     }
 
-  // loop through json object and push obj into Arr {value: name, viewValue: name}
-  extractRateCardNames(data): void {
-      for ( let i = 0; i < data.length; i++) {
-          this.rateCardInfo.push( { value: data[i].name, id: data[i].id }, );
-      }
-  }
+    // Profiles for each carrier
+    powerNetGlobalProfile(data) {
+        const dataSliced = data.slice(3);
 
-  // Match selected carrier and display relevent rate cards(their names) in drop down based on
-  // an a loop that checks for matching carrier_id's
-  // matchCorrectRateCardOfCarrier() {
-  //     const currentCarrierId = this.getCarrierId();
-  //     // loop through all availible rate cards
-  //     for ( let i = 0; i < this.rateCardInfo.length; i++) {
-  //         if (this.getCarrierId === this.rateCardInfo[i].carrier_id) {
-  //             // push updated rate card objects into rateCardNames Arr, from only the selected carrier
-  //             this.rateCardNames.push( { value: this.rateCardInfo[i].value, id: this.rateCardInfo[i].id } );
-  //         } else {
-  //         }
-  //     }
-  // }
+        for (let i = 0; i < dataSliced.length; i++) {
+            const destination: string = dataSliced[i][0];
+            const prefix: string = dataSliced[i][1];
+            const buyrate: number = dataSliced[i][2].slice(1) * 1;
+            const sellrate: number = buyrate * 1.05;
+            this.rateObj.push( { destination: destination, prefix: prefix, buy_rate: buyrate, sell_rate: sellrate  }, );
+        }
+    }
 
-  csvToJson() {
+    voxBeamProfile(data) {
+        const dataSliced = data.slice(1);
 
-  }
+        for (let i = 0; i < dataSliced.length; i++) {
+          const destination: string = dataSliced[i][2];
+          const prefix: string = dataSliced[i][0];
+          const buyrate: number = dataSliced[i][3] * 1;
+          const sellrate: number = buyrate * 1.05;
+          this.rateObj.push( { destination: destination, prefix: prefix, buy_rate: buyrate, sell_rate: sellrate  }, );
+        }
+    }
+
+    // listens on input="text" change event, if file uploaded pass to csv parser and flag the button to turn on,
+    // else flag the button to remain off
+    changeListenerUploadBtn(event): void {
+        if (event.target.files && event.target.files[0]) {
+            const csvFile = event.target.files[0];
+            this.fileName = csvFile.name;
+            this.papaParse(csvFile);
+            // pass boolean flag for valdation
+            this.disableUploadBoolean = false;
+        } else {
+            this.disableUploadBoolean = true;
+        }
+    }
+
+    // pass into step 2's [disable] to control button disable
+    uploadValidator(): boolean {
+        if (this.disableUploadBoolean === true) {
+            return true;
+        }
+        if ( this.disableUploadBoolean === false ) {
+            return false;
+        }
+    }
+
+    click_addRates(): void {
+        this.post_addRates();
+        this.closeDialog();
+    }
+
+    post_addRates(): void {
+        const id: number = this.getRateCardId();
+        const body = this.rateObj;
+        console.log('rate card id --> ' + id);
+
+        this.ratesService.post_Rates(body, id)
+            .subscribe(res => console.log(res));
+    }
+
+    // close dialog
+    closeDialog(): void {
+        this.dialogRef.close();
+    }
 
 }

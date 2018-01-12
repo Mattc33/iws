@@ -20,7 +20,21 @@ export class RatesService {
     }
 
     get_Rates(): Observable<any> {
-        return this.http.get(this.url + 'rates/')
+        return this.http.get(this.url + '/rates')
+            .map(res => res.json())
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
+    }
+
+    get_TeleURates(): Observable<any> {
+        return this.http.get(this.url + '/ratecards/28/rates')
+            .map(res => res.json())
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
+    }
+
+    post_Rates(body: any, id: number): Observable<any> {
+        return this.http.post(this.url + 'ratecards/' + id + '/rates', body)
             .map(res => res.json())
             .catch(this.handleError)
             .do(res => console.log('server data', res));

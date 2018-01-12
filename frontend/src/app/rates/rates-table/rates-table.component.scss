@@ -1,11 +1,16 @@
 section {
     width: auto; height: 100%;
-    margin-left: 30px;
-    margin-right: 20px;
 
-    ag-grid-angular {
-        width: 100%; height: 80vh;
+    #teleU {
+        width: 30vw; height: 80vh;
         box-sizing: 'border-box';
+        float: left;
+    }
+
+    #allrows {
+        width: 55vw; height: 80vh;
+        box-sizing: 'border-box';     
+        float: left;   
     }
 
     .ag-header-row {

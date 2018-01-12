@@ -1,65 +1,70 @@
 <mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
-    
-    <!-- Choose Rate Card Step -->
+
+    <!-- Choose Carrier Step -->
     <mat-step [stepControl]="firstFormGroup">
             <form [formGroup]="firstFormGroup">
-              <ng-template matStepLabel>Choose Rate Card</ng-template>
-              <mat-form-field>
-                  <mat-select placeholder="Carrier" formControlName="firstCtrl">
-                    <mat-option *ngFor="let carrier of carrierNames" [value]="carrier.rate_card_name">
-                      {{carrier.rate_card_name}} - [{{carrier.carrier_name}}]
+                <ng-template matStepLabel>Choose Carrier</ng-template>
+                <mat-form-field>
+                    <mat-select placeholder="Carriers" formControlName="firstCtrl">
+                    <mat-option *ngFor="let carrier of carrierNames" [value]="carrier.name" >
+                        {{carrier.name}}
                     </mat-option>
-                  </mat-select>
-              </mat-form-field>
-              <div>
-                <button mat-button matStepperNext (click)="on_getCarrierName()" (click)="on_getCarrierId()" [disabled]="!firstFormGroup.valid"> Next </button>
-              </div>
+                    </mat-select>
+                </mat-form-field>
+                <div>
+                <button mat-button matStepperNext (click)="currentRateCardList()" [disabled]="!firstFormGroup.valid"> Next </button>
+                </div>
             </form>
     </mat-step>
     
     <!-- Choose Rate Card Step -->
     <mat-step [stepControl]="secondFormGroup">
-        <form [formGroup]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+              <ng-template matStepLabel>Choose Rate Card</ng-template>
+              <mat-form-field>
+                  <mat-select placeholder="Rate Cards" formControlName="secondCtrl">
+                    <mat-option *ngFor="let ratecard of currentRateCardNames" [value]="ratecard.name">
+                      {{ratecard.name}}
+                    </mat-option>
+                  </mat-select>
+              </mat-form-field>
+              <div>
+                <button mat-button matStepperPrevious >Back</button>
+                <button mat-button matStepperNext [disabled]="!firstFormGroup.valid" > Next </button>
+              </div>
+            </form>
+    </mat-step>
+    
+    <!-- Upload Rates Step -->
+    <mat-step [stepControl]="thirdFormGroup">
+        <form [formGroup]="thirdFormGroup">
             <ng-template matStepLabel>Upload Rate Card</ng-template>
-            <mat-form-field>
-                    <input type="file" id="csv-file" name="files"/>
-            </mat-form-field>
+                <button class="uploadBtn" mat-button (click)="fileInput.click()">
+                    <span>Select CSV File</span>
+                    <input #fileInput type="file" (change)="changeListenerUploadBtn($event)" accept=".csv" formControlName="thirdCtrl" style="display:none;" />
+                </button>
             <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext > Next </button>
+                <button mat-button matStepperNext [disabled]="uploadValidator()"> Next </button>
             </div>
         </form>
     </mat-step>
     
-    <!-- Enter Rate Card Name Step -->
-    <!-- <mat-step [stepControl]="secondFormGroup">
-        <form [formGroup]="secondFormGroup">
-            <ng-template matStepLabel>Enter Rate Card Name</ng-template>
-            <mat-form-field class="example-full-width"> -->
-                <!-- <input matInput placeholder="Rate Card Name" formControlName="name" /> -->
-                <!-- </mat-form-field>
-                    <div>
-                        <button mat-button matStepperPrevious >Back</button>
-                        <button mat-button matStepperNext [disabled]="!secondFormGroup.get('name').valid">Next</button>
-                    </div>
-                </form>
-            </mat-step> -->
-            
-            <!-- Details & Finalize  -->
-            <!-- <mat-step>
-                <ng-template matStepLabel>Review, Submit</ng-template>
-                <div class="details">
-                    <b>Carrier Name:</b> {{ on_getCarrierName() }} <br><br>
-                    <b>Carrier Id:</b> {{ on_getCarrierId() }} <br><br>
-                    <b>Rate card Name:</b> {{ on_getRateCardName() }} <br><br>
-                    Press Submit to add new rate card. <br><br>
-                </div>
-                <div>
-                    <button mat-button matStepperPrevious>Back</button>   -->
-                    <!-- We imported the uploader method from the child fileUploaderComponent -->
-                    <!-- <button mat-button >Submit</button>
-                    </div>
-                </mat-step> -->
-                
-            </mat-horizontal-stepper>
+    <!-- Details & Finalize  -->
+    <mat-step>
+        <ng-template matStepLabel>Review, Submit</ng-template>
+        <div class="details">
+            <b>Carrier Name:</b> {{input_getCarrierName()}} <br><br>
+            <b>Rate Card:</b> {{input_getRateCardName()}} <br><br>
+            <b>Rate Card ID:</b> {{getRateCardId()}} <br><br>
+            <b>File:</b> {{fileName}} <br><br>
+            Press Submit to add rates to [{{input_getRateCardName()}}]. <br><br>
+        </div>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="click_addRates()" >Submit</button>
+        </div>
+    </mat-step>
+               
+</mat-horizontal-stepper>
             

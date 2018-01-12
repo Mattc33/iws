@@ -24,7 +24,7 @@ import { TopNavComponent } from './top-nav/top-nav.component';
 
 // Third Party Components
 import { AgGridModule } from 'ag-grid-angular';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { PapaParseModule } from 'ngx-papaparse';
 
 // DashBoard
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -53,13 +53,13 @@ import { RateCardsSharedService } from './rate-cards/services/rate-cards.shared.
 // Rates
 import { RatesComponent } from './rates/rates.component';
 import { RatesTableComponent } from './rates/rates-table/rates-table.component';
+import { RatesTableTeleUComponent } from './rates/rates-table/rates-table-tele-u/rates-table-tele-u.component';
+import { RatesTableAllComponent } from './rates/rates-table/rates-table-all/rates-table-all.component';
 
 import { RatesService } from './rates/services/rates.api.service';
 
 // Accounts
 import { AccountsComponent } from './accounts/accounts.component';
-
-
 
 @NgModule({
   declarations:
@@ -71,6 +71,8 @@ import { AccountsComponent } from './accounts/accounts.component';
     RateCardsComponent, RateCardsTableComponent, AddRateCardDialogComponent, DeleteRateCardsDialogComponent,
     RatesComponent, RatesTableComponent, UploadRatesDialogComponent,
     AccountsComponent,
+    RatesTableTeleUComponent,
+    RatesTableAllComponent,
   ],
   imports:
   [
@@ -78,7 +80,7 @@ import { AccountsComponent } from './accounts/accounts.component';
     HttpModule, HttpClientModule, BrowserModule,
     FormsModule, CommonModule, ReactiveFormsModule,
     // Third Party Modules
-    Ng2SmartTableModule,
+    PapaParseModule,
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule,
