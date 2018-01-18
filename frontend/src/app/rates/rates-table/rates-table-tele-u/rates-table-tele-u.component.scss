@@ -1,0 +1,51 @@
+section {
+    width: 30vw; height: 100vh;
+    float: left;   
+}
+
+ag-grid-angular {
+    width: 30vw; height: 85vh;
+}
+
+.mat-button {
+    margin-left: 20px;
+}
+
+.ag-header-row {
+    font-weight: bolder;
+    font-size: 1em;
+}
+
+.selectedRow {
+
+    div:nth-child(1) {
+        background-color: #ffffff;
+    }
+}
+
+.ag-header-container {
+    //background-color: rgba(243, 156, 18, .8);
+    border-color: #ffffff;
+}
+
+.ag-paging-panel {
+    //background-color: rgba(243, 156, 18, .8);
+}
+
+.ag-header-cell {
+    border-bottom: 1px solid #ffffff;
+}
+
+.ag-header-cell-resize {
+    width: 1.5px;
+    color: #ffffff;
+}
+
+.ag-theme-material .ag-floating-filter-body input {
+    border-bottom: 1.5px solid #ffffff;
+}
+
+.del, {
+    border: 1px solid black;
+}
+

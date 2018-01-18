@@ -28,17 +28,17 @@ export class RateCardsTableComponent implements OnInit {
 
     // Properties for internal service
     private rowSelection;
-    private rowID: number;
+    private rowObj;
 
     constructor(private rateCardsService: RateCardsService, private rateCardsSharedService: RateCardsSharedService,
     private dialog: MatDialog) {
         this.columnDefs = this.createColumnDefs();
-        this.rowSelection = 'single';
+        this.rowSelection = 'multiple';
     }
 
     ngOnInit() {
         this.on_InitializeRows();
-        this.rateCardsSharedService.currentRowID.subscribe( giveRowID => this.rowID = giveRowID );
+        this.rateCardsSharedService.currentRowObj.subscribe( giveRowObj => this.rowObj = giveRowObj );
     }
 
     on_GridReady(params): void {
@@ -58,7 +58,7 @@ export class RateCardsTableComponent implements OnInit {
     private createColumnDefs() {
         return [
             {
-                headerName: 'Carrier', field: 'carrier_name',
+                headerName: 'Carrier', field: 'carrier_name', checkboxSelection: true,
             },
             {
                 headerName: 'Rate Card', field: 'name',
@@ -88,8 +88,8 @@ export class RateCardsTableComponent implements OnInit {
     // On row selection pass rowID property to RateCardsTableService
     on_SelectionChanged() {
         const selectedRows = this.gridApi.getSelectedRows();
-        this.rowID = selectedRows[0].id;
-        console.log('id of row selected ---> ' + this.rowID);
+        this.rowObj = selectedRows;
+        console.log(this.rowObj);
     }
 
     aggrid_delRow(boolean) {
@@ -132,7 +132,7 @@ export class RateCardsTableComponent implements OnInit {
 
     openDialogDel() {
         // assign new rowID prop
-        this.rateCardsSharedService.changeRowID(this.rowID);
+        this.rateCardsSharedService.changeRowObj(this.rowObj);
 
         const dialogRef = this.dialog.open(DeleteRateCardsDialogComponent, {});
 
@@ -142,7 +142,7 @@ export class RateCardsTableComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(() => {
-            // sub.unsubscribe();
+            sub.unsubscribe();
             console.log('The dialog was closed');
         });
     } // end openDialogAdd UploadRatesDialog
@@ -150,13 +150,8 @@ export class RateCardsTableComponent implements OnInit {
     openDialogUpload() {
         const dialogRef = this.dialog.open(UploadRatesDialogComponent, {});
 
-        // const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
-        //     // do something with event data
-        //     this.aggrid_delRow(data);
-        // });
-
         dialogRef.afterClosed().subscribe(() => {
-            // sub.unsubscribe();
+
             console.log('The dialog was closed');
         });
     } // end openDialogAdd UploadRatesDialog

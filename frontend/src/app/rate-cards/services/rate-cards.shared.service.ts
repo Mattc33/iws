@@ -5,11 +5,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class RateCardsSharedService {
 
   // Passing rowID from carrier-table => delete dialog
-  rowIDSource = new BehaviorSubject<number>(0);
-  currentRowID = this.rowIDSource.asObservable();
+  rowObjSource = new BehaviorSubject<object>({});
+  currentRowObj = this.rowObjSource.asObservable();
 
-  changeRowID(rowID: number) {
-    this.rowIDSource.next(rowID);
+  changeRowObj(rowObj: object) {
+    this.rowObjSource.next(rowObj);
   }
 }
 

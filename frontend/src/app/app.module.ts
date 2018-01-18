@@ -56,7 +56,11 @@ import { RatesTableComponent } from './rates/rates-table/rates-table.component';
 import { RatesTableTeleUComponent } from './rates/rates-table/rates-table-tele-u/rates-table-tele-u.component';
 import { RatesTableAllComponent } from './rates/rates-table/rates-table-all/rates-table-all.component';
 
+import { DeleteTeleuRatesDialogComponent } from './rates/rates-table/rates-table-tele-u/dialog/delete-rates-teleu/delete-rates-teleu-dialog.component';
+import { DeleteAllRatesDialogComponent } from './rates/rates-table/rates-table-all/dialog/delete-rates-all/delete-rates-all-dialog.component';
+
 import { RatesService } from './rates/services/rates.api.service';
+import { RatesSharedService } from './rates/services/rates.shared.service';
 
 // Accounts
 import { AccountsComponent } from './accounts/accounts.component';
@@ -69,10 +73,9 @@ import { AccountsComponent } from './accounts/accounts.component';
     DashboardComponent,
     CarrierComponent, CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent,
     RateCardsComponent, RateCardsTableComponent, AddRateCardDialogComponent, DeleteRateCardsDialogComponent,
-    RatesComponent, RatesTableComponent, UploadRatesDialogComponent,
+    RatesComponent, RatesTableComponent, UploadRatesDialogComponent, DeleteAllRatesDialogComponent,
+    RatesTableTeleUComponent, RatesTableAllComponent, DeleteTeleuRatesDialogComponent,
     AccountsComponent,
-    RatesTableTeleUComponent,
-    RatesTableAllComponent,
   ],
   imports:
   [
@@ -97,10 +100,11 @@ import { AccountsComponent } from './accounts/accounts.component';
   ],
   providers: [ CarrierService, CarrierSharedService,
     RateCardsService, RateCardsSharedService,
-    RatesService ], // Applications services
+    RatesService, RatesSharedService ], // Applications services
   bootstrap: [ AppComponent ],
-  entryComponents: [ AddCarrierDialogComponent, DelCarrierDialogComponent, 
+  entryComponents: [ AddCarrierDialogComponent, DelCarrierDialogComponent,
     AddRateCardDialogComponent, DeleteRateCardsDialogComponent, UploadRatesDialogComponent,
+    DeleteAllRatesDialogComponent, DeleteTeleuRatesDialogComponent
   ] , // Add in dialog
 })
 

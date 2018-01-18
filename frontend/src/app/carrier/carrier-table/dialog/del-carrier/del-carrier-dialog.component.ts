@@ -15,42 +15,45 @@ import { CarrierSharedService } from '../../../services/carrier.shared.service';
   export class DelCarrierDialogComponent implements OnInit {
 
     event_onDel = new EventEmitter;
-
-    addCarrierFormGroup: FormGroup;
-    rowID: number;
+    private addCarrierFormGroup: FormGroup;
+    
+    private rowObj;
 
     constructor(
-      public dialogRef: MatDialogRef <CarrierTableComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any,
-      private carrierService: CarrierService,
-      private carrierSharedService: CarrierSharedService,
-    ) {
-    }
+        public dialogRef: MatDialogRef <CarrierTableComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private carrierService: CarrierService,
+        private carrierSharedService: CarrierSharedService,
+    ) {}
 
     ngOnInit() {
-      this.carrierSharedService.currentRowID.subscribe(receivedRowID => this.rowID = receivedRowID);
+        this.carrierSharedService.currentRowObj.subscribe(receivedRowID => this.rowObj = receivedRowID);
     }
 
     click_delCarrier() {
-      console.log('--->  ' + this.rowID);
-      this.del_delCarrier();
-      this.aggrid_delRateCard();
+        console.log(this.rowObj);
+        this.del_delCarrier();
+        this.aggrid_delRateCard();
 
-      this.closeDialog();
+        this.closeDialog();
     }
 
     aggrid_delRateCard() {
-      this.event_onDel.emit(true);
+        this.event_onDel.emit(true);
     }
 
     del_delCarrier() {
-      this.carrierService.del_DeleteRow(this.rowID)
-        .subscribe(resp => console.log(resp));
+        let rowId: number;
+        for( let i = 0; i < this.rowObj.length; i++) {
+            rowId = this.rowObj[i].id;
+            this.carrierService.del_DeleteRow(rowId)
+                .subscribe(resp => console.log(resp));
+        }
     }
 
     // On method call close dialog
     closeDialog(): void {
-      this.dialogRef.close();
+        this.dialogRef.close();
     }
 
   }

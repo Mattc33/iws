@@ -7,7 +7,6 @@ import { RateCardsTableComponent } from './../../rate-cards-table.component';
 import { RateCardsService } from '../../../services/rate-cards.api.service';
 import { RateCardsSharedService } from '../../../services/rate-cards.shared.service';
 
-
 @Component({
     selector: 'app-del-rate-cards-dialog',
     templateUrl: './delete-rate-cards-dialog.component.html',
@@ -18,7 +17,7 @@ import { RateCardsSharedService } from '../../../services/rate-cards.shared.serv
     event_onDel = new EventEmitter;
 
     addCarrierFormGroup: FormGroup;
-    rowID: number;
+    rowObj;
 
     constructor(
       public dialogRef: MatDialogRef <RateCardsTableComponent>,
@@ -28,28 +27,32 @@ import { RateCardsSharedService } from '../../../services/rate-cards.shared.serv
     ) {}
 
     ngOnInit() {
-      this.rateCardsSharedService.currentRowID.subscribe(receivedRowID => this.rowID = receivedRowID);
+        this.rateCardsSharedService.currentRowObj.subscribe(receivedRowObj => this.rowObj = receivedRowObj);
     }
 
     click_delRateCard() {
-      console.log('received rowID ---> ' + this.rowID);
-      this.aggrid_delRateCard();
-      this.del_delCarrier();
-      this.closeDialog();
+        console.log(this.rowObj);
+        this.aggrid_delRateCard();
+        this.del_delCarrier();
+        this.closeDialog();
     }
 
     aggrid_delRateCard() {
-      this.event_onDel.emit(true);
+        this.event_onDel.emit(true);
     }
 
     del_delCarrier() {
-      this.rateCardsService.del_DeleteRateCard(this.rowID)
-        .subscribe(resp => console.log(resp));
+        let rowId: number;
+        for( let i = 0; i < this.rowObj.length; i++) {
+            rowId = this.rowObj[i].id;
+            this.rateCardsService.del_DeleteRateCard(rowId)
+                .subscribe(resp => console.log(resp));
+        }
     }
 
     // On method call close dialog
     closeDialog(): void {
-      this.dialogRef.close();
+        this.dialogRef.close();
     }
 
   }

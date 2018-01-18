@@ -9,11 +9,11 @@ export class CarrierSharedService {
 // https://stackblitz.com/edit/sharing-data-any-comp?file=main.ts <- simplified example
 
   // Passing rowID from carrier-table => delete dialog
-  rowIDSource = new BehaviorSubject<number>(0);
-  currentRowID = this.rowIDSource.asObservable();
+  rowObjSource = new BehaviorSubject<object>({});
+  currentRowObj = this.rowObjSource.asObservable();
 
-  changeRowID(rowID: number) {
-    this.rowIDSource.next(rowID);
+  changeRowObj(rowID: object) {
+    this.rowObjSource.next(rowID);
     console.log('updated rowID: ' + rowID);
   }
 }

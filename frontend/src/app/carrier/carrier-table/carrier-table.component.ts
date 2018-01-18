@@ -31,19 +31,19 @@ export class CarrierTableComponent implements OnInit {
     private columnApi: ColumnApi;
 
     // pass Data using shared service
-    rowID: number;
+    private rowObj;
 
     // inject your service
-    constructor( private carrierService: CarrierService, private carrierSharedService: CarrierSharedService,  
+    constructor( private carrierService: CarrierService, private carrierSharedService: CarrierSharedService,
     private dialog: MatDialog) {
         this.columnDefs = this.createColumnDefs();
-        this.rowSelection = 'single';
+        this.rowSelection = 'multiple';
     }
 
     ngOnInit() {
         // set initial row data
         this.get_InitializeRows();
-        this.carrierSharedService.currentRowID.subscribe( giveRowID => this.rowID = giveRowID );
+        this.carrierSharedService.currentRowObj.subscribe( giveRowObj => this.rowObj = giveRowObj);
     }
 
     get_InitializeRows() {
@@ -67,7 +67,7 @@ export class CarrierTableComponent implements OnInit {
             // Name
             {
                 headerName: 'Name', field: 'name',
-                editable: true,
+                editable: true, checkboxSelection: true, 
             },
             // Phone Number
             {
@@ -115,8 +115,8 @@ export class CarrierTableComponent implements OnInit {
     // On row selection pass rowID property to TableService
     on_SelectionChanged() {
         const selectedRows = this.gridApi.getSelectedRows();
-        this.rowID = selectedRows[0].id;
-        console.log('id of row selected ---> ' + this.rowID);
+        this.rowObj = selectedRows;
+        console.log(this.rowObj);
     }
 
     aggrid_delRow(boolean) {
@@ -150,13 +150,16 @@ export class CarrierTableComponent implements OnInit {
         .subscribe(resp => console.log(resp));
     }
 
-    // put_editCarrier(carrierObj, id) {
-    //     this.carrierService.put_EditCarrier(carrierObj, id)
-    //     .subscribe(resp => console.log(resp));
-    // }
+    put_editCarrier(carrierObj, id) {
+        this.carrierService.put_EditCarrier(carrierObj, id)
+        .subscribe(resp => console.log(resp));
+    }
 
     openDialogAdd() {
-        const dialogRef = this.dialog.open(AddCarrierDialogComponent, {});
+        const dialogRef = this.dialog.open(AddCarrierDialogComponent, {
+            height: 'auto',
+            width: '30%',
+        });
 
         const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
             // do something with event data
@@ -171,7 +174,7 @@ export class CarrierTableComponent implements OnInit {
 
     openDialogDel() {
         // assign new rowID prop
-        this.carrierSharedService.changeRowID(this.rowID);
+        this.carrierSharedService.changeRowObj(this.rowObj);
 
         const dialogRef = this.dialog.open(DelCarrierDialogComponent, {});
 
@@ -181,7 +184,7 @@ export class CarrierTableComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(() => {
-            // sub.unsubscribe();
+            sub.unsubscribe();
             console.log('The dialog was closed');
         });
     } // end openDialogAdd UploadRatesDialog

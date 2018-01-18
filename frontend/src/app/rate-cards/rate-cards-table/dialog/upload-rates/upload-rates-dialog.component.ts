@@ -18,12 +18,19 @@ import { RatesService } from '../../../../rates/services/rates.api.service';
 export class UploadRatesDialogComponent implements OnInit {
 
     // Form Group var
-    firstFormGroup: FormGroup; secondFormGroup: FormGroup; thirdFormGroup: FormGroup;
+    firstFormGroup: FormGroup; secondFormGroup: FormGroup; thirdFormGroup: FormGroup; fourthFormGroup: FormGroup;
 
     // Var
     rateCardNames = []; // rate cards obj populated by API
     currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
     carrierNames = []; // carrier obj populated by API
+    percents = [
+        {value: 1.05, viewValue: '5%'}, {value: 1.1, viewValue: '10%'}, {value: 1.15, viewValue: '15%'}, {value: 1.2, viewValue: '20%'}, 
+        {value: 1.25, viewValue: '25%'}, {value: 1.3, viewValue: '30%'}, {value: 1.35, viewValue: '35%'}, {value: 1.4, viewValue: '40%'}, 
+        {value: 1.45, viewValue: '45%'}, {value: 1.5, viewValue: '50%'}, {value: 1.55, viewValue: '55%'}, {value: 1.6, viewValue: '60%'}, 
+        {value: 1.65, viewValue: '65%'}, {value: 1.7, viewValue: '70%'}, {value: 1.75, viewValue: '75%'}, {value: 1.8, viewValue: '80%'}, 
+        {value: 1.85, viewValue: '85%'}, {value: 1.9, viewValue: '90%'}, {value: 1.95, viewValue: '95%'}, {value: 2, viewValue: '100%'}
+    ];
 
     // Insert Rates Props
     rateCardID: number;
@@ -43,15 +50,17 @@ export class UploadRatesDialogComponent implements OnInit {
             secondCtrl: ['', Validators.required],
         });
         this.thirdFormGroup = this.formBuilder.group({
-            thirdCtrl: [''],
+            thirdCtrl: ['', Validators.required],
+        });
+        this.fourthFormGroup = this.formBuilder.group({
+            fourthCtrl: [''],
         });
 
         this.get_carrier();
         this.get_rateCard();
     }
 
-    get_rateCard(): void {
-        // subscribe to service and get carrier names
+    get_rateCard(): void {  // subscribe to service and get carrier names
         this.rateCardsService.get_RateCard()
         .subscribe(
             data => {
@@ -73,8 +82,7 @@ export class UploadRatesDialogComponent implements OnInit {
         );
     }
 
-    // Get list of rate cards based on carrier selection on step 1 next click
-    currentRateCardList(): void {
+    currentRateCardList(): void { // Get list of rate cards based on carrier selection on step 1 next click
         const currentCarrier = this.input_getCarrierName();
         const currentRateCardNames = [];
 
@@ -96,7 +104,7 @@ export class UploadRatesDialogComponent implements OnInit {
         return carrierName;
     }
 
-    getRateCardId() {
+    getRateCardId(): number {
         const rateCardNameFromInput = this.input_getRateCardName();
         const rateCardNameFromArr = this.rateCardNames;
         let rateCardId: number;
@@ -109,8 +117,12 @@ export class UploadRatesDialogComponent implements OnInit {
         return rateCardId;
     }
 
-    // Parse csv string into JSON
-    papaParse(csvFile): void {
+    getSellRatePercent(): number {
+        const sellRatePercent = this.thirdFormGroup.get('thirdCtrl').value;
+        return sellRatePercent;
+    }
+
+    papaParse(csvFile): void { // Parse csv string into JSON
         this.papa.parse(csvFile, {
             fastMode: true,
             complete: (results) => {
@@ -122,45 +134,63 @@ export class UploadRatesDialogComponent implements OnInit {
         });
     }
 
-    profileSorter(data) {
+    profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
         if (this.input_getCarrierName() === 'PowerNet Global') {
-            this.powerNetGlobalProfile(data);
+            this.powerNetGlobalProfile(data, this.getSellRatePercent());
         }
         if (this.input_getCarrierName() === 'VoxBeam') {
-            this.voxBeamProfile(data);
+            this.voxBeamProfile(data, this.getSellRatePercent());
         } else {
             return;
         }
     }
 
-    // Profiles for each carrier
-    powerNetGlobalProfile(data) {
+    powerNetGlobalProfile(data, percent) {
         const dataSliced = data.slice(3);
 
         for (let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];
             const prefix: string = dataSliced[i][1];
             const buyrate: number = dataSliced[i][2].slice(1) * 1;
-            const sellrate: number = buyrate * 1.05;
-            this.rateObj.push( { destination: destination, prefix: prefix, buy_rate: buyrate, sell_rate: sellrate  }, );
+            const sellrate: number = buyrate * percent;
+            console.log('sell rate --> ' + sellrate);
+            this.rateObj.push( 
+            { destination: destination, 
+                prefix: prefix, 
+                buy_rate: buyrate, 
+                buy_rate_minimum: 0, 
+                buy_rate_increment: 0,
+                sell_rate: sellrate,
+                sell_rate_minimum: 0,
+                sell_rate_increment: 0
+            }, 
+            );
         }
     }
 
-    voxBeamProfile(data) {
+    voxBeamProfile(data, percent) {
         const dataSliced = data.slice(1);
 
         for (let i = 0; i < dataSliced.length; i++) {
-          const destination: string = dataSliced[i][2];
-          const prefix: string = dataSliced[i][0];
-          const buyrate: number = dataSliced[i][3] * 1;
-          const sellrate: number = buyrate * 1.05;
-          this.rateObj.push( { destination: destination, prefix: prefix, buy_rate: buyrate, sell_rate: sellrate  }, );
+            const destination: string = dataSliced[i][2];
+            const prefix: string = dataSliced[i][0];
+            const buyrate: number = dataSliced[i][3] * 1;
+            const sellrate: number = buyrate * percent;
+            this.rateObj.push( 
+                { destination: destination, 
+                    prefix: prefix, 
+                    buy_rate: buyrate, 
+                    buy_rate_minimum: buyrate, 
+                    buy_rate_increment: 0,
+                    sell_rate: sellrate, 
+                    sell_rate_minimum: 0,
+                    sell_rate_increment: 0
+                }, 
+            );
         }
     }
 
-    // listens on input="text" change event, if file uploaded pass to csv parser and flag the button to turn on,
-    // else flag the button to remain off
-    changeListenerUploadBtn(event): void {
+    changeListenerUploadBtn(event): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button
         if (event.target.files && event.target.files[0]) {
             const csvFile = event.target.files[0];
             this.fileName = csvFile.name;
@@ -172,8 +202,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    // pass into step 2's [disable] to control button disable
-    uploadValidator(): boolean {
+    uploadValidator(): boolean { // pass into step 2's [disable] to control button disable
         if (this.disableUploadBoolean === true) {
             return true;
         }

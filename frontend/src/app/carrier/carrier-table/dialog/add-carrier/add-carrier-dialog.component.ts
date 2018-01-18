@@ -9,7 +9,7 @@ import { CarrierService } from '../../../services/carrier.api.service';
 @Component({
     selector: 'app-add-carrier-dialog-inner',
     templateUrl: './add-carrier-dialog.component.html',
-    styleUrls: [],
+    styleUrls: ['./add-carrier-dialog.component.scss'],
     providers: [ CarrierService ],
   })
 export class AddCarrierDialogComponent {

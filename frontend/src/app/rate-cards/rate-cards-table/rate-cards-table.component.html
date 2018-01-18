@@ -2,7 +2,7 @@
     <ag-grid-angular class="ag-theme-material"
     [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
     [rowSelection]="rowSelection" (selectionChanged)="on_SelectionChanged($event)"
-    [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
+    [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
     [floatingFilter]="true"
     [enableSorting]="true"
     [enableColResize]="true" (gridSizeChanged)="on_GridSizeChanged($event)"

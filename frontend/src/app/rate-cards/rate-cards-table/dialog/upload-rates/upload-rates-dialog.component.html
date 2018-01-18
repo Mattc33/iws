@@ -1,48 +1,66 @@
 <mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
-
+    
     <!-- Choose Carrier Step -->
     <mat-step [stepControl]="firstFormGroup">
-            <form [formGroup]="firstFormGroup">
-                <ng-template matStepLabel>Choose Carrier</ng-template>
-                <mat-form-field>
-                    <mat-select placeholder="Carriers" formControlName="firstCtrl">
+        <form [formGroup]="firstFormGroup">
+            <ng-template matStepLabel>Choose Carrier</ng-template>
+            <mat-form-field>
+                <mat-select placeholder="Carriers" formControlName="firstCtrl">
                     <mat-option *ngFor="let carrier of carrierNames" [value]="carrier.name" >
                         {{carrier.name}}
                     </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <div>
+                </mat-select>
+            </mat-form-field>
+            <div>
                 <button mat-button matStepperNext (click)="currentRateCardList()" [disabled]="!firstFormGroup.valid"> Next </button>
-                </div>
-            </form>
+            </div>
+        </form>
     </mat-step>
     
     <!-- Choose Rate Card Step -->
     <mat-step [stepControl]="secondFormGroup">
-            <form [formGroup]="secondFormGroup">
-              <ng-template matStepLabel>Choose Rate Card</ng-template>
-              <mat-form-field>
-                  <mat-select placeholder="Rate Cards" formControlName="secondCtrl">
+        <form [formGroup]="secondFormGroup">
+            <ng-template matStepLabel>Choose Rate Card</ng-template>
+            <mat-form-field>
+                <mat-select placeholder="Rate Cards" formControlName="secondCtrl">
                     <mat-option *ngFor="let ratecard of currentRateCardNames" [value]="ratecard.name">
-                      {{ratecard.name}}
+                        {{ratecard.name}}
                     </mat-option>
-                  </mat-select>
-              </mat-form-field>
-              <div>
+                </mat-select>
+            </mat-form-field>
+            <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext [disabled]="!firstFormGroup.valid" > Next </button>
-              </div>
-            </form>
+                <button mat-button matStepperNext [disabled]="!secondFormGroup.valid" > Next </button>
+            </div>
+        </form>
+    </mat-step>
+    
+    <!-- Choose Sell Rate Mark up Step -->
+    <mat-step [stepControl]="thirdFormGroup">
+        <form [formGroup]="thirdFormGroup">
+            <ng-template matStepLabel>Choose Sell Rate %</ng-template>
+            <mat-form-field>
+                <mat-select placeholder="Percent" formControlName="thirdCtrl">
+                    <mat-option *ngFor="let percent of percents" [value]="percent.value">
+                        {{percent.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperPrevious >Back</button>
+                <button mat-button matStepperNext (click)="getSellRatePercent()" [disabled]="!thirdFormGroup.valid" > Next </button>
+            </div>
+        </form>
     </mat-step>
     
     <!-- Upload Rates Step -->
-    <mat-step [stepControl]="thirdFormGroup">
-        <form [formGroup]="thirdFormGroup">
+    <mat-step [stepControl]="fourthFormGroup">
+        <form [formGroup]="fourthFormGroup">
             <ng-template matStepLabel>Upload Rate Card</ng-template>
-                <button class="uploadBtn" mat-button (click)="fileInput.click()">
-                    <span>Select CSV File</span>
-                    <input #fileInput type="file" (change)="changeListenerUploadBtn($event)" accept=".csv" formControlName="thirdCtrl" style="display:none;" />
-                </button>
+            <button class="uploadBtn" mat-button (click)="fileInput.click()">
+                <span>Select CSV File</span>
+                <input #fileInput type="file" (change)="changeListenerUploadBtn($event)" accept=".csv" formControlName="fourthCtrl" style="display:none;" />
+            </button>
             <div>
                 <button mat-button matStepperPrevious >Back</button>
                 <button mat-button matStepperNext [disabled]="uploadValidator()"> Next </button>
@@ -56,6 +74,7 @@
         <div class="details">
             <b>Carrier Name:</b> {{input_getCarrierName()}} <br><br>
             <b>Rate Card:</b> {{input_getRateCardName()}} <br><br>
+            <b>Percent Markup: </b>  {{ getSellRatePercent()}}% <br><br>
             <b>Rate Card ID:</b> {{getRateCardId()}} <br><br>
             <b>File:</b> {{fileName}} <br><br>
             Press Submit to add rates to [{{input_getRateCardName()}}]. <br><br>
@@ -65,6 +84,5 @@
             <button mat-button (click)="click_addRates()" >Submit</button>
         </div>
     </mat-step>
-               
+    
 </mat-horizontal-stepper>
-            
