@@ -1,7 +1,7 @@
 <mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
     
     <!-- Choose Carrier Step -->
-    <mat-step [stepControl]="firstFormGroup">
+    <mat-step [stepControl]="firstFormGroup" [completed]="false">
         <form [formGroup]="firstFormGroup">
             <ng-template matStepLabel>Choose Carrier</ng-template>
             <mat-form-field>
@@ -18,7 +18,7 @@
     </mat-step>
     
     <!-- Choose Rate Card Step -->
-    <mat-step [stepControl]="secondFormGroup">
+    <mat-step [stepControl]="secondFormGroup" [completed]="false">
         <form [formGroup]="secondFormGroup">
             <ng-template matStepLabel>Choose Rate Card</ng-template>
             <mat-form-field>
@@ -36,7 +36,7 @@
     </mat-step>
     
     <!-- Choose Sell Rate Mark up Step -->
-    <mat-step [stepControl]="thirdFormGroup">
+    <mat-step [stepControl]="thirdFormGroup" [completed]="false">
         <form [formGroup]="thirdFormGroup">
             <ng-template matStepLabel>Choose Sell Rate %</ng-template>
             <mat-form-field>
@@ -54,7 +54,7 @@
     </mat-step>
     
     <!-- Upload Rates Step -->
-    <mat-step [stepControl]="fourthFormGroup">
+    <mat-step [stepControl]="fourthFormGroup" [completed]="false">
         <form [formGroup]="fourthFormGroup">
             <ng-template matStepLabel>Upload Rate Card</ng-template>
             <button class="uploadBtn" mat-button (click)="fileInput.click()">
@@ -69,13 +69,13 @@
     </mat-step>
     
     <!-- Details & Finalize  -->
-    <mat-step>
+    <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
         <div class="details">
-            <b>Carrier Name:</b> {{input_getCarrierName()}} <br><br>
-            <b>Rate Card:</b> {{input_getRateCardName()}} <br><br>
-            <b>Percent Markup: </b>  {{ getSellRatePercent()}}% <br><br>
-            <b>Rate Card ID:</b> {{getRateCardId()}} <br><br>
+            <b>Carrier Name:</b> {{input_getCarrierName()}} <br>
+            <b>Rate Card:</b> {{input_getRateCardName()}} <br>
+            <b>Percent Markup: </b>  {{ getSellRatePercent()}} * Buy Rate <br>
+            <b>Rate Card ID:</b> {{getRateCardId()}} <br>
             <b>File:</b> {{fileName}} <br><br>
             Press Submit to add rates to [{{input_getRateCardName()}}]. <br><br>
         </div>

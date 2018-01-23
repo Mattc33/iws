@@ -14,9 +14,19 @@
     >
     </ag-grid-angular>
 
-    <button mat-button class="add" (click)="openDialogAdd()"> Add Rate Card </button>
-    <button mat-button class="del" (click)="openDialogDel()"> Delete Selected Rate Card </button>
-    <button mat-button class="upload" (click)="openDialogUpload()" > Upload Rates </button>
+    <mat-toolbar-row>
+    
+            <button (click)="openDialogDel()"> <i class="fa fa-trash-o"></i> </button>
+            <button (click)="openDialogAdd()" class="rate-card"> <i class="fa fa-plus" ></i> Rate Card </button>
+            <button (click)="openDialogUpload()"> <i class="fa fa-upload" ></i> Rates </button>
+            
+            <mat-form-field class="search-bar">
+                    <span matPrefix><i class="fa fa-search"></i> &nbsp;</span>
+                    <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+            </mat-form-field>
+    
+    </mat-toolbar-row>
+
 </section>
 
 

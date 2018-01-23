@@ -29,6 +29,7 @@ export class RateCardsTableComponent implements OnInit {
     // Properties for internal service
     private rowSelection;
     private rowObj;
+    private quickSearchValue: string = '';
 
     constructor(private rateCardsService: RateCardsService, private rateCardsSharedService: RateCardsSharedService,
     private dialog: MatDialog) {
@@ -155,5 +156,9 @@ export class RateCardsTableComponent implements OnInit {
             console.log('The dialog was closed');
         });
     } // end openDialogAdd UploadRatesDialog
+
+    onQuickFilterChanged() { // external global search
+        this.gridApi.setQuickFilter(this.quickSearchValue);
+    }
 
 }

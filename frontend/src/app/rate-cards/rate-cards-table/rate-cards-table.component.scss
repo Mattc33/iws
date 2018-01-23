@@ -7,6 +7,42 @@ section {
         width: auto; height: 85vh;
     }
 
+    mat-toolbar-row {
+        width: 89vw; height: auto;
+
+        button {
+            background-color: Transparent;
+            width: 90px;
+            height: 30px;
+            padding: 0;
+            border: 1px solid #E0E0E0;
+        }
+
+        .rate-card {
+            width: 120px;
+        }
+
+        button:hover {
+            background-color: #E0E0E0;
+        }
+
+        button:focus {
+            outline: 0;
+        }
+
+        mat-form-field {
+            font-size: 14px;
+        }
+
+        .search-bar {
+            float: right; position: relative;
+            width: 40%;
+            margin-left: 20px;
+            margin-top: -10px;
+        }
+
+    }
+
     .ag-header-row {
         font-weight: bolder;
         font-size: 1em;

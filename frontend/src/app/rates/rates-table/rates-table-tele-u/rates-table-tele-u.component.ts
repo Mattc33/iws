@@ -62,21 +62,19 @@ export class RatesTableTeleUComponent implements OnInit {
             headerName: 'Tele-U',
             children: [
                 {
-                    headerName: 'Prefix', field: 'prefix', 
-                    editable: true,
+                    headerName: 'Prefix', field: 'prefix',  width: 150,
                     filter: 'agNumberColumnFilter'
                 },
                 {
                     headerName: 'Destination', field: 'destination',
-                    editable: true
                 },
                 {
-                    headerName: 'Buy Rate', field: 'buy_rate',
+                    headerName: 'Buy Rate', field: 'buy_rate', width: 150,
                     editable: true,
                     filter: 'agNumberColumnFilter'
                 },
                 {
-                    headerName: 'Sell Rate', field: 'sell_rate',
+                    headerName: 'Sell Rate', field: 'sell_rate', width: 150,
                     editable: true,
                     filter: 'agNumberColumnFilter'
                 },

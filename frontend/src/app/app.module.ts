@@ -13,6 +13,10 @@ import { FileSelectDirective } from 'ng2-file-upload';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MatButtonModule, MatInputModule, MatStepperModule, MatSelectModule } from '@angular/material';
 import { MatCheckboxModule, MatIconModule, MatRadioModule, MatDialogModule } from '@angular/material';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
+// UI Library: Prime NG
+
 
 /* --------------------------------------------------------------------------------------------------------------------------------------
    -------------------------------------------------------------------------------------------------------------------------------------- */
@@ -62,8 +66,12 @@ import { DeleteAllRatesDialogComponent } from './rates/rates-table/rates-table-a
 import { RatesService } from './rates/services/rates.api.service';
 import { RatesSharedService } from './rates/services/rates.shared.service';
 
+// Call Plan
+import { CallPlanComponent } from './call-plan/call-plan.component';
+
 // Accounts
 import { AccountsComponent } from './accounts/accounts.component';
+
 
 @NgModule({
   declarations:
@@ -76,6 +84,7 @@ import { AccountsComponent } from './accounts/accounts.component';
     RatesComponent, RatesTableComponent, UploadRatesDialogComponent, DeleteAllRatesDialogComponent,
     RatesTableTeleUComponent, RatesTableAllComponent, DeleteTeleuRatesDialogComponent,
     AccountsComponent,
+    CallPlanComponent,
   ],
   imports:
   [
@@ -86,7 +95,8 @@ import { AccountsComponent } from './accounts/accounts.component';
     PapaParseModule,
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
-    MatRadioModule, MatIconModule, MatDialogModule,
+    MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule,
+    // Prime NG Modules
     //
     AgGridModule.withComponents([ ]),
     RouterModule.forRoot([
@@ -95,6 +105,7 @@ import { AccountsComponent } from './accounts/accounts.component';
       {path: 'carrier', component: CarrierComponent},
       {path: 'rate-cards', component: RateCardsComponent},
       {path: 'rates', component: RatesComponent},
+      {path: 'call-plan', component: CallPlanComponent},
       {path: 'accounts', component: AccountsComponent},
     ])
   ],

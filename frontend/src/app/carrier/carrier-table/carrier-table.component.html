@@ -14,8 +14,18 @@
     >
     </ag-grid-angular>
 
-    <button mat-button class="add" (click)="openDialogAdd()"> Add New Carrier </button>
-    <button mat-button class="del" (click)="openDialogDel()"> Delete Selected Carrier </button>
+    <mat-toolbar-row>
+    
+            <button (click)="openDialogDel()"> <i class="fa fa-trash-o"></i> </button>
+            <button (click)="openDialogAdd()"> <i class="fa fa-plus" ></i> Carrier </button>
+            
+            <mat-form-field class="search-bar">
+                    <span matPrefix><i class="fa fa-search"></i> &nbsp;</span>
+                    <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+            </mat-form-field>
+    
+    </mat-toolbar-row>
+
 </section>
 
 <!-- [singleClickEdit]="true" -->

@@ -1,10 +1,61 @@
 section {
     width: auto; height: 100vh;   
     float: left;  
-}
+    
+    ag-grid-angular {
+        width: 56vw; height: 85vh;     
+    }
 
-ag-grid-angular {
-    width: 56vw; height: 85vh;     
+    mat-toolbar-row {
+        width: 56vw; height: 32px;
+        position: absolute;
+        border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0;
+
+        span {
+            font-size: 12px;
+        }
+
+        button {
+            background-color: Transparent;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            border-right: 1px solid #E0E0E0;
+            border-left: 1px solid #E0E0E0;
+        }
+
+        button:hover {
+            background-color: #E0E0E0;
+        }
+
+        button:focus {
+            outline: 0;
+        }
+
+        mat-form-field {
+            height: 32px;
+            font-size: 10px;
+        }
+
+        .bulk-update {
+            width: 120px;
+            padding-right: 5px;
+            border-right: 1px solid #E0E0E0;
+
+            input {
+                padding-right: 5px;
+            }
+        }
+
+        .search-bar {
+            float: right;
+            position: relative;
+            width: 40%;
+        }
+
+    }
 }
 
 .mat-button {

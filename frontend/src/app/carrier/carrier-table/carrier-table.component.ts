@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { GridApi } from 'ag-grid';
 import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
@@ -15,8 +15,6 @@ import { CarrierSharedService } from './../services/carrier.shared.service';
   templateUrl: './carrier-table.component.html',
   styleUrls: ['./carrier-table.component.scss'],
   providers: [ CarrierService ],
-  // turn off encapsulated view so custom styles can be applied to ag-grid component
-  encapsulation: ViewEncapsulation.None
 })
 
 export class CarrierTableComponent implements OnInit {
@@ -32,12 +30,13 @@ export class CarrierTableComponent implements OnInit {
 
     // pass Data using shared service
     private rowObj;
+    private quickSearchValue: string = '';
 
     // inject your service
     constructor( private carrierService: CarrierService, private carrierSharedService: CarrierSharedService,
     private dialog: MatDialog) {
         this.columnDefs = this.createColumnDefs();
-        this.rowSelection = 'multiple';
+        this.rowSelection = 'single';
     }
 
     ngOnInit() {
@@ -188,5 +187,9 @@ export class CarrierTableComponent implements OnInit {
             console.log('The dialog was closed');
         });
     } // end openDialogAdd UploadRatesDialog
+
+    onQuickFilterChanged() { // external global search
+        this.gridApi.setQuickFilter(this.quickSearchValue);
+    }
 
 } // end class

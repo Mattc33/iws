@@ -10,6 +10,7 @@ import { CarrierSharedService } from '../../../services/carrier.shared.service';
 @Component({
     selector: 'app-del-carrier-dialog-inner',
     templateUrl: './del-carrier-dialog.component.html',
+    styleUrls: ['./del-carrier-dialog.component.scss'],
     providers: [ CarrierService ],
   })
   export class DelCarrierDialogComponent implements OnInit {

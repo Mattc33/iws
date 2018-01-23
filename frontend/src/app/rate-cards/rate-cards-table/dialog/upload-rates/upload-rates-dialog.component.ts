@@ -124,6 +124,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     papaParse(csvFile): void { // Parse csv string into JSON
         this.papa.parse(csvFile, {
+            // papa parse options
             fastMode: true,
             complete: (results) => {
                 console.log('Parsed: ', results);
@@ -135,25 +136,69 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
-        if (this.input_getCarrierName() === 'PowerNet Global') {
-            this.powerNetGlobalProfile(data, this.getSellRatePercent());
+        const percent = this.getSellRatePercent();
+        const currentCarrierName = this.input_getCarrierName();
+        if (currentCarrierName === 'PowerNet Global') {
+            console.log('using Power Net Global Profile');
+            this.powerNetGlobalProfile(data, percent);
         }
-        if (this.input_getCarrierName() === 'VoxBeam') {
-            this.voxBeamProfile(data, this.getSellRatePercent());
-        } else {
+        if (currentCarrierName === 'VoxBeam') {
+            console.log('using VoxBeam Profile');
+            this.voxBeamProfile(data, percent);
+        }
+        if (currentCarrierName === 'Alcazar Networks Inc') {
+            console.log('using Alcazar Networks Inc Profile');
+            this.alcazarNetworksProfile(data, percent);
+        }
+        if (currentCarrierName === 'Bankai Group') {
+            console.log('using Bankai Group Profile');
+            if ( this.input_getRateCardName() === 'Bankai Silver' || this.input_getRateCardName() === 'Bankai Gold') {
+                console.log('gold or silver profile');
+                this.bankaiGroupSilverGoldProfile(data, percent);
+            }
+            if ( this.input_getRateCardName() === 'Bankai Platinum' ) {
+                console.log('platinum profile');
+                this.bankaiGroupPlatinumProfile(data, percent);
+            }
+        }
+        if (currentCarrierName === 'PCCW Global' ) {
+            console.log('using PCCW Global Profile');
+            this.pccwGlobalProfile(data, percent);
+        }
+        if (currentCarrierName === 'StarSSip LLC') {
+            console.log('using Starsipp Profile')
+            this.starsippProfile(data, percent);
+        }
+        if (currentCarrierName === 'Teleinx') {
+            console.log('using Teleinx Profile');
+            this.teleinxProfile(data, percent);
+        }
+        if (currentCarrierName === 'VoiPlatinum Portal') {
+            console.log('using VoiPlatinum Profile');
+            this.voiPlatinumProfile(data, percent);
+        }
+        if (currentCarrierName === 'VOIP Routes') {
+            console.log('using VOIP Routes Profile');
+            this.voipRoutesProfile(data, percent);
+        }
+        else {
             return;
         }
     }
 
     powerNetGlobalProfile(data, percent) {
-        const dataSliced = data.slice(3);
+        const dataSliced = data.slice(4);
 
         for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][0];
-            const prefix: string = dataSliced[i][1];
+            let destination: string = dataSliced[i][0];
+            let prefix: string = dataSliced[i][1];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
             const buyrate: number = dataSliced[i][2].slice(1) * 1;
             const sellrate: number = buyrate * percent;
-            console.log('sell rate --> ' + sellrate);
             this.rateObj.push( 
             { destination: destination, 
                 prefix: prefix, 
@@ -172,8 +217,13 @@ export class UploadRatesDialogComponent implements OnInit {
         const dataSliced = data.slice(1);
 
         for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][2];
-            const prefix: string = dataSliced[i][0];
+            let destination: string = dataSliced[i][2];
+            let prefix: string = dataSliced[i][0];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
             const buyrate: number = dataSliced[i][3] * 1;
             const sellrate: number = buyrate * percent;
             this.rateObj.push( 
@@ -188,6 +238,224 @@ export class UploadRatesDialogComponent implements OnInit {
                 }, 
             );
         }
+    }
+
+    alcazarNetworksProfile(data, percent) {
+        const dataSliced = data.slice(7);
+    
+        for(let i = 0; i < dataSliced.length; i++) {
+            let destination: string = dataSliced[i][0];
+            let prefix: string = dataSliced[i][1];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
+            const buyrate: number = dataSliced[i][2] * 1;
+            const sellrate: number = buyrate * percent;
+            this.rateObj.push( 
+                { destination: destination, 
+                    prefix: prefix, 
+                    buy_rate: buyrate, 
+                    buy_rate_minimum: buyrate, 
+                    buy_rate_increment: 0,
+                    sell_rate: sellrate,  
+                    sell_rate_minimum: 0,
+                    sell_rate_increment: 0
+                }, 
+            );
+        }
+    }
+
+    bankaiGroupSilverGoldProfile(data, percent) {
+        const dataSliced = data.slice(1);
+    
+        for(let i = 0; i < dataSliced.length; i++) {
+            let destination: string = dataSliced[i][0];
+            let prefix: string = dataSliced[i][1];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
+            const buyrate: number = dataSliced[i][3] * 1;
+            const sellrate: number = buyrate * percent;
+            this.rateObj.push( 
+                { destination: destination, 
+                    prefix: prefix, 
+                    buy_rate: buyrate, 
+                    buy_rate_minimum: buyrate, 
+                    buy_rate_increment: 0,
+                    sell_rate: sellrate,  
+                    sell_rate_minimum: 0,
+                    sell_rate_increment: 0
+                }, 
+            );
+        }
+    }
+
+    bankaiGroupPlatinumProfile(data, percent) {
+        const dataSliced = data.slice(1);
+    
+        for(let i = 0; i < dataSliced.length; i++) {
+            let destination: string = dataSliced[i][0];
+            let prefix: string = dataSliced[i][1];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
+            const buyrate: number = dataSliced[i][2] * 1;
+            const sellrate: number = buyrate * percent;
+            this.rateObj.push( 
+                { destination: destination, 
+                    prefix: prefix, 
+                    buy_rate: buyrate, 
+                    buy_rate_minimum: buyrate, 
+                    buy_rate_increment: 0,
+                    sell_rate: sellrate,  
+                    sell_rate_minimum: 0,
+                    sell_rate_increment: 0
+                }, 
+            );
+        }
+    }
+
+    pccwGlobalProfile(data, percent) {
+        const dataSliced = data.slice(13);
+    
+        for(let i = 0; i < dataSliced.length; i++) {
+            let destination: string = dataSliced[i][0];
+            let prefix: string = dataSliced[i][1];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
+            const buyrate: number = dataSliced[i][4] * 1;
+            const sellrate: number = buyrate * percent;
+            this.rateObj.push( 
+                { destination: destination, 
+                    prefix: prefix, 
+                    buy_rate: buyrate, 
+                    buy_rate_minimum: buyrate, 
+                    buy_rate_increment: 0,
+                    sell_rate: sellrate,  
+                    sell_rate_minimum: 0,
+                    sell_rate_increment: 0
+                }, 
+            );
+        }
+    }
+
+    starsippProfile(data, percent) {
+        const dataSliced = data.slice(1);
+    
+        for(let i = 0; i < dataSliced.length; i++) {
+            let destination: string = dataSliced[i][1];
+            let prefix: string = dataSliced[i][2];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
+            const buyrate: number = dataSliced[i][3] * 1;
+            const sellrate: number = buyrate * percent;
+            this.rateObj.push( 
+                { destination: destination, 
+                    prefix: prefix, 
+                    buy_rate: buyrate, 
+                    buy_rate_minimum: buyrate, 
+                    buy_rate_increment: 0,
+                    sell_rate: sellrate,  
+                    sell_rate_minimum: 0,
+                    sell_rate_increment: 0
+                }, 
+            );
+        }
+    }
+
+    teleinxProfile(data, percent) {
+        const dataSliced = data.slice(1);
+    
+        for(let i = 0; i < dataSliced.length; i++) {
+            let destination: string = dataSliced[i][1];
+            let prefix: string = dataSliced[i][2];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
+            const buyrate: number = dataSliced[i][3] * 1;
+            const sellrate: number = buyrate * percent;
+            this.rateObj.push( 
+                { destination: destination, 
+                    prefix: prefix, 
+                    buy_rate: buyrate, 
+                    buy_rate_minimum: buyrate, 
+                    buy_rate_increment: 0,
+                    sell_rate: sellrate,  
+                    sell_rate_minimum: 0,
+                    sell_rate_increment: 0
+                }, 
+            );
+        } 
+    }
+
+    voiPlatinumProfile(data, percent) {
+        const dataSliced = data.slice(1, -1);
+    
+        for(let i = 0; i < dataSliced.length; i++) {
+            let destination: string = dataSliced[i][0];
+            let prefix: string = dataSliced[i][1];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }
+                if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
+            const buyrate: number = dataSliced[i][2] * 1;
+            const sellrate: number = buyrate * percent;
+            this.rateObj.push( 
+                { destination: destination, 
+                    prefix: prefix, 
+                    buy_rate: buyrate, 
+                    buy_rate_minimum: buyrate, 
+                    buy_rate_increment: 0,
+                    sell_rate: sellrate,  
+                    sell_rate_minimum: 0,
+                    sell_rate_increment: 0
+                }, 
+            );
+        } 
+    }
+
+    voipRoutesProfile(data, percent) {
+        const dataSliced = data.slice(9);
+    
+        for(let i = 0; i < dataSliced.length; i++) {
+            let destination: string = dataSliced[i][1];
+            let prefix: string = dataSliced[i][0];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                    destination = destination.slice(1, -1);
+                }
+                if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
+            const buyrate: number = dataSliced[i][2] * 1;
+            const sellrate: number = buyrate * percent;
+            this.rateObj.push( 
+                { destination: destination, 
+                    prefix: prefix, 
+                    buy_rate: buyrate, 
+                    buy_rate_minimum: buyrate, 
+                    buy_rate_increment: 0,
+                    sell_rate: sellrate,  
+                    sell_rate_minimum: 0,
+                    sell_rate_increment: 0
+                }, 
+            );
+        } 
     }
 
     changeListenerUploadBtn(event): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button

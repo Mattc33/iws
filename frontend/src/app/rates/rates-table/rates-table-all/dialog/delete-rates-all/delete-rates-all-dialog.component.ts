@@ -10,6 +10,7 @@ import { RatesSharedService } from '../../../../services/rates.shared.service';
 @Component({
     selector: 'app-del-rates-all-dialog',
     templateUrl: './delete-rates-all-dialog.component.html',
+    styleUrls: ['./delete-rates-all-dialog.component.scss'],
     providers: [ RatesService ],
   })
   export class DeleteAllRatesDialogComponent implements OnInit {

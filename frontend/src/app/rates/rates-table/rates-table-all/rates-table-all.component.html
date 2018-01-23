@@ -1,20 +1,45 @@
 <section>
   
     <ag-grid-angular class="ag-theme-material"
-    [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+    [columnDefs]="columnDefs" [rowData]="rowData"
     [rowSelection]="rowSelection" (selectionChanged)="on_SelectionChanged($event)" [suppressRowClickSelection]="true"
     [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
     [enableFilter]="true" [floatingFilter]="true"
     [enableSorting]="true"
     [enableColResize]="true" (gridSizeChanged)="on_GridSizeChanged($event)"
-    [pagination]="true"
+    [pagination]="true" paginationPageSize="10"
 
     [enableCellChangeFlash]="true"
 
     (gridReady)="on_GridReady($event)"
     >
     </ag-grid-angular>
-    
-    <button mat-button class="del" (click)="openDialogDel()">X</button>
-    
+
+    <mat-toolbar-row>
+        <span>Rows: {{ numberSelectedRows }}</span>
+
+        <button (click)="openDialogDel()" > <i class="fa fa-trash-o"></i> </button>
+
+        <mat-form-field class="bulk-update">
+            <mat-select placeholder="Bulk Update Sell Rate">
+                <mat-option *ngFor="let percent of percents" [value]="percent.value">
+                    {{ percent.viewValue }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="bulk-update">
+            <mat-select placeholder="Select Rate Cards" #r (change)="setRateCard(r.value)">
+                <mat-option *ngFor="let rateCardName of currentRateCardNames" [value]="rateCardName.value">
+                    {{ rateCardName.viewValue }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field class="search-bar">
+                <span matPrefix><i class="fa fa-search"></i> &nbsp;</span>
+                <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+        </mat-form-field>
+
+    </mat-toolbar-row>
 </section>

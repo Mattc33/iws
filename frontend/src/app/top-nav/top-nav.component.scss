@@ -23,10 +23,14 @@ header {
     .account-container {
         min-height: 50px; min-width: 200px;
         position: fixed; 
+        line-height: 50px; text-align: center;
+        color: white;
         right: 0;
+
+        .login:hover, .registration:hover {
+            color: #E3E3E3;
+            cursor: pointer;
+        }
     }
 
-    .account-container:hover {
-        background-color: #e5b443;
-    }
 }

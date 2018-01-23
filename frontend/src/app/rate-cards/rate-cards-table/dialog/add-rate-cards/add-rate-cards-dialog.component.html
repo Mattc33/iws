@@ -1,7 +1,7 @@
 <mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
 
     <!-- Choose Carrier Step -->
-      <mat-step [stepControl]="firstFormGroup">
+      <mat-step [stepControl]="firstFormGroup" [completed]="false">
         <form [formGroup]="firstFormGroup">
           <ng-template matStepLabel>Choose Carrier</ng-template>
           <mat-form-field>
@@ -18,7 +18,7 @@
       </mat-step>
     
     <!-- Enter Rate Card Name Step -->
-      <mat-step [stepControl]="secondFormGroup">
+      <mat-step [stepControl]="secondFormGroup" [completed]="false">
         <form [formGroup]="secondFormGroup">
           <ng-template matStepLabel>Enter Rate Card Name</ng-template>
           <mat-form-field class="example-full-width">
@@ -32,7 +32,7 @@
       </mat-step>
     
     <!-- Details & Finalize  -->
-      <mat-step>
+      <mat-step [completed]="false">
       <ng-template matStepLabel>Review, Submit</ng-template>
         <div class="details">
         <b>Carrier Name:</b> {{ on_getCarrierName() }} <br><br>
