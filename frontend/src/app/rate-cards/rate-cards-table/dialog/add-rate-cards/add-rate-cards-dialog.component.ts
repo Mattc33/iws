@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { RateCardsTableComponent } from './../../rate-cards-table.component';
 
 import { RateCardsService } from '../../../services/rate-cards.api.service';
+import { CarrierService } from './../../../../carrier/services/carrier.api.service';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class AddRateCardDialogComponent implements OnInit {
     currentCarrierId: number;
 
     constructor(public dialogRef: MatDialogRef <RateCardsTableComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    private formBuilder: FormBuilder, private rateCardsService: RateCardsService
+    private formBuilder: FormBuilder, private rateCardsService: RateCardsService, private carrierService: CarrierService
     ) {}
 
     ngOnInit() {
@@ -42,7 +43,7 @@ export class AddRateCardDialogComponent implements OnInit {
       });
 
       // subscribe to service and get carrier names
-      this.rateCardsService.get_CarrierNames()
+      this.carrierService.get_carriers()
         .subscribe(
             data => {
                 console.log(data);
@@ -128,7 +129,7 @@ export class AddRateCardDialogComponent implements OnInit {
 
         // Pass new rateCardObj as body to API
         this.rateCardsService.post_AddRateCard(body)
-        .subscribe(res => console.log(res));
+            .subscribe(res => console.log(res));
     }
 
     // emit event to parent Table Component containing row object

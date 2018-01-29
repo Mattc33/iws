@@ -16,8 +16,6 @@ import { CarrierSharedService } from '../../../services/carrier.shared.service';
   export class DelCarrierDialogComponent implements OnInit {
 
     event_onDel = new EventEmitter;
-    private addCarrierFormGroup: FormGroup;
-    
     private rowObj;
 
     constructor(

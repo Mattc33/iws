@@ -26,7 +26,7 @@ export class CarrierService {
     .catch(will catch errors and trigger handleError method)
     our view components can later .subscribe to the data
     */
-    get_initialLoad(): Observable<any> {
+    get_carriers(): Observable<any> {
         return this.http.get(this.url + 'carriers/')
             .map(res => res.json())
             .catch(this.handleError)
@@ -36,7 +36,8 @@ export class CarrierService {
     post_AddRow(body: any): Observable<any> {
         return this.http
             .post(this.url + 'carriers/', body, this.options)
-            .catch(this.handleError);
+            .catch(this.handleError)
+            .do(data => console.log('server data:', data));
     }
 
     del_DeleteRow(rowId: any): Observable<any> {
@@ -46,11 +47,11 @@ export class CarrierService {
             .do(data => console.log('server data:', data));
     }
 
-    // I need the row ID, the column, and the current value of that particular field. 3 things
     put_EditCarrier(body: any, rowId: number): Observable<any> {
         return this.http
             .put(this.url + 'carriers/' + rowId, body)
-            .catch(this.handleError);
+            .catch(this.handleError)
+            .do(data => console.log('server data:', data));
     }
 
     handleError(error: any): any {

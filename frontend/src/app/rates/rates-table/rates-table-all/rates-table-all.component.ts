@@ -25,8 +25,6 @@ export class RatesTableAllComponent implements OnInit {
     private rowData;
     private columnDefs;
 
-    private columnTypes;
-
     // AG grid props
     private gridApi: GridApi;
     private columnApi: ColumnApi;
@@ -61,17 +59,14 @@ export class RatesTableAllComponent implements OnInit {
     }
 
     on_GridReady(params): void {
-        console.time("grid");
         this.gridApi = params.api;
         this.columnApi = params.columnApi;
         this.on_InitializeRows();
         this.gridApi.sizeColumnsToFit();
         this.getRateCardNames();
-        console.timeEnd("grid");
     }
 
     on_InitializeRows(): void {
-        console.time("grid");
         this.ratesService.get_Rates()
         .subscribe(
             data => { this.rowData = data; },
@@ -242,7 +237,7 @@ export class RatesTableAllComponent implements OnInit {
         }
     }
 
-    setRateCard(rateCardName) {
+    setRateCard(rateCardName) { // set the current value of rate card dropdown to filter
         this.gridApi.setQuickFilter(rateCardName);
     }
 

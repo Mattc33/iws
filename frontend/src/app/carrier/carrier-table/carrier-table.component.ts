@@ -46,7 +46,7 @@ export class CarrierTableComponent implements OnInit {
     }
 
     get_InitializeRows() {
-        this.carrierService.get_initialLoad()
+        this.carrierService.get_carriers()
         .subscribe(
             data =>  this.rowData = data,
             error =>  console.log(error)
@@ -94,9 +94,9 @@ export class CarrierTableComponent implements OnInit {
                 headerName: 'Tier Number', field: 'tier',
                 editable: true
             },
-            // Two Digit Code
+            // Three Digit Code
             {
-                headerName: 'Two Digit Code', field: 'code',
+                headerName: 'Carrier Code', field: 'code',
                 editable: true
             },
         ];
