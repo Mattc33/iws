@@ -1,0 +1,103 @@
+<mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
+
+    <!-- Choose Call Plan Step -->
+      <mat-step [stepControl]="addCallPlanFormGroup" [completed]="false">
+        <form [formGroup]="addCallPlanFormGroup">
+          <ng-template matStepLabel>Choose Call Plan</ng-template>
+          <mat-form-field>
+              <mat-select placeholder="Call Plans" formControlName="callplanCtrl">
+                <mat-option *ngFor="let callplan of callPlanObj" [value]="callplan.id">
+                    {{ callplan.title }}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+          <div>
+            <button mat-button matStepperNext > Next </button>
+          </div>
+        </form>
+      </mat-step>
+      <!-- [disabled]="!firstFormGroup.valid" -->
+    
+    <!-- Enter Code Step -->
+    <mat-step [stepControl]="attachCodeFormGroup" [completed]="false">
+        <form [formGroup]="attachCodeFormGroup">
+        <ng-template matStepLabel>Enter Code Info</ng-template>
+
+            <mat-form-field> 
+                <mat-select placeholder="Origination Country" formControlName="originationCtrl">
+                    <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
+                        {{code.code}} - {{code.country}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field> 
+                <mat-select placeholder="Destination Country" formControlName="destinationCtrl">
+                    <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
+                        {{code.code}} - {{code.country}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- auto assign carriercode based on carrier_ID from call plan selected -->
+            <mat-form-field> 
+                <mat-select placeholder="Carrier Code" formControlName="carrierCtrl">
+                    <mat-option *ngFor="let code of carrierCodesObj" [value]="code.code">
+                        {{code.code}} - {{code.carrier}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field> 
+                <mat-select placeholder="Plan Type" formControlName="plantypeCtrl">
+                    <mat-option *ngFor="let planType of planTypes" [value]="planType.code">
+                        {{planType.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field> 
+                <mat-select placeholder="Plan Priority" formControlName="planpriorityCtrl">
+                    <mat-option *ngFor="let planPriority of planPriorityList" [value]="planPriority.num">
+                        {{planPriority.num}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field >
+                    <input matInput placeholder="Length of plan in days" formControlName="dayperiodCtrl" matTooltip="Type 0 for unlimited days" >
+            </mat-form-field>
+
+            <mat-form-field> 
+                <mat-select placeholder="Plan Number" formControlName="planpriorityCtrl" >
+                    <mat-option *ngFor="let number of planNumber" [value]="number.num">
+                        {{ number.num }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>         
+
+        <div>
+            <button mat-button matStepperPrevious >Back</button>
+            <button mat-button matStepperNext >Next</button>
+        </div>
+        </form>
+    </mat-step>
+    
+    <!-- Details & Finalize  -->
+    <mat-step [completed]="false">
+        <ng-template matStepLabel>Review, Submit</ng-template>
+            <div class="details">
+                Call Plan: <br><br>
+                Rate Card:  <br><br>
+
+                Press submit to attach rate card <br><br>
+            </div>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>  
+            <button mat-button >Submit</button>
+        </div>
+    </mat-step>
+
+        <!-- (click)="post_addRateCard()" -->
+    
+    </mat-horizontal-stepper>

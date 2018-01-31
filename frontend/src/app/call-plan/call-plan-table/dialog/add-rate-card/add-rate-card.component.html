@@ -1,0 +1,57 @@
+<mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
+
+    <!-- Choose Call Plan Step -->
+      <mat-step [stepControl]="firstFormGroup" [completed]="false">
+        <form [formGroup]="addCallPlanFormGroup">
+          <ng-template matStepLabel>Choose Call Plan</ng-template>
+          <mat-form-field>
+              <mat-select placeholder="Call Plans" formControlName="callplanCtrl">
+                <mat-option *ngFor="let callplan of callPlanObj" [value]="callplan.id">
+                    {{callplan.title}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+          <div>
+            <button mat-button matStepperNext > Next </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- [disabled]="!firstFormGroup.valid" -->
+    
+    <!-- CHoose Rate Card Step -->
+      <mat-step [stepControl]="secondFormGroup" [completed]="false">
+        <form [formGroup]="attachRateCardFormGroup">
+          <ng-template matStepLabel>Choose Rate Card</ng-template>
+          <mat-form-field class="example-full-width">
+                <mat-select placeholder="Rate Card" formControlName="ratecardCtrl">
+                    <mat-option *ngFor="let ratecard of rateCardObj" [value]="ratecard.id">
+                    {{ratecard.value}}
+                    </mat-option>
+                </mat-select>
+          </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious >Back</button>
+            <button mat-button matStepperNext >Next</button>
+          </div>
+        </form>
+      </mat-step>
+    
+    <!-- Details & Finalize  -->
+    <mat-step [completed]="false">
+        <ng-template matStepLabel>Review, Submit</ng-template>
+            <div class="details">
+                Call Plan: <br><br>
+                Rate Card: {{ getSelectedRateCardName() }} <br><br>
+
+                Press submit to attach rate card <br><br>
+            </div>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>  
+            <button mat-button (click)="post_attachRateCard()">Submit</button>
+        </div>
+    </mat-step>
+
+        <!-- (click)="post_addRateCard()" -->
+    
+    </mat-horizontal-stepper>

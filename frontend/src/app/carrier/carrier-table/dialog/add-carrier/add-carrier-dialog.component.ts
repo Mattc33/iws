@@ -19,7 +19,7 @@ export class AddCarrierDialogComponent {
   emailPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+';
   // phonePattern = '^[0-9]+$';
   taxablePattern = '^[0-1]+$';
-  codePattern = '^[a-zA-Z0-9]{2}';
+  codePattern = '^[a-zA-Z0-9]{3}';
 
   taxableOptions = [
     {value: false, viewValue: 'No'},

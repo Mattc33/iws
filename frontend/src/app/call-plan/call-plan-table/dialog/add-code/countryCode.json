@@ -1,0 +1,249 @@
+[
+    {country: 'Zambia', code: 894},
+    {country: 'Yemen',	code: 887},
+    {country: 'Samoa',	code: 882},
+    {country: 'Wallis and Futuna Islands', code: 876},
+    {country: 'Venezuela (Bolivarian Republic)', code: 862},
+    {country: 'Uzbekistan', code: 860},
+    {country: 'Uruguay', code: 858},
+    {country: 'Burkina', code: 854},
+    {country: 'Virgin Islands', code: 850},
+    {country: 'United States of America', code: 840},
+    {country: 'United Republic of Tanzania', code: 834},
+    {country: 'Isle of Man', code: 833},
+    {country: 'Jersey', code: 832},
+    {country: 'Guernsey', code: 831},
+    {country: 'United Kingdom',	code: 826},
+    {country: 'Egypt', code: 818},
+    {country: 'Republic of Macedonia', code: 807},
+    {country: 'Ukraine', code: 804},
+    {country: 'Uganda',	code: 800},
+    {country: 'Tuvalu',	code: 798},
+    {country: 'Turks and Caicos Islands', code: 796},
+    {country: 'Turkmenistan', code: 795},
+    {country: 'Turkey', code: 792},
+    {country: 'Tunisia', code: 788},
+    {country: 'United Arab Emirates', code: 784},
+    {country: 'Trinidad and Tobago', code: 780},
+    {country: 'Tonga', code: 776},
+    {country: 'Tokelau', code: 772},
+    {country: 'Togo', code: 768},
+    {country: 'Thailand', code: 764},
+    {country: 'Tajikistan', code: 762},
+    {country: 'Syrian Arab Republic (Syria)', code: 760},
+    {country: 'Switzerland', code: 756},
+    {country: 'Sweden',	code: 752},
+    {country: 'Swaziland', code: 748},
+    {country: 'Svalbard and Jan Mayen Islands', code: 744},
+    {country: 'Suriname', code: 740},
+    {country: 'Sudan', code: 736},
+    {country: 'Western Sahara', code: 732},
+    {country: 'South Sudan', code: 728},
+    {country: 'Spain', code: 724},
+    {country: 'Zimbabwe', code: 716},
+    {country: 'South Africa', code: 710},
+    {country: 'Somalia', code: 706},
+    {country: 'Slovenia', code: 705},
+    {country: 'Vietnam', code: 704},
+    {country: 'Slovakia', code: 703},
+    {country: 'Singapore', code: 702},
+    {country: 'Sierra Leone', code: 694},
+    {country: Seychelles	SC	SYC	690},
+    {country:Serbia	RS	SRB	688},
+    {country:Senegal	SN	SEN	686},
+    {country:Saudi Arabia	SA	SAU	682},
+    {country:Sao Tome and Principe	ST	STP	678},
+    {country:San Marino	SM	SMR	674},
+    {country:Saint Vincent and Grenadines	VC	VCT	670},
+    {country:Saint Pierre and Miquelon	PM	SPM	666},
+    {country:Saint-Martin (French part)	MF	MAF	663},
+    {country:Saint Lucia	LC	LCA	662},
+    {country:Anguilla	AI	AIA	660},
+    {country:Saint Kitts and Nevis	KN	KNA	659},
+    {country:Saint Helena	SH	SHN	654},
+    {country:Saint-Barthélemy	BL	BLM	652},
+    {country:Rwanda	RW	RWA	646},
+    {country:Russian Federation	RU	RUS	643},
+    {country:Romania	RO	ROU	642},
+    {country:Réunion	RE	REU	638},
+    {country:Qatar	QA	QAT	634},
+    {country:Puerto Rico	PR	PRI	630},
+    {country:Timor-Leste	TL	TLS	626},
+    {country:Guinea-Bissau	GW	GNB	624},
+    {country:Portugal	PT	PRT	620},
+    {country:Poland	PL	POL	616},
+    {country:Pitcairn	PN	PCN	612},
+    {country:Philippines	PH	PHL	608},
+    {country:Peru	PE	PER	604},
+    {country:Paraguay	PY	PRY	600},
+    {country:Papua New Guinea	PG	PNG	598},
+    {country:Panama	PA	PAN	591},
+    {country:Pakistan	PK	PAK	586},
+    {country:Palau	PW	PLW	585},
+    {country:Marshall Islands	MH	MHL	584},
+    {country:Micronesia, Federated States of	FM	FSM	583},
+    {country:US Minor Outlying Islands	UM	UMI	581},
+    {country:Northern Mariana Islands	MP	MNP	580},
+    {country:Norway	NO	NOR	578},
+    {country:Norfolk Island	NF	NFK	574},
+    {country:Niue	NU	NIU	570},
+    {country:Nigeria	NG	NGA	566},
+    {country:Niger	NE	NER	562},
+    {country:Nicaragua	NI	NIC	558},
+    {country:New Zealand	NZ	NZL	554},
+    {country:Vanuatu	VU	VUT	548},
+    {country:New Caledonia	NC	NCL	540},
+    {country:Aruba	AW	ABW	533},
+    {country:Netherlands Antilles	AN	ANT	530},
+    {country:Netherlands	NL	NLD	528},
+    {country:Nepal	NP	NPL	524},
+    {country:Nauru	NR	NRU	520},
+    {country:Namibia	NA	NAM	516},
+    {country:Oman	OM	OMN	512},
+    {country:Mozambique	MZ	MOZ	508},
+    {country:Morocco	MA	MAR	504},
+    {country:Montserrat	MS	MSR	500},
+    {country:Montenegro	ME	MNE	499},
+    {country:Moldova	MD	MDA	498},
+    {country:Mongolia	MN	MNG	496},
+    {country:Monaco	MC	MCO	492},
+    {country:Mexico	MX	MEX	484},
+    {country:Mauritius	MU	MUS	480},
+    {country:Mauritania	MR	MRT	478},
+    {country:Martinique	MQ	MTQ	474},
+    {country:Malta	MT	MLT	470},
+    {country:Mali	ML	MLI	466},
+    {country:Maldives	MV	MDV	462},
+    {country:Malaysia	MY	MYS	458},
+    {country:Malawi	MW	MWI	454},
+    {country:Madagascar	MG	MDG	450},
+    {country:Macao, SAR China	MO	MAC	446},
+    {country:Luxembourg	LU	LUX	442},
+    {country:Lithuania	LT	LTU	440},
+    {country:Liechtenstein	LI	LIE	438},
+    {country:Libya	LY	LBY	434},
+    {country:Liberia	LR	LBR	430},
+    {country:Latvia	LV	LVA	428},
+    {country:Lesotho	LS	LSO	426},
+    {country:Lebanon	LB	LBN	422},
+    {country:Lao PDR	LA	LAO	418},
+    {country:Kyrgyzstan	KG	KGZ	417},
+    {country:Kuwait	KW	KWT	414},
+    {country:Korea (South)	KR	KOR	410},
+    {country:Korea (North)	KP	PRK	408},
+    {country:Kenya	KE	KEN	404},
+    {country:Jordan	JO	JOR	400},
+    {country:Kazakhstan	KZ	KAZ	398},
+    {country:Japan	JP	JPN	392},
+    {country:Jamaica	JM	JAM	388},
+    {country:Côte d'Ivoire	CI	CIV	384},
+    {country:Italy	IT	ITA	380},
+    {country:Israel	IL	ISR	376},
+    {country:Ireland	IE	IRL	372},
+    {country:Iraq	IQ	IRQ	368},
+    {country:Iran, Islamic Republic of	IR	IRN	364},
+    {country:Indonesia	ID	IDN	360},
+    {country:India	IN	IND	356},
+    {country:Iceland	IS	ISL	352},
+    {country:Hungary	HU	HUN	348},
+    {country:Hong Kong, SAR China	HK	HKG	344},
+    {country:Honduras	HN	HND	340},
+    {country:Holy See (Vatican City State)	VA	VAT	336},
+    {country:Heard and Mcdonald Islands	HM	HMD	334},
+    {country:Haiti	HT	HTI	332},
+    {country:Guyana	GY	GUY	328},
+    {country:Guinea	GN	GIN	324},
+    {country:Guatemala	GT	GTM	320},
+    {country:Guam	GU	GUM	316},
+    {country:Guadeloupe	GP	GLP	312},
+    {country:Grenada	GD	GRD	308},
+    {country:Greenland	GL	GRL	304},
+    {country:Greece	GR	GRC	300},
+    {country:Kiribati	KI	KIR	296},
+    {country:Gibraltar	GI	GIB	292},
+    {country:Ghana	GH	GHA	288},
+    {country:Germany	DE	DEU	276},
+    {country:Palestinian Territory	PS	PSE	275},
+    {country:Gambia	GM	GMB	270},
+    {country:Georgia	GE	GEO	268},
+    {country:Gabon	GA	GAB	266},
+    {country:Djibouti	DJ	DJI	262},
+    {country:French Southern Territories	TF	ATF	260},
+    {country:French Polynesia	PF	PYF	258},
+    {country:French Guiana	GF	GUF	254},
+    {country:France	FR	FRA	250},
+    {country:ALA	Aland Islands	AX	ALA	248},
+    {country:Finland	FI	FIN	246},
+    {country:Fiji	FJ	FJI	242},
+    {country:South Georgia and the South Sandwich Islands	GS	SGS	239
+    {country:Falkland Islands (Malvinas)	FK	FLK	238
+    {country:Faroe Islands	FO	FRO	234
+    {country:Estonia	EE	EST	233
+    {country:Eritrea	ER	ERI	232
+    {country:Ethiopia	ET	ETH	231
+    {country:Equatorial Guinea	GQ	GNQ	226
+    {country:El Salvador	SV	SLV	222
+    {country:Ecuador	EC	ECU	218
+    {country:Dominican Republic	DO	DOM	214
+    {country:Dominica	DM	DMA	212
+    {country:Denmark	DK	DNK	208
+    {country:Benin	BJ	BEN	204
+    {country:Czech Republic	CZ	CZE	203
+    {country:Cyprus	CY	CYP	196
+    {country:Cuba	CU	CUB	192
+    {country:Croatia	HR	HRV	191
+    {country:osta Rica	CR	CRI	188
+    {country:Cook Islands	CK	COK	184
+    {country:Congo, (Kinshasa)	CD	COD	180
+    {country:Congo (Brazzaville)	CG	COG	178
+    {country:Mayotte	YT	MYT	175
+    {country:Comoros	KM	COM	174
+    {country:Colombia	CO	COL	170
+    {country:Cocos (Keeling) Islands	CC	CCK	166
+    {country:Christmas Island	CX	CXR	162
+    {country:Taiwan, Republic of China	TW	TWN	158
+    {country:China	CN	CHN	156
+    {country:Chile	CL	CHL	152
+    {country:Chad	TD	TCD	148
+    {country:Sri Lanka	LK	LKA	144
+    {country:Central African Republic	CF	CAF	140
+    {country:Cayman Islands	KY	CYM	136
+    {country:Cape Verde	CV	CPV	132
+    {country:Canada	CA	CAN	124
+    {country:Cameroon	CM	CMR	120
+    {country:Cambodia	KH	KHM	116
+    {country:Belarus	BY	BLR	112
+    {country:Burundi	BI	BDI	108
+    {country:Myanmar	MM	MMR	104
+    {country:Bulgaria	BG	BGR	100
+    {country:Brunei Darussalam	BN	BRN	096
+    {country:British Virgin Islands	VG	VGB	092
+    {country:Solomon Islands	SB	SLB	090
+    {country:British Indian Ocean Territory	IO	IOT	086
+    {country:Belize	BZ	BLZ	084
+    {country:Brazil	BR	BRA	076
+    {country:Bouvet Island	BV	BVT	074
+    {country:Botswana	BW	BWA	072
+    {country:Bosnia and Herzegovina	BA	BIH	070
+    {country:Bolivia	BO	BOL	068
+    {country:Bhutan	BT	BTN	064
+    {country:Bermuda	BM	BMU	060
+    {country:Belgium	BE	BEL	056
+    {country:Barbados	BB	BRB	052
+    {country:Armenia	AM	ARM	051
+    {country:Bangladesh	BD	BGD	050
+    {country:Bahrain	BH	BHR	048
+    {country:Bahamas	BS	BHS	044
+    {country:Austria	AT	AUT	040
+    {country:Australia	AU	AUS	036
+    {country:Argentina	AR	ARG	032
+    {country:Azerbaijan	AZ	AZE	031
+    {country:Antigua and Barbuda	AG	ATG	028
+    {country:Angola	AO	AGO	024
+    {country:Andorra	AD	AND	020
+    {country:American Samoa	AS	ASM	016
+    {country:Algeria	DZ	DZA	012
+    {country:	Antarctica	AQ	ATA	010
+    {country:Albania	AL	ALB	008
+    {country:Afghanistan	AF	AFG	004
+]

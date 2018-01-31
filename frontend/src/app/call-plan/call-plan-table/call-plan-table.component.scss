@@ -1,0 +1,105 @@
+
+section {
+    width: 100%; height: auto;
+
+    position: fixed;
+    background-color: white;
+    overflow: hidden;
+
+    #all-callplans {
+        width: 30vw; height: 40vh;  
+        margin-left: 10px; 
+        float: left;
+        border-right: 3px dashed #E0E0E0;
+    }
+
+    #call-plans-detail {
+        width: 60vw; height: 40vh;
+        float: left;
+    }
+
+    mat-toolbar-row {
+        width: 90vw; height: 32px;
+        margin-left: 20px;
+        float: left;
+
+        span {
+            font-size: 12px;
+        }
+
+        button {
+            background-color: Transparent;
+            width: 100px;
+            height: 32px;
+            padding: 0;
+            margin: 0;
+            border: 1px solid #E0E0E0;
+        }
+
+        button:hover {
+            background-color: #E0E0E0;
+        }
+
+        button:focus {
+            outline: 0;
+        }
+
+        mat-form-field {
+            height: 32px;
+            font-size: 10px;
+        }
+
+        .del {
+            width: 40px;
+        }
+
+        .search-bar {
+            float: right;
+            position: relative;
+            width: 40%;
+        }
+
+    }
+}
+
+.mat-button {
+    margin-left: 20px;
+}
+
+.ag-header-row {
+    font-weight: bolder;
+    font-size: 1em;
+}
+
+.selectedRow {
+
+    div:nth-child(1) {
+        background-color: #ffffff;
+    }
+}
+
+.ag-header-container {
+    //background-color: rgba(243, 156, 18, .8);
+    border-color: #ffffff;
+}
+
+.ag-paging-panel {
+    //background-color: rgba(243, 156, 18, .8);
+}
+
+.ag-header-cell {
+    border-bottom: 1px solid #ffffff;
+}
+
+.ag-header-cell-resize {
+    width: 1.5px;
+    color: #ffffff;
+}
+
+.ag-theme-material .ag-floating-filter-body input {
+    border-bottom: 1.5px solid #ffffff;
+}
+
+.del, {
+    border: 1px solid black;
+}

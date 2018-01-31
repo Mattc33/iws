@@ -151,7 +151,7 @@ export class CarrierTableComponent implements OnInit {
 
     put_editCarrier(carrierObj, id) {
         this.carrierService.put_EditCarrier(carrierObj, id)
-        .subscribe(resp => console.log(resp));
+            .subscribe(resp => console.log(resp));
     }
 
     openDialogAdd() {
