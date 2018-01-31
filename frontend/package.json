@@ -1,0 +1,29 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.3.",
+  "main": "karma.conf.js",
+  "dependencies": {
+    "ag-grid": "^15.0.0",
+    "ag-grid-angular": "^15.0.0",
+    "ngx-papaparse": "^2.0.4",
+    "ng2-smart-table": "^1.2.2",
+    "papaparse": "^4.3.6",
+    "primeng": "^5.2.0-rc.1",
+    "typescript": "^2.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/obietech/iws.git"
+  },
+  "author": "MattChan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/obietech/iws/issues"
+  },
+  "homepage": "https://gitlab.com/obietech/iws#README"
+}
