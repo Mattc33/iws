@@ -1,57 +1,75 @@
 <mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
 
     <!-- Choose Call Plan Step -->
-      <mat-step [stepControl]="firstFormGroup" [completed]="false">
+    <mat-step [stepControl]="addCallPlanFormGroup" [completed]="false">
         <form [formGroup]="addCallPlanFormGroup">
-          <ng-template matStepLabel>Choose Call Plan</ng-template>
-          <mat-form-field>
-              <mat-select placeholder="Call Plans" formControlName="callplanCtrl">
+            <ng-template matStepLabel>Choose Call Plan</ng-template>
+            <mat-form-field>
+            <mat-select placeholder="Call Plans" formControlName="callplanCtrl">
                 <mat-option *ngFor="let callplan of callPlanObj" [value]="callplan.id">
-                    {{callplan.title}}
+                {{callplan.title}}
                 </mat-option>
-              </mat-select>
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperNext > Next </button>
-          </div>
+            </mat-select>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperNext [disabled]="addCallPlanFormGroup.invalid"> Next </button>
+            </div>
         </form>
-      </mat-step>
-
-      <!-- [disabled]="!firstFormGroup.valid" -->
+    </mat-step>
     
-    <!-- CHoose Rate Card Step -->
-      <mat-step [stepControl]="secondFormGroup" [completed]="false">
+    <!-- Choose Rate Card Step -->
+    <mat-step [stepControl]="attachRateCardFormGroup" [completed]="false">
         <form [formGroup]="attachRateCardFormGroup">
-          <ng-template matStepLabel>Choose Rate Card</ng-template>
-          <mat-form-field class="example-full-width">
+            <ng-template matStepLabel>Choose Rate Card</ng-template>
+            <mat-form-field class="example-full-width">
                 <mat-select placeholder="Rate Card" formControlName="ratecardCtrl">
                     <mat-option *ngFor="let ratecard of rateCardObj" [value]="ratecard.id">
                     {{ratecard.value}}
                     </mat-option>
                 </mat-select>
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperPrevious >Back</button>
-            <button mat-button matStepperNext >Next</button>
-          </div>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperPrevious >Back</button>
+                <button mat-button matStepperNext [disabled]="attachRateCardFormGroup.invalid">Next</button>
+            </div>
         </form>
-      </mat-step>
-    
+    </mat-step>
+
+    <!-- Choose Plan Priority Step -->
+    <mat-step [stepControl]="choosePriorityFormGroup" [completed]="false">
+        <form [formGroup]="choosePriorityFormGroup">
+            <ng-template matStepLabel>Choose Rate Card Priority</ng-template>
+            <mat-form-field>
+                <mat-select placeholder="Priority" formControlName="priorityCtrl" matTooltip="Larger number = higher priority">
+                    <mat-option *ngFor="let plan of planPriorityList" [value]="plan.num">
+                    {{plan.num}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperPrevious >Back</button>
+                <button mat-button matStepperNext [disabled]="choosePriorityFormGroup.invalid"> Next </button>
+            </div>
+        </form>
+    </mat-step>
+
     <!-- Details & Finalize  -->
     <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
             <div class="details">
-                Call Plan: <br><br>
-                Rate Card: {{ getSelectedRateCardName() }} <br><br>
-
-                Press submit to attach rate card <br><br>
+                <b>Call Plan:</b> {{ getSelectedCallPlanName() }}
+                <hr>
+                <b>Rate Card:</b> {{ getSelectedRateCardName() }}
+                <hr>
+                <b>Priority:</b> {{ getSelectedPriority() }}
+                <hr>
+                Press submit to attach rate card.
+                <br><br>
             </div>
         <div>
             <button mat-button matStepperPrevious>Back</button>  
-            <button mat-button (click)="post_attachRateCard()">Submit</button>
+            <button mat-button (click)="click_attachRatecard()">Submit</button>
         </div>
     </mat-step>
-
-        <!-- (click)="post_addRateCard()" -->
     
-    </mat-horizontal-stepper>
+</mat-horizontal-stepper>

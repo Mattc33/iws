@@ -1,11 +1,11 @@
 <section>
     <ag-grid-angular class="ag-theme-material" id="all-callplans"
     [columnDefs]="columnDefs" [rowData]="rowData"
-    [rowSelection]="rowSelection" (selectionChanged)="on_SelectionChanged($event)" [suppressRowClickSelection]="true"
+    [rowSelection]="rowSelection" (selectionChanged)="aggrid_selectionChanged($event)" [suppressRowClickSelection]="true"
     [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
     [enableFilter]="true" [floatingFilter]="true"
     [enableSorting]="true"
-    [enableColResize]="true" (gridSizeChanged)="on_GridSizeChanged($event)"
+    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
     [pagination]="true" paginationPageSize="5"
 
     [enableCellChangeFlash]="true"
@@ -17,7 +17,7 @@
     <ag-grid-angular class="ag-theme-material" id="call-plans-detail"
     [columnDefs]="columnDefsDetail" [rowData]="rowDataDetail"
     [stopEditingWhenGridLosesFocus]="true" 
-    [enableColResize]="true" (gridSizeChanged)="on_GridSizeChanged($event)"
+    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
 
     [enableCellChangeFlash]="true"
 

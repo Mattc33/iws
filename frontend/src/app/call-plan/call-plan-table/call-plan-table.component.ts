@@ -19,201 +19,193 @@ import { AddCodeComponent } from './dialog/add-code/add-code.component';
 })
 export class CallPlanTableComponent implements OnInit {
 
+    // AG grid row/col 
     private rowData;
     private columnDefs;
     private rowDataDetail;
     private columnDefsDetail;
 
-    // AG grid props
+    // AG grid controllers
     private gridApi: GridApi;
     private columnApi: ColumnApi;
     private gridApiDetail: GridApi;
     private columnApiDetail: GridApi;
 
-    // Props for internal service
-    private callPlanRowObj;
-    private rowId;
-
     // Props for AG Grid
     private rowSelection;
     private quickSearchValue = '';
 
-    constructor(private callPlanService: CallPlanService, private callPlanSharedService: CallPlanSharedService,
-    private dialog: MatDialog, private formBuilder: FormBuilder ) { 
+    // Props for internal service
+    private callPlanRowObj;
+    private rowId;
+
+    constructor(
+        private callPlanService: CallPlanService, 
+        private callPlanSharedService: CallPlanSharedService,
+        private dialog: MatDialog, 
+        private formBuilder: FormBuilder 
+    ) { 
         this.columnDefs = this.createColumnDefs();
         this.rowSelection = 'single';
         this.columnDefsDetail = this.createColumnDefsDetail();
     }
 
     ngOnInit() {
+        this.get_allCallPlansData();
     }
 
     /*
-        grid
+        ~~~~~~~~~~ Call Plan API services ~~~~~~~~~~
     */
-    on_GridReady(params): void {
-        this.gridApi = params.api;
-        this.columnApi = params.columnApi;
-        this.on_InitializeRows();
-        this.gridApi.sizeColumnsToFit();
-    }
-
-    on_GridReady2(params): void {
-        this.gridApiDetail = params.api;
-        this.columnApiDetail = params.columnApi;
-        this.gridApi.sizeColumnsToFit();
-    }
-
-    on_InitializeRows(): void {
-        this.callPlanService.get_allCallPlan()
-        .subscribe(
-            data => { this.rowData = data; },
-            error => { console.log(error); }       
-        );
-    }
-
-    // All Call plans columns
-    private createColumnDefs() {
-        return [
-            {
-                headerName: 'Call Plans', field: 'title',
-                editable: true, checkboxSelection: true, 
-            },
-            {
-                headerName: 'Carrier Name', field: 'carrier_name',
-            },
-            {
-                headerName: 'Available', field: 'available',
-
-            },
-            {
-                headerName: 'Valid Through', field: 'valid_through'
-            },
-        ]
-    }
-
-    // Detailed Call plan table
-    private createColumnDefsDetail() {
-        return [
-            {
-                headerName: 'Sub Title', field: 'subtitle',
-            },
-            {
-                headerName: 'Buy Price', field: 'buy_price',
-            },
-            {
-                headerName: 'Sell Price', field: 'sell_price',
-            },
-            {
-                headerName: 'Days in Plan', field: 'day_period',
-            },
-            {
-                headerName: 'Plan Rank', field: 'ranking',
-            },
-            {
-                headerName: 'Activated', field: 'activeWhen',
-            },
-            {
-                headerName: 'Plan Type', field: 'planTypeName',
-
-            },
-            {
-                headerName: 'Promotion?', field: 'isForPromotion'
-            },
-            {
-                headerName: 'Max Destination #', field: 'maxDestNumbers',
-            },
-            {
-                headerName: 'Max Minutes', field: 'maxMinutes',
-            },
-        ]
-    }
-
-    on_GridSizeChanged(params): void {
-        params.api.sizeColumnsToFit();
-    }
-
-    on_SelectionChanged(): void {
-        this.gridApiDetail.setRowData([]); //resets row data
-        // const selectedRows = this.gridApi.getSelectedRows();
-        this.rowSelection = this.gridApi.getSelectedRows()
-        const callPlanId = this.rowSelection[0].id;
-
-        this.rowId = callPlanId;
-
-        this.callPlanService.get_callPlan(callPlanId)
-            .subscribe(
-                data => { 
-                    this.callPlanSharedService.changeCallPlanObj(data); 
-                    this.gridApiDetail.updateRowData({ add: [data] });
-                },
-            );
-    }
-
-    aggrid_delRow(boolean) {
-        console.log(boolean);
-        if (boolean === true) {
-            this.gridApi.updateRowData({ remove: this.rowSelection });
-        } else {
-            return;
+        get_allCallPlansData() {
+            this.callPlanService.get_allCallPlan()
+                .subscribe(
+                    data => { this.rowData = data; },
+                    error => { console.log(error); }
+                )
         }
-    }
 
-    /*
-        on cell editing
-    */
-    aggrid_onCellValueChanged(params: any) {
+        get_specificCallPlanData(callPlanId: number) { //updates shared obj and grid right after api call
+            this.callPlanService.get_callPlan(callPlanId)
+                .subscribe(
+                    data => { 
+                        this.callPlanSharedService.changeCallPlanObj(data); 
+                        this.gridApiDetail.updateRowData({ add: [data] });
+                    },
+                );
+        }
 
-        console.log (params);
-        const id = params.data.id; // rates ID
-        const ratecard_id = params.data.ratecard_id;
-        const prefix = params.data.prefix;
-        const destination = params.data.destination;
-        const buy_rate = parseFloat(params.data.buy_rate);
-        const buy_rate_minimum = params.data.buy_rate_minimum;
-        const buy_rate_increment = params.data.buy_rate_increment;
-        const sell_rate = parseFloat(params.data.sell_rate);
-        const sell_rate_minimum = params.data.sell_rate_minimum;
-        const sell_rate_increment = params.data.sell_rate_increment;
-          
-        const ratesObj = {
-            ratecard_id: ratecard_id,
-            prefix: prefix,
-            destination: destination,
-            buy_rate: buy_rate,
-            buy_rate_minimum: buy_rate_minimum,
-            buy_rate_increment: buy_rate_increment,
-            sell_rate: sell_rate,
-            sell_rate_minimum: sell_rate_minimum,
-            sell_rate_increment: sell_rate_increment
+        put_editCallPlan(callPlanObj, callplan_id) {
+            this.callPlanService.put_editCallPlan(callPlanObj, callplan_id) 
+                .subscribe(resp => console.log(resp));
         };
 
-        console.log(ratesObj);
-        this.put_editCallPlan(id, ratesObj);
-    }
+    /*
+        ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
+    */
+        private on_GridReady(params): void {
+            this.gridApi = params.api;
+            this.columnApi = params.columnApi;
+            this.gridApi.sizeColumnsToFit();
+        }
 
-    // call service to edit call plan
-    put_editCallPlan(callPlanObj, callplan_id) {
-        this.callPlanService.put_editCallPlan(callPlanObj, callplan_id) 
-            .subscribe(resp => console.log(resp));
-    };
+        private on_GridReady2(params): void {
+            this.gridApiDetail = params.api;
+            this.columnApiDetail = params.columnApi;
+            this.gridApi.sizeColumnsToFit();
+        }
 
-    aggrid_addRow(obj) {
-        console.log(obj);
-        this.gridApi.updateRowData({ add: [obj] });
-    }
+        private createColumnDefs() { // All Call plans columns
+            return [
+                {
+                    headerName: 'Call Plans', field: 'title',
+                    editable: true, checkboxSelection: true, 
+                },
+                {
+                    headerName: 'Carrier Name', field: 'carrier_name',
+                },
+                {
+                    headerName: 'Available', field: 'available',
 
+                },
+                {
+                    headerName: 'Valid Through', field: 'valid_through'
+                },
+            ]
+        }
 
-    /* For Rate Cards Display */
+        private createColumnDefsDetail() { // Detailed Call plan table
+            return [
+                {
+                    headerName: 'Sub Title', field: 'subtitle',
+                },
+                {
+                    headerName: 'Buy Price', field: 'buy_price',
+                },
+                {
+                    headerName: 'Sell Price', field: 'sell_price',
+                },
+                {
+                    headerName: 'Days in Plan', field: 'day_period',
+                },
+                {
+                    headerName: 'Plan Rank', field: 'ranking',
+                },
+                {
+                    headerName: 'Activated', field: 'activeWhen',
+                },
+                {
+                    headerName: 'Plan Type', field: 'planTypeName',
 
+                },
+                {
+                    headerName: 'Promotion?', field: 'isForPromotion'
+                },
+                {
+                    headerName: 'Max Destination #', field: 'maxDestNumbers',
+                },
+                {
+                    headerName: 'Max Minutes', field: 'maxMinutes',
+                },
+            ]
+        }
 
-    extractRateCards() {
+    /*
+        ~~~~~~~~~~ Grid UI Interations ~~~~~~~~~~
+    */
+        aggrid_gridSizeChanged(params): void {
+            params.api.sizeColumnsToFit();
+        }
 
-    }
+        aggrid_selectionChanged(): void {
+            this.gridApiDetail.setRowData([]); // resets row data
 
-    extractCodes() {
+            this.rowSelection = this.gridApi.getSelectedRows() // pass global row obj to row selection global var 
+            this.rowId = this.rowSelection[0].id; // pass callplan row id to shared service
 
-    }
+            this.get_specificCallPlanData(this.rowId);
+        }
+
+        aggrid_delRow(boolean): void {
+            if (boolean === true) {
+                this.gridApi.updateRowData({ remove: this.rowSelection });
+            } else {
+                return;
+            }
+        }
+
+        aggrid_onCellValueChanged(params: any) {
+            const id = params.data.id; // rates ID
+            const ratecard_id = params.data.ratecard_id;
+            const prefix = params.data.prefix;
+            const destination = params.data.destination;
+            const buy_rate = parseFloat(params.data.buy_rate);
+            const buy_rate_minimum = params.data.buy_rate_minimum;
+            const buy_rate_increment = params.data.buy_rate_increment;
+            const sell_rate = parseFloat(params.data.sell_rate);
+            const sell_rate_minimum = params.data.sell_rate_minimum;
+            const sell_rate_increment = params.data.sell_rate_increment;
+            
+            const ratesObj = {
+                ratecard_id: ratecard_id,
+                prefix: prefix,
+                destination: destination,
+                buy_rate: buy_rate,
+                buy_rate_minimum: buy_rate_minimum,
+                buy_rate_increment: buy_rate_increment,
+                sell_rate: sell_rate,
+                sell_rate_minimum: sell_rate_minimum,
+                sell_rate_increment: sell_rate_increment
+            };
+
+            this.put_editCallPlan(id, ratesObj);
+        }
+
+        aggrid_addRow(obj) {
+            console.log(obj);
+            this.gridApi.updateRowData({ add: [obj] });
+        }
+
 
     /*
         Toolbar
@@ -248,7 +240,7 @@ export class CallPlanTableComponent implements OnInit {
     openDialogAddCallPlan() {
         const dialogRef = this.dialog.open(AddCallPlanComponent, {
             height: 'auto',
-            width: '40%',
+            width: '50%'
         });
 
         const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
@@ -266,7 +258,7 @@ export class CallPlanTableComponent implements OnInit {
     openDialogAttachRateCard() {
         const dialogRef = this.dialog.open(AddRateCardComponent, {
             height: 'auto',
-            width: '30%',
+            width: '40%',
         });
 
         // const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
