@@ -18,7 +18,7 @@
     <mat-toolbar-row>
         <span>Rows: {{ numberSelectedRows }}</span>
 
-        <button (click)="openDialogDel()" > <i class="fa fa-trash-o"></i> </button>
+        <button (click)="openDialogDel()" > <i class="fas fa-trash-alt"></i> </button>
 
         <mat-form-field class="bulk-update">
             <mat-select placeholder="Bulk Update Sell Rate">
@@ -37,7 +37,7 @@
         </mat-form-field>
         
         <mat-form-field class="search-bar">
-                <span matPrefix><i class="fa fa-search"></i> &nbsp;</span>
+                <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                 <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
         </mat-form-field>
 

@@ -111,7 +111,6 @@
             <button mat-button matStepperNext [disabled]="
                 attachCallPlanFormGroup.get('titleCtrl').invalid ||
                 attachCallPlanFormGroup.get('availableCtrl').invalid ||
-                attachCallPlanFormGroup.get('validthroughCtrl').invalid ||
                 attachCallPlanFormGroup.get('buypriceCtrl').invalid ||
                 attachCallPlanFormGroup.get('sellpriceCtrl').invalid ||
                 attachCallPlanFormGroup.get('dayperiodCtrl').invalid ||
@@ -120,9 +119,11 @@
                 attachCallPlanFormGroup.get('activewhenCtrl').invalid ||
                 attachCallPlanFormGroup.get('promoCtrl').invalid
             "> Next</button>
+            <button mat-button (click)="insertDummyDataCallPlan()" > Insert Dummy Data </button>
         </div>     
         </form>
     </mat-step> 
+    <!-- attachCallPlanFormGroup.get('validthroughCtrl').invalid || -->
 
     <!-- Enter Code Initial Step -->
     <mat-step [stepControl]="attachCodesFormGroup" [completed]="false">
@@ -164,6 +165,7 @@
         <div>
             <button mat-button matStepperPrevious >Back</button>
             <button mat-button matStepperNext [disabled]="attachCodesFormGroup.invalid" >Next</button>
+            <button mat-button (click)="insertDummyDataCodes()" >Add Dummy Test Data</button>
         </div>
         </form>
     </mat-step>
@@ -175,13 +177,14 @@
             <div class="country-code-form">
                 <div formArrayName="codes" *ngFor="let codeFG of attachCountryCodeFormGroup.get('codes').controls; let counter=index">
                 <span> <b>Code Group {{counter + 1}}:</b> </span>
+                <button *ngIf="attachCountryCodeFormGroup.get('codes').controls.length > 1" (click)="removeAddress(counter)" class="country-code-trash"> <i class="fas fa-trash"></i> </button>
                     <div [formGroupName]="counter">
 
                         <mat-form-field class="half-width"> 
                             <mat-select placeholder="Origination Country" formControlName="originationCtrl">
                                 <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
                                     {{code.code}} - {{code.country}}
-                                </mat-option>
+                                </mat-option>   
                             </mat-select>
                         </mat-form-field>
 

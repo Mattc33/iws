@@ -16,11 +16,11 @@
 
     <mat-toolbar-row>
     
-            <button (click)="openDialogDel()"> <i class="fa fa-trash-o"></i> </button>
-            <button (click)="openDialogAdd()"> <i class="fa fa-plus" ></i> Carrier </button>
+            <button (click)="openDialogDel()"> <i class="fas fa-trash-alt"></i> </button>
+            <button (click)="openDialogAdd()"> <i class="fas fa-plus"></i> Carrier </button>
             
             <mat-form-field class="search-bar">
-                    <span matPrefix><i class="fa fa-search"></i> &nbsp;</span>
+                    <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                     <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
             </mat-form-field>
     

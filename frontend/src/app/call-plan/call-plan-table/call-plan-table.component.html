@@ -1,45 +1,94 @@
 <section>
-    <ag-grid-angular class="ag-theme-material" id="all-callplans"
-    [columnDefs]="columnDefs" [rowData]="rowData"
-    [rowSelection]="rowSelection" (selectionChanged)="aggrid_selectionChanged($event)" [suppressRowClickSelection]="true"
-    [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
-    [enableFilter]="true" [floatingFilter]="true"
-    [enableSorting]="true"
-    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
-    [pagination]="true" paginationPageSize="5"
+    <div class="all-callplans-container">
+        <ag-grid-angular class="ag-theme-material" id="all-callplans"
+            [columnDefs]="columnDefs" [rowData]="rowData"
+            [rowSelection]="rowSelection" (selectionChanged)="aggrid_selectionChanged($event)" [suppressRowClickSelection]="true"
+            [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
+            [enableFilter]="true" [floatingFilter]="true"
+            [enableSorting]="true"
+            [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+            [pagination]="true" paginationPageSize="10"
 
-    [enableCellChangeFlash]="true"
+            [enableCellChangeFlash]="true"
 
-    (gridReady)="on_GridReady($event)"
-    >
-    </ag-grid-angular>
+            (gridReady)="on_GridReady($event)"
+        >
+        </ag-grid-angular>
 
-    <ag-grid-angular class="ag-theme-material" id="call-plans-detail"
-    [columnDefs]="columnDefsDetail" [rowData]="rowDataDetail"
-    [stopEditingWhenGridLosesFocus]="true" 
-    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+        <mat-toolbar-row>
+            <button (click)="openDialogDel()" class="del"> <i class="fas fa-trash-alt"></i> </button>
+            <button (click)="openDialogAddCallPlan()" > <i class="fas fa-plus"></i> Call Plan</button>
+            <button (click)="openDialogAttachRateCard()" > <i class="fas fa-plus-circle"></i> Rate Card</button>
+            <button (click)="openDialogAttachCode()" > <i class="fas fa-plus-circle"></i> Code</button>
+    
+            <mat-form-field class="search-bar">
+                    <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
+                    <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+            </mat-form-field>
+        </mat-toolbar-row>
+    </div>
 
-    [enableCellChangeFlash]="true"
+    <div class="details-container">
+        <mat-tab-group>
+            <mat-tab label="More Details">
+                    <ag-grid-angular class="ag-theme-material" id="call-plans-detail"
+                        [columnDefs]="columnDefsDetail" [rowData]="rowDataDetail"
+                        [stopEditingWhenGridLosesFocus]="true" 
+                        [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                        [enableCellChangeFlash]="true"
+                        [suppressLoadingOverlay]="true"
+                    
+                        (gridReady)="on_GridReady_Details($event)"
+                    >
+                    </ag-grid-angular>
+                    <ag-grid-angular class="ag-theme-material" id="call-plans-detail2"
+                        [columnDefs]="columnDefsDetail2" [rowData]="rowDataDetail"
+                        [stopEditingWhenGridLosesFocus]="true" 
+                        [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                        [suppressNoRowsOverlay]="true" [suppressLoadingOverlay]="true"
+                        [enableCellChangeFlash]="true"
+                    
+                        (gridReady)="on_GridReady_Details2($event)"
+                >
+                </ag-grid-angular>
+            </mat-tab>
+            <mat-tab label="Rate Cards">
+                    <ag-grid-angular class="ag-theme-material" id="call-plans-ratecards"
+                        [columnDefs]="columnDefsRatecards" [rowData]="rowDataDetail" 
+                        [rowSelection]="rowSelectionRateCards" (selectionChanged)="aggrid_rateCards_selectionChanged($event)" [suppressRowClickSelection]="true"
+                        [stopEditingWhenGridLosesFocus]="true" 
+                        [enableFilter]="true" [floatingFilter]="true"
+                        [enableSorting]="true"
+                        [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                        [pagination]="true" paginationPageSize="10"
+                        [suppressLoadingOverlay]="true"
+                        [enableCellChangeFlash]="true"
+                    
+                        (gridReady)="on_GridReady_Ratecards($event)"
+                        
+                    >
+                    </ag-grid-angular>
+                    <!-- aggrid_rateCards_selectionChanged() -->
+            </mat-tab>
+                <mat-tab label="Codes">
+                    <ag-grid-angular class="ag-theme-material" id="call-plans-codes"
+                        [columnDefs]="columnDefsCodes" [rowData]="rowDataDetail" [suppressRowClickSelection]="true"
+                        [stopEditingWhenGridLosesFocus]="true" 
+                        [enableFilter]="true" [floatingFilter]="true"
+                        [enableSorting]="true"
+                        [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                        [pagination]="true" paginationPageSize="10"
+                        [suppressLoadingOverlay]="true"
+                    
+                        [enableCellChangeFlash]="true"
+                    
+                        (gridReady)="on_GridReady_Codes($event)"
+                    >
+                    </ag-grid-angular>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
 
-    (gridReady)="on_GridReady2($event)"
-    >
-    </ag-grid-angular>
 
-    <mat-toolbar-row>
-
-        <button (click)="openDialogDel()" class="del"> <i class="fa fa-trash-o"></i> </button>
-
-        <button (click)="openDialogAddCallPlan()" > <i class="fa fa-plus"></i> Call Plan</button>
-
-        <button (click)="openDialogAttachRateCard()" > <i class="fa fa-plus-circle"></i> Rate Card</button>
-
-        <button (click)="openDialogAttachCode()" > <i class="fa fa-plus-circle"></i> Code</button>
-
-        <mat-form-field class="search-bar">
-                <span matPrefix><i class="fa fa-search"></i> &nbsp;</span>
-                <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
-        </mat-form-field>
-
-    </mat-toolbar-row>
 
 </section>

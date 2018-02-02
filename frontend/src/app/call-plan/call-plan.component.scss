@@ -6,28 +6,3 @@ section {
     background-color: white;
     overflow: hidden;
 }
-
-app-call-plan-table {
-    height: 30%; 
-    position: absolute;
-    top: 0;
-}
-
-.container {
-    position: absolute;
-    height: 54%; width: inherit;
-    bottom: 0;
-
-    app-call-plan-rate-cards {
-        width: 46%; height: 100%;
-        float: left;
-        border-top: 3px dashed #E0E0E0;
-        border-right: 3px dashed #E0E0E0;
-    }
-     
-    app-call-plan-codes {
-        width: 53.8%; height: 100%;
-        float: right;
-        border-top: 3px dashed #E0E0E0;
-    }
-}

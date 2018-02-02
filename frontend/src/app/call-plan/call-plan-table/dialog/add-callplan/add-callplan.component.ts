@@ -1,4 +1,3 @@
-import { CallPlanCodesComponent } from './../../../call-plan-codes/call-plan-codes.component';
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder,FormArray, Validators, FormControl } from '@angular/forms';
@@ -57,7 +56,7 @@ export class AddCallPlanComponent implements OnInit {
     // codes
         private countryCodeList;
         private planNumber = [
-            {num: 0}, {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}, {num: 10}, 
+            {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}, {num: 10}, 
             {num: 11}, {num: 12}, {num: 13}, {num: 14}, {num: 15}, {num: 16}, {num: 17}, {num: 18}, {num: 19}, {num: 20}
         ];
         private planTypes = [
@@ -89,7 +88,7 @@ export class AddCallPlanComponent implements OnInit {
             subtitleCtrl: [''],
             descriptionCtrl: ['', Validators.required],
             availableCtrl: ['', Validators.required],
-            validthroughCtrl: ['', [Validators.required]],
+            validthroughCtrl: ['', Validators.required],
             buypriceCtrl: ['', [Validators.required, Validators.pattern(this.currencyPattern)]],
             sellpriceCtrl: ['', [Validators.required, Validators.pattern(this.currencyPattern)]],
             dayperiodCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
@@ -175,6 +174,11 @@ export class AddCallPlanComponent implements OnInit {
             control.push(this.initCountryCodeFormGroup());
     }
 
+    removeAddress(index: number) {
+        const control = <FormArray>this.attachCountryCodeFormGroup.controls['codes'];
+        control.removeAt(index);
+    }
+
         // Validation
         priceErr(): string {
             if(this.attachCallPlanFormGroup.get('buypriceCtrl').hasError('required') || this.attachCallPlanFormGroup.get('sellpriceCtrl').hasError('required')){
@@ -209,7 +213,37 @@ export class AddCallPlanComponent implements OnInit {
     */
 
     click_addCallPlan() {
+        console.log(JSON.stringify(this.finalCallPlanObj));
         this.post_callPlan();
+    }
+
+    insertDummyDataCallPlan() {
+        const randomInt = Math.floor(Math.random() * Math.floor(1000));
+
+        this.attachCallPlanFormGroup.get('titleCtrl').setValue(`Random title ${randomInt}`);
+        this.attachCallPlanFormGroup.get('subtitleCtrl').setValue(`Random subtitle ${randomInt}`);
+        this.attachCallPlanFormGroup.get('availableCtrl').setValue(`available`);
+        this.attachCallPlanFormGroup.get('buypriceCtrl').setValue(`1.11`);
+        this.attachCallPlanFormGroup.get('sellpriceCtrl').setValue(`2.22`);
+        this.attachCallPlanFormGroup.get('dayperiodCtrl').setValue(`27`);
+        this.attachCallPlanFormGroup.get('rankingCtrl').setValue(`1`);
+        this.attachCallPlanFormGroup.get('plantypeCtrl').setValue(`PAY_AS_YOU_GO_CALL_PLAN`);
+        this.attachCallPlanFormGroup.get('maxdestinationCtrl').setValue(`0`);
+        this.attachCallPlanFormGroup.get('maxminutesCtrl').setValue(`0`);
+        this.attachCallPlanFormGroup.get('activewhenCtrl').setValue(`IMMEDIATELY`);
+        this.attachCallPlanFormGroup.get('promoCtrl').setValue(true);
+
+        console.log(this.attachCallPlanFormGroup.value);
+    }   
+
+    insertDummyDataCodes() {
+        this.attachCodesFormGroup.get('carrierCtrl').setValue(`OBT`);
+        this.attachCodesFormGroup.get('plantypeCtrl').setValue(0);
+        this.attachCodesFormGroup.get('planpriorityCtrl').setValue(1);
+        this.attachCodesFormGroup.get('dayperiodCtrl').setValue(27);
+        this.attachCodesFormGroup.get('plannumberCtrl').setValue(1);
+
+        console.log(this.attachCodesFormGroup.value);
     }
 
     // Add Static fields to codes Array
@@ -231,7 +265,7 @@ export class AddCallPlanComponent implements OnInit {
             title: this.attachCallPlanFormGroup.get('titleCtrl').value,
             subtitle: this.attachCallPlanFormGroup.get('subtitleCtrl').value,
             available: this.attachCallPlanFormGroup.get('availableCtrl').value,
-            valid_through: Date.parse(this.attachCallPlanFormGroup.get('validthroughCtrl').value).toString(),
+            valid_through: Date.parse(this.attachCallPlanFormGroup.get('validthroughCtrl').value).toString,
             buy_price: parseFloat(this.attachCallPlanFormGroup.get('buypriceCtrl').value),
             sell_price: parseFloat(this.attachCallPlanFormGroup.get('sellpriceCtrl').value),
             day_period: parseInt(this.attachCallPlanFormGroup.get('dayperiodCtrl').value),
@@ -262,7 +296,7 @@ export class AddCallPlanComponent implements OnInit {
                     carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
                     planType: this.attachCodesFormGroup.get('plantypeCtrl').value,
                     priority: this.attachCodesFormGroup.get('planpriorityCtrl').value,
-                    dayPeriod: this.attachCodesFormGroup.get('planpriorityCtrl').value,
+                    dayPeriod: this.attachCodesFormGroup.get('dayperiodCtrl').value,
                     planNumber: parseInt(this.attachCodesFormGroup.get('plannumberCtrl').value)
                 },
             );

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
+import { GlobalSharedService } from './../../global-services/global-service.shared.service';
+
 // Observable operators
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -9,15 +11,19 @@ import 'rxjs/add/operator/do';
 
 @Injectable()
 export class CarrierService {
-    url = 'https://172.20.13.129:8943/';
-    rowData: any[];
-    headers: Headers;
-    options: RequestOptions;
+    private url = 'http://172.20.13.129:8943/';
+    private rowData: any[];
+    private headers: Headers;
+    private options: RequestOptions;
 
-    constructor(private http: Http) {
+    constructor(
+        private http: Http,
+        private globalSharedService: GlobalSharedService
+    ) {
         this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
         this.options = new RequestOptions({ headers: this.headers });
     }
+
 
     /*
     initialLoad() is returning an obj of type Observable that is an array defined in Carriers Model as an obj

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 
 import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-table.component';
 
@@ -20,6 +20,7 @@ export class AddCodeComponent implements OnInit {
     // Form Group 
     private addCallPlanFormGroup: FormGroup;
     private attachCodeFormGroup: FormGroup;
+    private attachCountryCodeFormGroup: FormGroup;
 
     // var
     callPlanObj = [];
@@ -51,13 +52,16 @@ export class AddCodeComponent implements OnInit {
             callplanCtrl: ['']
         });
         this.attachCodeFormGroup = this.formBuilder.group({
-            originationCtrl: ['', Validators.required],
-            destinationCtrl: ['', Validators.required],
             carrierCtrl: ['', Validators.required],
             plantypeCtrl: ['', Validators.required],
             planpriorityCtrl: ['', Validators.required],
             dayperiodCtrl: ['', [Validators.required, Validators.maxLength(3), Validators.pattern('^[0-9]*$')]],
             plannumberCtrl: ['', Validators.required],
+        })
+        this.attachCountryCodeFormGroup = this.formBuilder.group({
+            codes: this.formBuilder.array([
+                this.initCountryCodeFormGroup()
+            ])
         })
 
         this.get_CallPlan();
@@ -66,46 +70,66 @@ export class AddCodeComponent implements OnInit {
         this.callPlanSharedService.currentCountryCode.subscribe( receivedCountryCodeObj => this.countryCodeList = receivedCountryCodeObj);
     }
 
-    // subscribe to serice and get carrier names
-    get_CallPlan() {
-        this.callPlanService.get_allCallPlan().subscribe(
-            data => {
-                console.log(data);
-                this.extractCallPlanNames(data);
-            },
-            error => { console.log(error); },
-        )
-    }
-
-    extractCallPlanNames(data): void {
-        for ( let i = 0 ; i < data.length; i++) {
-            this.callPlanObj.push( { title: data[i].title, id: data[i].id }, );
+    /*
+        ~~~~~~~~~~ Call API services ~~~~~~~~~~
+    */
+        get_CallPlan() {
+            this.callPlanService.get_allCallPlan().subscribe(
+                data => {
+                    console.log(data);
+                    this.extractCallPlanNames(data);
+                },
+                error => { console.log(error); },
+            )
         }
 
-        console.log(this.callPlanObj);
-    }
-
-    getSelectedCallPlanId(): number {
-        const callplanId = this.addCallPlanFormGroup.get('callplanCtrl').value;
-        return callplanId;
-    }
-
-    get_CarrierCodes() {
-        this.carrierService.get_carriers().subscribe(
-            data => {
-                console.log(data);
-                this.extractCarrierCodes(data);
-            },
-            error => { console.log(error); },
-        )
-    }
-
-    extractCarrierCodes(data) {
-        for ( let i = 0 ; i < data.length; i++) {
-            this.carrierCodesObj.push( { code: data[i].code, carrier: data[i].name}, );
+        get_CarrierCodes() {
+            this.carrierService.get_carriers().subscribe(
+                data => {
+                    console.log(data);
+                    this.extractCarrierCodes(data);
+                },
+                error => { console.log(error); },
+            )
         }
 
-        console.log(this.carrierCodesObj);
-    }
+    /*
+        ~~~~~~~~~~ Extract Data from JSON into input Format ~~~~~~~~~~
+    */
+        extractCallPlanNames(data): void {
+            for ( let i = 0 ; i < data.length; i++) {
+                this.callPlanObj.push( { title: data[i].title, id: data[i].id }, );
+            }
+
+            console.log(this.callPlanObj);
+        }
+
+        getSelectedCallPlanId(): number {
+            const callplanId = this.addCallPlanFormGroup.get('callplanCtrl').value;
+            return callplanId;
+        }
+
+        extractCarrierCodes(data) {
+            for ( let i = 0 ; i < data.length; i++) {
+                this.carrierCodesObj.push( { code: data[i].code, carrier: data[i].name}, );
+            }
+
+            console.log(this.carrierCodesObj);
+        }
+
+    /*
+        ~~~~~~~~~~ Form related UI Methods ~~~~~~~~~~
+    */
+        initCountryCodeFormGroup() { //Initialize a FormGroup that will be repeated in a nested array
+            return this.formBuilder.group({
+                originationCtrl: ['', Validators.required],
+                destinationCtrl: ['', Validators.required]
+            })
+        }
+
+        addCodes(): void {
+            const control = <FormArray>this.attachCountryCodeFormGroup.controls['codes'];
+                control.push(this.initCountryCodeFormGroup());
+        }
 
 }

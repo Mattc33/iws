@@ -242,3 +242,32 @@ export class RatesTableAllComponent implements OnInit {
     }
 
 }   
+
+/*
+
+add_ts
+:
+"2018-01-22T20:29:03Z"
+carrier_id
+:
+1
+carrier_name
+:
+"VoxBeam"
+description
+:
+null
+end_ts
+:
+"2018-01-22T20:29:03Z"
+id
+:
+29
+name
+:
+"VoxBeam Silver"
+start_ts
+:
+"2018-01-19T20:29:03Z"
+
+*/

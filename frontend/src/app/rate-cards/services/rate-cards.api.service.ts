@@ -9,7 +9,7 @@ import 'rxjs/add/operator/do';
 
 @Injectable()
 export class RateCardsService {
-    url = 'https://172.20.13.129:8943/';
+    url = 'http://172.20.13.129:8943/';
     headers: Headers;
     options: RequestOptions;
 

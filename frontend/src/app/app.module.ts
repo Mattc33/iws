@@ -1,5 +1,4 @@
 // Core Modules
-// import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,8 +15,7 @@ import { MatCheckboxModule, MatIconModule, MatRadioModule, MatDialogModule, MatD
 import { MatNativeDateModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-// UI Library: Prime NG
+import { MatTabsModule } from '@angular/material/tabs';
 
 /* --------------------------------------------------------------------------------------------------------------------------------------
    -------------------------------------------------------------------------------------------------------------------------------------- */
@@ -26,6 +24,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppComponent } from './app.component';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
+
+import { GlobalSharedService } from './global-services/global-service.shared.service';
 
 // Third Party Components
 import { AgGridModule } from 'ag-grid-angular';
@@ -70,8 +70,6 @@ import { RatesSharedService } from './rates/services/rates.shared.service';
 // Call Plan
 import { CallPlanComponent } from './call-plan/call-plan.component';
 import { CallPlanTableComponent } from './call-plan/call-plan-table/call-plan-table.component';
-import { CallPlanRateCardsComponent } from './call-plan/call-plan-rate-cards/call-plan-rate-cards.component';
-import { CallPlanCodesComponent } from './call-plan/call-plan-codes/call-plan-codes.component';
 
 import { AddCallPlanComponent } from './call-plan/call-plan-table/dialog/add-callplan/add-callplan.component';
 import { DelCallPlanComponent } from './call-plan/call-plan-table/dialog/del-callplan/del-callplan.component';
@@ -98,8 +96,8 @@ import { RegistrationComponent } from './registration/registration.component';
     RateCardsComponent, RateCardsTableComponent, AddRateCardDialogComponent, DeleteRateCardsDialogComponent,
     RatesComponent, RatesTableComponent, UploadRatesDialogComponent, DeleteAllRatesDialogComponent,
     RatesTableTeleUComponent, RatesTableAllComponent, DeleteTeleuRatesDialogComponent,
-    CallPlanComponent, CallPlanTableComponent, CallPlanRateCardsComponent, CallPlanCodesComponent,
-    AddCallPlanComponent, DelCallPlanComponent, AddRateCardComponent, AddCodeComponent,
+    CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, 
+    AddRateCardComponent, AddCodeComponent,
     AccountsComponent,
   ],
   imports:
@@ -112,8 +110,8 @@ import { RegistrationComponent } from './registration/registration.component';
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatTooltipModule, MatDatepickerModule, MatNativeDateModule,
-    // Prime NG Modules
-    //
+    MatTabsModule,
+    // Ag Grid & Routing
     AgGridModule.withComponents([ ]),
     RouterModule.forRoot([
       {path: '', component: DashboardComponent},
@@ -128,6 +126,7 @@ import { RegistrationComponent } from './registration/registration.component';
     ])
   ],
   providers: [ 
+    GlobalSharedService,
     CarrierService, CarrierSharedService,
     RateCardsService, RateCardsSharedService,
     RatesService, RatesSharedService,
