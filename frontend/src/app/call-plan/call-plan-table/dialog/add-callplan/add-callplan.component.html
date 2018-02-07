@@ -179,7 +179,6 @@
                 <span> <b>Code Group {{counter + 1}}:</b> </span>
                 <button *ngIf="attachCountryCodeFormGroup.get('codes').controls.length > 1" (click)="removeAddress(counter)" class="country-code-trash"> <i class="fas fa-trash"></i> </button>
                     <div [formGroupName]="counter">
-
                         <mat-form-field class="half-width"> 
                             <mat-select placeholder="Origination Country" formControlName="originationCtrl">
                                 <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
@@ -187,6 +186,22 @@
                                 </mat-option>   
                             </mat-select>
                         </mat-form-field>
+
+                        <!--
+                                <mat-select placeholder="Origination Country" formControlName="originationCtrl">
+                                <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
+                                    {{code.code}} - {{code.country}}
+                                </mat-option>   
+                                </mat-select>
+                            
+
+                                <input placeholder="Pick one" matInput [formControl]="myControl" [matAutocomplete]="auto">
+                                <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.code">
+                                    {{ option.country }} | {{ option.code }}
+                                </mat-option>
+                                </mat-autocomplete>
+                        -->
 
                         <mat-form-field class="half-width"> 
                             <mat-select placeholder="Destination Country" formControlName="destinationCtrl">

@@ -2,11 +2,16 @@ import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder,FormArray, Validators, FormControl } from '@angular/forms';
 
+import { Observable } from 'rxjs/Observable';
+import { startWith } from 'rxjs/operators/startWith';
+import { map } from 'rxjs/operators/map';
+
 import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-table.component';
 
 import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
 import { CarrierService } from './../../../../carrier/services/carrier.api.service';
+
 
 @Component({
   selector: 'app-add-callplan',
@@ -68,6 +73,7 @@ export class AddCallPlanComponent implements OnInit {
         private planPriorityList = [
             {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}
         ];
+        filteredOptions: Observable<any>;
         private finalCallPlanObj;
 
     constructor(
@@ -284,11 +290,8 @@ export class AddCallPlanComponent implements OnInit {
         let finalCallPlanObj = this.finalCallPlanObj;
 
         const countryCodeArr = this.attachCountryCodeFormGroup.value.codes;
-        console.log(countryCodeArr);
-        const countryCodeArrLen = this.attachCountryCodeFormGroup.value.codes.length;
-        console.log(countryCodeArrLen);
 
-        for(let i = 0; i<countryCodeArrLen; i++) {
+        for(let i = 0; i<countryCodeArr.length; i++) {
             finalCallPlanObj['codes'].push(
                 {
                     orig_cc: parseInt(countryCodeArr[i].originationCtrl), 

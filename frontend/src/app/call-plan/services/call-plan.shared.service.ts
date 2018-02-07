@@ -4,11 +4,17 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class CallPlanSharedService {
 
-    // Passing rowID from carrier-table => delete dialog
-    rowObjSource = new BehaviorSubject<number>(0);
-    currentRowObj = this.rowObjSource.asObservable();
+    // Passing rowIdAll from callplan-all-table => delete dialog
+    rowAllSource = new BehaviorSubject<number>(0);
+    currentRowAll = this.rowAllSource.asObservable();
 
-    // Pasing Call Plan Object
+    // Passing rowIdRatecards from callplan-ratecards-table => dettach ratecards dialog
+    rowRatecardsObjSource = new BehaviorSubject<object>({});
+    currentRatecardsObj = this.rowRatecardsObjSource.asObservable();
+
+    // Passing rowIdRatecards from callplan-ratecards-table => dettach ratecards dialog
+
+    // Passing Call Plan Object
     callPlanObjSource = new BehaviorSubject<object>({});
     currentCallPlanObj = this.callPlanObjSource.asObservable();
 
@@ -1010,9 +1016,14 @@ export class CallPlanSharedService {
   ]);
   currentCountryCode = this.countryCodeSource.asObservable();
 
-  changeRowObj(rowID: number) {
-    this.rowObjSource.next(rowID);
-    console.log('updated rowID: ' + rowID);
+  changeRowAll(rowAllId: number) {
+    this.rowAllSource.next(rowAllId);
+    console.log('updated rowID: ' + rowAllId);
+  }
+
+  changeRowRatecards(rowRatecardsObj: object) {
+    this.rowRatecardsObjSource.next(rowRatecardsObj);
+    console.log(rowRatecardsObj);
   }
 
   changeCallPlanObj(callPlanObj: object) {

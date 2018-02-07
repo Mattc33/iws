@@ -86,13 +86,13 @@ export class CarrierTableComponent implements OnInit {
             },
             // Taxable
             {
-                headerName: 'Taxable', field: 'taxable',
-                editable: true,
+                headerName: 'Taxable', field: 'taxable', editable: true, 
+                cellEditor: 'select', cellEditorParams: {values: [ "true", "false"]}
             },
             // Tier Number
             {
-                headerName: 'Tier Number', field: 'tier',
-                editable: true
+                headerName: 'Tier Number', field: 'tier', editable: true,
+                cellEditor: 'select', cellEditorParams: {values: [ 1, 2, 3, 4, 5]}
             },
             // Three Digit Code
             {

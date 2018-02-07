@@ -19,13 +19,13 @@ export class AddCodeComponent implements OnInit {
 
     // Form Group 
     private addCallPlanFormGroup: FormGroup;
-    private attachCodeFormGroup: FormGroup;
-    private attachCountryCodeFormGroup: FormGroup;
+    private attachCodesFormGroup: FormGroup;
+    private attachCountryCodesFormGroup: FormGroup;
 
     // var
     callPlanObj = [];
     planNumber = [
-        {num: 0}, {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}, {num: 10}, 
+        {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}, {num: 10}, 
         {num: 11}, {num: 12}, {num: 13}, {num: 14}, {num: 15}, {num: 16}, {num: 17}, {num: 18}, {num: 19}, {num: 20}
     ];
     planTypes = [
@@ -39,6 +39,7 @@ export class AddCodeComponent implements OnInit {
     ]
     carrierCodesObj = [];
     countryCodeList;
+    finalCodesObj = []  ;
      
 
     constructor(public dialogRef: MatDialogRef<CallPlanTableComponent>, 
@@ -51,14 +52,14 @@ export class AddCodeComponent implements OnInit {
         this.addCallPlanFormGroup = this.formBuilder.group({
             callplanCtrl: ['']
         });
-        this.attachCodeFormGroup = this.formBuilder.group({
+        this.attachCodesFormGroup = this.formBuilder.group({
             carrierCtrl: ['', Validators.required],
             plantypeCtrl: ['', Validators.required],
             planpriorityCtrl: ['', Validators.required],
             dayperiodCtrl: ['', [Validators.required, Validators.maxLength(3), Validators.pattern('^[0-9]*$')]],
-            plannumberCtrl: ['', Validators.required],
+            plannumberCtrl: ['', Validators.required]
         })
-        this.attachCountryCodeFormGroup = this.formBuilder.group({
+        this.attachCountryCodesFormGroup = this.formBuilder.group({
             codes: this.formBuilder.array([
                 this.initCountryCodeFormGroup()
             ])
@@ -93,6 +94,15 @@ export class AddCodeComponent implements OnInit {
             )
         }
 
+        post_attachCallPlanCodes() {
+            const obj = this.countryCodeList;
+            const callplanId = this.getSelectedCallPlanId();    
+            console.log(obj);
+            // this.callPlanService.post_newPlanCode().subscribe(
+
+            // )
+        }
+
     /*
         ~~~~~~~~~~ Extract Data from JSON into input Format ~~~~~~~~~~
     */
@@ -117,6 +127,44 @@ export class AddCodeComponent implements OnInit {
             console.log(this.carrierCodesObj);
         }
 
+        insertDummyDataCodes() {
+            this.attachCodesFormGroup.get('carrierCtrl').setValue(`OBT`);
+            this.attachCodesFormGroup.get('plantypeCtrl').setValue(0);
+            this.attachCodesFormGroup.get('planpriorityCtrl').setValue(1);
+            this.attachCodesFormGroup.get('dayperiodCtrl').setValue(27);
+            this.attachCodesFormGroup.get('plannumberCtrl').setValue(1);
+    
+            console.log(this.attachCodesFormGroup.value);
+        }
+
+    /*
+        ~~~~~~~~~~ Create final Codes Object (finalCodesObj) ~~~~~~~~~~
+    */    
+        click_attachCodes(): void {
+            console.log(this.finalCodesObj);
+        }
+
+        codesObjBuilder() {
+            const countryCodeArr = this.attachCountryCodesFormGroup.value.codes;
+
+            for (let i = 0; i<countryCodeArr.length; i++) {
+                this.finalCodesObj.push( 
+
+                    {
+                        orig_cc: parseInt(countryCodeArr[i].originationCtrl),
+                        dest_cc: parseInt(countryCodeArr[i].destinationCtrl),
+                        carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
+                        planType: parseInt(this.attachCodesFormGroup.get('plantypeCtrl').value),
+                        priority: parseInt(this.attachCodesFormGroup.get('planpriorityCtrl').value),
+                        day_period: parseInt(this.attachCodesFormGroup.get('dayperiodCtrl').value),
+                        planNumber: this.attachCodesFormGroup.get('plannumberCtrl').value
+                    },
+                );
+            }
+
+            console.log(this.finalCodesObj);
+        }
+
     /*
         ~~~~~~~~~~ Form related UI Methods ~~~~~~~~~~
     */
@@ -128,7 +176,7 @@ export class AddCodeComponent implements OnInit {
         }
 
         addCodes(): void {
-            const control = <FormArray>this.attachCountryCodeFormGroup.controls['codes'];
+            const control = <FormArray>this.attachCountryCodesFormGroup.controls['codes'];
                 control.push(this.initCountryCodeFormGroup());
         }
 

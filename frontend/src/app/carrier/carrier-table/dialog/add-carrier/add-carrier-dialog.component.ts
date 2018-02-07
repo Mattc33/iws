@@ -39,7 +39,6 @@ export class AddCarrierDialogComponent {
     name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.pattern(this.emailPattern)]),
     address: new FormControl('', [Validators.required]),
-    // tslint:disable-next-line:max-line-length
     phone: new FormControl('', [Validators.required]),
     taxable: new FormControl('', [Validators.required]),
     tier: new FormControl('', [Validators.required]),

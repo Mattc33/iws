@@ -19,6 +19,14 @@ export class CallPlanService {
         this.options = new RequestOptions({ headers: this.headers });
     }
 
+    // 
+    get_rateCardOfCallPlan6(): Observable<any> {
+        return this.http.get(this.url + 'callplans/6')
+            .map(res => res.json())
+            .catch(this.handleError)
+            .do(data => console.log('server data:', data));
+    }
+
     get_allCallPlan(): Observable<any> {
         return this.http.get(this.url + 'callplans/')
             .map(res => res.json())

@@ -18,8 +18,8 @@
       </mat-step>
     
     <!-- Enter Code Step -->
-    <mat-step [stepControl]="attachCodeFormGroup" [completed]="false">
-        <form [formGroup]="attachCodeFormGroup">
+    <mat-step [stepControl]="attachCodesFormGroup" [completed]="false">
+        <form [formGroup]="attachCodesFormGroup">
         <ng-template matStepLabel>Enter Code Info</ng-template>
 
             <mat-form-field> 
@@ -51,7 +51,7 @@
             </mat-form-field>
 
             <mat-form-field> 
-                <mat-select placeholder="Plan Number" formControlName="planpriorityCtrl" >
+                <mat-select placeholder="Plan Number" formControlName="plannumberCtrl" >
                     <mat-option *ngFor="let number of planNumber" [value]="number.num">
                         {{ number.num }}
                     </mat-option>
@@ -61,16 +61,17 @@
         <div>
             <button mat-button matStepperPrevious >Back</button>
             <button mat-button matStepperNext >Next</button>
+            <button mat-button (click)="insertDummyDataCodes()">TEST DATA</button>
         </div>
         </form>
     </mat-step>
 
      <!-- Enter Country Code Step -->
-     <mat-step [stepControl]="attachCountryCodeFormGroup" [completed]="false">
-            <form [formGroup]="attachCountryCodeFormGroup">
+     <mat-step [stepControl]="attachCountryCodesFormGroup" [completed]="false">
+            <form [formGroup]="attachCountryCodesFormGroup">
             <ng-template matStepLabel>Enter Code Info</ng-template>
                 <div class="country-code-form">
-                    <div formArrayName="codes" *ngFor="let codeFG of attachCountryCodeFormGroup.get('codes').controls; let counter=index">
+                    <div formArrayName="codes" *ngFor="let codeFG of attachCountryCodesFormGroup.get('codes').controls; let counter=index">
                     <span> <b>Code Group {{counter + 1}}:</b> </span>
                         <div [formGroupName]="counter">
     
@@ -96,7 +97,7 @@
             <div>
                 <button mat-button (click)="addCodes()">Add New Country Code</button>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext (click)="codesObjBuilder()" >Next</button>
+                <button mat-button matStepperNext (click)="codesObjBuilder()">Next</button>
             </div>
             </form>
         </mat-step>
@@ -105,14 +106,11 @@
     <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
             <div class="details">
-                Call Plan: <br><br>
-                Rate Card:  <br><br>
-
-                Press submit to attach rate card <br><br>
+                <pre>{{finalCodesObj | json}}</pre>
             </div>
         <div>
             <button mat-button matStepperPrevious>Back</button>  
-            <button mat-button >Submit</button>
+            <button mat-button (click)="click_attachCodes()">Submit</button>
         </div>
     </mat-step>
 

@@ -12,10 +12,11 @@ import { FileSelectDirective } from 'ng2-file-upload';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MatButtonModule, MatInputModule, MatStepperModule, MatSelectModule } from '@angular/material';
 import { MatCheckboxModule, MatIconModule, MatRadioModule, MatDialogModule, MatDatepickerModule } from '@angular/material';
-import { MatNativeDateModule } from '@angular/material';
+import { MatNativeDateModule, MatAutocompleteModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
+
 
 /* --------------------------------------------------------------------------------------------------------------------------------------
    -------------------------------------------------------------------------------------------------------------------------------------- */
@@ -75,6 +76,8 @@ import { AddCallPlanComponent } from './call-plan/call-plan-table/dialog/add-cal
 import { DelCallPlanComponent } from './call-plan/call-plan-table/dialog/del-callplan/del-callplan.component';
 import { AddRateCardComponent } from './call-plan/call-plan-table/dialog/add-rate-card/add-rate-card.component';
 import { AddCodeComponent } from './call-plan/call-plan-table/dialog/add-code/add-code.component';
+import { DettachRatecardsComponent } from './call-plan/call-plan-table/dialog/dettach-ratecards/dettach-ratecards.component';
+import { DettachCodesComponent } from './call-plan/call-plan-table/dialog/dettach-codes/dettach-codes.component';
 
 import { CallPlanService } from './call-plan/services/call-plan.api.service';
 import { CallPlanSharedService } from './call-plan/services/call-plan.shared.service';
@@ -89,15 +92,14 @@ import { RegistrationComponent } from './registration/registration.component';
 @NgModule({
   declarations:
   [
-    AppComponent,
-    SideNavComponent, TopNavComponent, LoginComponent, RegistrationComponent,
-    DashboardComponent,
-    CarrierComponent, CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent,
-    RateCardsComponent, RateCardsTableComponent, AddRateCardDialogComponent, DeleteRateCardsDialogComponent,
-    RatesComponent, RatesTableComponent, UploadRatesDialogComponent, DeleteAllRatesDialogComponent,
-    RatesTableTeleUComponent, RatesTableAllComponent, DeleteTeleuRatesDialogComponent,
-    CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, 
-    AddRateCardComponent, AddCodeComponent,
+    AppComponent, SideNavComponent, TopNavComponent, LoginComponent, RegistrationComponent, // Main 
+    DashboardComponent, // Dashboard
+    CarrierComponent, CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
+    RateCardsComponent, RateCardsTableComponent, AddRateCardDialogComponent, DeleteRateCardsDialogComponent, // RateCards
+    RatesComponent, RatesTableComponent, UploadRatesDialogComponent, DeleteAllRatesDialogComponent, // Rates History
+    RatesTableTeleUComponent, RatesTableAllComponent, DeleteTeleuRatesDialogComponent, 
+    CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
+    AddRateCardComponent, AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
     AccountsComponent,
   ],
   imports:
@@ -110,7 +112,7 @@ import { RegistrationComponent } from './registration/registration.component';
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatTooltipModule, MatDatepickerModule, MatNativeDateModule,
-    MatTabsModule,
+    MatTabsModule, MatAutocompleteModule,
     // Ag Grid & Routing
     AgGridModule.withComponents([ ]),
     RouterModule.forRoot([
@@ -125,19 +127,22 @@ import { RegistrationComponent } from './registration/registration.component';
       {path: 'registration', component: RegistrationComponent},
     ])
   ],
-  providers: [ 
-    GlobalSharedService,
-    CarrierService, CarrierSharedService,
-    RateCardsService, RateCardsSharedService,
-    RatesService, RatesSharedService,
-    CallPlanService, CallPlanSharedService ], // Applications services
-  bootstrap: [ AppComponent ],
-  entryComponents: [ 
-    AddCarrierDialogComponent, DelCarrierDialogComponent,
-    AddRateCardDialogComponent, DeleteRateCardsDialogComponent, UploadRatesDialogComponent,
-    DeleteAllRatesDialogComponent, DeleteTeleuRatesDialogComponent,
-    AddCallPlanComponent, DelCallPlanComponent, AddRateCardComponent, AddCodeComponent
-  ] , // Add in dialog
+    providers: [ 
+        GlobalSharedService,
+        CarrierService, CarrierSharedService,
+        RateCardsService, RateCardsSharedService,
+        RatesService, RatesSharedService,
+        CallPlanService, CallPlanSharedService  
+    ], // Applications services
+    bootstrap: [ AppComponent ],
+    entryComponents: [ 
+        AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
+        AddRateCardDialogComponent, DeleteRateCardsDialogComponent, UploadRatesDialogComponent, // Ratecards
+        DeleteAllRatesDialogComponent, DeleteTeleuRatesDialogComponent, // Rates
+        AddCallPlanComponent, DelCallPlanComponent, AddRateCardComponent, AddCodeComponent, // Callplans
+        DettachRatecardsComponent, DettachCodesComponent,
+
+    ] , // Add in dialog
 })
 
 export class AppModule { }

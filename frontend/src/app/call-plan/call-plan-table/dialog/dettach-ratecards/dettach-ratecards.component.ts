@@ -8,14 +8,15 @@ import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from '../../../services/call-plan.shared.service';
 
 @Component({
-  selector: 'app-del-callplan',
-  templateUrl: './del-callplan.component.html',
-  styleUrls: ['./del-callplan.component.scss']
+  selector: 'app-dettach-ratecards',
+  templateUrl: './dettach-ratecards.component.html',
+  styleUrls: ['./dettach-ratecards.component.scss']
 })
-export class DelCallPlanComponent implements OnInit {
+export class DettachRatecardsComponent implements OnInit {
 
-    event_onDel = new EventEmitter;
+    event_onDettach = new EventEmitter;
     private rowIdAll;
+    private rowObjRatecards;
 
     constructor(
         public dialogRef: MatDialogRef <CallPlanTableComponent>,
@@ -27,22 +28,28 @@ export class DelCallPlanComponent implements OnInit {
     ngOnInit() {
         this.callPlanSharedServce.currentRowAll
             .subscribe(receivedRowId => this.rowIdAll = receivedRowId);
+        this.callPlanSharedServce.currentRatecardsObj
+            .subscribe(receivedRowObj => this.rowObjRatecards = receivedRowObj);
     }
 
-    click_delCallPlan() {
-        this.del_delCallPlan();
-        this.aggrid_delCallPlan();
+    click_dettachRatecards() {
+        this.del_detachRatecards();
+        this.aggrid_dettachratecards();
 
         this.closeDialog();
     }
 
-    aggrid_delCallPlan() {
-        this.event_onDel.emit('del-callplan');
+    aggrid_dettachratecards() {
+        this.event_onDettach.emit('detach-ratecards');
     }
 
-    del_delCallPlan() {
-        this.callPlanService.del_callPlan(this.rowIdAll)
-            .subscribe(resp => console.log(resp));
+    del_detachRatecards() {
+        let rowRatecardsId: number;
+        for (let i = 0; i<this.rowObjRatecards.length; i++) {
+            rowRatecardsId = this.rowObjRatecards[i].id;
+            this.callPlanService.del_detachRateCard(this.rowIdAll, rowRatecardsId)
+                .subscribe(resp => console.log(resp));
+        }
     }
 
     // On method call close dialog
