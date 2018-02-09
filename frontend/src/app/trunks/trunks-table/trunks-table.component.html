@@ -1,0 +1,26 @@
+<section>
+        <ag-grid-angular class="ag-theme-material" [animateRows]="true"
+            [columnDefs]="columnDefs" [rowData]="rowData"
+            [rowSelection]="rowSelection" (selectionChanged)="aggrid_selectionChanged($event)" [suppressRowClickSelection]="true"
+            [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
+            [enableFilter]="true" [floatingFilter]="true"
+            [enableSorting]="true"
+            [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+            [pagination]="true" paginationPageSize="10"
+
+            [enableCellChangeFlash]="true"
+
+            (gridReady)="on_GridReady($event)"
+        >
+        </ag-grid-angular>
+
+        <mat-toolbar-row>
+            <button (click)="openDialogDel()" class="del" > <i class="fas fa-trash-alt"></i> </button>
+            <button (click)="openDialogAddTrunks()" > <i class="fas fa-plus"></i> Trunks</button>
+    
+            <mat-form-field class="search-bar">
+                    <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
+                    <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+            </mat-form-field>
+        </mat-toolbar-row>
+</section>

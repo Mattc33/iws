@@ -3,6 +3,7 @@ nav{
     height: 100vh; width: 150px;
     position: fixed; left: 0;
     margin-top: 50px;
+    user-select: none;
 
     background-color: #272728;
 
@@ -25,6 +26,35 @@ nav{
 
     .active-link {
         background-color:#4d4d4f;
+    }
+
+    mat-expansion-panel {
+        background-color: #272728 !important;
+        border-bottom: .5px dotted white;
+        padding-bottom: none;
+        width: 150px;
+
+        a {
+            width: 150px;
+            margin-left: -25px;
+        }
+    }
+
+    mat-expansion-panel-header {
+        height: 40px !important;
+        border-bottom: .5px dotted white;
+    }
+
+    .mat-expansion-indicator::after {
+        color: white;
+    }
+
+    mat-panel-title {
+        color: white !important;
+    }
+
+    .mat-expansion-indicator {
+        color: white;
     }
     
 }

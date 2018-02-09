@@ -1,0 +1,182 @@
+import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
+import { GridApi } from 'ag-grid';
+
+import { DeleteTrunksComponent } from './dialog/delete-trunks/delete-trunks.component';
+import { AddTrunksComponent } from './dialog/add-trunks/add-trunks.component';
+
+import { TrunksService } from '../services/trunks.api.service';
+import { TrunksSharedService } from './../services/trunks.shared.service';
+
+@Component({
+  selector: 'app-trunks-table',
+  templateUrl: './trunks-table.component.html',
+  styleUrls: ['./trunks-table.component.scss']
+})
+export class TrunksTableComponent implements OnInit {
+
+    // AG grid 
+    private rowData;
+    private columnDefs;
+    private rowSelection;
+    private quickSearchValue: string = '';
+    // AG grid controllers
+    private gridApi: GridApi;
+    private columnApi: ColumnApi;
+
+    // Pass data to shared service
+    private rowObj;
+
+    constructor(
+        private dialog: MatDialog,
+        private formBuilder: FormBuilder,
+        private trunksService: TrunksService,
+        private trunksSharedService: TrunksSharedService,
+    ) { 
+        this.rowSelection = 'multiple';
+    }
+
+    ngOnInit() {
+        this.get_allTrunksData();
+    }
+
+    /*
+        ~~~~~~~~~~ Trunks API services ~~~~~~~~~~
+    */
+    get_allTrunksData(): void {
+        this.trunksService.get_allTrunks()
+            .subscribe(
+                data => { this.rowData = data; },
+                error => { console.log(error); }
+            )
+    }
+
+    put_editTrunks(trunkId: number, body): void {
+        this.trunksService.put_editTrunk(trunkId, body)
+            .subscribe(resp => console.log(resp));
+    }
+
+    /*
+        ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
+    */
+    on_GridReady(params): void {
+        this.columnDefs = this.createColumnDefs();
+        this.gridApi = params.api;
+        this.columnApi = params.columnApi;
+        this.gridApi.sizeColumnsToFit();
+    }
+
+    private createColumnDefs(): object {
+        return [
+            {
+                headerName: 'Trunk Name', field: 'trunk_name',
+                editable: true,
+            },
+            {
+                headerName: 'Trunk IP', field: 'trunk_ip',
+                editable: true,
+            },
+            {
+                headerName: 'Trunk Port', field: 'trunk_port',
+                editable: true,
+            },
+            {
+                headerName: 'Transport Method', field: 'transport', editable: true,
+                cellEditor: "select", cellEditorParams: {values: ['udp','tcp', 'both']}
+            },
+            {
+                headerName: 'Prefix', field: 'prefix',
+                editable: true,
+            },
+            {
+                headerName: 'Active?', field: 'active', editable: true,
+                cellEditor: "select", cellEditorParams: {values: [true, false]}
+            },
+            {
+                headerName: 'Metadata', field: 'metadata',
+                editable: true,
+            }
+        ]
+    }
+
+    /*
+        ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
+    */
+    aggrid_gridSizeChanged(params): void {
+        params.api.sizeColumnsToFit();
+    }
+
+    aggrid_selectionChanged(): void {
+        const selectedRows = this.gridApi.getSelectedNodes();
+        this.rowObj = selectedRows;
+        console.log(this.rowObj);
+    }
+
+    aggrid_delRow(boolean): void {
+        if (boolean === true) {
+            this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
+        } else {
+            return;
+        }
+    }
+
+    aggrid_addRow(obj): void {
+        this.gridApi.updateRowData({ add: [obj] });
+    }
+
+    aggrid_onCellValueChanged(params: any) {
+        const id = params.data.id;
+        const trunkObj = {
+            trunk_name: params.data.trunk_name,
+            trunk_ip: params.data.trunk_ip,
+            trunk_port: params.data.trunk_port,
+            transport: params.data.transport,
+            prefix: params.data.prefix,
+            active: params.data.active,
+            metadata: params.data.metadata
+        };
+
+        this.put_editTrunks(id, trunkObj);
+    }
+
+    /*
+        ~~~~~~~~~~ Dialog ~~~~~~~~~~
+    */
+
+    openDialogDel(): void {
+        // assign new rowID prop
+        this.trunksSharedService.changeRowObj(this.rowObj);
+
+        const dialogRef = this.dialog.open(DeleteTrunksComponent, {});
+
+        const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
+            // do something with event data
+            this.aggrid_delRow(data);
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
+            console.log('The dialog was closed');
+        });
+    }
+
+    openDialogAddTrunks(): void {
+        const dialogRef = this.dialog.open(AddTrunksComponent, {
+            height: 'auto',
+            width: '30%',
+        });
+
+        const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
+            // do something with event data
+            this.aggrid_addRow(data);
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
+            console.log('The dialog was closed');
+        });
+    }
+
+}

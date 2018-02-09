@@ -8,6 +8,7 @@
             [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
             [pagination]="true" paginationPageSize="10"
+            [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
 
             [enableCellChangeFlash]="true"
 
@@ -31,27 +32,26 @@
     <div class="details-container">
         <mat-tab-group>
             <mat-tab label="More Details">
-                    <ag-grid-angular class="ag-theme-material" id="call-plans-detail" [animateRows]="true"
-                        [columnDefs]="columnDefsDetail" [rowData]=""
-                        [stopEditingWhenGridLosesFocus]="true" 
-                        [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
-                        [enableCellChangeFlash]="true"
-                        [suppressLoadingOverlay]="true"
-                        (cellValueChanged)="aggrid_detail_onCellValueChanged($event)"
+                <ag-grid-angular class="ag-theme-material" id="call-plans-detail" [animateRows]="true"
+                    [columnDefs]="columnDefsDetail" [rowData]=""
+                    [stopEditingWhenGridLosesFocus]="true" 
+                    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                    [enableCellChangeFlash]="true"
+                    [suppressLoadingOverlay]="true"
+                    (cellValueChanged)="aggrid_detail_onCellValueChanged($event)"
+                
+                    (gridReady)="on_GridReady_Details($event)"
+                >
+                </ag-grid-angular>
+                <ag-grid-angular class="ag-theme-material" id="call-plans-detail2" [animateRows]="true"
+                    [columnDefs]="columnDefsDetail2" [rowData]=""
+                    [stopEditingWhenGridLosesFocus]="true" 
+                    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                    [suppressNoRowsOverlay]="true" [suppressLoadingOverlay]="true"
+                    [enableCellChangeFlash]="true"
+                    (cellValueChanged)="aggrid_detail2_onCellValueChanged($event)"
                     
-                        (gridReady)="on_GridReady_Details($event)"
-                    >
-                    </ag-grid-angular>
-                    <ag-grid-angular class="ag-theme-material" id="call-plans-detail2" [animateRows]="true"
-                        [columnDefs]="columnDefsDetail2" [rowData]=""
-                        [stopEditingWhenGridLosesFocus]="true" 
-                        [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
-                        [suppressNoRowsOverlay]="true" [suppressLoadingOverlay]="true"
-                        [enableCellChangeFlash]="true"
-                        (cellValueChanged)="aggrid_detail2_onCellValueChanged($event)"
-                       
-                    
-                        (gridReady)="on_GridReady_Details2($event)"
+                    (gridReady)="on_GridReady_Details2($event)"
                 >
                 </ag-grid-angular>
             </mat-tab>

@@ -8,13 +8,13 @@ export class CarrierSharedService {
 // https://angularfirebase.com/lessons/sharing-data-between-angular-components-four-methods/
 // https://stackblitz.com/edit/sharing-data-any-comp?file=main.ts <- simplified example
 
-  // Passing rowID from carrier-table => delete dialog
-  rowObjSource = new BehaviorSubject<object>({});
-  currentRowObj = this.rowObjSource.asObservable();
+    // Passing rowID from carrier-table => delete dialog
+    rowObjSource = new BehaviorSubject<object>({});
+    currentRowObj = this.rowObjSource.asObservable();
 
-  changeRowObj(rowID: object) {
-    this.rowObjSource.next(rowID);
-    console.log('updated rowID: ' + rowID);
-  }
+    changeRowObj(rowId: object) {
+        this.rowObjSource.next(rowId);
+        console.log('updated rowId: ' + rowId);
+    }
 }
 

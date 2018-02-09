@@ -18,12 +18,18 @@ import { RatesService } from '../../../../rates/services/rates.api.service';
 export class UploadRatesDialogComponent implements OnInit {
 
     // Form Group var
-    firstFormGroup: FormGroup; secondFormGroup: FormGroup; thirdFormGroup: FormGroup; fourthFormGroup: FormGroup;
+    carrierFormGroup: FormGroup; 
+    ratecardFormGroup: FormGroup; 
+    percentFormGroup: FormGroup; 
+    fourthFormGroup: FormGroup;
 
-    // Var
-    rateCardNames = []; // rate cards obj populated by API
+    // DB Objects
+    carrierObj = [];
+    ratecardObj = [];
+
     currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
-    carrierNames = []; // carrier obj populated by API
+
+    // Input props
     percents = [
         {value: 1.05, viewValue: '5%'}, {value: 1.1, viewValue: '10%'}, {value: 1.15, viewValue: '15%'}, {value: 1.2, viewValue: '20%'}, 
         {value: 1.25, viewValue: '25%'}, {value: 1.3, viewValue: '30%'}, {value: 1.35, viewValue: '35%'}, {value: 1.4, viewValue: '40%'}, 
@@ -38,153 +44,143 @@ export class UploadRatesDialogComponent implements OnInit {
     fileName: string;
     disableUploadBoolean = true;
 
-    constructor(public dialogRef: MatDialogRef <RateCardsTableComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    private papa: PapaParseService,
-    private formBuilder: FormBuilder, private rateCardsService: RateCardsService, private ratesService: RatesService) {}
+    constructor(
+        public dialogRef: MatDialogRef <RateCardsTableComponent>, 
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private papa: PapaParseService,
+        private formBuilder: FormBuilder, 
+        private rateCardsService: RateCardsService, 
+        private ratesService: RatesService
+    ) {};
 
     ngOnInit() {
-        this.firstFormGroup = this.formBuilder.group({
-            firstCtrl: ['', Validators.required]
-        });
-        this.secondFormGroup = this.formBuilder.group({
-            secondCtrl: ['', Validators.required],
-        });
-        this.thirdFormGroup = this.formBuilder.group({
-            thirdCtrl: ['', Validators.required],
-        });
-        this.fourthFormGroup = this.formBuilder.group({
-            fourthCtrl: [''],
-        });
-
         this.get_carrier();
         this.get_rateCard();
-    }
+
+        this.carrierFormGroup = this.formBuilder.group({
+            carrierCtrl: ['', Validators.required]
+        });
+        this.ratecardFormGroup = this.formBuilder.group({
+            ratecardCtrl: ['', Validators.required],
+        });
+        this.percentFormGroup = this.formBuilder.group({
+            teleUPercentCtrl: ['', Validators.required],
+            privatePercentCtrl: ['', Validators.required]
+        });
+        // this.fourthFormGroup = this.formBuilder.group({
+        //     fourthCtrl: [''],
+        // });
+    };
+
+    /*
+        ~~~~~~~~~~ API service ~~~~~~~~~~
+    */
+    get_carrier(): void {
+        this.rateCardsService.get_CarrierNames()
+            .subscribe(
+                data => { this.carrierObj = data; },
+                error => { console.log(error); }
+            );
+    };
 
     get_rateCard(): void {  // subscribe to service and get carrier names
         this.rateCardsService.get_RateCard()
-        .subscribe(
-            data => {
-                console.log(data);
-                this.rateCardNames = data; //*
-            },
-            error => { console.log(error); },
-        );
-    }
+            .subscribe(
+                data => { this.ratecardObj = data; },
+                error => { console.log(error); },
+            );
+    };
 
-    get_carrier(): void {
-        this.rateCardsService.get_CarrierNames()
-        .subscribe(
-            data => {
-                console.log(data);
-                this.carrierNames = data;
-            },
-            error => { console.log(error); }
-        );
-    }
-
-    currentRateCardList(): void { // Get list of rate cards based on carrier selection on step 1 next click
-        const currentCarrier = this.input_getCarrierName();
-        const currentRateCardNames = [];
-
-        for ( let i = 0; i < this.rateCardNames.length; i++) {
-            if ( this.rateCardNames[i].carrier_name === currentCarrier ) {
-                currentRateCardNames.push( {name: this.rateCardNames[i].name}, );
+    /*
+        ~~~~~~~~~~ Extract data ~~~~~~~~~~
+    */
+    extract_CarrierName(): string {
+        for(let i = 0; i<this.carrierObj.length; i++) {
+            if ( this.carrierObj[i].id === this.input_getCarrierId() ) {
+                return this.carrierObj[i].name;
             }
         }
-        this.currentRateCardNames = currentRateCardNames;
-    }
+    };
 
-    input_getRateCardName(): string {
-        const rateCardName = this.secondFormGroup.get('secondCtrl').value;
-        return rateCardName;
-    }
+    /*
+        ~~~~~~~~~~ Get data from input ~~~~~~~~~~
+    */
+    input_getCarrierId(): number {
+        return this.carrierFormGroup.get('carrierCtrl').value;
+    };
 
-    input_getCarrierName(): string {
-        const carrierName = this.firstFormGroup.get('firstCtrl').value;
-        return carrierName;
-    }
+    input_getRateCardName(): number {
+        return this.ratecardFormGroup.get('ratecardCtrl').value;
+    };
 
-    getRateCardId(): number {
-        const rateCardNameFromInput = this.input_getRateCardName();
-        const rateCardNameFromArr = this.rateCardNames;
-        let rateCardId: number;
+    // getSellRatePercent(): number {
+    //     const sellRatePercent = this.thirdFormGroup.get('thirdCtrl').value;
+    //     return sellRatePercent;
+    // };
 
-        for (let i = 0; i < rateCardNameFromArr.length; i++) {
-            if ( rateCardNameFromInput === rateCardNameFromArr[i].name) {
-                rateCardId = rateCardNameFromArr[i].id;
-            }
-        }
-        return rateCardId;
-    }
+    // papaParse(csvFile): void { // Parse csv string into JSON
+    //     this.papa.parse(csvFile, {
+    //         // papa parse options
+    //         fastMode: true,
+    //         complete: (results) => {
+    //             console.log('Parsed: ', results);
+    //             const data = results.data;
+    //             this.profileSorter(data);
+    //             console.log(this.rateObj);
+    //         }
+    //     });
+    // }
 
-    getSellRatePercent(): number {
-        const sellRatePercent = this.thirdFormGroup.get('thirdCtrl').value;
-        return sellRatePercent;
-    }
-
-    papaParse(csvFile): void { // Parse csv string into JSON
-        this.papa.parse(csvFile, {
-            // papa parse options
-            fastMode: true,
-            complete: (results) => {
-                console.log('Parsed: ', results);
-                const data = results.data;
-                this.profileSorter(data);
-                console.log(this.rateObj);
-            }
-        });
-    }
-
-    profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
-        const percent = this.getSellRatePercent();
-        const currentCarrierName = this.input_getCarrierName();
-        if (currentCarrierName === 'PowerNet Global') {
-            console.log('using Power Net Global Profile');
-            this.powerNetGlobalProfile(data, percent);
-        }
-        if (currentCarrierName === 'VoxBeam') {
-            console.log('using VoxBeam Profile');
-            this.voxBeamProfile(data, percent);
-        }
-        if (currentCarrierName === 'Alcazar Networks Inc') {
-            console.log('using Alcazar Networks Inc Profile');
-            this.alcazarNetworksProfile(data, percent);
-        }
-        if (currentCarrierName === 'Bankai Group') {
-            console.log('using Bankai Group Profile');
-            if ( this.input_getRateCardName() === 'Bankai Silver' || this.input_getRateCardName() === 'Bankai Gold') {
-                console.log('gold or silver profile');
-                this.bankaiGroupSilverGoldProfile(data, percent);
-            }
-            if ( this.input_getRateCardName() === 'Bankai Platinum' ) {
-                console.log('platinum profile');
-                this.bankaiGroupPlatinumProfile(data, percent);
-            }
-        }
-        if (currentCarrierName === 'PCCW Global' ) {
-            console.log('using PCCW Global Profile');
-            this.pccwGlobalProfile(data, percent);
-        }
-        if (currentCarrierName === 'StarSSip LLC') {
-            console.log('using Starsipp Profile')
-            this.starsippProfile(data, percent);
-        }
-        if (currentCarrierName === 'Teleinx') {
-            console.log('using Teleinx Profile');
-            this.teleinxProfile(data, percent);
-        }
-        if (currentCarrierName === 'VoiPlatinum Portal') {
-            console.log('using VoiPlatinum Profile');
-            this.voiPlatinumProfile(data, percent);
-        }
-        if (currentCarrierName === 'VOIP Routes') {
-            console.log('using VOIP Routes Profile');
-            this.voipRoutesProfile(data, percent);
-        }
-        else {
-            return;
-        }
-    }
+    // profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
+    //     const percent = this.getSellRatePercent();
+    //     const currentCarrierName = this.input_getCarrierName();
+    //     if (currentCarrierName === 'PowerNet Global') {
+    //         console.log('using Power Net Global Profile');
+    //         this.powerNetGlobalProfile(data, percent);
+    //     }
+    //     if (currentCarrierName === 'VoxBeam') {
+    //         console.log('using VoxBeam Profile');
+    //         this.voxBeamProfile(data, percent);
+    //     }
+    //     if (currentCarrierName === 'Alcazar Networks Inc') {
+    //         console.log('using Alcazar Networks Inc Profile');
+    //         this.alcazarNetworksProfile(data, percent);
+    //     }
+    //     if (currentCarrierName === 'Bankai Group') {
+    //         console.log('using Bankai Group Profile');
+    //         if ( this.input_getRateCardName() === 'Bankai Silver' || this.input_getRateCardName() === 'Bankai Gold') {
+    //             console.log('gold or silver profile');
+    //             this.bankaiGroupSilverGoldProfile(data, percent);
+    //         }
+    //         if ( this.input_getRateCardName() === 'Bankai Platinum' ) {
+    //             console.log('platinum profile');
+    //             this.bankaiGroupPlatinumProfile(data, percent);
+    //         }
+    //     }
+    //     if (currentCarrierName === 'PCCW Global' ) {
+    //         console.log('using PCCW Global Profile');
+    //         this.pccwGlobalProfile(data, percent);
+    //     }
+    //     if (currentCarrierName === 'StarSSip LLC') {
+    //         console.log('using Starsipp Profile')
+    //         this.starsippProfile(data, percent);
+    //     }
+    //     if (currentCarrierName === 'Teleinx') {
+    //         console.log('using Teleinx Profile');
+    //         this.teleinxProfile(data, percent);
+    //     }
+    //     if (currentCarrierName === 'VoiPlatinum Portal') {
+    //         console.log('using VoiPlatinum Profile');
+    //         this.voiPlatinumProfile(data, percent);
+    //     }
+    //     if (currentCarrierName === 'VOIP Routes') {
+    //         console.log('using VOIP Routes Profile');
+    //         this.voipRoutesProfile(data, percent);
+    //     }
+    //     else {
+    //         return;
+    //     }
+    // }
 
     powerNetGlobalProfile(data, percent) {
         const dataSliced = data.slice(4);
@@ -458,17 +454,17 @@ export class UploadRatesDialogComponent implements OnInit {
         } 
     }
 
-    changeListenerUploadBtn(event): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button
-        if (event.target.files && event.target.files[0]) {
-            const csvFile = event.target.files[0];
-            this.fileName = csvFile.name;
-            this.papaParse(csvFile);
-            // pass boolean flag for valdation
-            this.disableUploadBoolean = false;
-        } else {
-            this.disableUploadBoolean = true;
-        }
-    }
+    // changeListenerUploadBtn(event): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button
+    //     if (event.target.files && event.target.files[0]) {
+    //         const csvFile = event.target.files[0];
+    //         this.fileName = csvFile.name;
+    //         this.papaParse(csvFile);
+    //         // pass boolean flag for valdation
+    //         this.disableUploadBoolean = false;
+    //     } else {
+    //         this.disableUploadBoolean = true;
+    //     }
+    // }
 
     uploadValidator(): boolean { // pass into step 2's [disable] to control button disable
         if (this.disableUploadBoolean === true) {
@@ -479,19 +475,19 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    click_addRates(): void {
-        this.post_addRates();
-        this.closeDialog();
-    }
+    // click_addRates(): void {
+    //     this.post_addRates();
+    //     this.closeDialog();
+    // }
 
-    post_addRates(): void {
-        const id: number = this.getRateCardId();
-        const body = this.rateObj;
-        console.log('rate card id --> ' + id);
+    // post_addRates(): void {
+    //     const id: number = this.getRateCardId();
+    //     const body = this.rateObj;
+    //     console.log('rate card id --> ' + id);
 
-        this.ratesService.post_Rates(body, id)
-            .subscribe(res => console.log(res));
-    }
+    //     this.ratesService.post_Rates(body, id)
+    //         .subscribe(res => console.log(res));
+    // }
 
     // close dialog
     closeDialog(): void {

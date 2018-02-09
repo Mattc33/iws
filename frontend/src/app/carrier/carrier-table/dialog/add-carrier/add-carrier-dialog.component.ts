@@ -14,58 +14,61 @@ import { CarrierService } from '../../../services/carrier.api.service';
   })
 export class AddCarrierDialogComponent {
 
-  event_onAdd = new EventEmitter;
+    event_onAdd = new EventEmitter;
 
-  emailPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+';
-  // phonePattern = '^[0-9]+$';
-  taxablePattern = '^[0-1]+$';
-  codePattern = '^[a-zA-Z0-9]{3}';
+    emailPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+';
+    // phonePattern = '^[0-9]+$';
+    taxablePattern = '^[0-1]+$';
+    codePattern = '^[a-zA-Z0-9]{3}';
 
-  taxableOptions = [
-    {value: false, viewValue: 'No'},
-    {value: true, viewValue: 'Yes'},
-  ];
+    taxableOptions = [
+        {value: false, viewValue: 'No'},
+        {value: true, viewValue: 'Yes'},
+    ];
 
-  tierOptions = [
-    {value: 1, viewValue: 'Tier 1'},
-    {value: 2, viewValue: 'Tier 2'},
-    {value: 3, viewValue: 'Tier 3'},
-    {value: 4, viewValue: 'Tier 4'},
-    {value: 5, viewValue: 'Tier 5'},
-  ];
+    tierOptions = [
+        {value: 1, viewValue: 'Tier 1'},
+        {value: 2, viewValue: 'Tier 2'},
+        {value: 3, viewValue: 'Tier 3'},
+        {value: 4, viewValue: 'Tier 4'},
+        {value: 5, viewValue: 'Tier 5'},
+    ];
 
-  // Form controllers
-  addCarrierFormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.pattern(this.emailPattern)]),
-    address: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required]),
-    taxable: new FormControl('', [Validators.required]),
-    tier: new FormControl('', [Validators.required]),
-    code: new FormControl('', [Validators.required, Validators.pattern(this.codePattern)])
-  });
+    // Form controllers
+    addCarrierFormGroup = new FormGroup({
+        name: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.pattern(this.emailPattern)]),
+        address: new FormControl('', [Validators.required]),
+        phone: new FormControl('', [Validators.required]),
+        taxable: new FormControl('', [Validators.required]),
+        tier: new FormControl('', [Validators.required]),
+        code: new FormControl('', [Validators.required, Validators.pattern(this.codePattern)])
+    });
 
-  constructor(public dialogRef: MatDialogRef <CarrierTableComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    private carrierService: CarrierService) {}
+    constructor(
+        public dialogRef: MatDialogRef <CarrierTableComponent>, 
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private carrierService: CarrierService
+    ) {}
 
-  click_addCarrier(post) {
-    const carrierModel = {
-        code: post.code,
-        name: post.name,
-        email: post.email,
-        phone: post.phone,
-        address: post.address,
-        taxable: post.taxable,
-        tier: post.tier
-    };
+    click_addCarrier(post) {
+        const carrierModel = {
+            code: post.code,
+            name: post.name,
+            email: post.email,
+            phone: post.phone,
+            address: post.address,
+            taxable: post.taxable,
+            tier: post.tier
+        };
 
-    console.log(carrierModel);
+        console.log(carrierModel);
 
-    this.aggrid_addCarrier(carrierModel);
-    this.post_addCarrier(carrierModel);
+        this.aggrid_addCarrier(carrierModel);
+        this.post_addCarrier(carrierModel);
 
-    this.closeDialog();
-  }
+        this.closeDialog();
+    }
 
     post_addCarrier(body) {
         this.carrierService.post_AddRow(body)

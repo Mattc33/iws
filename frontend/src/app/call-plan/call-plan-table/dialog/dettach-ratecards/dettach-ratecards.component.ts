@@ -52,7 +52,6 @@ export class DettachRatecardsComponent implements OnInit {
         }
     }
 
-    // On method call close dialog
     closeDialog(): void {
         this.dialogRef.close();
     }

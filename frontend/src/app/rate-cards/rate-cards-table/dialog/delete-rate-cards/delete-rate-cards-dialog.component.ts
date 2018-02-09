@@ -39,7 +39,7 @@ import { RateCardsSharedService } from '../../../services/rate-cards.shared.serv
     }
 
     aggrid_delRateCard() {
-        this.event_onDel.emit(true);
+        this.event_onDel.emit('delete-ratecards');
     }
 
     del_delCarrier() {

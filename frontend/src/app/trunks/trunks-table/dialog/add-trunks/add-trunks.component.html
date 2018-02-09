@@ -1,0 +1,81 @@
+<mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
+
+    <!-- Choose Carrier Step -->
+    <mat-step [stepControl]="carrierFormGroup" [completed]="false">
+    <form [formGroup]="carrierFormGroup">
+        <ng-template matStepLabel>Choose Carrier</ng-template>
+        <mat-form-field>
+            <mat-select placeholder="Carrier" formControlName="carrierCtrl">
+            <mat-option *ngFor="let carrier of carrierNames" [value]="carrier.value">
+                {{carrier.value}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+            <button mat-button matStepperNext [disabled]="carrierFormGroup.invalid"> Next </button>
+        </div>
+    </form>
+    </mat-step>
+    
+    <!-- Enter Trunks Info Step -->
+    <mat-step [stepControl]="trunksFormGroup" [completed]="false">
+    <form [formGroup]="trunksFormGroup">
+        <ng-template matStepLabel>Enter Trunks Information</ng-template>
+
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Trunk Name" formControlName="nameCtrl" />
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Trunk IP" formControlName="ipCtrl" />
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Trunk Port" formControlName="portCtrl" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select placeholder="Trasport Method" formControlName="transportCtrl">
+                <mat-option *ngFor="let option of transportMethods" [value]="option.value">
+                    {{option.value}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Trunk Prefix" formControlName="prefixCtrl" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select placeholder="Active?" formControlName="activeCtrl">
+                <mat-option *ngFor="let option of activeValues" [value]="option.value">
+                    {{option.value}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Meta Data" formControlName="metadataCtrl" />
+        </mat-form-field>
+
+        <div>
+            <button mat-button matStepperPrevious >Back</button>
+            <button mat-button matStepperNext [disabled]="!trunksFormGroup.valid" >Next</button>
+        </div>
+    </form>
+    </mat-step>
+    
+    <!-- Details & Finalize  -->
+    <mat-step [completed]="false">
+        <ng-template matStepLabel>Review, Submit</ng-template>
+            <div class="details">
+                <pre></pre>
+                Press Submit to add new rate card. <br><br>
+            </div>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>  
+            <button mat-button (click)="click_addTrunks()">Submit</button>
+        </div>
+    </mat-step>
+    
+</mat-horizontal-stepper>

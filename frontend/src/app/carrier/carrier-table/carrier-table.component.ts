@@ -23,6 +23,7 @@ export class CarrierTableComponent implements OnInit {
     private rowData;
     private columnDefs;
     private rowSelection;
+    private quickSearchValue: string = '';
 
     // gridApi and columnApi
     private gridApi: GridApi;
@@ -30,7 +31,6 @@ export class CarrierTableComponent implements OnInit {
 
     // pass Data using shared service
     private rowObj;
-    private quickSearchValue: string = '';
 
     // inject your service
     constructor( private carrierService: CarrierService, private carrierSharedService: CarrierSharedService,
@@ -45,6 +45,9 @@ export class CarrierTableComponent implements OnInit {
         this.carrierSharedService.currentRowObj.subscribe( giveRowObj => this.rowObj = giveRowObj);
     }
 
+    /*
+        ~~~~~~~~~~ Carrier API services ~~~~~~~~~~
+    */
     get_InitializeRows() {
         this.carrierService.get_carriers()
         .subscribe(
@@ -53,7 +56,14 @@ export class CarrierTableComponent implements OnInit {
         );
     }
 
-    // on grid initialisation, grap the APIs and auto resize the columns to fit the available space
+    put_editCarrier(carrierObj, id) {
+        this.carrierService.put_EditCarrier(carrierObj, id)
+            .subscribe(resp => console.log(resp));
+    }
+
+    /*
+        ~~~~~~~~~~ AG Grid Initialization ~~~~~~~~~~
+    */
     on_GridReady(params): void {
         this.gridApi = params.api;
         this.columnApi = params.columnApi;
@@ -102,7 +112,9 @@ export class CarrierTableComponent implements OnInit {
         ];
     }
 
-    // When width of parent (e) has been changed, fire this event to resize col
+    /*
+        ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
+    */
     on_GridSizeChanged(params) {
         params.api.sizeColumnsToFit();
     }
@@ -111,7 +123,6 @@ export class CarrierTableComponent implements OnInit {
         this.gridApi.updateRowData({ add: [obj] });
     }
 
-    // On row selection pass rowID property to TableService
     on_SelectionChanged() {
         const selectedRows = this.gridApi.getSelectedRows();
         this.rowObj = selectedRows;
@@ -126,7 +137,6 @@ export class CarrierTableComponent implements OnInit {
         }
     }
 
-    // When cell edit event closes call update
     aggrid_onCellValueChanged(params: any) {
         const id = params.data.id;
         let taxable = params.data.taxable;
@@ -145,15 +155,16 @@ export class CarrierTableComponent implements OnInit {
             tier: parseInt(params.data.tier),
           };
 
-        this.carrierService.put_EditCarrier(carrierObj, id)
-        .subscribe(resp => console.log(resp));
+        this.put_editCarrier(carrierObj, id);
     }
 
-    put_editCarrier(carrierObj, id) {
-        this.carrierService.put_EditCarrier(carrierObj, id)
-            .subscribe(resp => console.log(resp));
+    onQuickFilterChanged() { // external global search
+        this.gridApi.setQuickFilter(this.quickSearchValue);
     }
 
+    /*
+        ~~~~~~~~~~ Dialog ~~~~~~~~~
+    */
     openDialogAdd() {
         const dialogRef = this.dialog.open(AddCarrierDialogComponent, {
             height: 'auto',
@@ -187,9 +198,5 @@ export class CarrierTableComponent implements OnInit {
             console.log('The dialog was closed');
         });
     } // end openDialogAdd UploadRatesDialog
-
-    onQuickFilterChanged() { // external global search
-        this.gridApi.setQuickFilter(this.quickSearchValue);
-    }
 
 } // end class

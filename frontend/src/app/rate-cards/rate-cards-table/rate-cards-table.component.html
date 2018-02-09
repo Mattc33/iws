@@ -1,32 +1,90 @@
 <section id="grid-wrapper">
-    <ag-grid-angular class="ag-theme-material"
-    [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
-    [rowSelection]="rowSelection" (selectionChanged)="on_SelectionChanged($event)"
-    [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
-    [floatingFilter]="true"
-    [enableSorting]="true"
-    [enableColResize]="true" (gridSizeChanged)="on_GridSizeChanged($event)"
-    [pagination]="true" [paginationAutoPageSize]="true"
+    <div class="all-ratecards-container">
+        <ag-grid-angular class="ag-theme-material" id="all-ratecards-table"
+            [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+            [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="aggrid_selectionChanged()"
+            [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
+            [floatingFilter]="true"
+            [enableSorting]="true"
+            [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+            [pagination]="true" [paginationAutoPageSize]="true"
+            [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
 
-    [enableCellChangeFlash]="true"
+            [enableCellChangeFlash]="true"
 
-    (gridReady)="on_GridReady($event)"
-    >
-    </ag-grid-angular>
+            (gridReady)="on_GridReady($event)"
+        >
+        </ag-grid-angular>
 
-    <mat-toolbar-row>
-    
+        <mat-toolbar-row>
             <button (click)="openDialogDel()"> <i class="fas fa-trash-alt"></i> </button>
-            <button (click)="openDialogAdd()" class="rate-card"> <i class="fas fa-plus"></i> Rate Card </button>
-            <button (click)="openDialogUpload()"> <i class="fas fa-upload"></i> Rates </button>
+            <button (click)="openDialogUpload()"> <i class="fas fa-upload"></i> Rate Card</button>
+            <button (click)="openDialogAttachTrunks()"> <i class="fas fa-plus"></i> Trunks </button>
             
             <mat-form-field class="search-bar">
                     <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                     <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
             </mat-form-field>
-            
-    </mat-toolbar-row>
+                
+        </mat-toolbar-row>
+    </div>
 
+    <div class="details-container">
+        <mat-tab-group>
+            <mat-tab label="Rates">
+                <ag-grid-angular class="ag-theme-material" id="rates-table" [animateRows]="true"
+                    [columnDefs]="columnDefsRates" [rowData]="" 
+                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_rates_selectionChanged($event)" [suppressRowClickSelection]="true"
+                    [stopEditingWhenGridLosesFocus]="true" 
+                    [enableFilter]="true" [floatingFilter]="true"
+                    [enableSorting]="true"
+                    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                    [pagination]="true" paginationPageSize="15"
+                
+                    [enableCellChangeFlash]="true"
+                
+                    (gridReady)="on_GridReady_Rates($event)"
+                >
+                </ag-grid-angular>
+                <mat-toolbar-row>
+                    <button (click)="openDialogDelRates()" class="del"> <i class="fas fa-trash-alt"></i> </button>
+                    <!-- <button (click)="openDialogUpload()" class="upload-ratecards"> <i class="fas fa-upload"></i> Rate Card</button> -->
+                    
+                    <mat-form-field class="search-bar">
+                            <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
+                            <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+                    </mat-form-field>
+                            
+                </mat-toolbar-row>
+            </mat-tab>
+            <mat-tab label="Trunks">
+                <ag-grid-angular class="ag-theme-material" id="trunks-table"
+                    [columnDefs]="columnDefsTrunks" [rowData]="" [animateRows]="true"
+                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_selectionChanged()"
+                    [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
+                    [floatingFilter]="true"
+                    [enableSorting]="true"
+                    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                    [pagination]="true" [paginationAutoPageSize]="true"
+                    [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+        
+                    [enableCellChangeFlash]="true"
+        
+                    (gridReady)="on_GridReady_Trunks($event)"
+                >
+                </ag-grid-angular>
+                <mat-toolbar-row>
+                    <button (click)="openDialogDelRates()" class="del"> <i class="fas fa-trash-alt"></i> </button>
+                    <!-- <button (click)="openDialogUpload()" class="upload-ratecards"> <i class="fas fa-upload"></i> Rate Card</button> -->
+                    
+                    <mat-form-field class="search-bar">
+                            <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
+                            <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+                    </mat-form-field>
+                </mat-toolbar-row>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
 </section>
 
 

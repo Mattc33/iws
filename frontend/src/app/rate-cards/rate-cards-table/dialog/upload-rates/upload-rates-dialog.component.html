@@ -1,60 +1,68 @@
-<mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
+<mat-horizontal-stepper> <!-- linear forces user to complete ea step -->
     
     <!-- Choose Carrier Step -->
-    <mat-step [stepControl]="firstFormGroup" [completed]="false">
-        <form [formGroup]="firstFormGroup">
+    <mat-step [stepControl]="carrierFormGroup" [completed]="false">
+        <form [formGroup]="carrierFormGroup">
             <ng-template matStepLabel>Choose Carrier</ng-template>
             <mat-form-field>
-                <mat-select placeholder="Carriers" formControlName="firstCtrl">
-                    <mat-option *ngFor="let carrier of carrierNames" [value]="carrier.name" >
-                        {{carrier.name}}
+                <mat-select placeholder="Carriers" formControlName="carrierCtrl">
+                    <mat-option *ngFor="let option of carrierObj" [value]="option.id" >
+                        {{option.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <div>
-                <button mat-button matStepperNext (click)="currentRateCardList()" [disabled]="!firstFormGroup.valid"> Next </button>
+                <button mat-button matStepperNext [disabled]="!carrierFormGroup.valid"> Next </button>
             </div>
         </form>
     </mat-step>
     
     <!-- Choose Rate Card Step -->
-    <mat-step [stepControl]="secondFormGroup" [completed]="false">
-        <form [formGroup]="secondFormGroup">
+    <mat-step [stepControl]="ratecardFormGroup" [completed]="false">
+        <form [formGroup]="ratecardFormGroup">
             <ng-template matStepLabel>Choose Rate Card</ng-template>
             <mat-form-field>
-                <mat-select placeholder="Rate Cards" formControlName="secondCtrl">
-                    <mat-option *ngFor="let ratecard of currentRateCardNames" [value]="ratecard.name">
-                        {{ratecard.name}}
-                    </mat-option>
-                </mat-select>
+                <input matInput placeholder="Enter Ratecard Name" formControlName="ratecardCtrl">
             </mat-form-field>
             <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext [disabled]="!secondFormGroup.valid" > Next </button>
+                <button mat-button matStepperNext [disabled]="!ratecardFormGroup.valid" (click)="test()"> Next </button>
             </div>
         </form>
     </mat-step>
     
     <!-- Choose Sell Rate Mark up Step -->
-    <mat-step [stepControl]="thirdFormGroup" [completed]="false">
-        <form [formGroup]="thirdFormGroup">
-            <ng-template matStepLabel>Choose Sell Rate %</ng-template>
-            <mat-form-field>
-                <mat-select placeholder="Percent" formControlName="thirdCtrl">
-                    <mat-option *ngFor="let percent of percents" [value]="percent.value">
-                        {{percent.viewValue}}
+    <mat-step [stepControl]="percentFormGroup" [completed]="false">
+        <form [formGroup]="percentFormGroup">
+            <ng-template matStepLabel>Choose Upload Conditions</ng-template>
+
+            <mat-checkbox disableRipple>Add to Tele-U</mat-checkbox>  
+            <mat-form-field class="percent-dropdown">              
+                <mat-select placeholder="Percent" formControlName="teleUPercentCtrl" disabled="false">
+                    <mat-option *ngFor="let option of percents" [value]="option.value" >
+                        {{option.viewValue}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+
+            <mat-checkbox disableRipple>Add to Private</mat-checkbox>  
+            <mat-form-field class="percent-dropdown">              
+                <mat-select placeholder="Percent" formControlName="privatePercentCtrl">
+                    <mat-option *ngFor="let option of percents" [value]="option.value" >
+                        {{option.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
             <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext (click)="getSellRatePercent()" [disabled]="!thirdFormGroup.valid" > Next </button>
+                <button mat-button matStepperNext > Next</button>
             </div>
         </form>
     </mat-step>
     
     <!-- Upload Rates Step -->
-    <mat-step [stepControl]="fourthFormGroup" [completed]="false">
+    <!-- <mat-step [stepControl]="fourthFormGroup" [completed]="false">
         <form [formGroup]="fourthFormGroup">
             <ng-template matStepLabel>Upload Rate Card</ng-template>
             <button class="uploadBtn" mat-button (click)="fileInput.click()">
@@ -66,10 +74,10 @@
                 <button mat-button matStepperNext [disabled]="uploadValidator()"> Next </button>
             </div>
         </form>
-    </mat-step>
+    </mat-step> -->
     
     <!-- Details & Finalize  -->
-    <mat-step [completed]="false">
+    <!-- <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
         <div class="details">
             <b>Carrier Name:</b> {{input_getCarrierName()}} <br>
@@ -83,6 +91,6 @@
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button (click)="click_addRates()" >Submit</button>
         </div>
-    </mat-step>
+    </mat-step> -->
     
 </mat-horizontal-stepper>

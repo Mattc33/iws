@@ -31,7 +31,6 @@ export class CallPlanTableComponent implements OnInit {
     private columnDefsRatecards;
     private columnDefsCodes;
 
-
     // AG grid controllers
     private gridApi: GridApi; // All
     private columnApi: ColumnApi;
@@ -64,9 +63,8 @@ export class CallPlanTableComponent implements OnInit {
         private callPlanService: CallPlanService, 
         private callPlanSharedService: CallPlanSharedService,
         private dialog: MatDialog, 
-        private formBuilder: FormBuilder 
+        // private formBuilder: FormBuilder 
     ) { 
-        this.columnDefs = this.createColumnDefs();
     }
 
     ngOnInit() {
@@ -76,13 +74,13 @@ export class CallPlanTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Call Plan API services ~~~~~~~~~~
     */
-        get_allCallPlansData() {
+        get_allCallPlansData(): void {
             this.callPlanService.get_allCallPlan()
                 .subscribe(
                     data => { this.rowData = data; },
                     error => { console.log(error); }
                 )
-        }
+        };
 
         get_specificCallPlanData(callPlanId: number) { //updates shared obj and grid right after api call
             this.callPlanService.get_callPlan(callPlanId)
@@ -95,9 +93,9 @@ export class CallPlanTableComponent implements OnInit {
                         this.gridApiCodes.updateRowData({ add: data.codes });
                     },
                 );
-        }
+        };
 
-        put_editCallPlan(callPlanObj, callplan_id) {
+        put_editCallPlan(callPlanObj, callplan_id): void {
             this.callPlanService.put_editCallPlan(callPlanObj, callplan_id) 
                 .subscribe(resp => console.log(resp));
         };
@@ -106,7 +104,7 @@ export class CallPlanTableComponent implements OnInit {
         ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
     */
         private on_GridReady(params): void { // init grid for all call plans table
-            this.columnDefsRatecards = this.createColumnDefsRatecards();
+            this.columnDefs = this.createColumnDefs();
             this.gridApi = params.api;
             this.columnApi = params.columnApi;
             this.gridApi.sizeColumnsToFit();
@@ -127,6 +125,7 @@ export class CallPlanTableComponent implements OnInit {
         }
 
         private on_GridReady_Ratecards(params): void { // init grid for ratecards table
+            this.columnDefsRatecards = this.createColumnDefsRatecards();
             this.gridApiRatecards = params.api;
             this.columnApiRatecards = params.ColumnApi;
             this.gridApiRatecards.sizeColumnsToFit();
@@ -139,7 +138,7 @@ export class CallPlanTableComponent implements OnInit {
             this.gridApiCodes.sizeColumnsToFit();
         }
 
-        private createColumnDefs() { // All Call plans columns
+        private createColumnDefs(): object { // All Call plans columns
             return [
                 {
                     headerName: 'Call Plans', field: 'title',
@@ -156,7 +155,7 @@ export class CallPlanTableComponent implements OnInit {
             ]
         }
 
-        private createColumnDefsDetail() { // Detailed Call plan table
+        private createColumnDefsDetail(): object { // Detailed Call plan table
             return [
                 {
                     headerName: 'Sub Title', field: 'subtitle',
@@ -189,7 +188,7 @@ export class CallPlanTableComponent implements OnInit {
             ]
         }
 
-        private createColumnDefsDetail2() {
+        private createColumnDefsDetail2(): object {
             return [
                 {
                     headerName: 'Plan Rank', field: 'ranking',
@@ -229,7 +228,7 @@ export class CallPlanTableComponent implements OnInit {
             ]
         }
 
-        private createColumnDefsRatecards() {
+        private createColumnDefsRatecards(): object {
             return [
                 {
                     headerName: 'Ratecard Name', field: 'name', checkboxSelection: true,
@@ -250,7 +249,7 @@ export class CallPlanTableComponent implements OnInit {
             ]
         }
 
-        private createColumnDefsCodes() {
+        private createColumnDefsCodes(): object {
             return [
                 {
                     headerName: 'Codes', field: 'code',
@@ -277,7 +276,7 @@ export class CallPlanTableComponent implements OnInit {
         }
 
     /*
-        ~~~~~~~~~~ Grid UI Interations ~~~~~~~~~~
+        ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
     */
         aggrid_gridSizeChanged(params): void {
             params.api.sizeColumnsToFit();
@@ -321,7 +320,7 @@ export class CallPlanTableComponent implements OnInit {
             };
 
             this.put_editCallPlan(callplanObj, id);
-        }
+        };
 
         aggrid_detail_onCellValueChanged(params: any) {
             const id = params.data.id; // rates ID
@@ -403,7 +402,7 @@ export class CallPlanTableComponent implements OnInit {
             // });
 
             dialogRef.afterClosed().subscribe(() => {
-                sub.unsubscribe();
+                // sub.unsubscribe();
                 console.log('The dialog was closed');
             });
         } // end openDialogAdd UploadRatesDialog

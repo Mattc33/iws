@@ -101,12 +101,12 @@ export class RatesTableAllComponent implements OnInit {
                     {
                         headerName: 'Difference',
                         valueGetter: function(params) {
-                          const diff = (params.data.sell_rate - params.data.buy_rate);
-                          const percent = ((diff) / params.data.buy_rate) * 100;
-                          const diffFixed = diff.toFixed(4);
-                          const percentFixed = percent.toFixed(2);
+                            const diff = (params.data.sell_rate - params.data.buy_rate);
+                            const percent = ((diff) / params.data.buy_rate) * 100;
+                            const diffFixed = diff.toFixed(4);
+                            const percentFixed = percent.toFixed(2);
 
-                          return `${diffFixed}(${percentFixed}%)`;
+                            return `${diffFixed}(${percentFixed}%)`;
                         }
                     },
                 ]
@@ -242,32 +242,3 @@ export class RatesTableAllComponent implements OnInit {
     }
 
 }   
-
-/*
-
-add_ts
-:
-"2018-01-22T20:29:03Z"
-carrier_id
-:
-1
-carrier_name
-:
-"VoxBeam"
-description
-:
-null
-end_ts
-:
-"2018-01-22T20:29:03Z"
-id
-:
-29
-name
-:
-"VoxBeam Silver"
-start_ts
-:
-"2018-01-19T20:29:03Z"
-
-*/

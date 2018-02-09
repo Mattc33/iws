@@ -8,52 +8,48 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 
 @Injectable()
-export class CarrierService {
+export class TrunksService {
     private url = 'http://172.20.13.129:8943/';
     private headers: Headers;
     private options: RequestOptions;
 
     constructor(
         private http: Http
-    ) {
-        this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
-        this.options = new RequestOptions({ headers: this.headers });
-    }
+    ) {}
 
-
-    /*
-    initialLoad() is returning an obj of type Observable that is an array defined in Carriers Model as an obj
-    we .map is as json format then return the data
-    .do(logs the json object to console)
-    .catch(will catch errors and trigger handleError method)
-    our view components can later .subscribe to the data
-    */
-    get_carriers(): Observable<any> {
-        return this.http.get(this.url + 'carriers/')
+    get_allTrunks(): Observable<any> {
+        return this.http.get(this.url + 'trunks/')
             .map(res => res.json())
             .catch(this.handleError)
             .do(data => console.log('server data:', data));
     }
 
-    post_AddRow(body: any): Observable<any> {
-        return this.http
-            .post(this.url + 'carriers/', body, this.options)
+    get_specificTrunk(trunkId: number): Observable<any> {
+        return this.http.get(this.url + 'trunks/' + trunkId)
+            .map(res => res.json())
             .catch(this.handleError)
             .do(data => console.log('server data:', data));
     }
 
-    del_DeleteRow(rowId: any): Observable<any> {
-        return this.http
-            .delete(this.url + 'carriers/' + rowId)
+    post_addTrunk(body: any): Observable<any> {
+        return this.http.post(this.url + 'trunks/', body)
+            .map(res => res.json())
             .catch(this.handleError)
             .do(data => console.log('server data:', data));
     }
 
-    put_EditCarrier(body: any, rowId: number): Observable<any> {
-        return this.http
-            .put(this.url + 'carriers/' + rowId, body)
+    del_deleteTrunk(trunkId: number): Observable<any> {
+        return this.http.delete(this.url + 'trunks/' + trunkId)
+            .map(res => res.json())
             .catch(this.handleError)
-            .do(data => console.log('server data:', data));
+            .do(data => console.log('server data:', data)); 
+    }
+
+    put_editTrunk(trunkId: number, body): Observable<any> {
+        return this.http.put(this.url + 'trunks/' + trunkId, body)
+            .map(res => res.json())
+            .catch(this.handleError)
+            .do(data => console.log('server data:', data)); 
     }
 
     handleError(error: any): any {

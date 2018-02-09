@@ -25,6 +25,13 @@ export class RateCardsService {
             .do(res => console.log('server data', res));
     }
 
+    get_SpecificRateCard(ratecardId: number): Observable<any> {
+        return this.http.get(this.url + 'ratecards/' + ratecardId + '/rates')
+            .map(res => res.json())
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
+    }
+
     get_CarrierNames(): Observable<any> {
         return this.http.get(this.url + 'carriers/')
             .map(res => res.json())
@@ -38,8 +45,8 @@ export class RateCardsService {
         .do(res => console.log('server data', res));
     }
 
-    del_DeleteRateCard(rowID: any): Observable<any> {
-        return this.http.delete(this.url + 'ratecards/' + rowID)
+    del_DeleteRateCard(rowId: number): Observable<any> {
+        return this.http.delete(this.url + 'ratecards/' + rowId)
         .catch(this.handleError)
         .do(res => console.log('server data', res));
     }

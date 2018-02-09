@@ -4,8 +4,8 @@
 
 section {
     width: 100%; height: 100%;
-    background-color: white;
-    overflow: hidden;
+    margin-left: 20px;
+    margin-right: 20px;
 
     .all-callplans-container { // All Call Plans --Left Section
         width: 30vw; height: 100vh;
@@ -29,10 +29,8 @@ section {
     
             button {
                 background-color: Transparent;
-                width: auto;
-                height: 32px;
-                padding: 2px;
-                margin: 0;
+                width: auto; height: 32px;
+                padding-left: 5px; padding-right: 5px;
                 border: 1px solid #E0E0E0;
             }
     
