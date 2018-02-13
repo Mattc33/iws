@@ -8,11 +8,13 @@ export class CallPlanSharedService {
     rowAllSource = new BehaviorSubject<number>(0);
     currentRowAll = this.rowAllSource.asObservable();
 
-    // Passing rowIdRatecards from callplan-ratecards-table => dettach ratecards dialog
+    // Passing rowObj Ratecards from callplan-ratecards-table => dettach ratecards dialog
     rowRatecardsObjSource = new BehaviorSubject<object>({});
     currentRatecardsObj = this.rowRatecardsObjSource.asObservable();
 
-    // Passing rowIdRatecards from callplan-ratecards-table => dettach ratecards dialog
+    // Passing rowObj codes from callplan-ratecards-table => dettach ratecards dialog
+    rowCodesObjSource = new BehaviorSubject<object>({});
+    currentCodesObj = this.rowCodesObjSource.asObservable();
 
     // Passing Call Plan Object
     callPlanObjSource = new BehaviorSubject<object>({});
@@ -1024,6 +1026,11 @@ export class CallPlanSharedService {
   changeRowRatecards(rowRatecardsObj: object) {
     this.rowRatecardsObjSource.next(rowRatecardsObj);
     console.log(rowRatecardsObj);
+  }
+
+  changeRowCodes(rowCodesObj: object) {
+      this.rowCodesObjSource.next(rowCodesObj);
+      console.log(rowCodesObj);
   }
 
   changeCallPlanObj(callPlanObj: object) {

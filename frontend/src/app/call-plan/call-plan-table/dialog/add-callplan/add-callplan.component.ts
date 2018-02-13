@@ -24,35 +24,35 @@ export class AddCallPlanComponent implements OnInit {
     event_onAdd = new EventEmitter();
 
     // Form Group
-        private addCarrierFormGroup: FormGroup;
-        private attachCallPlanFormGroup: FormGroup;
-        private attachCodesFormGroup: FormGroup;
-        private attachCountryCodeFormGroup: FormGroup;
+    private addCarrierFormGroup: FormGroup;
+    private attachCallPlanFormGroup: FormGroup;
+    private attachCodesFormGroup: FormGroup;
+    private attachCountryCodeFormGroup: FormGroup;
 
     // callplan
-        private carrierObj = [];
-        private status = [
-            {value: 'available'},
-            {value: 'unavailable'},
-            {value: 'deleted'},
-            {value: 'staged'},
-            {value: 'pending'},
-        ];
-        private planType = [
-            {name: 'Unlimited', value: 'UNLIMITED_CALL_PLAN'},
-            {name: 'Pay As You Go', value: 'PAY_AS_YOU_GO_CALL_PLAN'},
-            {name: 'Minutes', value: 'MINUTES_CALL_PLAN'},
-        ];
-        private activeWhen = [
-            {name: 'Activated Immediately', value: 'IMMEDIATELY'},
-            {name: 'Activated on a successful call', value: 'SUCCESS_CALL'}
-        ];
-        private promotion = [
-            {name: 'Yes', value: true},
-            {name: 'No', value: false},
-        ];
-        private unlimitedPlanToggle = false;
-        private callPlanObj = [];
+    private carrierObj = [];
+    private status = [
+        {value: 'available'},
+        {value: 'unavailable'},
+        {value: 'deleted'},
+        {value: 'staged'},
+        {value: 'pending'},
+    ];
+    private planType = [
+        {name: 'Unlimited', value: 'UNLIMITED_CALL_PLAN'},
+        {name: 'Pay As You Go', value: 'PAY_AS_YOU_GO_CALL_PLAN'},
+        {name: 'Minutes', value: 'MINUTES_CALL_PLAN'},
+    ];
+    private activeWhen = [
+        {name: 'Activated Immediately', value: 'IMMEDIATELY'},
+        {name: 'Activated on a successful call', value: 'SUCCESS_CALL'}
+    ];
+    private promotion = [
+        {name: 'Yes', value: true},
+        {name: 'No', value: false},
+    ];
+    private unlimitedPlanToggle = false;
+    private callPlanObj = [];
     
     // Patterns
         private currencyPattern = /^\d+\.\d{2}$/;
@@ -128,13 +128,9 @@ export class AddCallPlanComponent implements OnInit {
     /*
         ~~~~~~~~~~ Call API Service ~~~~~~~~~~
     */
-
     get_CarrierCodes() {
         this.carrierService.get_carriers().subscribe(
-            data => {
-                console.log(data);
-                this.extractCarrierNames(data);
-            },
+            data => {this.extractCarrierNames(data);},
             error => { console.log(error); },
         )
     }
@@ -148,7 +144,6 @@ export class AddCallPlanComponent implements OnInit {
     /*
         ~~~~~~~~~~ Extract Data from JSON into input format ~~~~~~~~~~
     */
-
     extractCarrierNames(data) {
         for ( let i = 0; i < data.length; i++) {
             this.carrierObj.push( { id: data[i].id, carrier: data[i].name, code: data[i].code}, );
@@ -158,7 +153,6 @@ export class AddCallPlanComponent implements OnInit {
     /*
         ~~~~~~~~~~ Form related UI Methods ~~~~~~~~~~
     */
-
     onChangePlanType(): boolean { // If user selects plan type UNLIMITED_CALL_PLAN show 2 extra fields
         const planType = this.attachCallPlanFormGroup.get('plantypeCtrl').value;
         if (planType === 'UNLIMITED_CALL_PLAN') {
@@ -209,51 +203,14 @@ export class AddCallPlanComponent implements OnInit {
     /*
         ~~~~~~~~~~ aggrid Event methods ~~~~~~~~~~
     */
-
-    aggrid_addCallPlan(body) {
-        this.event_onAdd.emit(body);
+    aggrid_addCallPlan(): void {
+        this.event_onAdd.emit(this.finalCallPlanObj);
     }
 
     /*
         ~~~~~~~~~~ Create Final Call Plan Object ~~~~~~~~~~
     */
-
-    click_addCallPlan() {
-        console.log(JSON.stringify(this.finalCallPlanObj));
-        this.post_callPlan();
-    }
-
-    insertDummyDataCallPlan() {
-        const randomInt = Math.floor(Math.random() * Math.floor(1000));
-
-        this.attachCallPlanFormGroup.get('titleCtrl').setValue(`Random title ${randomInt}`);
-        this.attachCallPlanFormGroup.get('subtitleCtrl').setValue(`Random subtitle ${randomInt}`);
-        this.attachCallPlanFormGroup.get('availableCtrl').setValue(`available`);
-        this.attachCallPlanFormGroup.get('buypriceCtrl').setValue(`1.11`);
-        this.attachCallPlanFormGroup.get('sellpriceCtrl').setValue(`2.22`);
-        this.attachCallPlanFormGroup.get('dayperiodCtrl').setValue(`27`);
-        this.attachCallPlanFormGroup.get('rankingCtrl').setValue(`1`);
-        this.attachCallPlanFormGroup.get('plantypeCtrl').setValue(`PAY_AS_YOU_GO_CALL_PLAN`);
-        this.attachCallPlanFormGroup.get('maxdestinationCtrl').setValue(`0`);
-        this.attachCallPlanFormGroup.get('maxminutesCtrl').setValue(`0`);
-        this.attachCallPlanFormGroup.get('activewhenCtrl').setValue(`IMMEDIATELY`);
-        this.attachCallPlanFormGroup.get('promoCtrl').setValue(true);
-
-        console.log(this.attachCallPlanFormGroup.value);
-    }   
-
-    insertDummyDataCodes() {
-        this.attachCodesFormGroup.get('carrierCtrl').setValue(`OBT`);
-        this.attachCodesFormGroup.get('plantypeCtrl').setValue(0);
-        this.attachCodesFormGroup.get('planpriorityCtrl').setValue(1);
-        this.attachCodesFormGroup.get('dayperiodCtrl').setValue(27);
-        this.attachCodesFormGroup.get('plannumberCtrl').setValue(1);
-
-        console.log(this.attachCodesFormGroup.value);
-    }
-
-    // Add Static fields to codes Array
-    pushStaticCallPlanFieldToObj() {
+    pushStaticCallPlanFieldToObj() { // Add Static fields to codes Array
         let maxDestNumber: number; let maxMinutes: number; // check if maxdestination/maxminutes fields are skipped then assign them a value of 0 instead of being nulled
             if(this.attachCallPlanFormGroup.get('maxdestinationCtrl').value === ''){
                 maxDestNumber = 0;
@@ -294,8 +251,8 @@ export class AddCallPlanComponent implements OnInit {
         for(let i = 0; i<countryCodeArr.length; i++) {
             finalCallPlanObj['codes'].push(
                 {
-                    orig_cc: parseInt(countryCodeArr[i].originationCtrl), 
-                    dest_cc: parseInt(countryCodeArr[i].destinationCtrl),
+                    ori_cc: parseInt(countryCodeArr[i].originationCtrl), 
+                    des_cc: parseInt(countryCodeArr[i].destinationCtrl),
                     carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
                     planType: this.attachCodesFormGroup.get('plantypeCtrl').value,
                     priority: this.attachCodesFormGroup.get('planpriorityCtrl').value,
@@ -305,4 +262,51 @@ export class AddCallPlanComponent implements OnInit {
             );
         }
     }
+
+    /*
+        ~~~~~~~~~~ UI Interactions ~~~~~~~~~~~
+    */
+    click_addCallPlan() {
+        this.post_callPlan();
+        this.aggrid_addCallPlan();
+        this.closeDialog();
+    }
+
+    closeDialog(): void { // close dialog
+        this.dialogRef.close();
+    }
+
+    /*
+        ~~~~~~~~~~ Test Data ~~~~~~~~~~
+    */
+    insertDummyDataCallPlan() {
+        const randomInt = Math.floor(Math.random() * Math.floor(1000));
+
+        this.attachCallPlanFormGroup.get('titleCtrl').setValue(`Random title ${randomInt}`);
+        this.attachCallPlanFormGroup.get('subtitleCtrl').setValue(`Random subtitle ${randomInt}`);
+        this.attachCallPlanFormGroup.get('availableCtrl').setValue(`available`);
+        this.attachCallPlanFormGroup.get('buypriceCtrl').setValue(`1.11`);
+        this.attachCallPlanFormGroup.get('sellpriceCtrl').setValue(`2.22`);
+        this.attachCallPlanFormGroup.get('dayperiodCtrl').setValue(`27`);
+        this.attachCallPlanFormGroup.get('rankingCtrl').setValue(`1`);
+        this.attachCallPlanFormGroup.get('plantypeCtrl').setValue(`PAY_AS_YOU_GO_CALL_PLAN`);
+        this.attachCallPlanFormGroup.get('maxdestinationCtrl').setValue(`0`);
+        this.attachCallPlanFormGroup.get('maxminutesCtrl').setValue(`0`);
+        this.attachCallPlanFormGroup.get('activewhenCtrl').setValue(`IMMEDIATELY`);
+        this.attachCallPlanFormGroup.get('promoCtrl').setValue(true);
+
+        console.log(this.attachCallPlanFormGroup.value);
+    }   
+
+    insertDummyDataCodes() {
+        this.attachCodesFormGroup.get('carrierCtrl').setValue(`OBT`);
+        this.attachCodesFormGroup.get('plantypeCtrl').setValue(0);
+        this.attachCodesFormGroup.get('planpriorityCtrl').setValue(1);
+        this.attachCodesFormGroup.get('dayperiodCtrl').setValue(27);
+        this.attachCodesFormGroup.get('plannumberCtrl').setValue(1);
+
+        console.log(this.attachCodesFormGroup.value);
+    }
+
+    
 }

@@ -20,3 +20,8 @@ button {
 mat-checkbox {
     user-select: none;
 }
+
+pre {
+    height: 20vh;
+    overflow-y: scroll;
+}

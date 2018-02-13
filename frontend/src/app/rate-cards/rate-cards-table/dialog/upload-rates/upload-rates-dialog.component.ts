@@ -21,7 +21,7 @@ export class UploadRatesDialogComponent implements OnInit {
     carrierFormGroup: FormGroup; 
     ratecardFormGroup: FormGroup; 
     percentFormGroup: FormGroup; 
-    fourthFormGroup: FormGroup;
+    uploadRatesFormGroup: FormGroup;
 
     // DB Objects
     carrierObj = [];
@@ -40,9 +40,10 @@ export class UploadRatesDialogComponent implements OnInit {
 
     // Insert Rates Props
     rateCardID: number;
-    rateObj = [];
     fileName: string;
     disableUploadBoolean = true;
+    
+    finalRatecardObj;
 
     constructor(
         public dialogRef: MatDialogRef <RateCardsTableComponent>, 
@@ -64,12 +65,17 @@ export class UploadRatesDialogComponent implements OnInit {
             ratecardCtrl: ['', Validators.required],
         });
         this.percentFormGroup = this.formBuilder.group({
-            teleUPercentCtrl: ['', Validators.required],
-            privatePercentCtrl: ['', Validators.required]
+            teleUCheckboxCtrl: [false],
+            teleUPercentCtrl: [0],
+            privateCheckboxCtrl: [false],
+            privatePercentCtrl: [0]
         });
-        // this.fourthFormGroup = this.formBuilder.group({
-        //     fourthCtrl: [''],
-        // });
+        this.uploadRatesFormGroup = this.formBuilder.group({
+            uploadRatesCtrl: ['', Validators.required]
+        });
+
+        this.percentFormGroup.controls.teleUCheckboxCtrl.setValue(false);
+        this.percentFormGroup.controls.privateCheckboxCtrl.setValue(false);
     };
 
     /*
@@ -90,6 +96,11 @@ export class UploadRatesDialogComponent implements OnInit {
                 error => { console.log(error); },
             );
     };
+
+    post_addRates(): void {
+        this.rateCardsService.post_AddRateCard(this.finalRatecardObj)
+            .subscribe(res => console.log(res));
+    }
 
     /*
         ~~~~~~~~~~ Extract data ~~~~~~~~~~
@@ -113,76 +124,126 @@ export class UploadRatesDialogComponent implements OnInit {
         return this.ratecardFormGroup.get('ratecardCtrl').value;
     };
 
-    // getSellRatePercent(): number {
-    //     const sellRatePercent = this.thirdFormGroup.get('thirdCtrl').value;
-    //     return sellRatePercent;
-    // };
+    /*
+        ~~~~~~~~~~ UI Interactions ~~~~~~~~~~
+    */
+    checkBoxValueTeleU(): boolean {
+        return !this.percentFormGroup.get('teleUCheckboxCtrl').value    
+    }
 
-    // papaParse(csvFile): void { // Parse csv string into JSON
-    //     this.papa.parse(csvFile, {
-    //         // papa parse options
-    //         fastMode: true,
-    //         complete: (results) => {
-    //             console.log('Parsed: ', results);
-    //             const data = results.data;
-    //             this.profileSorter(data);
-    //             console.log(this.rateObj);
-    //         }
-    //     });
-    // }
+    checkBoxValuePrivate(): boolean {
+        return !this.percentFormGroup.get('privateCheckboxCtrl').value
+    }
 
-    // profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
-    //     const percent = this.getSellRatePercent();
-    //     const currentCarrierName = this.input_getCarrierName();
-    //     if (currentCarrierName === 'PowerNet Global') {
-    //         console.log('using Power Net Global Profile');
-    //         this.powerNetGlobalProfile(data, percent);
-    //     }
-    //     if (currentCarrierName === 'VoxBeam') {
-    //         console.log('using VoxBeam Profile');
-    //         this.voxBeamProfile(data, percent);
-    //     }
-    //     if (currentCarrierName === 'Alcazar Networks Inc') {
-    //         console.log('using Alcazar Networks Inc Profile');
-    //         this.alcazarNetworksProfile(data, percent);
-    //     }
-    //     if (currentCarrierName === 'Bankai Group') {
-    //         console.log('using Bankai Group Profile');
-    //         if ( this.input_getRateCardName() === 'Bankai Silver' || this.input_getRateCardName() === 'Bankai Gold') {
-    //             console.log('gold or silver profile');
-    //             this.bankaiGroupSilverGoldProfile(data, percent);
-    //         }
-    //         if ( this.input_getRateCardName() === 'Bankai Platinum' ) {
-    //             console.log('platinum profile');
-    //             this.bankaiGroupPlatinumProfile(data, percent);
-    //         }
-    //     }
-    //     if (currentCarrierName === 'PCCW Global' ) {
-    //         console.log('using PCCW Global Profile');
-    //         this.pccwGlobalProfile(data, percent);
-    //     }
-    //     if (currentCarrierName === 'StarSSip LLC') {
-    //         console.log('using Starsipp Profile')
-    //         this.starsippProfile(data, percent);
-    //     }
-    //     if (currentCarrierName === 'Teleinx') {
-    //         console.log('using Teleinx Profile');
-    //         this.teleinxProfile(data, percent);
-    //     }
-    //     if (currentCarrierName === 'VoiPlatinum Portal') {
-    //         console.log('using VoiPlatinum Profile');
-    //         this.voiPlatinumProfile(data, percent);
-    //     }
-    //     if (currentCarrierName === 'VOIP Routes') {
-    //         console.log('using VOIP Routes Profile');
-    //         this.voipRoutesProfile(data, percent);
-    //     }
-    //     else {
-    //         return;
-    //     }
-    // }
+    changeListenerUploadBtn(event): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button
+        if (event.target.files && event.target.files[0]) {
+            const csvFile = event.target.files[0];
+            this.fileName = csvFile.name;
+            this.papaParse(csvFile);
+            this.disableUploadBoolean = false; // pass boolean flag for valdation
+        } else {
+            this.disableUploadBoolean = true;
+        }
+    }
 
-    powerNetGlobalProfile(data, percent) {
+    uploadValidator(boolean): boolean { // pass into step 2's [disable] to control button disable
+        if (this.disableUploadBoolean === true) {
+            return true;
+        }
+        if ( this.disableUploadBoolean === false ) {
+            return false;
+        }
+    }
+
+    /*
+        ~~~~~~~~~~~ Construct JSON ~~~~~~~~~~
+    */
+    construct_ratecardObj() {
+        this.finalRatecardObj = {
+            name: this.ratecardFormGroup.get('ratecardCtrl').value,
+            carrier_id: this.input_getCarrierId(),
+            addToTeleU: this.percentFormGroup.get('teleUCheckboxCtrl').value,
+            teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
+            asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
+            privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
+            rates: [
+
+            ]
+        };
+        console.log(this.finalRatecardObj);
+    }
+
+    /*
+        ~~~~~~~~~~ Dialog ~~~~~~~~~~
+    */
+    closeDialog(): void {
+        this.dialogRef.close();
+    }
+
+    click_addRates(): void {
+        this.post_addRates();
+        this.closeDialog();
+    }
+
+    /*
+        ~~~~~~~~~~ CSV Parser ~~~~~~~~~~
+    */
+
+    papaParse(csvFile): void { // Parse csv string into JSON
+        this.papa.parse(csvFile, {
+            // papa parse options
+            fastMode: true,
+            complete: (results) => {
+                console.log('Parsed: ', results);
+                const data = results.data;
+                this.profileSorter(data);
+            }
+        });
+    }
+
+    profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
+        const currentCarrierName = this.extract_CarrierName();
+        if (currentCarrierName === 'PowerNet Global') {
+            console.log('using Power Net Global Profile');
+            this.powerNetGlobalProfile(data);
+        }
+        if (currentCarrierName === 'VoxBeam') {
+            console.log('using VoxBeam Profile');
+            this.voxBeamProfile(data);
+        }
+        if (currentCarrierName === 'Alcazar Networks Inc') {
+            console.log('using Alcazar Networks Inc Profile');
+            this.alcazarNetworksProfile(data);
+        }
+        if (currentCarrierName === 'Bankai Group') {
+            this.bankaiGroupProfile(data);
+        }
+        if (currentCarrierName === 'PCCW Global' ) {
+            console.log('using PCCW Global Profile');
+            this.pccwGlobalProfile(data);
+        }
+        if (currentCarrierName === 'StarSSip LLC') {
+            console.log('using Starsipp Profile')
+            this.starsippProfile(data);
+        }
+        if (currentCarrierName === 'Teleinx') {
+            console.log('using Teleinx Profile');
+            this.teleinxProfile(data);
+        }
+        if (currentCarrierName === 'VoiPlatinum Portal') {
+            console.log('using VoiPlatinum Profile');
+            this.voiPlatinumProfile(data);
+        }
+        if (currentCarrierName === 'VOIP Routes') {
+            console.log('using VOIP Routes Profile');
+            this.voipRoutesProfile(data);
+        }
+        else {
+            return;
+        }
+    }
+
+    powerNetGlobalProfile(data) {
         const dataSliced = data.slice(4);
 
         for (let i = 0; i < dataSliced.length; i++) {
@@ -194,8 +255,8 @@ export class UploadRatesDialogComponent implements OnInit {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][2].slice(1) * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
+            const sellrate: number = buyrate;
+            this.finalRatecardObj.rates.push( 
             { destination: destination, 
                 prefix: prefix, 
                 buy_rate: buyrate, 
@@ -209,7 +270,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    voxBeamProfile(data, percent) {
+    voxBeamProfile(data) {
         const dataSliced = data.slice(1);
 
         for (let i = 0; i < dataSliced.length; i++) {
@@ -221,8 +282,8 @@ export class UploadRatesDialogComponent implements OnInit {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
+            const sellrate: number = buyrate;
+            this.finalRatecardObj.rates.push( 
                 { destination: destination, 
                     prefix: prefix, 
                     buy_rate: buyrate, 
@@ -236,7 +297,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    alcazarNetworksProfile(data, percent) {
+    alcazarNetworksProfile(data) {
         const dataSliced = data.slice(7);
     
         for(let i = 0; i < dataSliced.length; i++) {
@@ -248,8 +309,8 @@ export class UploadRatesDialogComponent implements OnInit {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
+            const sellrate: number = buyrate;
+            this.finalRatecardObj.rates.push( 
                 { destination: destination, 
                     prefix: prefix, 
                     buy_rate: buyrate, 
@@ -263,7 +324,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    bankaiGroupSilverGoldProfile(data, percent) {
+    bankaiGroupProfile(data) {
         const dataSliced = data.slice(1);
     
         for(let i = 0; i < dataSliced.length; i++) {
@@ -275,8 +336,8 @@ export class UploadRatesDialogComponent implements OnInit {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
+            const sellrate: number = buyrate;
+            this.finalRatecardObj.rates.push( 
                 { destination: destination, 
                     prefix: prefix, 
                     buy_rate: buyrate, 
@@ -290,34 +351,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    bankaiGroupPlatinumProfile(data, percent) {
-        const dataSliced = data.slice(1);
-    
-        for(let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][0];
-            let prefix: string = dataSliced[i][1];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
-                    destination = destination.slice(1, -1);
-                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
-                    prefix = prefix.slice(1, -1);
-                }
-            const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
-                { destination: destination, 
-                    prefix: prefix, 
-                    buy_rate: buyrate, 
-                    buy_rate_minimum: buyrate, 
-                    buy_rate_increment: 0,
-                    sell_rate: sellrate,  
-                    sell_rate_minimum: 0,
-                    sell_rate_increment: 0
-                }, 
-            );
-        }
-    }
-
-    pccwGlobalProfile(data, percent) {
+    pccwGlobalProfile(data) {
         const dataSliced = data.slice(13);
     
         for(let i = 0; i < dataSliced.length; i++) {
@@ -329,8 +363,8 @@ export class UploadRatesDialogComponent implements OnInit {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][4] * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
+            const sellrate: number = buyrate;
+            this.finalRatecardObj.rates.push( 
                 { destination: destination, 
                     prefix: prefix, 
                     buy_rate: buyrate, 
@@ -344,7 +378,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    starsippProfile(data, percent) {
+    starsippProfile(data) {
         const dataSliced = data.slice(1);
     
         for(let i = 0; i < dataSliced.length; i++) {
@@ -356,8 +390,8 @@ export class UploadRatesDialogComponent implements OnInit {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
+            const sellrate: number = buyrate;
+            this.finalRatecardObj.rates.push( 
                 { destination: destination, 
                     prefix: prefix, 
                     buy_rate: buyrate, 
@@ -371,7 +405,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    teleinxProfile(data, percent) {
+    teleinxProfile(data) {
         const dataSliced = data.slice(1);
     
         for(let i = 0; i < dataSliced.length; i++) {
@@ -383,8 +417,8 @@ export class UploadRatesDialogComponent implements OnInit {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
+            const sellrate: number = buyrate;
+            this.finalRatecardObj.rates.push( 
                 { destination: destination, 
                     prefix: prefix, 
                     buy_rate: buyrate, 
@@ -398,7 +432,7 @@ export class UploadRatesDialogComponent implements OnInit {
         } 
     }
 
-    voiPlatinumProfile(data, percent) {
+    voiPlatinumProfile(data) {
         const dataSliced = data.slice(1, -1);
     
         for(let i = 0; i < dataSliced.length; i++) {
@@ -411,8 +445,8 @@ export class UploadRatesDialogComponent implements OnInit {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
+            const sellrate: number = buyrate;
+            this.finalRatecardObj.rates.push( 
                 { destination: destination, 
                     prefix: prefix, 
                     buy_rate: buyrate, 
@@ -426,7 +460,7 @@ export class UploadRatesDialogComponent implements OnInit {
         } 
     }
 
-    voipRoutesProfile(data, percent) {
+    voipRoutesProfile(data) {
         const dataSliced = data.slice(9);
     
         for(let i = 0; i < dataSliced.length; i++) {
@@ -439,8 +473,8 @@ export class UploadRatesDialogComponent implements OnInit {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate * percent;
-            this.rateObj.push( 
+            const sellrate: number = buyrate;
+            this.finalRatecardObj.rates.push( 
                 { destination: destination, 
                     prefix: prefix, 
                     buy_rate: buyrate, 
@@ -452,46 +486,6 @@ export class UploadRatesDialogComponent implements OnInit {
                 }, 
             );
         } 
-    }
-
-    // changeListenerUploadBtn(event): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button
-    //     if (event.target.files && event.target.files[0]) {
-    //         const csvFile = event.target.files[0];
-    //         this.fileName = csvFile.name;
-    //         this.papaParse(csvFile);
-    //         // pass boolean flag for valdation
-    //         this.disableUploadBoolean = false;
-    //     } else {
-    //         this.disableUploadBoolean = true;
-    //     }
-    // }
-
-    uploadValidator(): boolean { // pass into step 2's [disable] to control button disable
-        if (this.disableUploadBoolean === true) {
-            return true;
-        }
-        if ( this.disableUploadBoolean === false ) {
-            return false;
-        }
-    }
-
-    // click_addRates(): void {
-    //     this.post_addRates();
-    //     this.closeDialog();
-    // }
-
-    // post_addRates(): void {
-    //     const id: number = this.getRateCardId();
-    //     const body = this.rateObj;
-    //     console.log('rate card id --> ' + id);
-
-    //     this.ratesService.post_Rates(body, id)
-    //         .subscribe(res => console.log(res));
-    // }
-
-    // close dialog
-    closeDialog(): void {
-        this.dialogRef.close();
     }
 
 }

@@ -28,11 +28,10 @@ import { RateCardsSharedService } from '../../../services/rate-cards.shared.serv
     ) {}
 
     ngOnInit() {
-        this.rateCardsSharedService.currentRowObj.subscribe(receivedRowObj => this.rowObj = receivedRowObj);
+        this.rateCardsSharedService.currentRowObj.subscribe(data => this.rowObj = data);
     }
 
     click_delRateCard() {
-        console.log(this.rowObj);
         this.aggrid_delRateCard();
         this.del_delCarrier();
         this.closeDialog();
@@ -43,12 +42,9 @@ import { RateCardsSharedService } from '../../../services/rate-cards.shared.serv
     }
 
     del_delCarrier() {
-        let rowId: number;
-        for( let i = 0; i < this.rowObj.length; i++) {
-            rowId = this.rowObj[i].id;
+        const rowId = this.rowObj[0].id;
             this.rateCardsService.del_DeleteRateCard(rowId)
                 .subscribe(resp => console.log(resp));
-        }
     }
 
     // On method call close dialog

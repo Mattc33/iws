@@ -39,9 +39,8 @@ export class AddCodeComponent implements OnInit {
     ]
     carrierCodesObj = [];
     countryCodeList;
-    finalCodesObj = []  ;
+    finalCodesObj;
      
-
     constructor(public dialogRef: MatDialogRef<CallPlanTableComponent>, 
         @Inject(MAT_DIALOG_DATA) public data, private formBuilder: FormBuilder, 
         private callPlanService: CallPlanService, private callPlanSharedService: CallPlanSharedService,
@@ -60,15 +59,15 @@ export class AddCodeComponent implements OnInit {
             plannumberCtrl: ['', Validators.required]
         })
         this.attachCountryCodesFormGroup = this.formBuilder.group({
-            codes: this.formBuilder.array([
-                this.initCountryCodeFormGroup()
-            ])
+            originationCtrl: ['', Validators.required],
+            destinationCtrl: ['', Validators.required]
         })
 
         this.get_CallPlan();
         this.get_CarrierCodes();
 
-        this.callPlanSharedService.currentCountryCode.subscribe( receivedCountryCodeObj => this.countryCodeList = receivedCountryCodeObj);
+        this.callPlanSharedService.currentCountryCode
+            .subscribe( data => this.countryCodeList = data);
     }
 
     /*
@@ -95,12 +94,11 @@ export class AddCodeComponent implements OnInit {
         }
 
         post_attachCallPlanCodes() {
-            const obj = this.countryCodeList;
+            const obj = this.finalCodesObj;
             const callplanId = this.getSelectedCallPlanId();    
-            console.log(obj);
-            // this.callPlanService.post_newPlanCode().subscribe(
-
-            // )
+            this.callPlanService.post_newPlanCode(callplanId, obj).subscribe(
+                resp => {console.log(resp);}
+            )
         }
 
     /*
@@ -115,8 +113,7 @@ export class AddCodeComponent implements OnInit {
         }
 
         getSelectedCallPlanId(): number {
-            const callplanId = this.addCallPlanFormGroup.get('callplanCtrl').value;
-            return callplanId;
+            return this.addCallPlanFormGroup.get('callplanCtrl').value;
         }
 
         extractCarrierCodes(data) {
@@ -140,44 +137,48 @@ export class AddCodeComponent implements OnInit {
     /*
         ~~~~~~~~~~ Create final Codes Object (finalCodesObj) ~~~~~~~~~~
     */    
-        click_attachCodes(): void {
-            console.log(this.finalCodesObj);
-        }
-
         codesObjBuilder() {
             const countryCodeArr = this.attachCountryCodesFormGroup.value.codes;
 
-            for (let i = 0; i<countryCodeArr.length; i++) {
-                this.finalCodesObj.push( 
-
+                this.finalCodesObj =
                     {
-                        orig_cc: parseInt(countryCodeArr[i].originationCtrl),
-                        dest_cc: parseInt(countryCodeArr[i].destinationCtrl),
+                        ori_cc: parseInt(this.attachCountryCodesFormGroup.get('originationCtrl').value),
+                        des_cc: parseInt(this.attachCountryCodesFormGroup.get('destinationCtrl').value),
                         carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
                         planType: parseInt(this.attachCodesFormGroup.get('plantypeCtrl').value),
                         priority: parseInt(this.attachCodesFormGroup.get('planpriorityCtrl').value),
                         day_period: parseInt(this.attachCodesFormGroup.get('dayperiodCtrl').value),
                         planNumber: this.attachCodesFormGroup.get('plannumberCtrl').value
                     },
-                );
-            }
 
             console.log(this.finalCodesObj);
         }
 
     /*
-        ~~~~~~~~~~ Form related UI Methods ~~~~~~~~~~
+        ~~~~~~~~~~ UI Interactions ~~~~~~~~~~
     */
-        initCountryCodeFormGroup() { //Initialize a FormGroup that will be repeated in a nested array
-            return this.formBuilder.group({
-                originationCtrl: ['', Validators.required],
-                destinationCtrl: ['', Validators.required]
-            })
+        click_attachCodes(): void {
+            this.post_attachCallPlanCodes();
+            this.aggrid_attachCodes();
+            this.closeDialog();
         }
 
-        addCodes(): void {
-            const control = <FormArray>this.attachCountryCodesFormGroup.controls['codes'];
-                control.push(this.initCountryCodeFormGroup());
+        aggrid_attachCodes(): void {
+            const body = {
+                ori_cc: parseInt(this.attachCountryCodesFormGroup.get('originationCtrl').value),
+                des_cc: parseInt(this.attachCountryCodesFormGroup.get('destinationCtrl').value),
+                carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
+                planType: parseInt(this.attachCodesFormGroup.get('plantypeCtrl').value),
+                priority: parseInt(this.attachCodesFormGroup.get('planpriorityCtrl').value),
+                day_period: parseInt(this.attachCodesFormGroup.get('dayperiodCtrl').value),
+                planNumber: this.attachCodesFormGroup.get('plannumberCtrl').value
+            };
+
+            this.event_onAdd.emit(body);
+        }
+
+        closeDialog(): void { // close dialog
+            this.dialogRef.close();
         }
 
 }

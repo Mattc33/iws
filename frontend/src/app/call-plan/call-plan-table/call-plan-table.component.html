@@ -71,7 +71,7 @@
                     >
                     </ag-grid-angular>
 
-                    <mat-toolbar-row class="toolbar-ratecards">
+                    <mat-toolbar-row class="toolbar-details">
                         <button (click)="openDialogDetachRatecards()" class="del"> <i class="fas fa-trash-alt"></i> </button>
                         <mat-form-field class="search-bar">
                             <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
@@ -82,7 +82,7 @@
             <mat-tab label="Codes">
                 <ag-grid-angular class="ag-theme-material" id="call-plans-codes" [animateRows]="true"
                     [columnDefs]="columnDefsCodes" [rowData]="" 
-                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_rateCards_selectionChanged($event)" [suppressRowClickSelection]="true"
+                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_codes_selectionChanged($event)" [suppressRowClickSelection]="true"
                     [stopEditingWhenGridLosesFocus]="true" 
                     [enableFilter]="true" [floatingFilter]="true"
                     [enableSorting]="true"
@@ -95,7 +95,7 @@
                     (gridReady)="on_GridReady_Codes($event)"
                 >
                 </ag-grid-angular>
-                <mat-toolbar-row>
+                <mat-toolbar-row class="toolbar-details">
                     <button (click)="openDialogDetachCodes()" class="del"> <i class="fas fa-trash-alt"></i> </button>
                     <mat-form-field class="search-bar">
                         <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>

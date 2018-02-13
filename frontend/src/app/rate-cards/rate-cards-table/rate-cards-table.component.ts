@@ -1,3 +1,4 @@
+import { AgGridModule } from 'ag-grid-angular';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
@@ -10,6 +11,7 @@ import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.compone
 
 import { RateCardsService } from '../services/rate-cards.api.service';
 import { RateCardsSharedService } from '../services/rate-cards.shared.service';
+import { RatesService } from './../../rates/services/rates.api.service';
 
 @Component({
     selector: 'app-rate-cards-table',
@@ -44,36 +46,41 @@ export class RateCardsTableComponent implements OnInit {
     private rowSelectionTrunks;
     
     // Properties for internal service
-    private rowObj;
+    private rowRatecardObj;
     private quickSearchValue: string = '';
     private rowIdAll;
 
     constructor(
         private rateCardsService: RateCardsService, 
         private rateCardsSharedService: RateCardsSharedService,
+        private ratesService: RatesService,
         private dialog: MatDialog
     ) {
     }
 
     ngOnInit() {
         this.on_InitializeRows();
-        this.rateCardsSharedService.currentRowObj.subscribe( giveRowObj => this.rowObj = giveRowObj );
     }
 
     /*
         ~~~~~~~~~~ Ratecard API services ~~~~~~~~~~
     */
-    put_editRateCard(rateCardObj, id) {
+    put_editRateCard(rateCardObj:object, id: number) {
         this.rateCardsService.put_EditRateCard(rateCardObj, id)
             .subscribe(resp => console.log(resp));
     }
 
     on_InitializeRows(): void {
         this.rateCardsService.get_RateCard()
-        .subscribe(
-            data => { this.rowData = data; },
-            error => { console.log(error); }
-        );
+            .subscribe(
+                data => { this.rowData = data; },
+                error => { console.log(error); }
+            );
+    }
+
+    put_editRates(rateCardObj: object, id: number) {
+        this.ratesService.put_Rates(id, rateCardObj)
+            .subscribe(resp => console.log(resp));
     }
 
     /*
@@ -98,7 +105,7 @@ export class RateCardsTableComponent implements OnInit {
         this.gridApiTrunks = params.api;
         this.columnApiTrunks = params.ColumnApi;
         this.gridApiTrunks.sizeColumnsToFit();
-    }
+    };
 
     private createColumnDefs() {
         return [
@@ -118,11 +125,11 @@ export class RateCardsTableComponent implements OnInit {
     private createColumnDefsRates() {
         return [
             {
-                headerName: 'Prefix', field: 'prefix', editable: true,
+                headerName: 'Prefix', field: 'prefix',
                 checkboxSelection: true, headerCheckboxSelection: true,
             },
             {
-                headerName: 'Destination', field: 'destination', editable: true,
+                headerName: 'Destination', field: 'destination',
             },
             {
                 headerName: 'Buy Rate', field: 'buy_rate', editable: true,
@@ -167,77 +174,101 @@ export class RateCardsTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Grid UI Interctions ~~~~~~~~~~
     */
-    aggrid_selectionChanged(): void {
-        this.gridApiRates.setRowData([]);
-
-        this.rowSelectionAll = this.gridApi.getSelectedRows();
-        this.rowIdAll = this.rowSelectionAll[0].id;
-
-        this.rateCardsService.get_SpecificRateCard(this.rowIdAll)
-            .subscribe(
-                data => {this.gridApiRates.updateRowData({ add: data });}
-            );
-        
-        this.rateCardsService.get_SpecificRateCard(this.rowIdAll)
-            .subscribe(
-                data => {this.gridApiTrunks.updateRowData({ add: data.trunks })}
-            )
-    }
-
-    aggrid_rates_selectionChanged(): void {
-        this.rowSelectionRates = this.gridApiRates.getSelectedRows();
-        console.log(this.rowSelectionRates);
-    }
-
-    aggrid_gridSizeChanged(params) {
-        params.api.sizeColumnsToFit();
-    }
-
-    aggrid_addRow(obj) {
-        this.gridApi.updateRowData({ add: [obj] });
-    }
-
-    aggrid_delRow(string) {
-        if (string == 'delete-ratecards') {
-            this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
-        } 
-        if (string == 'delete-rates') {
-            this.gridApiRates.updateRowData({ remove: this.gridApiRates.getSelectedRows() });
+        aggrid_gridSizeChanged(params) {
+            params.api.sizeColumnsToFit();
         }
-        if (string == 'delete-trunks') {
-            this.gridApiTrunks.updateRowData({ remove: this.gridApiTrunks.getSelectedRows() });
-        }
-        else {
-            return;
-        }
-    }
 
-    aggrid_onCellValueChanged(params: any) {
-        const id = params.data.id;
-        const rateCardObj = {
-            name: params.data.name,
-            carrier_id: params.data.carrier_id
+        onQuickFilterChanged() { // external global search
+            this.gridApi.setQuickFilter(this.quickSearchValue);
+        }
+
+        /*
+            ~~~~~ Selection ~~~~~
+        */
+        aggrid_selectionChanged(): void {
+            this.gridApiRates.setRowData([]);
+
+            this.rowRatecardObj = this.gridApi.getSelectedRows();
+            const selectedRatecardId = this.rowRatecardObj[0].id;
+
+            this.rateCardsService.get_SpecificRateCard(selectedRatecardId)
+                .subscribe(
+                    data => {this.gridApiRates.updateRowData({ add: data });}
+                );
+            
+            this.rateCardsService.get_SpecificRateCard(selectedRatecardId)
+                .subscribe(
+                    data => {this.gridApiTrunks.updateRowData({ add: data.trunks })}
+                )
         };
 
-        this.put_editRateCard(rateCardObj, id);
-    }
+        aggrid_rates_selectionChanged(): void {
+            this.rowSelectionRates = this.gridApiRates.getSelectedRows();
+            console.log(this.rowSelectionRates);
+        }
 
-    onQuickFilterChanged() { // external global search
-        this.gridApi.setQuickFilter(this.quickSearchValue);
-    }
+        /*
+            ~~~~~ Deletion ~~~~~
+        */
+        aggrid_delRow(string): void {
+            if (string == 'delete-ratecards') {
+                this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
+            } 
+            if (string == 'delete-rates') {
+                this.gridApiRates.updateRowData({ remove: this.gridApiRates.getSelectedRows() });
+            }
+            if (string == 'delete-trunks') {
+                this.gridApiTrunks.updateRowData({ remove: this.gridApiTrunks.getSelectedRows() });
+            }
+            else {
+                return;
+            }
+        }
+        
+        /*
+            ~~~~~ Addition ~~~~~
+        */
+        aggrid_addRow(obj): void {
+            this.gridApi.updateRowData({ add: [obj] });
+        }
+
+        /*
+            ~~~~~ Edit ~~~~~
+        */
+        aggrid_onCellValueChanged(params: any) {
+            const id = params.data.id;
+            const rateCardObj = {
+                name: params.data.name,
+                carrier_id: params.data.carrier_id,
+                confirmed: params.data.confirmed
+            };
+
+            this.put_editRateCard(rateCardObj, id);
+        };
+
+        aggrid_onCellValueChanged_rates(params: any) {
+            const id = params.data.id;
+            const ratesObj =  {
+                sell_rate: parseInt(params.data.sell_rate), 
+                buy_rate: parseInt(params.data.buy_rate)
+            }
+
+            this.put_editRates(ratesObj, id);
+        }
 
     /*
         ~~~~~~~~~~ Dialog ~~~~~~~~~~
     */  
-    // Ratecard Toolbar 
+
+        /*
+            ~~~~~ Rate cards ~~~~~
+        */
         openDialogDel(): void {
-            // assign new rowID prop
-            this.rateCardsSharedService.changeRowObj(this.rowObj);
+            this.rateCardsSharedService.changeRowObj(this.rowRatecardObj);
 
             const dialogRef = this.dialog.open(DeleteRateCardsDialogComponent, {});
 
             const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
-                // do something with event data
                 this.aggrid_delRow(data);
             });
 
@@ -245,7 +276,7 @@ export class RateCardsTableComponent implements OnInit {
                 sub.unsubscribe();
                 console.log('The dialog was closed');
             });
-        } // end openDialogAdd UploadRatesDialog
+        }
 
         openDialogUpload(): void {
             const dialogRef = this.dialog.open(UploadRatesDialogComponent, {});
@@ -254,11 +285,12 @@ export class RateCardsTableComponent implements OnInit {
 
                 console.log('The dialog was closed');
             });
-        } // end openDialogAdd UploadRatesDialog
-    
-    // Rates Toolbar
+        }
+        
+        /*
+            ~~~~~ Rates ~~~~~
+        */
         openDialogDelRates(): void {
-            // assign new rowID prop
             this.rateCardsSharedService.changeRowRatesObj(this.rowSelectionRates);
 
             const dialogRef = this.dialog.open(DeleteRatesComponent, {});
@@ -272,7 +304,10 @@ export class RateCardsTableComponent implements OnInit {
                 console.log('The dialog was closed');
             });
         }
-    // Trunks Toolbar
+
+        /*
+            ~~~~~ Trunks ~~~~~
+        */
         openDialogDelTrunks(): void {
             
         }

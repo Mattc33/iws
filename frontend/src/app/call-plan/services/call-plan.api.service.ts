@@ -81,7 +81,7 @@ export class CallPlanService {
     // add new plan code from callplan
     post_newPlanCode(callplan_id: number, body: any): Observable<any> {
         return this.http
-            .post(this.url + 'callplans/' + callplan_id + '/code/', body)
+            .post(this.url + 'callplans/' + callplan_id + '/code', body)
             .catch(this.handleError)
             .do(data => console.log('server data:', data));
     }

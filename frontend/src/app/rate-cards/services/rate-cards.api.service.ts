@@ -40,9 +40,9 @@ export class RateCardsService {
     }
 
     post_AddRateCard(body: any): Observable<any> {
-        return this.http.post(this.url + 'ratecards/', body, this.options)
-        .catch(this.handleError)
-        .do(res => console.log('server data', res));
+        return this.http.post(this.url + 'ratecards/', body)
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
     }
 
     del_DeleteRateCard(rowId: number): Observable<any> {

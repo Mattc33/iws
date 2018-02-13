@@ -70,32 +70,23 @@
      <mat-step [stepControl]="attachCountryCodesFormGroup" [completed]="false">
             <form [formGroup]="attachCountryCodesFormGroup">
             <ng-template matStepLabel>Enter Code Info</ng-template>
-                <div class="country-code-form">
-                    <div formArrayName="codes" *ngFor="let codeFG of attachCountryCodesFormGroup.get('codes').controls; let counter=index">
-                    <span> <b>Code Group {{counter + 1}}:</b> </span>
-                        <div [formGroupName]="counter">
-    
-                            <mat-form-field class="half-width"> 
-                                <mat-select placeholder="Origination Country" formControlName="originationCtrl">
-                                    <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
-                                        {{code.code}} - {{code.country}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-    
-                            <mat-form-field class="half-width"> 
-                                <mat-select placeholder="Destination Country" formControlName="destinationCtrl">
-                                    <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
-                                        {{code.code}} - {{code.country}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                <mat-form-field class="half-width"> 
+                    <mat-select placeholder="Origination Country" formControlName="originationCtrl">
+                        <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
+                            {{code.code}} - {{code.country}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 
-                        </div>
-                    </div> <!-- end nested array FormGroup -->
-                </div>
+                <mat-form-field class="half-width"> 
+                    <mat-select placeholder="Destination Country" formControlName="destinationCtrl">
+                        <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
+                            {{code.code}} - {{code.country}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             <div>
-                <button mat-button (click)="addCodes()">Add New Country Code</button>
+                <!-- <button mat-button (click)="addCodes()">Add New Country Code</button> -->
                 <button mat-button matStepperPrevious >Back</button>
                 <button mat-button matStepperNext (click)="codesObjBuilder()">Next</button>
             </div>

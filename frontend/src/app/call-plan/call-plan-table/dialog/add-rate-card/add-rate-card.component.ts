@@ -159,13 +159,11 @@ export class AddRateCardComponent implements OnInit {
             this.closeDialog();
         }
 
-        aggrid_attachRatecards() {
+        aggrid_attachRatecards(): void {
             const body = {
                 name: this.getSelectedRateCardName(),
                 carrier_name: this.getSelectedCallPlanName()
             }
-
-            console.log(body);
 
             this.event_onAdd.emit(body);
         }

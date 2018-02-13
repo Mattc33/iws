@@ -1,4 +1,4 @@
-<mat-horizontal-stepper> <!-- linear forces user to complete ea step -->
+<mat-horizontal-stepper > <!-- linear forces user to complete ea step -->
     
     <!-- Choose Carrier Step -->
     <mat-step [stepControl]="carrierFormGroup" [completed]="false">
@@ -26,7 +26,7 @@
             </mat-form-field>
             <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext [disabled]="!ratecardFormGroup.valid" (click)="test()"> Next </button>
+                <button mat-button matStepperNext [disabled]="!ratecardFormGroup.valid"> Next </button>
             </div>
         </form>
     </mat-step>
@@ -36,16 +36,16 @@
         <form [formGroup]="percentFormGroup">
             <ng-template matStepLabel>Choose Upload Conditions</ng-template>
 
-            <mat-checkbox disableRipple>Add to Tele-U</mat-checkbox>  
+            <mat-checkbox disableRipple formControlName="teleUCheckboxCtrl">Add to Tele-U</mat-checkbox>  
             <mat-form-field class="percent-dropdown">              
-                <mat-select placeholder="Percent" formControlName="teleUPercentCtrl" disabled="false">
+                <mat-select placeholder="Percent" formControlName="teleUPercentCtrl">
                     <mat-option *ngFor="let option of percents" [value]="option.value" >
                         {{option.viewValue}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <mat-checkbox disableRipple>Add to Private</mat-checkbox>  
+            <mat-checkbox disableRipple formControlName="privateCheckboxCtrl">Add to Private</mat-checkbox>  
             <mat-form-field class="percent-dropdown">              
                 <mat-select placeholder="Percent" formControlName="privatePercentCtrl">
                     <mat-option *ngFor="let option of percents" [value]="option.value" >
@@ -56,41 +56,36 @@
 
             <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext > Next</button>
+                <button mat-button matStepperNext (click)="construct_ratecardObj()"> Next</button>
             </div>
         </form>
     </mat-step>
     
     <!-- Upload Rates Step -->
-    <!-- <mat-step [stepControl]="fourthFormGroup" [completed]="false">
-        <form [formGroup]="fourthFormGroup">
+    <mat-step [stepControl]="uploadRatesFormGroup" [completed]="false">
+        <form [formGroup]="uploadRatesFormGroup">
             <ng-template matStepLabel>Upload Rate Card</ng-template>
             <button class="uploadBtn" mat-button (click)="fileInput.click()">
                 <span>Select CSV File</span>
-                <input #fileInput type="file" (change)="changeListenerUploadBtn($event)" accept=".csv" formControlName="fourthCtrl" style="display:none;" />
+                <input #fileInput type="file" (change)="changeListenerUploadBtn($event)" accept=".csv" formControlName="uploadRatesCtrl" style="display:none;" />
             </button>
             <div>
                 <button mat-button matStepperPrevious >Back</button>
                 <button mat-button matStepperNext [disabled]="uploadValidator()"> Next </button>
             </div>
         </form>
-    </mat-step> -->
+    </mat-step>
     
     <!-- Details & Finalize  -->
-    <!-- <mat-step [completed]="false">
+    <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
         <div class="details">
-            <b>Carrier Name:</b> {{input_getCarrierName()}} <br>
-            <b>Rate Card:</b> {{input_getRateCardName()}} <br>
-            <b>Percent Markup: </b>  {{ getSellRatePercent()}} * Buy Rate <br>
-            <b>Rate Card ID:</b> {{getRateCardId()}} <br>
-            <b>File:</b> {{fileName}} <br><br>
-            Press Submit to add rates to [{{input_getRateCardName()}}]. <br><br>
+            <pre>{{finalRatecardObj | json}}</pre>
         </div>
         <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button (click)="click_addRates()" >Submit</button>
         </div>
-    </mat-step> -->
+    </mat-step>
     
 </mat-horizontal-stepper>
