@@ -1,43 +1,63 @@
-<h2 mat-dialog-title>Add Carrier</h2>
+<mat-horizontal-stepper linear>
 
-<form [formGroup]="addCarrierFormGroup" class="example-form" (ngSubmit)="click_addCarrier(addCarrierFormGroup.value)">
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Name" formControlName="name">
-    </mat-form-field>
+    <!-- Enter Carrier Info Step -->
+    <mat-step [stepControl]="addCarrierFormGroup" [completed]="false">
+        <form [formGroup]="addCarrierFormGroup">
+        <ng-template matStepLabel>Enter Carrier Info</ng-template>
 
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Email" formControlName="email">
-    </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <input matInput placeholder="Name" formControlName="nameCtrl">
+            </mat-form-field>
 
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Address" formControlName="address">
-    </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <input matInput placeholder="Email" formControlName="emailCtrl">
+            </mat-form-field>
 
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Phone Number" formControlName="phone">
-    </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <input matInput placeholder="Address" formControlName="addressCtrl">
+            </mat-form-field>
 
-    <mat-form-field class="example-full-width">
-      <mat-select matInput placeholder="Taxable" formControlName="taxable">
-        <mat-option *ngFor="let taxable of taxableOptions" [value]="taxable.value">
-          {{taxable.viewValue}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <input matInput placeholder="Phone Number" formControlName="phoneCtrl">
+            </mat-form-field>
 
-    <mat-form-field class="example-full-width">
-      <mat-select matInput placeholder="Tier" formControlName="tier">
-        <mat-option *ngFor="let tier of tierOptions" [value]="tier.value">
-          {{tier.viewValue}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-select matInput placeholder="Taxable" formControlName="taxableCtrl">
+                    <mat-option *ngFor="let taxable of taxableOptions" [value]="taxable.value">
+                        {{taxable.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Code" formControlName="code">
-    </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-select matInput placeholder="Tier" formControlName="tierCtrl">
+                    <mat-option *ngFor="let tier of tierOptions" [value]="tier.value">
+                        {{tier.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-    <div mat-dialog-actions>
-        <button mat-button type="submit" [disabled]="!addCarrierFormGroup.valid">Ok</button>
-    </div>    
-</form>
+            <mat-form-field class="example-full-width">
+                <input matInput placeholder="Code" formControlName="codeCtrl">
+            </mat-form-field>
+
+            <div mat-dialog-actions>
+                <button mat-button matStepperNext >Ok</button>
+            </div>
+            <!-- [disabled]="!addCarrierFormGroup.valid" -->
+        </form>
+    </mat-step>
+
+    <!-- Details & Finalize  -->
+    <mat-step [completed]="false">
+        <ng-template matStepLabel>Review, Submit</ng-template>
+            <div class="details">
+            </div>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>  
+            <button mat-button (click)="click_addCarrier()">Submit</button>
+        </div>
+    </mat-step>
+</mat-horizontal-stepper>
+
+

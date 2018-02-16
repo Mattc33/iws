@@ -18,7 +18,7 @@ export class TrunksService {
     ) {}
 
     get_allTrunks(): Observable<any> {
-        return this.http.get(this.url + 'trunks/')
+        return this.http.get(this.url + 'trunks')
             .map(res => res.json())
             .catch(this.handleError)
             .do(data => console.log('server data:', data));
@@ -32,7 +32,7 @@ export class TrunksService {
     }
 
     post_addTrunk(body: any): Observable<any> {
-        return this.http.post(this.url + 'trunks/', body)
+        return this.http.post(this.url + 'trunks', body)
             .map(res => res.json())
             .catch(this.handleError)
             .do(data => console.log('server data:', data));
@@ -55,7 +55,7 @@ export class TrunksService {
     handleError(error: any): any {
         const errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg); // log to console instead
-        return Observable.throw(errMsg);
+            console.error(errMsg); // log to console instead
+            return Observable.throw(errMsg);
     }
 }

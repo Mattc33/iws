@@ -68,7 +68,7 @@ export class UploadRatesDialogComponent implements OnInit {
             teleUCheckboxCtrl: [false],
             teleUPercentCtrl: [0],
             privateCheckboxCtrl: [false],
-            privatePercentCtrl: [0]
+            privatePercentCtrl: [1.5]
         });
         this.uploadRatesFormGroup = this.formBuilder.group({
             uploadRatesCtrl: ['', Validators.required]
@@ -166,9 +166,7 @@ export class UploadRatesDialogComponent implements OnInit {
             teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
             asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
             privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
-            rates: [
-
-            ]
+            rates: []
         };
         console.log(this.finalRatecardObj);
     }
@@ -188,11 +186,8 @@ export class UploadRatesDialogComponent implements OnInit {
     /*
         ~~~~~~~~~~ CSV Parser ~~~~~~~~~~
     */
-
     papaParse(csvFile): void { // Parse csv string into JSON
         this.papa.parse(csvFile, {
-            // papa parse options
-            fastMode: true,
             complete: (results) => {
                 console.log('Parsed: ', results);
                 const data = results.data;

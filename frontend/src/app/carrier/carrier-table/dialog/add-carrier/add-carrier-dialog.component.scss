@@ -4,7 +4,10 @@ mat-form-field {
 
 button {
     border: 1px solid black;
-    float: right;
+}
+
+/deep/ .mat-dialog-actions:last-child {
+    margin-bottom: 0;
 }
 
 

@@ -22,6 +22,7 @@ export class TrunksTableComponent implements OnInit {
     private columnDefs;
     private rowSelection;
     private quickSearchValue: string = '';
+    
     // AG grid controllers
     private gridApi: GridApi;
     private columnApi: ColumnApi;

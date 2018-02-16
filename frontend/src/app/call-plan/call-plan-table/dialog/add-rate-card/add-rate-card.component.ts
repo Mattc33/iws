@@ -19,13 +19,15 @@ export class AddRateCardComponent implements OnInit {
     event_onAdd = new EventEmitter();
 
     // Form Group var
-    addCallPlanFormGroup: FormGroup;
-    attachRateCardFormGroup: FormGroup;
-    choosePriorityFormGroup: FormGroup;
+    private addCallPlanFormGroup: FormGroup;
+    private attachRateCardFormGroup: FormGroup;
+    private choosePriorityFormGroup: FormGroup;
 
     // Internal Service Props
-    rateCardObj = [];
-    callPlanObj = [];
+    private rateCardsFromService;
+    private finalRateCardObj = [];
+    private callPlanObj = [];
+    private currentRowId;
 
     // Dropdown Props
     planPriorityList = [
@@ -42,9 +44,6 @@ export class AddRateCardComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.addCallPlanFormGroup = this.formBuilder.group({
-            callplanCtrl: ['', Validators.required]
-        });
         this.attachRateCardFormGroup = this.formBuilder.group({
             ratecardCtrl: ['', Validators.required]
         });
@@ -52,27 +51,19 @@ export class AddRateCardComponent implements OnInit {
             priorityCtrl: ['', Validators.required]
         })
 
-        this.get_CallPlan();
+        this.callPlanSharedService.currentRowAll.subscribe(data => this.currentRowId = data);
+
         this.get_RateCards();
     }
 
     /*
         ~~~~~~~~~~ Call API services ~~~~~~~~~~
     */
-        get_CallPlan(): void {
-            this.callPlanService.get_allCallPlan().subscribe(
-                data => {
-                    console.log(data);
-                    this.extractCallPlanNames(data);
-                },
-                error => { console.log(error); },
-            )
-        }
-
         get_RateCards(): void {
             this.rateCardsService.get_RateCard().subscribe(
                 data => {
                     console.log(data);
+                    this.rateCardsFromService = data;
                     this.extractRateCardNames(data);
                 },
                 error => { console.log(error); },
@@ -81,7 +72,7 @@ export class AddRateCardComponent implements OnInit {
 
         post_attachRateCard(): void {
             const ratecardId = this.getSelectedRateCardId();
-            const callplanId = this.getSelectedCallPlanId();
+            const callplanId = this.currentRowId;
             const body = {
                 priority: this.choosePriorityFormGroup.get('priorityCtrl').value
             };
@@ -94,38 +85,15 @@ export class AddRateCardComponent implements OnInit {
         ~~~~~~~~~~ Extract JSON objects and format them into input ~~~~~~~~~~
     */
         extractRateCardNames(data): void {
-            for ( let i = 0 ; i < data.length; i++) {
-                this.rateCardObj.push( { value: data[i].name, id: data[i].id }, );
-            }
-        }
-
-        extractCallPlanNames(data): void {
-            for ( let i = 0 ; i < data.length; i++) {
-                this.callPlanObj.push( { title: data[i].title, id: data[i].id }, );
+        for ( let i = 0 ; i < data.length; i++) {
+                if(this.rateCardsFromService[i].active === 1) { // If ratecard is activated add to displayed ratecards arr
+                    this.finalRateCardObj.push( { value: data[i].name, id: data[i].id }, );
+                }
             }
         }
     /*
         ~~~~~~~~~~ Get selected values from input, i.e. names, Id's, ect ~~~~~~~~~~
     */
-        getSelectedCallPlanId(): number {
-            const callplanId = this.addCallPlanFormGroup.get('callplanCtrl').value;
-                return callplanId;
-        }
-
-        getSelectedCallPlanName(): string {
-            const callplanIdFromInput = this.getSelectedCallPlanId();
-            const callplanArr = this.callPlanObj;
-            let callplanName: string;
-
-            for (let i = 0; i < callplanArr.length; i++) {
-                if ( callplanIdFromInput === callplanArr[i].id ) {
-                    callplanName = callplanArr[i].title;
-                } else {
-                }
-            }
-                return callplanName;
-        }
-
         getSelectedRateCardId(): number {
             const rateCardId = this.attachRateCardFormGroup.get('ratecardCtrl').value;
                 return rateCardId;
@@ -133,7 +101,7 @@ export class AddRateCardComponent implements OnInit {
 
         getSelectedRateCardName(): string {
             const ratecardIdFromInput = this.getSelectedRateCardId();
-            const ratecardArr = this.rateCardObj;
+            const ratecardArr = this.finalRateCardObj;
             let ratecardName: string;
 
             for (let i = 0; i < ratecardArr.length; i++) {
@@ -162,7 +130,6 @@ export class AddRateCardComponent implements OnInit {
         aggrid_attachRatecards(): void {
             const body = {
                 name: this.getSelectedRateCardName(),
-                carrier_name: this.getSelectedCallPlanName()
             }
 
             this.event_onAdd.emit(body);

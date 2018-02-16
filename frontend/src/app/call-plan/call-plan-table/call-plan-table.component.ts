@@ -24,26 +24,20 @@ export class CallPlanTableComponent implements OnInit {
     // AG grid row/col 
     private rowData; // All
     private columnDefs;
-
     private columnDefsDetail;
     private columnDefsDetail2;
-
     private columnDefsRatecards;
     private columnDefsCodes;
 
     // AG grid controllers
     private gridApi: GridApi; // All
     private columnApi: ColumnApi;
-
     private gridApiDetail: GridApi;
     private columnApiDetail: ColumnApi;
-
     private gridApiDetail2: GridApi;
     private columnApiDetail2: ColumnApi;
-
     private gridApiRatecards: GridApi;
     private columnApiRatecards: ColumnApi;
-
     private gridApiCodes: GridApi;
     private columnApiCodes: GridApi;
 
@@ -55,9 +49,17 @@ export class CallPlanTableComponent implements OnInit {
     private rowSelectionCodes;
     private quickSearchValue = ''; // Default value for global search
 
+    // Props for button Toggle
+    private buttonToggleBoolean: boolean = true;
+    private gridSelectionStatus: number;
+    private buttonToggleBoolean_ratecards: boolean = true;
+    private gridSelectionStatus_ratecards: number;
+    private buttonToggleBoolean_codes: boolean = true;
+    private gridSelectionStatus_codes: number;
+
     // Props for internal service
     private callPlanRowObj;
-    private rowIdAll;
+    private rowIdAll: number;
 
     constructor(
         private callPlanService: CallPlanService, 
@@ -142,15 +144,14 @@ export class CallPlanTableComponent implements OnInit {
             return [
                 {
                     headerName: 'Call Plans', field: 'title',
-                    editable: true, checkboxSelection: true, 
+                    checkboxSelection: true, 
                     width: 250,
                 },
                 {
                     headerName: 'Carrier Name', field: 'carrier_name',
                 },
                 {
-                    headerName: 'Available', field: 'available', editable: true,
-                    cellEditor: "select", cellEditorParams: {values: ['available','unavailable','deleted','staged','pending']}
+                    headerName: 'Available', field: 'available'
                 }
             ]
         }
@@ -158,32 +159,28 @@ export class CallPlanTableComponent implements OnInit {
         private createColumnDefsDetail(): object { // Detailed Call plan table
             return [
                 {
-                    headerName: 'Sub Title', field: 'subtitle',
-                    editable: true,
+                    headerName: 'Title', field: 'title', editable: true,
                 },
                 {
-                    headerName: 'Valid Through', field: 'valid_through',
-                    editable: true,
+                    headerName: 'Sub Title', field: 'subtitle', editable: true,
+                },
+                {
+                    headerName: 'Available', field: 'available', editable: true,
+                    cellEditor: 'select', cellEditorParams: {values: ['available', 'unavailable', 'deleted', 'staged', 'deleted']},
+                },
+                {
+                    headerName: 'Valid Through', field: 'valid_through', editable: true,
+                },
+                {
+                    headerName: 'Days in Plan', field: 'day_period', editable: true,
                 },
                 {
                     headerName: 'Buy Price', field: 'buy_price',
-                    editable: true,
+                    editable: true, filter: "agNumberColumnFilter"
                 },
                 {
                     headerName: 'Sell Price', field: 'sell_price',
-                    editable: true,
-                },
-                {
-                    headerName: 'Days in Plan', field: 'day_period',
-                    editable: true,
-                },
-                {
-                    headerName: 'Activated', field: 'activeWhen', editable: true,
-                    cellEditor: "select", cellEditorParams: {values: ['IMMEDIATELY','SUCCESS_CALL']}
-                },
-                {
-                    headerName: 'Plan Type', field: 'planTypeName', editable: true,
-                    cellEditor: "select", cellEditorParams: {values: ['UNLIMITED_CALL_PLAN','PAY_AS_YOU_GO_CALL_PLAN','MINUTES_CALL_PLAN']}
+                    editable: true, filter: "agNumberColumnFilter"
                 },
             ]
         }
@@ -195,8 +192,24 @@ export class CallPlanTableComponent implements OnInit {
                     editable: true,
                 },
                 {
+                    headerName: 'Activated on?', field: 'activeWhen', editable: true,
+                    cellEditor: "select", cellEditorParams: {values: ['IMMEDIATELY','SUCCESS_CALL']}
+                },
+                {
                     headerName: 'Promotion?', field: 'isForPromotion', editable: true,
+                    valueFormatter: function(params) {
+                        if(params.value === 1) {
+                            return true
+                        }
+                        if(params.value === 0) {
+                            return false
+                        }
+                    },
                     cellEditor: "select", cellEditorParams: {values: ['true','false']}
+                },
+                {
+                    headerName: 'Plan Type', field: 'planTypeName', editable: true,
+                    cellEditor: 'select', cellEditorParams: {values: ['UNLIMITED_CALL_PLAN','PAY_AS_YOU_GO_CALL_PLAN','MINUTES_CALL_PLAN']}
                 },
                 {
                     headerName: 'For Unlimited Call Plans',
@@ -209,20 +222,6 @@ export class CallPlanTableComponent implements OnInit {
                             headerName: 'Max Minutes', field: 'maxMinutes',
                             editable: true,
                         },
-                    ]
-                },
-                {
-                    headerName: 'Data Base Times',
-                    children: [
-                        {
-                            headerName: 'Added to Data Base', field: 'start_ts',
-                        },
-                        {
-                            headerName: 'End Time Stamp', field: 'end_ts',
-                        },
-                        {
-                            headerName: 'Last Date of Edit', field: 'add_ts',
-                        }
                     ]
                 }
             ]
@@ -292,7 +291,7 @@ export class CallPlanTableComponent implements OnInit {
                 this.gridApiCodes.setRowData([]);
 
                 this.rowSelectionAll = this.gridApi.getSelectedRows(); // pass global row obj to row selection global var 
-                this.rowIdAll = this.rowSelectionAll[0].id; // pass callplan row id to shared service
+                this.rowIdAll = this.rowSelectionAll[0].id; // pass callplan row id to global var
 
                 this.get_specificCallPlanData(this.rowIdAll);
             };
@@ -305,6 +304,48 @@ export class CallPlanTableComponent implements OnInit {
             aggrid_codes_selectionChanged(): void {
                 this.rowSelectionCodes = this.gridApiCodes.getSelectedRows();
                 console.log(this.rowSelectionCodes);
+            }
+
+        /*
+            ~~~~~~~~~~ Button Toggle ~~~~~~~~~~
+        */    
+            aggrid_rowSelected() {
+                this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
+            }
+
+            toggleButtonStatus() {
+                if ( this.gridSelectionStatus > 0 ) {
+                    this.buttonToggleBoolean = false;
+                } else {
+                    this.buttonToggleBoolean = true;
+                }
+                return this.buttonToggleBoolean;
+            }
+
+            aggrid_rowSelected_ratecards() {
+                this.gridSelectionStatus_ratecards = this.gridApiRatecards.getSelectedNodes().length;
+            }
+
+            toggleButtonStatus_ratecards() {
+                if ( this.gridSelectionStatus_ratecards > 0 ) {
+                    this.buttonToggleBoolean_ratecards = false;
+                } else {
+                    this.buttonToggleBoolean_ratecards = true;
+                }
+                return this.buttonToggleBoolean_ratecards;
+            }
+
+            aggrid_rowSelected_codes() {
+                this.gridSelectionStatus_codes = this.gridApiCodes.getSelectedNodes().length;
+            }
+
+            toggleButtonStatus_codes() {
+                if ( this.gridSelectionStatus_codes > 0 ) {
+                    this.buttonToggleBoolean_codes = false;
+                } else {
+                    this.buttonToggleBoolean_codes = true;
+                }
+                return this.buttonToggleBoolean_codes;
             }
         
         /*
@@ -343,47 +384,34 @@ export class CallPlanTableComponent implements OnInit {
         /*
             ~~~~~~ Edits ~~~~
         */           
-            aggrid_all_onCellValueChanged(params: any): void {
-                const id = params.data.id;
-
-                const callplanObj = {
-                    carrier_id: params.data.carrier_id,
-                    available: params.data.available
-                };
-
-                this.put_editCallPlan(callplanObj, id);
-            };
-
             aggrid_detail_onCellValueChanged(params: any): void {
                 const id = params.data.id; // rates ID
-                const date = Date.parse(params.data.valid_through).toString();
+                const date = Date.parse(params.data.valid_through);
+                let isForPromotion: boolean;
+                if( params.data.isForPromotion === 1 ) {
+                    isForPromotion = true
+                } else{
+                    isForPromotion = false
+                }
 
-                const callplanObj = {
+                const detailObj = {
+                    carrier_id: params.data.carrier_id,
+                    title: params.data.title,
                     subtitle: params.data.subtitle,
+                    available: params.data.available,
                     valid_through: date,
                     buy_price: params.data.buy_price,
                     sell_price: params.data.sell_price,
                     day_period: params.data.day_period,
-                    ranking: params.data.ranking,
                     planTypeName: params.data.planTypeName,
-                    activeWhen: params.data.activeWhen
-                };
-
-                this.put_editCallPlan(callplanObj, id);
-            };
-
-            aggrid_detail2_onCellValueChanged(params: any): void {
-                const id = params.data.id; // rates ID
-                console.log(params);
-
-                const callplanObj = {
+                    activeWhen: params.data.activeWhen,
                     ranking: params.data.ranking,
-                    isForPromotion: params.data.isForPromotion,
+                    isForPromotion: isForPromotion,
                     maxDestNumbers: params.data.maxDestNumbers,
                     maxMinutes: params.data.maxMinutes
                 };
 
-                this.put_editCallPlan(callplanObj, id);
+                this.put_editCallPlan(detailObj, id);
             };
 
     /*
@@ -428,11 +456,12 @@ export class CallPlanTableComponent implements OnInit {
             });
         }
 
-
     /*
         ~~~~~~~~~~ Dialog Rate Card ~~~~~~~~~~
     */
         openDialogAttachRateCard() { // Add Rate Card to Call Plan
+            this.callPlanSharedService.changeRowAll(this.rowIdAll);
+
             const dialogRef = this.dialog.open(AddRateCardComponent, {
                 height: 'auto',
                 width: '40%',
@@ -469,6 +498,8 @@ export class CallPlanTableComponent implements OnInit {
         ~~~~~~~~~~ Dialog Codes ~~~~~~~~~~
     */
         openDialogAttachCode() { // Add a Code to Call Plan
+            this.callPlanSharedService.changeRowAll(this.rowIdAll);
+
             const dialogRef = this.dialog.open(AddCodeComponent, {
                 height: 'auto',
                 width: '40%',

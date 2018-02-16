@@ -1,7 +1,7 @@
 <mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
 
     <!-- Choose Carrier Step -->
-    <mat-step [stepControl]="carrierFormGroup" [completed]="false">
+    <!-- <mat-step [stepControl]="carrierFormGroup" [completed]="false">
     <form [formGroup]="carrierFormGroup">
         <ng-template matStepLabel>Choose Carrier</ng-template>
         <mat-form-field>
@@ -15,7 +15,7 @@
             <button mat-button matStepperNext [disabled]="carrierFormGroup.invalid"> Next </button>
         </div>
     </form>
-    </mat-step>
+    </mat-step> -->
     
     <!-- Enter Trunks Info Step -->
     <mat-step [stepControl]="trunksFormGroup" [completed]="false">
@@ -60,7 +60,8 @@
 
         <div>
             <button mat-button matStepperPrevious >Back</button>
-            <button mat-button matStepperNext [disabled]="!trunksFormGroup.valid" >Next</button>
+            <button mat-button matStepperNext [disabled]="!trunksFormGroup.valid" (click)="createTrunkObj()">Next</button>
+            <button mat-button (click)="insertTrunkTestData()"> Insert Test Data </button>
         </div>
     </form>
     </mat-step>
@@ -69,7 +70,7 @@
     <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
             <div class="details">
-                <pre></pre>
+                <pre>{{finalTrunkObj | json}}</pre>
                 Press Submit to add new rate card. <br><br>
             </div>
         <div>

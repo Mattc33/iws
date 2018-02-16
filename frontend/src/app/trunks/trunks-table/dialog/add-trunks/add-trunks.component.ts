@@ -18,18 +18,19 @@ export class AddTrunksComponent implements OnInit {
     event_onAdd = new EventEmitter;
 
     // Form Group var
-    carrierFormGroup: FormGroup;
-    trunksFormGroup: FormGroup;
+    private carrierFormGroup: FormGroup;
+    private trunksFormGroup: FormGroup;
 
     // Var
-    carrierNames = [];
-    currentCarrierId: number;
-    transportMethods = [
+    private carrierNames = [];
+    private currentCarrierId: number;
+    private transportMethods = [
         {value: 'udp'}, {value: 'tcp'}, {value: 'both'}
     ];
-    activeValues = [
+    private activeValues = [
         {value: true}, {value: false}
     ];
+    private finalTrunkObj;
 
     // Validation Patterns
     
@@ -78,7 +79,7 @@ export class AddTrunksComponent implements OnInit {
     };
 
     /*
-        ~~~~~~~~~~ Extract Necessary Data Methods ~~~~~~~~~~
+        ~~~~~~~~~~ Extract Necessary Data ~~~~~~~~~~
     */
     extractCarrierNames(data): void {
         for ( let i = 0; i < data.length ; i++) {
@@ -121,9 +122,9 @@ export class AddTrunksComponent implements OnInit {
     /*
         ~~~~~~~~~~ Dialog ~~~~~~~~~~
     */
-    click_addTrunks(): void {
-        const id = this.on_getCarrierId();
-        const body = { 
+    createTrunkObj() {
+        this.finalTrunkObj = {
+            carrier_id: this.on_getCarrierId(),
             trunk_name: this.trunksFormGroup.get('nameCtrl').value,
             trunk_ip: this.trunksFormGroup.get('ipCtrl').value,
             trunk_port: parseInt(this.trunksFormGroup.get('portCtrl').value),
@@ -131,19 +132,32 @@ export class AddTrunksComponent implements OnInit {
             prefix: this.trunksFormGroup.get('prefixCtrl').value,
             active: this.trunksFormGroup.get('activeCtrl').value,
             metadata: this.trunksFormGroup.get('metadataCtrl').value
-        };
+            // direction: 'up'
+        }
+    }
 
-        console.log(id);
-        console.log(body);
-
-        this.aggrid_addTrunks(body);
-        // this.post_addTrunk(body);
+    click_addTrunks(): void {
+        this.aggrid_addTrunks(this.finalTrunkObj);
+        this.post_addTrunk(this.finalTrunkObj);
 
         // this.closeDialog;
-        
     };
 
     closeDialog(): void {
         this.dialogRef.close();
     };
+
+    /* 
+        ~~~~~~~~~~ TEST ~~~~~~~~~~
+    */
+    insertTrunkTestData() {
+        const randomNumber = Math.floor(Math.random() * Math.floor(1000));
+        this.trunksFormGroup.get('nameCtrl').setValue('Test Trunk ' + randomNumber);
+        this.trunksFormGroup.get('ipCtrl').setValue('192.168.1.1');
+        this.trunksFormGroup.get('portCtrl').setValue('3308');
+        this.trunksFormGroup.get('transportCtrl').setValue('udp');
+        this.trunksFormGroup.get('prefixCtrl').setValue('prefix');
+        this.trunksFormGroup.get('activeCtrl').setValue(true);
+        this.trunksFormGroup.get('metadataCtrl').setValue('meta data');
+    }
 }

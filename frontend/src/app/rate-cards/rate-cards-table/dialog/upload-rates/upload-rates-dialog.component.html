@@ -1,4 +1,4 @@
-<mat-horizontal-stepper > <!-- linear forces user to complete ea step -->
+<mat-horizontal-stepper> <!-- linear forces user to complete ea step -->
     
     <!-- Choose Carrier Step -->
     <mat-step [stepControl]="carrierFormGroup" [completed]="false">
@@ -20,7 +20,7 @@
     <!-- Choose Rate Card Step -->
     <mat-step [stepControl]="ratecardFormGroup" [completed]="false">
         <form [formGroup]="ratecardFormGroup">
-            <ng-template matStepLabel>Choose Rate Card</ng-template>
+            <ng-template matStepLabel>Enter Rate Card Name</ng-template>
             <mat-form-field>
                 <input matInput placeholder="Enter Ratecard Name" formControlName="ratecardCtrl">
             </mat-form-field>
@@ -36,18 +36,20 @@
         <form [formGroup]="percentFormGroup">
             <ng-template matStepLabel>Choose Upload Conditions</ng-template>
 
-            <mat-checkbox disableRipple formControlName="teleUCheckboxCtrl">Add to Tele-U</mat-checkbox>  
+            <mat-checkbox disableRipple formControlName="teleUCheckboxCtrl" >Add to Tele-U</mat-checkbox>  
             <mat-form-field class="percent-dropdown">              
-                <mat-select placeholder="Percent" formControlName="teleUPercentCtrl">
+                <mat-select placeholder="Percent" formControlName="teleUPercentCtrl" [disabled]="checkBoxValueTeleU()">
                     <mat-option *ngFor="let option of percents" [value]="option.value" >
                         {{option.viewValue}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
+            <hr>
+
             <mat-checkbox disableRipple formControlName="privateCheckboxCtrl">Add to Private</mat-checkbox>  
             <mat-form-field class="percent-dropdown">              
-                <mat-select placeholder="Percent" formControlName="privatePercentCtrl">
+                <mat-select placeholder="Percent" formControlName="privatePercentCtrl" [disabled]="checkBoxValuePrivate()">
                     <mat-option *ngFor="let option of percents" [value]="option.value" >
                         {{option.viewValue}}
                     </mat-option>
@@ -64,7 +66,7 @@
     <!-- Upload Rates Step -->
     <mat-step [stepControl]="uploadRatesFormGroup" [completed]="false">
         <form [formGroup]="uploadRatesFormGroup">
-            <ng-template matStepLabel>Upload Rate Card</ng-template>
+            <ng-template matStepLabel>Upload CSV</ng-template>
             <button class="uploadBtn" mat-button (click)="fileInput.click()">
                 <span>Select CSV File</span>
                 <input #fileInput type="file" (change)="changeListenerUploadBtn($event)" accept=".csv" formControlName="uploadRatesCtrl" style="display:none;" />

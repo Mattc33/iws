@@ -2,7 +2,7 @@
     <div class="all-callplans-container">
         <ag-grid-angular class="ag-theme-material" id="all-callplans" [animateRows]="true"
             [columnDefs]="columnDefs" [rowData]="rowData"
-            [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="aggrid_selectionChanged($event)" [suppressRowClickSelection]="true"
+            [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="aggrid_selectionChanged($event)" (rowSelected)="aggrid_rowSelected($event)" [suppressRowClickSelection]="true"
             [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_all_onCellValueChanged($event)"
             [enableFilter]="true" [floatingFilter]="true"
             [enableSorting]="true"
@@ -17,10 +17,10 @@
         </ag-grid-angular>
 
         <mat-toolbar-row>
-            <button (click)="openDialogDel()" class="del" > <i class="fas fa-trash-alt"></i> </button>
+            <button (click)="openDialogDel()" [disabled]="toggleButtonStatus()" class="del" > <i class="fas fa-trash-alt"></i> </button>
             <button (click)="openDialogAddCallPlan()" > <i class="fas fa-plus"></i> Call Plan</button>
-            <button (click)="openDialogAttachRateCard()" > <i class="fas fa-plus-circle"></i> Rate Card</button>
-            <button (click)="openDialogAttachCode()" > <i class="fas fa-plus-circle"></i> Code</button>
+            <button (click)="openDialogAttachRateCard()" [disabled]="toggleButtonStatus()"> <i class="fas fa-plus-circle"></i> Rate Card</button>
+            <button (click)="openDialogAttachCode()" [disabled]="toggleButtonStatus()"> <i class="fas fa-plus-circle"></i> Code</button>
     
             <mat-form-field class="search-bar">
                     <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
@@ -49,7 +49,7 @@
                     [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
                     [suppressNoRowsOverlay]="true" [suppressLoadingOverlay]="true"
                     [enableCellChangeFlash]="true"
-                    (cellValueChanged)="aggrid_detail2_onCellValueChanged($event)"
+                    (cellValueChanged)="aggrid_detail_onCellValueChanged($event)"
                     
                     (gridReady)="on_GridReady_Details2($event)"
                 >
@@ -57,7 +57,7 @@
             </mat-tab>
             <mat-tab label="Rate Cards">
                     <ag-grid-angular class="ag-theme-material" id="call-plans-ratecards" [animateRows]="true"
-                        [columnDefs]="columnDefsRatecards" [rowData]="" 
+                        [columnDefs]="columnDefsRatecards" [rowData]=""  (rowSelected)="aggrid_rowSelected_ratecards($event)"
                         [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_rateCards_selectionChanged($event)" [suppressRowClickSelection]="true"
                         [stopEditingWhenGridLosesFocus]="true" 
                         [enableFilter]="true" [floatingFilter]="true"
@@ -72,7 +72,7 @@
                     </ag-grid-angular>
 
                     <mat-toolbar-row class="toolbar-details">
-                        <button (click)="openDialogDetachRatecards()" class="del"> <i class="fas fa-trash-alt"></i> </button>
+                        <button (click)="openDialogDetachRatecards()" [disabled]="toggleButtonStatus_ratecards()" class="del"> <i class="fas fa-trash-alt"></i> </button>
                         <mat-form-field class="search-bar">
                             <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                             <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
@@ -81,7 +81,7 @@
             </mat-tab>
             <mat-tab label="Codes">
                 <ag-grid-angular class="ag-theme-material" id="call-plans-codes" [animateRows]="true"
-                    [columnDefs]="columnDefsCodes" [rowData]="" 
+                    [columnDefs]="columnDefsCodes" [rowData]="" (rowSelected)="aggrid_rowSelected_codes($event)"
                     [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_codes_selectionChanged($event)" [suppressRowClickSelection]="true"
                     [stopEditingWhenGridLosesFocus]="true" 
                     [enableFilter]="true" [floatingFilter]="true"
@@ -96,7 +96,7 @@
                 >
                 </ag-grid-angular>
                 <mat-toolbar-row class="toolbar-details">
-                    <button (click)="openDialogDetachCodes()" class="del"> <i class="fas fa-trash-alt"></i> </button>
+                    <button (click)="openDialogDetachCodes()" [disabled]="toggleButtonStatus_codes()" class="del"> <i class="fas fa-trash-alt"></i> </button>
                     <mat-form-field class="search-bar">
                         <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                         <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">

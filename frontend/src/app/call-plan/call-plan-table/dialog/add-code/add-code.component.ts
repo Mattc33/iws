@@ -38,19 +38,22 @@ export class AddCodeComponent implements OnInit {
         {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}
     ]
     carrierCodesObj = [];
+
+    // Service props
     countryCodeList;
     finalCodesObj;
+    currentRowId: number;
      
-    constructor(public dialogRef: MatDialogRef<CallPlanTableComponent>, 
-        @Inject(MAT_DIALOG_DATA) public data, private formBuilder: FormBuilder, 
-        private callPlanService: CallPlanService, private callPlanSharedService: CallPlanSharedService,
+    constructor(
+        public dialogRef: MatDialogRef<CallPlanTableComponent>, 
+        @Inject(MAT_DIALOG_DATA) public data, 
+        private formBuilder: FormBuilder, 
+        private callPlanService: CallPlanService, 
+        private callPlanSharedService: CallPlanSharedService,
         private carrierService: CarrierService,
     ) { }
 
     ngOnInit() {
-        this.addCallPlanFormGroup = this.formBuilder.group({
-            callplanCtrl: ['']
-        });
         this.attachCodesFormGroup = this.formBuilder.group({
             carrierCtrl: ['', Validators.required],
             plantypeCtrl: ['', Validators.required],
@@ -63,9 +66,9 @@ export class AddCodeComponent implements OnInit {
             destinationCtrl: ['', Validators.required]
         })
 
-        this.get_CallPlan();
         this.get_CarrierCodes();
 
+        this.callPlanSharedService.currentRowAll.subscribe( data => this.currentRowId = data  );
         this.callPlanSharedService.currentCountryCode
             .subscribe( data => this.countryCodeList = data);
     }
@@ -73,16 +76,6 @@ export class AddCodeComponent implements OnInit {
     /*
         ~~~~~~~~~~ Call API services ~~~~~~~~~~
     */
-        get_CallPlan() {
-            this.callPlanService.get_allCallPlan().subscribe(
-                data => {
-                    console.log(data);
-                    this.extractCallPlanNames(data);
-                },
-                error => { console.log(error); },
-            )
-        }
-
         get_CarrierCodes() {
             this.carrierService.get_carriers().subscribe(
                 data => {
@@ -95,7 +88,7 @@ export class AddCodeComponent implements OnInit {
 
         post_attachCallPlanCodes() {
             const obj = this.finalCodesObj;
-            const callplanId = this.getSelectedCallPlanId();    
+            const callplanId = this.currentRowId;    
             this.callPlanService.post_newPlanCode(callplanId, obj).subscribe(
                 resp => {console.log(resp);}
             )
@@ -104,24 +97,10 @@ export class AddCodeComponent implements OnInit {
     /*
         ~~~~~~~~~~ Extract Data from JSON into input Format ~~~~~~~~~~
     */
-        extractCallPlanNames(data): void {
-            for ( let i = 0 ; i < data.length; i++) {
-                this.callPlanObj.push( { title: data[i].title, id: data[i].id }, );
-            }
-
-            console.log(this.callPlanObj);
-        }
-
-        getSelectedCallPlanId(): number {
-            return this.addCallPlanFormGroup.get('callplanCtrl').value;
-        }
-
         extractCarrierCodes(data) {
             for ( let i = 0 ; i < data.length; i++) {
                 this.carrierCodesObj.push( { code: data[i].code, carrier: data[i].name}, );
             }
-
-            console.log(this.carrierCodesObj);
         }
 
         insertDummyDataCodes() {
@@ -130,8 +109,6 @@ export class AddCodeComponent implements OnInit {
             this.attachCodesFormGroup.get('planpriorityCtrl').setValue(1);
             this.attachCodesFormGroup.get('dayperiodCtrl').setValue(27);
             this.attachCodesFormGroup.get('plannumberCtrl').setValue(1);
-    
-            console.log(this.attachCodesFormGroup.value);
         }
 
     /*
@@ -139,7 +116,6 @@ export class AddCodeComponent implements OnInit {
     */    
         codesObjBuilder() {
             const countryCodeArr = this.attachCountryCodesFormGroup.value.codes;
-
                 this.finalCodesObj =
                     {
                         ori_cc: parseInt(this.attachCountryCodesFormGroup.get('originationCtrl').value),

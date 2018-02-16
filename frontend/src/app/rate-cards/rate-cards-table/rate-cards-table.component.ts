@@ -44,11 +44,20 @@ export class RateCardsTableComponent implements OnInit {
     private rowSelectionAll;
     private rowSelectionRates;
     private rowSelectionTrunks;
+
+    // Props for button toggle
+    private buttonToggleBoolean: boolean = true;
+    private gridSelectionStatus: number;
+    private buttonToggleBoolean_rates: boolean = true;
+    private gridSelectionStatus_rates: number;
+    private buttonToggleBoolean_trunks: boolean = true;
+    private gridSelectionStatus_trunks: number;
     
     // Properties for internal service
     private rowRatecardObj;
     private quickSearchValue: string = '';
     private rowIdAll;
+    private selectedRatecardId: number;
 
     constructor(
         private rateCardsService: RateCardsService, 
@@ -105,6 +114,8 @@ export class RateCardsTableComponent implements OnInit {
         this.gridApiTrunks = params.api;
         this.columnApiTrunks = params.ColumnApi;
         this.gridApiTrunks.sizeColumnsToFit();
+
+        this.activeFilter();
     };
 
     private createColumnDefs() {
@@ -117,8 +128,21 @@ export class RateCardsTableComponent implements OnInit {
                 editable: true
             },
             {
-                headerName: 'Approved?'
+                headerName: 'Approved?', editable: true, field: 'confirmed',
+                valueFormatter: function(params) {
+                    if(params.value === 1) {
+                        return true
+                    } 
+                    if(params.value === 0) {
+                        return false
+                    }
+                },
+                cellEditor: 'select', cellEditorParams: {values: [ true, false]},
+
             },
+            {
+                headerName: 'Active', field: 'active', filter: "agNumberColumnFilter", hide: true
+            }
         ];
     };
 
@@ -133,9 +157,11 @@ export class RateCardsTableComponent implements OnInit {
             },
             {
                 headerName: 'Buy Rate', field: 'buy_rate', editable: true,
+                filter: "agNumberColumnFilter"
             },
             {
                 headerName: 'Sell Rate', field: 'sell_rate', editable: true,
+                filter: "agNumberColumnFilter"
             },
             {
                 headerName: 'Difference', 
@@ -150,6 +176,27 @@ export class RateCardsTableComponent implements OnInit {
             },
             {
                 headerName: 'Approved?', field: 'confirmed', editable: true,
+                cellEditor: 'select', cellEditorParams: {values: [ true, false]},
+                valueFormatter: function(params) {
+                    if(params.value === 1) {
+                        return true
+                    }
+                    if(params.value === 0) {
+                        return false
+                    }
+                },
+            },
+            {
+                headerName: 'Active?', field: 'active', editable: true,
+                cellEditor: 'select', cellEditorParams: {values: [ true, false]},
+                valueFormatter: function(params) {
+                    if(params.value === 1) {
+                        return true
+                    }
+                    if(params.value === 0) {
+                        return false
+                    }
+                },
             }
         ]
     };
@@ -182,6 +229,15 @@ export class RateCardsTableComponent implements OnInit {
             this.gridApi.setQuickFilter(this.quickSearchValue);
         }
 
+        activeFilter(): void { // Trigger this to filter all disabled rows
+            const activeFilterComponent = this.gridApi.getFilterInstance('active');
+            activeFilterComponent.setModel({
+                type: "greaterThan",
+                filter: 0
+            })
+            this.gridApi.onFilterChanged();
+        }
+
         /*
             ~~~~~ Selection ~~~~~
         */
@@ -189,22 +245,62 @@ export class RateCardsTableComponent implements OnInit {
             this.gridApiRates.setRowData([]);
 
             this.rowRatecardObj = this.gridApi.getSelectedRows();
-            const selectedRatecardId = this.rowRatecardObj[0].id;
+            this.selectedRatecardId = this.rowRatecardObj[0].id;
 
-            this.rateCardsService.get_SpecificRateCard(selectedRatecardId)
+            this.rateCardsService.get_SpecificRateCard(this.selectedRatecardId)
                 .subscribe(
-                    data => {this.gridApiRates.updateRowData({ add: data });}
+                    data => {
+                        this.gridApiRates.updateRowData({ add: data });
+                        this.gridApiTrunks.updateRowData({ add: data.trunks });
+                    }
                 );
-            
-            this.rateCardsService.get_SpecificRateCard(selectedRatecardId)
-                .subscribe(
-                    data => {this.gridApiTrunks.updateRowData({ add: data.trunks })}
-                )
         };
 
         aggrid_rates_selectionChanged(): void {
             this.rowSelectionRates = this.gridApiRates.getSelectedRows();
             console.log(this.rowSelectionRates);
+        }
+
+        /*
+            ~~~~~~~~~~ Button Toggle ~~~~~~~~~~
+        */
+        rowSelected(params) {
+            this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
+        }
+        
+        toggleButtonStates() {
+            if ( this.gridSelectionStatus > 0 ) {
+                this.buttonToggleBoolean = false;
+            } else {
+                this.buttonToggleBoolean = true;
+            }
+            return this.buttonToggleBoolean;
+        }
+
+        rowSelected_rates(params) {
+            this.gridSelectionStatus_rates = this.gridApiRates.getSelectedNodes().length;
+        }
+        
+        toggleButtonStates_rates() {
+            if ( this.gridSelectionStatus_rates > 0 ) {
+                this.buttonToggleBoolean_rates = false;
+            } else {
+                this.buttonToggleBoolean_rates = true;
+            }
+            return this.buttonToggleBoolean_rates;
+        }
+        
+        rowSelected_trunks(params) {
+            this.gridSelectionStatus_trunks = this.gridApiTrunks.getSelectedNodes().length;
+        }
+        
+        toggleButtonStates_trunks() {
+            if ( this.gridSelectionStatus_trunks > 0 ) {
+                this.buttonToggleBoolean_trunks = false;
+            } else {
+                this.buttonToggleBoolean_trunks = true;
+            }
+            return this.buttonToggleBoolean_trunks;
         }
 
         /*
@@ -240,7 +336,7 @@ export class RateCardsTableComponent implements OnInit {
             const rateCardObj = {
                 name: params.data.name,
                 carrier_id: params.data.carrier_id,
-                confirmed: params.data.confirmed
+                confirmed: JSON.parse(params.data.confirmed)
             };
 
             this.put_editRateCard(rateCardObj, id);
@@ -248,18 +344,41 @@ export class RateCardsTableComponent implements OnInit {
 
         aggrid_onCellValueChanged_rates(params: any) {
             const id = params.data.id;
-            const ratesObj =  {
-                sell_rate: parseInt(params.data.sell_rate), 
-                buy_rate: parseInt(params.data.buy_rate)
+            let active: boolean;
+            let confirmed: boolean;
+
+            if( params.data.active === 1 ) {
+                active = true
+            } else{
+                active = false
             }
 
+            if( params.data.confirmed === 1 ) {
+                confirmed = true
+            } else {
+                confirmed = false
+            }
+            
+            const ratesObj =  {
+                ratecard_id: this.selectedRatecardId,
+                prefix: params.data.prefix,
+                destination: params.data.destination,
+                active: active,
+                sell_rate: parseFloat(params.data.sell_rate), 
+                buy_rate: parseFloat(params.data.buy_rate),
+                sell_rate_minimum: params.data.sell_rate_minimum,
+                sell_rate_increment: params.data.sell_rate_increment,   
+                buy_rate_minimum: params.data.buy_rate_minimum,
+                buy_rate_increment: params.data.buy_rate_increment,
+                confirmed: confirmed
+            };
+            console.log(ratesObj);
             this.put_editRates(ratesObj, id);
         }
 
     /*
         ~~~~~~~~~~ Dialog ~~~~~~~~~~
     */  
-
         /*
             ~~~~~ Rate cards ~~~~~
         */
@@ -309,7 +428,18 @@ export class RateCardsTableComponent implements OnInit {
             ~~~~~ Trunks ~~~~~
         */
         openDialogDelTrunks(): void {
-            
+            // this.rateCardsSharedService.changeRowRatesObj(this.rowSelectionRates);
+
+            // const dialogRef = this.dialog.open(DeleteRatesComponent, {});
+
+            // const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
+            //     this.aggrid_delRow(data);
+            // });
+
+            // dialogRef.afterClosed().subscribe(() => {
+            //     sub.unsubscribe();
+            //     console.log('The dialog was closed');
+            // });
         }
 
         openDialogAttachTrunks(): void {

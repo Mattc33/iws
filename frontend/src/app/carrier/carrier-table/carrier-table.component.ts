@@ -16,7 +16,6 @@ import { CarrierSharedService } from './../services/carrier.shared.service';
   styleUrls: ['./carrier-table.component.scss'],
   providers: [ CarrierService ],
 })
-
 export class CarrierTableComponent implements OnInit {
 
     // row data and column definitions
@@ -32,15 +31,21 @@ export class CarrierTableComponent implements OnInit {
     // pass Data using shared service
     private rowObj;
 
-    // inject your service
-    constructor( private carrierService: CarrierService, private carrierSharedService: CarrierSharedService,
-    private dialog: MatDialog) {
+    // UI Props
+    private buttonToggleBoolean: boolean = true;
+    private gridSelectionStatus: number;
+
+    constructor( // inject your service
+        private carrierService: CarrierService, 
+        private carrierSharedService: CarrierSharedService,
+        private dialog: MatDialog
+    ) 
+    {
         this.columnDefs = this.createColumnDefs();
         this.rowSelection = 'single';
     }
 
     ngOnInit() {
-        // set initial row data
         this.get_InitializeRows();
         this.carrierSharedService.currentRowObj.subscribe( giveRowObj => this.rowObj = giveRowObj);
     }
@@ -102,7 +107,8 @@ export class CarrierTableComponent implements OnInit {
             // Tier Number
             {
                 headerName: 'Tier Number', field: 'tier', editable: true,
-                cellEditor: 'select', cellEditorParams: {values: [ 1, 2, 3, 4, 5]}
+                cellEditor: 'select', cellEditorParams: {values: [ 1, 2, 3, 4, 5]},
+                filter: "agNumberColumnFilter"
             },
             // Three Digit Code
             {
@@ -115,21 +121,21 @@ export class CarrierTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
     */
-    on_GridSizeChanged(params) {
+    on_GridSizeChanged(params): void {
         params.api.sizeColumnsToFit();
     }
 
-    aggrid_addRow(obj) {
+    aggrid_addRow(obj): void {
         this.gridApi.updateRowData({ add: [obj] });
     }
 
-    on_SelectionChanged() {
+    on_SelectionChanged(): void {
         const selectedRows = this.gridApi.getSelectedRows();
         this.rowObj = selectedRows;
         console.log(this.rowObj);
     }
 
-    aggrid_delRow(boolean) {
+    aggrid_delRow(boolean): void {
         if (boolean === true) {
             this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
         } else {
@@ -137,7 +143,20 @@ export class CarrierTableComponent implements OnInit {
         }
     }
 
-    aggrid_onCellValueChanged(params: any) {
+    aggrid_rowSelected(): void {
+        this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
+    }
+
+    toggleButtonStates(): boolean {
+        if ( this.gridSelectionStatus > 0 ) {
+          this.buttonToggleBoolean = false;
+        } else {
+          this.buttonToggleBoolean = true;
+        }
+        return this.buttonToggleBoolean;
+    }
+
+    aggrid_onCellValueChanged(params: any): void {
         const id = params.data.id;
         let taxable = params.data.taxable;
             if (taxable === 'false') {
@@ -167,12 +186,11 @@ export class CarrierTableComponent implements OnInit {
     */
     openDialogAdd() {
         const dialogRef = this.dialog.open(AddCarrierDialogComponent, {
-            height: 'auto',
-            width: '30%',
+            // height: 'auto',
+            width: '40%',
         });
 
         const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-            // do something with event data
             this.aggrid_addRow(data);
         });
 
@@ -180,10 +198,9 @@ export class CarrierTableComponent implements OnInit {
             sub.unsubscribe();
             console.log('The dialog was closed');
         });
-    } // end openDialogAdd UploadRatesDialog
+    }
 
     openDialogDel() {
-        // assign new rowID prop
         this.carrierSharedService.changeRowObj(this.rowObj);
 
         const dialogRef = this.dialog.open(DelCarrierDialogComponent, {});
@@ -197,6 +214,6 @@ export class CarrierTableComponent implements OnInit {
             sub.unsubscribe();
             console.log('The dialog was closed');
         });
-    } // end openDialogAdd UploadRatesDialog
+    } 
 
-} // end class
+} 

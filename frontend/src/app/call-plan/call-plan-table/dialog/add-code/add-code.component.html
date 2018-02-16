@@ -1,22 +1,5 @@
 <mat-horizontal-stepper> <!-- linear forces user to complete ea step -->
 
-    <!-- Choose Call Plan Step -->
-      <mat-step [stepControl]="addCallPlanFormGroup" [completed]="false">
-        <form [formGroup]="addCallPlanFormGroup">
-          <ng-template matStepLabel>Choose Call Plan</ng-template>
-          <mat-form-field>
-              <mat-select placeholder="Call Plans" formControlName="callplanCtrl">
-                <mat-option *ngFor="let callplan of callPlanObj" [value]="callplan.id">
-                    {{ callplan.title }}
-                </mat-option>
-              </mat-select>
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperNext [disabled]="addCallPlanFormGroup.invalid"> Next </button>
-          </div>
-        </form>
-      </mat-step>
-    
     <!-- Enter Code Step -->
     <mat-step [stepControl]="attachCodesFormGroup" [completed]="false">
         <form [formGroup]="attachCodesFormGroup">
@@ -47,7 +30,7 @@
             </mat-form-field>
 
             <mat-form-field >
-                    <input matInput placeholder="Length of plan in days" formControlName="dayperiodCtrl" matTooltip="Type 0 for unlimited days" >
+                <input matInput placeholder="Length of plan in days" formControlName="dayperiodCtrl" matTooltip="Type 0 for unlimited days" >
             </mat-form-field>
 
             <mat-form-field> 

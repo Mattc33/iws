@@ -1,21 +1,4 @@
 <mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
-
-    <!-- Choose Call Plan Step -->
-    <mat-step [stepControl]="addCallPlanFormGroup" [completed]="false">
-        <form [formGroup]="addCallPlanFormGroup">
-            <ng-template matStepLabel>Choose Call Plan</ng-template>
-            <mat-form-field>
-            <mat-select placeholder="Call Plans" formControlName="callplanCtrl">
-                <mat-option *ngFor="let callplan of callPlanObj" [value]="callplan.id">
-                {{callplan.title}}
-                </mat-option>
-            </mat-select>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperNext [disabled]="addCallPlanFormGroup.invalid"> Next </button>
-            </div>
-        </form>
-    </mat-step>
     
     <!-- Choose Rate Card Step -->
     <mat-step [stepControl]="attachRateCardFormGroup" [completed]="false">
@@ -23,8 +6,8 @@
             <ng-template matStepLabel>Choose Rate Card</ng-template>
             <mat-form-field class="example-full-width">
                 <mat-select placeholder="Rate Card" formControlName="ratecardCtrl">
-                    <mat-option *ngFor="let ratecard of rateCardObj" [value]="ratecard.id">
-                    {{ratecard.value}}
+                    <mat-option *ngFor="let option of finalRateCardObj" [value]="option.id">
+                        {{option.value}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -57,12 +40,6 @@
     <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
             <div class="details">
-                <b>Call Plan:</b> {{ getSelectedCallPlanName() }}
-                <hr>
-                <b>Rate Card:</b> {{ getSelectedRateCardName() }}
-                <hr>
-                <b>Priority:</b> {{ getSelectedPriority() }}
-                <hr>
                 Press submit to attach rate card.
                 <br><br>
             </div>
