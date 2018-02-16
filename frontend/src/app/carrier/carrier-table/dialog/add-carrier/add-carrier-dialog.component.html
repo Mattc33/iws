@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear>
+<mat-horizontal-stepper>
 
     <!-- Enter Carrier Info Step -->
     <mat-step [stepControl]="addCarrierFormGroup" [completed]="false">
@@ -42,7 +42,7 @@
             </mat-form-field>
 
             <div mat-dialog-actions>
-                <button mat-button matStepperNext [disabled]="!addCarrierFormGroup.valid"> Next </button>
+                <button mat-button matStepperNext> Next </button>
             </div>
             <!-- [disabled]="!addCarrierFormGroup.valid" -->
         </form>
