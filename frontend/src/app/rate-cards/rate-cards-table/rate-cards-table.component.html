@@ -2,7 +2,7 @@
     <div class="all-ratecards-container">
         <ag-grid-angular class="ag-theme-material" id="all-ratecards-table"
             [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
-            [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="aggrid_selectionChanged()" (rowSelected)="rowSelected($event)"
+            [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="aggrid_selectionChanged($event)" (rowSelected)="rowSelected($event)"
             [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
             [floatingFilter]="true"
             [enableSorting]="true"
@@ -33,8 +33,8 @@
         <mat-tab-group>
             <mat-tab label="Rates">
                 <ag-grid-angular class="ag-theme-material" id="rates-table" [animateRows]="true"
-                    [columnDefs]="columnDefsRates" [rowData]="" (rowSelected)="rowSelected_rates($event)"
-                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_rates_selectionChanged($event)" [suppressRowClickSelection]="true"
+                    [columnDefs]="columnDefsRates" [rowData]="" 
+                    (selectionChanged)="aggrid_rates_selectionChanged($event)" [suppressRowClickSelection]="true"
                     (cellValueChanged)="aggrid_onCellValueChanged_rates($event)"
                     [stopEditingWhenGridLosesFocus]="true" 
                     [enableFilter]="true" [floatingFilter]="true"
@@ -48,7 +48,7 @@
                 >
                 </ag-grid-angular>
                 <mat-toolbar-row>
-                    <button (click)="openDialogDelRates()" [disabled]="toggleButtonStates_rates()" class="del"> <i class="fas fa-trash-alt"></i> </button>
+                    <button (click)="openDialogDelRates()" class="del"> <i class="fas fa-trash-alt"></i> </button>
                     <!-- <button (click)="openDialogUpload()" class="upload-ratecards"> <i class="fas fa-upload"></i> Rate Card</button> -->
                     
                     <mat-form-field class="search-bar">
@@ -61,7 +61,7 @@
             <mat-tab label="Trunks">
                 <ag-grid-angular class="ag-theme-material" id="trunks-table"
                     [columnDefs]="columnDefsTrunks" [rowData]="" [animateRows]="true"
-                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_selectionChanged()"
+                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_trunks_selectionChanged($event)" (rowSelected)="rowSelected_trunks($event)"
                     [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
                     [floatingFilter]="true"
                     [enableSorting]="true"
@@ -75,9 +75,7 @@
                 >
                 </ag-grid-angular>
                 <mat-toolbar-row>
-                    <button (click)="openDialogDelRates()" class="del"> <i class="fas fa-trash-alt"></i> </button>
-                    <!-- <button (click)="openDialogUpload()" class="upload-ratecards"> <i class="fas fa-upload"></i> Rate Card</button> -->
-                    
+                    <button (click)="openDialogDetachTrunks()" [disabled]="toggleButtonStates_trunks()" class="del"> <i class="fas fa-trash-alt"></i> </button>
                     <mat-form-field class="search-bar">
                             <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                             <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">

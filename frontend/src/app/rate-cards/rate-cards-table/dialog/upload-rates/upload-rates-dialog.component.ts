@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { MatStepper } from '@angular/material';
 
 import { PapaParseService } from 'ngx-papaparse';
 
@@ -18,19 +19,19 @@ import { RatesService } from '../../../../rates/services/rates.api.service';
 export class UploadRatesDialogComponent implements OnInit {
 
     // Form Group var
-    carrierFormGroup: FormGroup; 
-    ratecardFormGroup: FormGroup; 
-    percentFormGroup: FormGroup; 
-    uploadRatesFormGroup: FormGroup;
+    private carrierFormGroup: FormGroup; 
+    private ratecardFormGroup: FormGroup; 
+    private percentFormGroup: FormGroup; 
+    private uploadRatesFormGroup: FormGroup;
 
     // DB Objects
-    carrierObj = [];
-    ratecardObj = [];
+    private carrierObj = [];
+    private ratecardObj = [];
 
-    currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
+    private currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
 
     // Input props
-    percents = [
+    private percents = [
         {value: 1.05, viewValue: '5%'}, {value: 1.1, viewValue: '10%'}, {value: 1.15, viewValue: '15%'}, {value: 1.2, viewValue: '20%'}, 
         {value: 1.25, viewValue: '25%'}, {value: 1.3, viewValue: '30%'}, {value: 1.35, viewValue: '35%'}, {value: 1.4, viewValue: '40%'}, 
         {value: 1.45, viewValue: '45%'}, {value: 1.5, viewValue: '50%'}, {value: 1.55, viewValue: '55%'}, {value: 1.6, viewValue: '60%'}, 
@@ -39,11 +40,13 @@ export class UploadRatesDialogComponent implements OnInit {
     ];
 
     // Insert Rates Props
-    rateCardID: number;
-    fileName: string;
-    disableUploadBoolean = true;
+    private rateCardID: number;
+    private fileName: string;
+    private disableUploadBoolean = true;
     
     finalRatecardObj;
+    finalRatecardPreviewObj = [];
+    ratesPreviewObj = [];
 
     constructor(
         public dialogRef: MatDialogRef <RateCardsTableComponent>, 
@@ -168,6 +171,15 @@ export class UploadRatesDialogComponent implements OnInit {
             privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
             rates: []
         };
+
+        this.finalRatecardPreviewObj.push( {
+            name: this.ratecardFormGroup.get('ratecardCtrl').value,
+            carrier_id: this.input_getCarrierId(),
+            addToTeleU: this.percentFormGroup.get('teleUCheckboxCtrl').value,
+            teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
+            asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
+            privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
+        },)
         console.log(this.finalRatecardObj);
     }
 
@@ -238,8 +250,33 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
+    generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview
+        this.finalRatecardObj.rates.push( 
+            { destination: destination, 
+                prefix: prefix, 
+                buy_rate: buyrate, 
+                buy_rate_minimum: 0, 
+                buy_rate_increment: 0,
+                sell_rate: sellrate,
+                sell_rate_minimum: 0,
+                sell_rate_increment: 0
+            }, 
+        );
+        this.ratesPreviewObj.push(
+            { destination: destination, 
+                prefix: prefix, 
+                buy_rate: buyrate, 
+                buy_rate_minimum: buyrate, 
+                buy_rate_increment: 0,
+                sell_rate: sellrate, 
+                sell_rate_minimum: 0,
+                sell_rate_increment: 0
+            }, 
+        );
+    }
+
     powerNetGlobalProfile(data) {
-        const dataSliced = data.slice(4);
+        const dataSliced = data.slice(3);
 
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
@@ -251,17 +288,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 }
             const buyrate: number = dataSliced[i][2].slice(1) * 1;
             const sellrate: number = buyrate;
-            this.finalRatecardObj.rates.push( 
-            { destination: destination, 
-                prefix: prefix, 
-                buy_rate: buyrate, 
-                buy_rate_minimum: 0, 
-                buy_rate_increment: 0,
-                sell_rate: sellrate,
-                sell_rate_minimum: 0,
-                sell_rate_increment: 0
-            }, 
-            );
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
     }
 
@@ -278,17 +305,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 }
             const buyrate: number = dataSliced[i][3] * 1;
             const sellrate: number = buyrate;
-            this.finalRatecardObj.rates.push( 
-                { destination: destination, 
-                    prefix: prefix, 
-                    buy_rate: buyrate, 
-                    buy_rate_minimum: buyrate, 
-                    buy_rate_increment: 0,
-                    sell_rate: sellrate, 
-                    sell_rate_minimum: 0,
-                    sell_rate_increment: 0
-                }, 
-            );
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
     }
 
@@ -305,17 +322,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 }
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
-            this.finalRatecardObj.rates.push( 
-                { destination: destination, 
-                    prefix: prefix, 
-                    buy_rate: buyrate, 
-                    buy_rate_minimum: buyrate, 
-                    buy_rate_increment: 0,
-                    sell_rate: sellrate,  
-                    sell_rate_minimum: 0,
-                    sell_rate_increment: 0
-                }, 
-            );
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
     }
 
@@ -332,17 +339,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 }
             const buyrate: number = dataSliced[i][3] * 1;
             const sellrate: number = buyrate;
-            this.finalRatecardObj.rates.push( 
-                { destination: destination, 
-                    prefix: prefix, 
-                    buy_rate: buyrate, 
-                    buy_rate_minimum: buyrate, 
-                    buy_rate_increment: 0,
-                    sell_rate: sellrate,  
-                    sell_rate_minimum: 0,
-                    sell_rate_increment: 0
-                }, 
-            );
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
     }
 
@@ -359,17 +356,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 }
             const buyrate: number = dataSliced[i][4] * 1;
             const sellrate: number = buyrate;
-            this.finalRatecardObj.rates.push( 
-                { destination: destination, 
-                    prefix: prefix, 
-                    buy_rate: buyrate, 
-                    buy_rate_minimum: buyrate, 
-                    buy_rate_increment: 0,
-                    sell_rate: sellrate,  
-                    sell_rate_minimum: 0,
-                    sell_rate_increment: 0
-                }, 
-            );
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
     }
 
@@ -386,17 +373,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 }
             const buyrate: number = dataSliced[i][3] * 1;
             const sellrate: number = buyrate;
-            this.finalRatecardObj.rates.push( 
-                { destination: destination, 
-                    prefix: prefix, 
-                    buy_rate: buyrate, 
-                    buy_rate_minimum: buyrate, 
-                    buy_rate_increment: 0,
-                    sell_rate: sellrate,  
-                    sell_rate_minimum: 0,
-                    sell_rate_increment: 0
-                }, 
-            );
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
     }
 
@@ -413,17 +390,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 }
             const buyrate: number = dataSliced[i][3] * 1;
             const sellrate: number = buyrate;
-            this.finalRatecardObj.rates.push( 
-                { destination: destination, 
-                    prefix: prefix, 
-                    buy_rate: buyrate, 
-                    buy_rate_minimum: buyrate, 
-                    buy_rate_increment: 0,
-                    sell_rate: sellrate,  
-                    sell_rate_minimum: 0,
-                    sell_rate_increment: 0
-                }, 
-            );
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
         } 
     }
 
@@ -441,17 +408,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 }
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
-            this.finalRatecardObj.rates.push( 
-                { destination: destination, 
-                    prefix: prefix, 
-                    buy_rate: buyrate, 
-                    buy_rate_minimum: buyrate, 
-                    buy_rate_increment: 0,
-                    sell_rate: sellrate,  
-                    sell_rate_minimum: 0,
-                    sell_rate_increment: 0
-                }, 
-            );
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
         } 
     }
 
@@ -469,17 +426,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 }
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
-            this.finalRatecardObj.rates.push( 
-                { destination: destination, 
-                    prefix: prefix, 
-                    buy_rate: buyrate, 
-                    buy_rate_minimum: buyrate, 
-                    buy_rate_increment: 0,
-                    sell_rate: sellrate,  
-                    sell_rate_minimum: 0,
-                    sell_rate_increment: 0
-                }, 
-            );
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
         } 
     }
 

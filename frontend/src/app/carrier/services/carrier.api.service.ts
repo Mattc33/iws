@@ -32,7 +32,7 @@ export class CarrierService {
         return this.http.get(this.url + 'carriers/')
             .map(res => res.json())
             .catch(this.handleError)
-            .do(data => console.log('server data:', data));
+            .do(data => console.table(data));
     }
 
     post_AddRow(body: any): Observable<any> {

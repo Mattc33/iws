@@ -74,43 +74,35 @@ export class CarrierTableComponent implements OnInit {
         this.columnApi = params.columnApi;
         this.gridApi.sizeColumnsToFit();
     }
-
-    // create column definitions
+    
     private createColumnDefs() {
         return [
-            // Name
             {
                 headerName: 'Name', field: 'name',
                 editable: true, checkboxSelection: true, 
             },
-            // Phone Number
             {
                 headerName: 'Phone Number', field: 'phone',
                 editable: true
             },
-            // Email
             {
                 headerName: 'Email', field: 'email',
                 editable: true
             },
-            // Address
             {
                 headerName: 'Address', field: 'address',
                 width: 300,
                 editable: true
             },
-            // Taxable
             {
                 headerName: 'Taxable', field: 'taxable', editable: true, 
                 cellEditor: 'select', cellEditorParams: {values: [ "true", "false"]}
             },
-            // Tier Number
             {
                 headerName: 'Tier Number', field: 'tier', editable: true,
                 cellEditor: 'select', cellEditorParams: {values: [ 1, 2, 3, 4, 5]},
                 filter: "agNumberColumnFilter"
             },
-            // Three Digit Code
             {
                 headerName: 'Carrier Code', field: 'code',
                 editable: true

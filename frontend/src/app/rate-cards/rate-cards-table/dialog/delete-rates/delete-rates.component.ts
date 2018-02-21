@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 import { RateCardsTableComponent } from './../../rate-cards-table.component';
 

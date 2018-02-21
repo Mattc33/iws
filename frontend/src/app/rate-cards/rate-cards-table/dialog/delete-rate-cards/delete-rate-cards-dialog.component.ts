@@ -28,7 +28,7 @@ import { RateCardsSharedService } from '../../../services/rate-cards.shared.serv
     ) {}
 
     ngOnInit() {
-        this.rateCardsSharedService.currentRowObj.subscribe(data => this.rowObj = data);
+        this.rateCardsSharedService.currentRowAllObj.subscribe(data => this.rowObj = data);
     }
 
     click_delRateCard() {

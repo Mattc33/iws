@@ -27,8 +27,12 @@ export class TrunksTableComponent implements OnInit {
     private gridApi: GridApi;
     private columnApi: ColumnApi;
 
-    // Pass data to shared service
-    private rowObj;
+    // Props for button toggle
+    private buttonToggleBoolean: boolean = true;
+    private gridSelectionStatus: number;
+
+    // Properties for internal service
+    private rowObj: object;
 
     constructor(
         private dialog: MatDialog,
@@ -73,7 +77,10 @@ export class TrunksTableComponent implements OnInit {
         return [
             {
                 headerName: 'Trunk Name', field: 'trunk_name',
-                editable: true,
+                editable: true, checkboxSelection: true
+            },
+            {
+                headerName: 'Carrier', field: 'carrier_name',
             },
             {
                 headerName: 'Trunk IP', field: 'trunk_ip',
@@ -86,6 +93,10 @@ export class TrunksTableComponent implements OnInit {
             {
                 headerName: 'Transport Method', field: 'transport', editable: true,
                 cellEditor: "select", cellEditorParams: {values: ['udp','tcp', 'both']}
+            },
+            {
+                headerName: 'Direction', field: 'direction', editable: true,
+                cellEditor: "select", cellEditorParams: {values: ['inbound','outbound']}
             },
             {
                 headerName: 'Prefix', field: 'prefix',
@@ -110,9 +121,8 @@ export class TrunksTableComponent implements OnInit {
     }
 
     aggrid_selectionChanged(): void {
-        const selectedRows = this.gridApi.getSelectedNodes();
+        const selectedRows = this.gridApi.getSelectedRows();
         this.rowObj = selectedRows;
-        console.log(this.rowObj);
     }
 
     aggrid_delRow(boolean): void {
@@ -130,10 +140,12 @@ export class TrunksTableComponent implements OnInit {
     aggrid_onCellValueChanged(params: any) {
         const id = params.data.id;
         const trunkObj = {
+            carrier_id: params.data.carrier_id,
             trunk_name: params.data.trunk_name,
             trunk_ip: params.data.trunk_ip,
             trunk_port: params.data.trunk_port,
             transport: params.data.transport,
+            direction: 'outbound',
             prefix: params.data.prefix,
             active: params.data.active,
             metadata: params.data.metadata
@@ -143,9 +155,24 @@ export class TrunksTableComponent implements OnInit {
     }
 
     /*
+        ~~~~~~~~~~ Button Toggle ~~~~~~~~~~
+    */
+    rowSelected(params) {
+        this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
+    }
+
+    toggleButtonStates() {
+        if ( this.gridSelectionStatus > 0 ) {
+            this.buttonToggleBoolean = false;
+        } else {
+            this.buttonToggleBoolean = true;
+        }
+        return this.buttonToggleBoolean;
+    }
+
+    /*
         ~~~~~~~~~~ Dialog ~~~~~~~~~~
     */
-
     openDialogDel(): void {
         // assign new rowID prop
         this.trunksSharedService.changeRowObj(this.rowObj);
@@ -153,7 +180,6 @@ export class TrunksTableComponent implements OnInit {
         const dialogRef = this.dialog.open(DeleteTrunksComponent, {});
 
         const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
-            // do something with event data
             this.aggrid_delRow(data);
         });
 
@@ -170,7 +196,6 @@ export class TrunksTableComponent implements OnInit {
         });
 
         const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-            // do something with event data
             this.aggrid_addRow(data);
         });
 

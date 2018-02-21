@@ -72,6 +72,12 @@
                 <input #fileInput type="file" (change)="changeListenerUploadBtn($event)" accept=".csv" formControlName="uploadRatesCtrl" style="display:none;" />
             </button>
             <div>
+                <b>File Name:</b> {{fileName}} <br>
+                <b>Rates Inserted:</b> {{ratesPreviewObj.length}} <br>
+                <b>Preview First 3 rates:</b> <br>
+                <pre>{{ratesPreviewObj[0] | json }} {{ratesPreviewObj[1] | json }} {{ratesPreviewObj[2] | json }}</pre>
+            </div>
+            <div>
                 <button mat-button matStepperPrevious >Back</button>
                 <button mat-button matStepperNext [disabled]="uploadValidator()"> Next </button>
             </div>
@@ -82,7 +88,7 @@
     <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
         <div class="details">
-            <pre>{{finalRatecardObj | json}}</pre>
+            <pre>{{finalRatecardPreviewObj | json}}</pre>
         </div>
         <div>
             <button mat-button matStepperPrevious>Back</button>

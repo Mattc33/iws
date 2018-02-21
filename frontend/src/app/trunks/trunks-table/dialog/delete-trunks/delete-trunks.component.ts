@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { TrunksTableComponent } from './../../trunks-table.component';
 
 import { TrunksService } from './../../../services/trunks.api.service';
+import { TrunksSharedService } from './../../../services/trunks.shared.service';
 
 @Component({
   selector: 'app-delete-trunks',
@@ -21,19 +22,25 @@ export class DeleteTrunksComponent implements OnInit {
         public dialogRef: MatDialogRef <TrunksTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private trunksService: TrunksService,
+        private trunksSharedService: TrunksSharedService
     ) {}
 
     ngOnInit() {
+        this.trunksSharedService.currentRowId.subscribe(data => this.rowObj = data);
     }
     
     click_delCarrier() {
+        this.del_delTrunks();
+        this.aggrid_delTrunks();
+
+        this.closeDialog();
     }
 
     aggrid_delTrunks() {
         this.event_onDel.emit(true);
     }
 
-    del_delCarrier() {
+    del_delTrunks() {
         let rowId: number;
         for( let i = 0; i < this.rowObj.length; i++) {
             rowId = this.rowObj[i].id;

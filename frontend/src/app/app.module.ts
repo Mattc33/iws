@@ -152,7 +152,7 @@ import { RegistrationComponent } from './registration/registration.component';
     entryComponents: [ 
         AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
         AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, UploadRatesDialogComponent, // Ratecards
-        DeleteTrunksComponent, AddTrunksComponent, DeleteRatesComponent, // Trunks
+        DeleteTrunksComponent, AddTrunksComponent, DeleteRatesComponent, DetachTrunksComponent, // Trunks
         DeleteAllRatesDialogComponent, DeleteTeleuRatesDialogComponent, // Rates
         AddCallPlanComponent, DelCallPlanComponent, AddRateCardComponent, AddCodeComponent, // Callplans
         DettachRatecardsComponent, DettachCodesComponent,

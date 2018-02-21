@@ -30,7 +30,12 @@ export class AddTrunksComponent implements OnInit {
     private activeValues = [
         {value: true}, {value: false}
     ];
+    private directionValues = [
+        {value: 'inbound'}, {value: 'outbound'}
+    ];
+    private carrierName: string;
     private finalTrunkObj;
+
 
     // Validation Patterns
     
@@ -54,6 +59,7 @@ export class AddTrunksComponent implements OnInit {
             ipCtrl: ['', Validators.required],
             portCtrl: ['', Validators.required],
             transportCtrl: ['', Validators.required],
+            directionCtrl: ['', Validators.required],
             prefixCtrl: ['', Validators.required],
             activeCtrl: ['', Validators.required],
             metadataCtrl: ['', Validators.required]
@@ -109,6 +115,7 @@ export class AddTrunksComponent implements OnInit {
     */
     on_getCarrierName(): string {
         const carrierName = this.carrierFormGroup.get('carrierCtrl').value;
+            this.carrierName = carrierName;
             return carrierName;
     };
 
@@ -123,16 +130,18 @@ export class AddTrunksComponent implements OnInit {
         ~~~~~~~~~~ Dialog ~~~~~~~~~~
     */
     createTrunkObj() {
+        const randomNum = Math.floor(Math.random() * 9999); 
         this.finalTrunkObj = {
             carrier_id: this.on_getCarrierId(),
-            trunk_name: this.trunksFormGroup.get('nameCtrl').value,
+            carrier_name: this.carrierName,
+            trunk_name: this.trunksFormGroup.get('nameCtrl').value + " " + randomNum,
             trunk_ip: this.trunksFormGroup.get('ipCtrl').value,
             trunk_port: parseInt(this.trunksFormGroup.get('portCtrl').value),
             transport: this.trunksFormGroup.get('transportCtrl').value,
+            direction: this.trunksFormGroup.get('directionCtrl').value,
             prefix: this.trunksFormGroup.get('prefixCtrl').value,
             active: this.trunksFormGroup.get('activeCtrl').value,
             metadata: this.trunksFormGroup.get('metadataCtrl').value
-            // direction: 'up'
         }
     }
 
@@ -140,7 +149,7 @@ export class AddTrunksComponent implements OnInit {
         this.aggrid_addTrunks(this.finalTrunkObj);
         this.post_addTrunk(this.finalTrunkObj);
 
-        // this.closeDialog;
+        this.closeDialog();
     };
 
     closeDialog(): void {
@@ -151,11 +160,12 @@ export class AddTrunksComponent implements OnInit {
         ~~~~~~~~~~ TEST ~~~~~~~~~~
     */
     insertTrunkTestData() {
-        const randomNumber = Math.floor(Math.random() * Math.floor(1000));
+        const randomNumber = Math.floor(Math.random() * Math.floor(9999));
         this.trunksFormGroup.get('nameCtrl').setValue('Test Trunk ' + randomNumber);
         this.trunksFormGroup.get('ipCtrl').setValue('192.168.1.1');
         this.trunksFormGroup.get('portCtrl').setValue('3308');
         this.trunksFormGroup.get('transportCtrl').setValue('udp');
+        this.trunksFormGroup.get('directionCtrl').setValue('outbound');
         this.trunksFormGroup.get('prefixCtrl').setValue('prefix');
         this.trunksFormGroup.get('activeCtrl').setValue(true);
         this.trunksFormGroup.get('metadataCtrl').setValue('meta data');

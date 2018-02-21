@@ -4,11 +4,12 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class TrunksSharedService {
 
-    rowObjSource = new BehaviorSubject<object>({});
-    currentRowObj = this.rowObjSource.asObservable();
+    rowObjSource = new BehaviorSubject<object>([{}]);
+    currentRowId = this.rowObjSource.asObservable();
 
-    changeRowObj(rowId: object) {
-        this.rowObjSource.next(rowId);
-        console.log('updated rowId: ' + rowId)
+    changeRowObj(rowObj: object) {
+        this.rowObjSource.next(rowObj);
+        console.log('updated rowId:')
+        console.table(rowObj)
     }
 }

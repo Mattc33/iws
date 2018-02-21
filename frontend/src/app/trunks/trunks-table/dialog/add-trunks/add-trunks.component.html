@@ -1,7 +1,7 @@
 <mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
 
     <!-- Choose Carrier Step -->
-    <!-- <mat-step [stepControl]="carrierFormGroup" [completed]="false">
+    <mat-step [stepControl]="carrierFormGroup" [completed]="false">
     <form [formGroup]="carrierFormGroup">
         <ng-template matStepLabel>Choose Carrier</ng-template>
         <mat-form-field>
@@ -15,7 +15,7 @@
             <button mat-button matStepperNext [disabled]="carrierFormGroup.invalid"> Next </button>
         </div>
     </form>
-    </mat-step> -->
+    </mat-step>
     
     <!-- Enter Trunks Info Step -->
     <mat-step [stepControl]="trunksFormGroup" [completed]="false">
@@ -37,6 +37,14 @@
         <mat-form-field>
             <mat-select placeholder="Trasport Method" formControlName="transportCtrl">
                 <mat-option *ngFor="let option of transportMethods" [value]="option.value">
+                    {{option.value}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select placeholder="Direction" formControlName="directionCtrl">
+                <mat-option *ngFor="let option of directionValues" [value]="option.value">
                     {{option.value}}
                 </mat-option>
             </mat-select>

@@ -25,8 +25,15 @@ export class RateCardsService {
             .do(res => console.log('server data', res));
     }
 
-    get_SpecificRateCard(ratecardId: number): Observable<any> {
+    get_RatesInRatecard(ratecardId: number): Observable<any> {
         return this.http.get(this.url + 'ratecards/' + ratecardId + '/rates')
+            .map(res => res.json())
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
+    }
+
+    get_SpecificRatecard(ratecardId: number): Observable<any> {
+        return this.http.get(this.url + 'ratecards/' + ratecardId)
             .map(res => res.json())
             .catch(this.handleError)
             .do(res => console.log('server data', res));
@@ -54,7 +61,24 @@ export class RateCardsService {
     put_EditRateCard(body: any, rowID: any): Observable<any> {
         return this.http
             .put(this.url + 'ratecards/' + rowID, body)
-            .catch(this.handleError);
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
+    }
+
+    post_AttachTrunk(ratecardId: number, trunkId: number) {
+        const body = {};
+        return this.http
+            .post(this.url + 'ratecards/' + ratecardId + '/trunks/' + trunkId, body)
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
+    }
+
+    del_DetachTrunk(ratecardId: number, trunkId: number) {
+        const body = {};
+        return this.http
+            .delete(this.url + 'ratecards/' + ratecardId + '/trunks/' + trunkId, body)
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
     }
 
     handleError(error: any): any {

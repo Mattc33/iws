@@ -4,10 +4,11 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
 import { GridApi, Column } from 'ag-grid';
 
+import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.component';
 import { DeleteRateCardsDialogComponent } from './dialog/delete-rate-cards/delete-rate-cards-dialog.component';
 import { UploadRatesDialogComponent } from './dialog/upload-rates/upload-rates-dialog.component';
 import { AttachTrunksDialogComponent } from './dialog/attach-trunks/attach-trunks-dialog.component';
-import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.component';
+import { DetachTrunksComponent } from './dialog/detach-trunks/detach-trunks.component';
 
 import { RateCardsService } from '../services/rate-cards.api.service';
 import { RateCardsSharedService } from '../services/rate-cards.shared.service';
@@ -48,8 +49,6 @@ export class RateCardsTableComponent implements OnInit {
     // Props for button toggle
     private buttonToggleBoolean: boolean = true;
     private gridSelectionStatus: number;
-    private buttonToggleBoolean_rates: boolean = true;
-    private gridSelectionStatus_rates: number;
     private buttonToggleBoolean_trunks: boolean = true;
     private gridSelectionStatus_trunks: number;
     
@@ -107,15 +106,16 @@ export class RateCardsTableComponent implements OnInit {
         this.gridApiRates = params.api;
         this.columnApiRates = params.ColumnApi;
         this.gridApiRates.sizeColumnsToFit();
+
+        this.activeFilter(); // activate filter for all ratecards table
     };
 
     on_GridReady_Trunks(params): void {
-        this.columnDefsTrunks = this.createColumnDefsRates();
+        this.columnDefsTrunks = this.createColumnsDefsTrunks();
         this.gridApiTrunks = params.api;
         this.columnApiTrunks = params.ColumnApi;
         this.gridApiTrunks.sizeColumnsToFit();
 
-        this.activeFilter();
     };
 
     private createColumnDefs() {
@@ -204,6 +204,10 @@ export class RateCardsTableComponent implements OnInit {
     private createColumnsDefsTrunks() {
         return [
             {
+                headerName: 'Trunk Id', field: 'cx_trunk_id',
+                checkboxSelection: true,
+            },
+            {
                 headerName: 'Carrier Name', field: 'carrier_name',
             },
             {
@@ -243,14 +247,21 @@ export class RateCardsTableComponent implements OnInit {
         */
         aggrid_selectionChanged(): void {
             this.gridApiRates.setRowData([]);
+            this.gridApiTrunks.setRowData([]);
 
             this.rowRatecardObj = this.gridApi.getSelectedRows();
             this.selectedRatecardId = this.rowRatecardObj[0].id;
 
-            this.rateCardsService.get_SpecificRateCard(this.selectedRatecardId)
+            this.rateCardsService.get_RatesInRatecard(this.selectedRatecardId) 
                 .subscribe(
                     data => {
                         this.gridApiRates.updateRowData({ add: data });
+                    }
+                );
+
+            this.rateCardsService.get_SpecificRatecard(this.selectedRatecardId)
+                .subscribe (
+                    data => {
                         this.gridApiTrunks.updateRowData({ add: data.trunks });
                     }
                 );
@@ -259,6 +270,11 @@ export class RateCardsTableComponent implements OnInit {
         aggrid_rates_selectionChanged(): void {
             this.rowSelectionRates = this.gridApiRates.getSelectedRows();
             console.log(this.rowSelectionRates);
+        }
+
+        aggrid_trunks_selectionChanged(): void {
+            this.rowSelectionTrunks = this.gridApiTrunks.getSelectedRows();
+            console.log(this.rowSelectionTrunks);
         }
 
         /*
@@ -275,19 +291,6 @@ export class RateCardsTableComponent implements OnInit {
                 this.buttonToggleBoolean = true;
             }
             return this.buttonToggleBoolean;
-        }
-
-        rowSelected_rates(params) {
-            this.gridSelectionStatus_rates = this.gridApiRates.getSelectedNodes().length;
-        }
-        
-        toggleButtonStates_rates() {
-            if ( this.gridSelectionStatus_rates > 0 ) {
-                this.buttonToggleBoolean_rates = false;
-            } else {
-                this.buttonToggleBoolean_rates = true;
-            }
-            return this.buttonToggleBoolean_rates;
         }
         
         rowSelected_trunks(params) {
@@ -383,7 +386,7 @@ export class RateCardsTableComponent implements OnInit {
             ~~~~~ Rate cards ~~~~~
         */
         openDialogDel(): void {
-            this.rateCardsSharedService.changeRowObj(this.rowRatecardObj);
+            this.rateCardsSharedService.changeRowAllObj(this.rowRatecardObj);
 
             const dialogRef = this.dialog.open(DeleteRateCardsDialogComponent, {});
 
@@ -427,26 +430,28 @@ export class RateCardsTableComponent implements OnInit {
         /*
             ~~~~~ Trunks ~~~~~
         */
-        openDialogDelTrunks(): void {
-            // this.rateCardsSharedService.changeRowRatesObj(this.rowSelectionRates);
+        openDialogDetachTrunks(): void {
+            this.rateCardsSharedService.changeRowAllObj(this.rowRatecardObj);
+            this.rateCardsSharedService.changeRowTrunksObj(this.rowSelectionTrunks);
 
-            // const dialogRef = this.dialog.open(DeleteRatesComponent, {});
+            const dialogRef = this.dialog.open(DetachTrunksComponent, {});
 
-            // const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
-            //     this.aggrid_delRow(data);
-            // });
+            const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
+                this.aggrid_delRow(data);
+            });
 
-            // dialogRef.afterClosed().subscribe(() => {
-            //     sub.unsubscribe();
-            //     console.log('The dialog was closed');
-            // });
+            dialogRef.afterClosed().subscribe(() => {
+                sub.unsubscribe();
+                console.log('The dialog was closed');
+            });
         }
 
         openDialogAttachTrunks(): void {
+            this.rateCardsSharedService.changeRowAllObj(this.rowRatecardObj);
+
             const dialogRef = this.dialog.open(AttachTrunksDialogComponent, {});
 
             const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-                // do something with event data
                 // this.aggrid_addRow(data);
             });
 

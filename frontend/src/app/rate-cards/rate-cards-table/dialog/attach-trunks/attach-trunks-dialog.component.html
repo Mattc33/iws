@@ -1,21 +1,4 @@
 <mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
-
-    <!-- Choose Ratecard Step -->
-    <mat-step [stepControl]="ratecardFormGroup" [completed]="false">
-        <form [formGroup]="ratecardFormGroup">
-        <ng-template matStepLabel>Choose Ratecard</ng-template>
-            <mat-form-field>
-                <mat-select placeholder="Select Ratecard" formControlName="ratecardCtrl">
-                    <mat-option *ngFor="let option of ratecards" [value]="option.id">
-                        {{option.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperNext [disabled]="!ratecardFormGroup.valid"> Next </button>
-            </div>
-        </form>
-    </mat-step>
     
     <!-- Enter Rate Card Name Step -->
     <mat-step [stepControl]="trunksFormGroup" [completed]="false">
@@ -23,8 +6,8 @@
             <ng-template matStepLabel>Enter Rate Card Name</ng-template>
                 <mat-form-field>
                     <mat-select placeholder="Select Trunks" formControlName="trunksCtrl">
-                        <mat-option *ngFor="let option of trunks" [value]="option.id">
-                            {{option.trunk_ip}}
+                        <mat-option *ngFor="let option of trunksFormObj" [value]="option.name">
+                            {{option.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -36,23 +19,17 @@
     </mat-step>
     
     <!-- Details & Finalize  -->
-    <!-- <mat-step [completed]="false">
+    <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
         <div class="details">
-            <b>Carrier Name:</b> {{ on_getCarrierName() }}
-            <hr>
-            <b>Carrier Id:</b> {{ currentCarrierId }}
-            <hr>
-            <b>Rate card Name:</b> {{ currentRateCardName }}
+            {{extract_trunksId()}}
             <hr>
             Press Submit to add new rate card. <br><br>
         </div>
         <div>
             <button mat-button matStepperPrevious>Back</button>  
-            <button mat-button (click)="click_addRateCard()">Submit</button>
+            <button mat-button (click)="click_attachTrunks()">Submit</button>
         </div>
-    </mat-step> -->
-
-        <!-- (click)="post_addRateCard()" -->
+    </mat-step>
     
-    </mat-horizontal-stepper>
+</mat-horizontal-stepper>

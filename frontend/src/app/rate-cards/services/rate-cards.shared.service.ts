@@ -4,22 +4,28 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class RateCardsSharedService {
 
-    // Passing rowObj from ratecard-all-table => delete dialog
-    rowObjSource = new BehaviorSubject<object>({});
-    currentRowObj = this.rowObjSource.asObservable();
+    rowObjAllSource = new BehaviorSubject<object>({}); // Passing rowObj from ratecard-all-table => delete dialog
+    currentRowAllObj = this.rowObjAllSource.asObservable();
 
-    // Passing rates rowObj from rate table => delete dialog
-    rowRatesObjSource = new BehaviorSubject<object>({});
+    rowRatesObjSource = new BehaviorSubject<object>({}); // Passing rates rowObj from rate table => delete dialog
     currentRowRatesObj = this.rowRatesObjSource.asObservable();
+    
+    rowTrunksObjSource = new BehaviorSubject<object>({}); // Passing trunks rowObj from trunks table => delete dialog
+    currentRowTrunksObj = this.rowTrunksObjSource.asObservable();
 
-    changeRowObj(rowObj: object) {
-        this.rowObjSource.next(rowObj);
+    changeRowAllObj(rowObj: object) {
+        this.rowObjAllSource.next(rowObj);
+        console.table(rowObj);
     }
 
     changeRowRatesObj(rowObj: object) {
         this.rowRatesObjSource.next(rowObj);
-        console.log('shared service -->')
-        console.log(rowObj);    
+        console.table(rowObj);    
+    }
+
+    changeRowTrunksObj(rowObj: object) {
+        this.rowTrunksObjSource.next(rowObj);
+        console.table(rowObj);
     }
 }
 

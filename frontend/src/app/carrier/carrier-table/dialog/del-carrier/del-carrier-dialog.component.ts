@@ -30,7 +30,6 @@ import { CarrierSharedService } from '../../../services/carrier.shared.service';
     }
 
     click_delCarrier() {
-        console.log(this.rowObj);
         this.del_delCarrier();
         this.aggrid_delRateCard();
 

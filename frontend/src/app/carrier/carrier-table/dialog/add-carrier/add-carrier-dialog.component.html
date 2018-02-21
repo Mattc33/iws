@@ -52,6 +52,7 @@
     <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
             <div class="details">
+                {{finalCarrierObj | json}}
             </div>
         <div>
             <button mat-button matStepperPrevious>Back</button>  
