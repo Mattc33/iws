@@ -255,10 +255,10 @@ export class UploadRatesDialogComponent implements OnInit {
             { destination: destination, 
                 prefix: prefix, 
                 buy_rate: buyrate, 
-                buy_rate_minimum: 0, 
+                buy_rate_minimum: buyrate, 
                 buy_rate_increment: 0,
                 sell_rate: sellrate,
-                sell_rate_minimum: 0,
+                sell_rate_minimum: sellrate,
                 sell_rate_increment: 0
             }, 
         );
@@ -269,7 +269,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 buy_rate_minimum: buyrate, 
                 buy_rate_increment: 0,
                 sell_rate: sellrate, 
-                sell_rate_minimum: 0,
+                sell_rate_minimum: sellrate,
                 sell_rate_increment: 0
             }, 
         );
@@ -396,7 +396,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     voiPlatinumProfile(data) {
         const dataSliced = data.slice(1, -1);
-    
+
         for(let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];

@@ -1,7 +1,8 @@
 <section id="grid-wrapper">
     <div class="all-ratecards-container">
         <ag-grid-angular class="ag-theme-material" id="all-ratecards-table"
-            [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+            [getNodeChildDetails]="getNodeChildDetails"
+            [columnDefs]="columnDefs" [rowData]="formattedRowData" [animateRows]="true"
             [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="aggrid_selectionChanged($event)" (rowSelected)="rowSelected($event)"
             [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
             [floatingFilter]="true"
@@ -31,9 +32,10 @@
 
     <div class="details-container">
         <mat-tab-group>
-            <mat-tab label="Rates">
+           <mat-tab label="Rates">
                 <ag-grid-angular class="ag-theme-material" id="rates-table" [animateRows]="true"
                     [columnDefs]="columnDefsRates" [rowData]="" 
+                    [enableColResize]="true"
                     (selectionChanged)="aggrid_rates_selectionChanged($event)" [suppressRowClickSelection]="true"
                     (cellValueChanged)="aggrid_onCellValueChanged_rates($event)"
                     [stopEditingWhenGridLosesFocus]="true" 

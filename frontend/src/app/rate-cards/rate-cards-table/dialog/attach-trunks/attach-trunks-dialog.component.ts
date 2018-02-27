@@ -25,9 +25,10 @@ export class AttachTrunksDialogComponent implements OnInit {
 
     // Shared service props
     private ratecardsObj;
+    private trunksObj;
 
     // props
-    trunksFormObj = [];
+    private trunksFormObj = [];
 
     constructor(
         public dialogRef: MatDialogRef <RateCardsTableComponent>, 
@@ -53,6 +54,7 @@ export class AttachTrunksDialogComponent implements OnInit {
     get_getTrunks(): void {
         this.trunksService.get_allTrunks().subscribe(
             data => {
+                this.trunksObj = data;
                 this.extract_trunksData(data);
             },
             error => { console.log(error); },
@@ -67,7 +69,7 @@ export class AttachTrunksDialogComponent implements OnInit {
     /*
         ~~~~~~~~~~ Extract Necessary Data Methods ~~~~~~~~~~
     */
-    extract_trunksData(data) {
+    extract_trunksData(data): void {
         for(let i = 0; i<data.length; i++) {
             this.trunksFormObj.push(
                 {value: data[i].id, name: data[i].trunk_name},
@@ -75,7 +77,7 @@ export class AttachTrunksDialogComponent implements OnInit {
         };
     };
 
-    extract_trunksId() {
+    extract_trunksId(): number {
         for(let i = 0; i<this.trunksFormObj.length; i++) {
             if(this.trunksFormGroup.get('trunksCtrl').value === this.trunksFormObj[i].name) {
                 return this.trunksFormObj[i].value;
@@ -84,28 +86,36 @@ export class AttachTrunksDialogComponent implements OnInit {
         }
     }; 
 
-    /*
-        ~~~~~~~~~~ Get Input Values ~~~~~~~~~~
-    */
-    
-    
+    extract_trunkObj() {
+        const inputValue = this.trunksFormGroup.get('trunksCtrl').value;
+        for(let i = 0; i<this.trunksObj.length; i++){
+            if(inputValue === this.trunksObj[i].trunk_name) {
+                return this.trunksObj[i];
+            } else {
+            }
+        }
+    }
+
     /*
         ~~~~~~~~~~ AG Grid Methods ~~~~~~~~~~ 
     */
+    aggrid_addTrunkData() {
+        this.event_onAdd.emit(this.extract_trunkObj());
+    }
 
 
     /*
         ~~~~~~~~~~ Dialog ~~~~~~~~~~
     */
-
     click_attachTrunks(): void {
         const trunkId = this.extract_trunksId();
         const ratecardId = this.ratecardsObj[0].id;
 
         this.post_attachTrunksToRatecard(ratecardId, trunkId);
+        this.aggrid_addTrunkData();
+
+        this.closeDialog();
     }
-
-
 
     closeDialog(): void {
         this.dialogRef.close();

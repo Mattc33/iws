@@ -19,7 +19,7 @@ export class RateCardsService {
     }
 
     get_RateCard(): Observable<any> {
-        return this.http.get(this.url + 'ratecards/')
+        return this.http.get(this.url + 'ratecards')
             .map(res => res.json())
             .catch(this.handleError)
             .do(res => console.log('server data', res));
