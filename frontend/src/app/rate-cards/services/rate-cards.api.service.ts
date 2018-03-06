@@ -39,13 +39,6 @@ export class RateCardsService {
             .do(res => console.log('server data', res));
     }
 
-    get_CarrierNames(): Observable<any> {
-        return this.http.get(this.url + 'carriers/')
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
-    }
-
     post_AddRateCard(body: any): Observable<any> {
         return this.http.post(this.url + 'ratecards/', body)
             .catch(this.handleError)
@@ -77,6 +70,13 @@ export class RateCardsService {
         const body = {};
         return this.http
             .delete(this.url + 'ratecards/' + ratecardId + '/trunks/' + trunkId, body)
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
+    }
+
+    put_EditRates(ratesId: number, body: any): Observable<any> {
+        return this.http.put(this.url + 'rates/' + ratesId, body)
+            .map(res => res.json())
             .catch(this.handleError)
             .do(res => console.log('server data', res));
     }

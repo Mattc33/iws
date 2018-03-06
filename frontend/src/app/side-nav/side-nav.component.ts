@@ -10,9 +10,7 @@ import { Router } from '@angular/router';
 })
 export class SideNavComponent {
 
-
     constructor() { }
-
 
 }
 

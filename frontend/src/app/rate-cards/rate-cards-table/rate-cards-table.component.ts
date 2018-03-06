@@ -1,18 +1,16 @@
 import { AgGridModule } from 'ag-grid-angular';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
 import { GridApi, Column } from 'ag-grid';
 
 import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.component';
 import { DeleteRateCardsDialogComponent } from './dialog/delete-rate-cards/delete-rate-cards-dialog.component';
-import { UploadRatesDialogComponent } from './dialog/upload-rates/upload-rates-dialog.component';
 import { AttachTrunksDialogComponent } from './dialog/attach-trunks/attach-trunks-dialog.component';
 import { DetachTrunksComponent } from './dialog/detach-trunks/detach-trunks.component';
 
 import { RateCardsService } from '../services/rate-cards.api.service';
 import { RateCardsSharedService } from '../services/rate-cards.shared.service';
-import { RatesService } from './../../rates/services/rates.api.service';
 
 @Component({
     selector: 'app-rate-cards-table',
@@ -20,7 +18,7 @@ import { RatesService } from './../../rates/services/rates.api.service';
     styleUrls: ['./rate-cards-table.component.scss'],
     providers: [ RateCardsService ],
 })
-export class RateCardsTableComponent implements OnInit {
+export class RateCardsTableComponent implements OnInit, AfterViewChecked {
 
     // Define row and column data
     private rowData; // All
@@ -49,7 +47,7 @@ export class RateCardsTableComponent implements OnInit {
     private gridSelectionStatus: number;
     private buttonToggleBoolean_trunks = true;
     private gridSelectionStatus_trunks: number;
-    
+
     // Properties for internal service
     private rowRatecardObj;
     private quickSearchValue = '';
@@ -64,7 +62,6 @@ export class RateCardsTableComponent implements OnInit {
     constructor(
         private rateCardsService: RateCardsService,
         private rateCardsSharedService: RateCardsSharedService,
-        private ratesService: RatesService,
         private dialog: MatDialog
     ) {
     }
@@ -72,6 +69,10 @@ export class RateCardsTableComponent implements OnInit {
     ngOnInit() {
         this.getNodeChildDetails = this.setGroups();
         this.on_InitializeRows();
+    }
+
+    ngAfterViewChecked() {
+        this.activeFilter();
     }
 
     /*
@@ -90,8 +91,8 @@ export class RateCardsTableComponent implements OnInit {
             .subscribe(resp => console.log(resp));
     }
 
-    put_editRates(rateCardObj: object, id: number) {
-        this.ratesService.put_Rates(id, rateCardObj)
+    put_editRates(id: number, rateCardObj: object) {
+        this.rateCardsService.put_EditRates(id, rateCardObj)
             .subscribe(resp => console.log(resp));
     }
 
@@ -108,7 +109,6 @@ export class RateCardsTableComponent implements OnInit {
         this.columnDefsRates = this.createColumnDefsRates();
         this.gridApiRates = params.api;
         this.columnApiRates = params.ColumnApi;
-        this.activeFilter(); // activate filter for all ratecards table
     }
 
     on_GridReady_Trunks(params): void {
@@ -134,10 +134,10 @@ export class RateCardsTableComponent implements OnInit {
             {
                 headerName: 'Approve?', editable: true, field: 'confirmed', width: 80,
                 valueFormatter: function(params) {
-                    if(params.value === 1) {
+                    if (params.value === 1) {
                         return true;
-                    } 
-                    if(params.value === 0) {
+                    }
+                    if (params.value === 0) {
                         return false;
                     }
                 },
@@ -167,7 +167,7 @@ export class RateCardsTableComponent implements OnInit {
                 filter: 'agNumberColumnFilter'
             },
             {
-                headerName: 'Difference', 
+                headerName: 'Difference',
                 valueGetter: function(params) {
                     const diff = (params.data.sell_rate - params.data.buy_rate);
                     const percent = ((diff) / params.data.buy_rate) * 100;
@@ -181,10 +181,10 @@ export class RateCardsTableComponent implements OnInit {
                 headerName: 'Approved?', field: 'confirmed', editable: true,
                 cellEditor: 'select', cellEditorParams: {values: [ true, false]},
                 valueFormatter: function(params) {
-                    if(params.value === 1) {
+                    if (params.value === 1) {
                         return true;
                     }
-                    if(params.value === 0) {
+                    if (params.value === 0) {
                         return false;
                     }
                 },
@@ -193,10 +193,10 @@ export class RateCardsTableComponent implements OnInit {
                 headerName: 'Active?', field: 'active', editable: true,
                 cellEditor: 'select', cellEditorParams: {values: [ true, false]},
                 valueFormatter: function(params) {
-                    if(params.value === 1) {
+                    if (params.value === 1) {
                         return true;
                     }
-                    if(params.value === 0) {
+                    if (params.value === 0) {
                         return false;
                     }
                 },
@@ -257,7 +257,7 @@ export class RateCardsTableComponent implements OnInit {
     }
 
     groupDataByName() {
-        Array.prototype.groupBy = function (prop) {
+        Array.prototype.groupBy = function (prop): any {
             return this.reduce(function (groups, item) {
                 groups[item[prop]] = groups[item[prop]] || [];
                 groups[item[prop]].push(item);
@@ -306,7 +306,7 @@ export class RateCardsTableComponent implements OnInit {
             } else {
             return null;
             }
-        }
+        };
     }
 
     /*
@@ -339,7 +339,7 @@ export class RateCardsTableComponent implements OnInit {
             this.rowRatecardObj = this.gridApi.getSelectedRows();
             this.selectedRatecardId = this.rowRatecardObj[0].id;
 
-            this.rateCardsService.get_RatesInRatecard(this.selectedRatecardId) 
+            this.rateCardsService.get_RatesInRatecard(this.selectedRatecardId)
                 .subscribe(
                     data => {
                         this.gridApiRates.updateRowData({ add: data });
@@ -352,7 +352,7 @@ export class RateCardsTableComponent implements OnInit {
                         this.gridApiTrunks.updateRowData({ add: data.trunks });
                     }
                 );
-        };
+        }
 
         aggrid_rates_selectionChanged(): void {
             this.rowSelectionRates = this.gridApiRates.getSelectedRows();
@@ -370,7 +370,7 @@ export class RateCardsTableComponent implements OnInit {
         rowSelected(params) {
             this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
         }
-        
+
         toggleButtonStates() {
             if ( this.gridSelectionStatus > 0 ) {
                 this.buttonToggleBoolean = false;
@@ -379,11 +379,11 @@ export class RateCardsTableComponent implements OnInit {
             }
             return this.buttonToggleBoolean;
         }
-        
+
         rowSelected_trunks(params) {
             this.gridSelectionStatus_trunks = this.gridApiTrunks.getSelectedNodes().length;
         }
-        
+
         toggleButtonStates_trunks() {
             if ( this.gridSelectionStatus_trunks > 0 ) {
                 this.buttonToggleBoolean_trunks = false;
@@ -397,20 +397,19 @@ export class RateCardsTableComponent implements OnInit {
             ~~~~~ Deletion ~~~~~
         */
         aggrid_delRow(string): void {
-            if (string == 'delete-ratecards') {
+            if (string === 'delete-ratecards') {
                 this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
-            } 
-            if (string == 'delete-rates') {
+            }
+            if (string === 'delete-rates') {
                 this.gridApiRates.updateRowData({ remove: this.gridApiRates.getSelectedRows() });
             }
-            if (string == 'delete-trunks') {
+            if (string === 'delete-trunks') {
                 this.gridApiTrunks.updateRowData({ remove: this.gridApiTrunks.getSelectedRows() });
-            }
-            else {
+            } else {
                 return;
             }
         }
-        
+
         /*
             ~~~~~ Addition ~~~~~
         */
@@ -441,16 +440,16 @@ export class RateCardsTableComponent implements OnInit {
             let active: boolean;
             let confirmed: boolean;
 
-            if( params.data.active === 1 ) {
-                active = true
-            } else{
-                active = false
+            if ( params.data.active === 1 ) {
+                active = true;
+            } else {
+                active = false;
             }
 
-            if( params.data.confirmed === 1 ) {
-                confirmed = true
+            if ( params.data.confirmed === 1 ) {
+                confirmed = true;
             } else {
-                confirmed = false
+                confirmed = false;
             }
 
             const ratesObj =  {
@@ -467,7 +466,7 @@ export class RateCardsTableComponent implements OnInit {
                 confirmed: confirmed
             };
             console.log(ratesObj);
-            this.put_editRates(ratesObj, id);
+            this.put_editRates(id, ratesObj);
         }
 
     /*
@@ -487,14 +486,6 @@ export class RateCardsTableComponent implements OnInit {
 
             dialogRef.afterClosed().subscribe(() => {
                 sub.unsubscribe();
-                console.log('The dialog was closed');
-            });
-        }
-
-        openDialogUpload(): void {
-            const dialogRef = this.dialog.open(UploadRatesDialogComponent, {});
-
-            dialogRef.afterClosed().subscribe(() => {
                 console.log('The dialog was closed');
             });
         }

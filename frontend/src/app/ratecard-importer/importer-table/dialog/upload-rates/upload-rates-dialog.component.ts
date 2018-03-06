@@ -5,11 +5,10 @@ import { MatStepper } from '@angular/material';
 
 import { PapaParseService } from 'ngx-papaparse';
 
-import { RateCardsTableComponent } from './../../rate-cards-table.component';
+import { ImporterTableComponent } from './../../importer-table.component';
 
-import { RateCardsService } from '../../../services/rate-cards.api.service';
-import { RateCardsSharedService } from '../../../services/rate-cards.shared.service';
-import { RatesService } from '../../../../rates/services/rates.api.service';
+import { ImporterService } from './../../../services/importer.api.service';
+import { ImporterSharedService } from './../../../services/importer.shared.service';
 
 @Component({
   selector: 'app-upload-rates',
@@ -18,24 +17,24 @@ import { RatesService } from '../../../../rates/services/rates.api.service';
 })
 export class UploadRatesDialogComponent implements OnInit {
 
+    event_onAdd = new EventEmitter;
+
     // Form Group var
-    private carrierFormGroup: FormGroup; 
-    private ratecardFormGroup: FormGroup; 
-    private percentFormGroup: FormGroup; 
+    private carrierFormGroup: FormGroup;
+    private ratecardFormGroup: FormGroup;
+    private percentFormGroup: FormGroup;
     private uploadRatesFormGroup: FormGroup;
 
     // DB Objects
     private carrierObj = [];
-    private ratecardObj = [];
-
     private currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
 
     // Input props
     private percents = [
-        {value: 1.05, viewValue: '5%'}, {value: 1.1, viewValue: '10%'}, {value: 1.15, viewValue: '15%'}, {value: 1.2, viewValue: '20%'}, 
-        {value: 1.25, viewValue: '25%'}, {value: 1.3, viewValue: '30%'}, {value: 1.35, viewValue: '35%'}, {value: 1.4, viewValue: '40%'}, 
-        {value: 1.45, viewValue: '45%'}, {value: 1.5, viewValue: '50%'}, {value: 1.55, viewValue: '55%'}, {value: 1.6, viewValue: '60%'}, 
-        {value: 1.65, viewValue: '65%'}, {value: 1.7, viewValue: '70%'}, {value: 1.75, viewValue: '75%'}, {value: 1.8, viewValue: '80%'}, 
+        {value: 1.05, viewValue: '5%'}, {value: 1.1, viewValue: '10%'}, {value: 1.15, viewValue: '15%'}, {value: 1.2, viewValue: '20%'},
+        {value: 1.25, viewValue: '25%'}, {value: 1.3, viewValue: '30%'}, {value: 1.35, viewValue: '35%'}, {value: 1.4, viewValue: '40%'},
+        {value: 1.45, viewValue: '45%'}, {value: 1.5, viewValue: '50%'}, {value: 1.55, viewValue: '55%'}, {value: 1.6, viewValue: '60%'},
+        {value: 1.65, viewValue: '65%'}, {value: 1.7, viewValue: '70%'}, {value: 1.75, viewValue: '75%'}, {value: 1.8, viewValue: '80%'},
         {value: 1.85, viewValue: '85%'}, {value: 1.9, viewValue: '90%'}, {value: 1.95, viewValue: '95%'}, {value: 2, viewValue: '100%'}
     ];
 
@@ -43,23 +42,25 @@ export class UploadRatesDialogComponent implements OnInit {
     private rateCardID: number;
     private fileName: string;
     private disableUploadBoolean = true;
-    
-    finalRatecardObj;
-    finalRatecardPreviewObj = [];
-    ratesPreviewObj = [];
+
+    private finalRatecardObj;
+    private finalRatecardPreviewObj = [];
+    private ratesPreviewObj = [];
+
+    // Internal Service
+    private postTableArr;
 
     constructor(
-        public dialogRef: MatDialogRef <RateCardsTableComponent>, 
+        public dialogRef: MatDialogRef <ImporterTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private papa: PapaParseService,
-        private formBuilder: FormBuilder, 
-        private rateCardsService: RateCardsService, 
-        private ratesService: RatesService
-    ) {};
+        private formBuilder: FormBuilder,
+        private importerService: ImporterService,
+        private importerSharedService: ImporterSharedService
+    ) {}
 
     ngOnInit() {
         this.get_carrier();
-        this.get_rateCard();
 
         this.carrierFormGroup = this.formBuilder.group({
             carrierCtrl: ['', Validators.required]
@@ -70,7 +71,7 @@ export class UploadRatesDialogComponent implements OnInit {
         this.percentFormGroup = this.formBuilder.group({
             teleUCheckboxCtrl: [false],
             teleUPercentCtrl: [0],
-            privateCheckboxCtrl: [false],
+            privateCheckboxCtrl: [true],
             privatePercentCtrl: [1.5]
         });
         this.uploadRatesFormGroup = this.formBuilder.group({
@@ -78,64 +79,56 @@ export class UploadRatesDialogComponent implements OnInit {
         });
 
         this.percentFormGroup.controls.teleUCheckboxCtrl.setValue(false);
-        this.percentFormGroup.controls.privateCheckboxCtrl.setValue(false);
-    };
+        this.percentFormGroup.controls.privateCheckboxCtrl.setValue(true);
+    }
 
     /*
         ~~~~~~~~~~ API service ~~~~~~~~~~
     */
     get_carrier(): void {
-        this.rateCardsService.get_CarrierNames()
+        this.importerService.get_CarrierNames()
             .subscribe(
                 data => { this.carrierObj = data; },
                 error => { console.log(error); }
             );
-    };
-
-    get_rateCard(): void {  // subscribe to service and get carrier names
-        this.rateCardsService.get_RateCard()
-            .subscribe(
-                data => { this.ratecardObj = data; },
-                error => { console.log(error); },
-            );
-    };
+    }
 
     post_addRates(): void {
-        this.rateCardsService.post_AddRateCard(this.finalRatecardObj)
-            .subscribe(res => console.log(res));
+        this.importerService.post_AddRateCard(this.finalRatecardObj)
+            .subscribe();
     }
 
     /*
         ~~~~~~~~~~ Extract data ~~~~~~~~~~
     */
     extract_CarrierName(): string {
-        for(let i = 0; i<this.carrierObj.length; i++) {
+        for (let i = 0; i < this.carrierObj.length; i++) {
             if ( this.carrierObj[i].id === this.input_getCarrierId() ) {
                 return this.carrierObj[i].name;
             }
         }
-    };
+    }
 
     /*
         ~~~~~~~~~~ Get data from input ~~~~~~~~~~
     */
     input_getCarrierId(): number {
         return this.carrierFormGroup.get('carrierCtrl').value;
-    };
+    }
 
     input_getRateCardName(): number {
         return this.ratecardFormGroup.get('ratecardCtrl').value;
-    };
+    }
 
     /*
         ~~~~~~~~~~ UI Interactions ~~~~~~~~~~
     */
     checkBoxValueTeleU(): boolean {
-        return !this.percentFormGroup.get('teleUCheckboxCtrl').value    
+        return !this.percentFormGroup.get('teleUCheckboxCtrl').value;
     }
 
     checkBoxValuePrivate(): boolean {
-        return !this.percentFormGroup.get('privateCheckboxCtrl').value
+        return !this.percentFormGroup.get('privateCheckboxCtrl').value;
     }
 
     changeListenerUploadBtn(event): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button
@@ -159,6 +152,14 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     /*
+        ~~~~~~~~~~ AG Grid Methods ~~~~~~~~~~
+    */
+    aggrid_addRatecard() {
+        this.importerSharedService.currentPostTableObj.subscribe( data => { this.postTableArr = data; });
+        this.event_onAdd.emit();
+    }
+
+    /*
         ~~~~~~~~~~~ Construct JSON ~~~~~~~~~~
     */
     construct_ratecardObj() {
@@ -179,7 +180,8 @@ export class UploadRatesDialogComponent implements OnInit {
             teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
             asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
             privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
-        },)
+        },
+        );
         console.log(this.finalRatecardObj);
     }
 
@@ -192,6 +194,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     click_addRates(): void {
         this.post_addRates();
+        this.aggrid_addRatecard();
         this.closeDialog();
     }
 
@@ -230,7 +233,7 @@ export class UploadRatesDialogComponent implements OnInit {
             this.pccwGlobalProfile(data);
         }
         if (currentCarrierName === 'StarSSip LLC') {
-            console.log('using Starsipp Profile')
+            console.log('using Starsipp Profile');
             this.starsippProfile(data);
         }
         if (currentCarrierName === 'Teleinx') {
@@ -244,8 +247,7 @@ export class UploadRatesDialogComponent implements OnInit {
         if (currentCarrierName === 'VOIP Routes') {
             console.log('using VOIP Routes Profile');
             this.voipRoutesProfile(data);
-        }
-        else {
+        } else {
             return;
         }
     }
@@ -271,7 +273,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 sell_rate: sellrate, 
                 sell_rate_minimum: sellrate,
                 sell_rate_increment: 0
-            }, 
+            },
         );
     }
 
@@ -311,7 +313,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     alcazarNetworksProfile(data) {
         const dataSliced = data.slice(7);
-    
+
         for(let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
@@ -427,7 +429,7 @@ export class UploadRatesDialogComponent implements OnInit {
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
-        } 
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
@@ -15,20 +15,20 @@ import { TrunksSharedService } from './../services/trunks.shared.service';
   templateUrl: './trunks-table.component.html',
   styleUrls: ['./trunks-table.component.scss']
 })
-export class TrunksTableComponent implements OnInit {
+export class TrunksTableComponent implements OnInit, AfterViewChecked {
 
-    // AG grid 
+    // AG grid
     private rowData;
     private columnDefs;
     private rowSelection;
-    private quickSearchValue: string = '';
-    
+    private quickSearchValue = '';
+
     // AG grid controllers
     private gridApi: GridApi;
     private columnApi: ColumnApi;
 
     // Props for button toggle
-    private buttonToggleBoolean: boolean = true;
+    private buttonToggleBoolean = true;
     private gridSelectionStatus: number;
 
     // Properties for internal service
@@ -39,12 +39,16 @@ export class TrunksTableComponent implements OnInit {
         private formBuilder: FormBuilder,
         private trunksService: TrunksService,
         private trunksSharedService: TrunksSharedService,
-    ) { 
+    ) {
         this.rowSelection = 'multiple';
     }
 
     ngOnInit() {
         this.get_allTrunksData();
+    }
+
+    ngAfterViewChecked() {
+        this.gridApi.sizeColumnsToFit();
     }
 
     /*
@@ -55,7 +59,7 @@ export class TrunksTableComponent implements OnInit {
             .subscribe(
                 data => { this.rowData = data; },
                 error => { console.log(error); }
-            )
+            );
     }
 
     put_editTrunks(trunkId: number, body): void {
@@ -70,7 +74,6 @@ export class TrunksTableComponent implements OnInit {
         this.columnDefs = this.createColumnDefs();
         this.gridApi = params.api;
         this.columnApi = params.columnApi;
-        this.gridApi.sizeColumnsToFit();
     }
 
     private createColumnDefs(): object {
@@ -92,11 +95,11 @@ export class TrunksTableComponent implements OnInit {
             },
             {
                 headerName: 'Transport Method', field: 'transport', editable: true,
-                cellEditor: "select", cellEditorParams: {values: ['udp','tcp', 'both']}
+                cellEditor: 'select', cellEditorParams: {values: ['udp','tcp', 'both']}
             },
             {
                 headerName: 'Direction', field: 'direction', editable: true,
-                cellEditor: "select", cellEditorParams: {values: ['inbound','outbound']}
+                cellEditor: 'select', cellEditorParams: {values: ['inbound', 'outbound']}
             },
             {
                 headerName: 'Prefix', field: 'prefix',
@@ -104,7 +107,7 @@ export class TrunksTableComponent implements OnInit {
             },
             {
                 headerName: 'Active?', field: 'active', editable: true,
-                cellEditor: "select", cellEditorParams: {values: [true, false]}
+                cellEditor: 'select', cellEditorParams: {values: [true, false]}
             },
             {
                 headerName: 'Metadata', field: 'metadata',

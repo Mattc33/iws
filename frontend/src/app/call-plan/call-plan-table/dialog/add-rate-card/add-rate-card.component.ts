@@ -35,10 +35,10 @@ export class AddRateCardComponent implements OnInit {
     ];
 
     constructor(
-        public dialogRef: MatDialogRef<CallPlanTableComponent>, 
-        @Inject(MAT_DIALOG_DATA) public data, 
-        private formBuilder: FormBuilder, 
-        private callPlanService: CallPlanService, 
+        public dialogRef: MatDialogRef<CallPlanTableComponent>,
+        @Inject(MAT_DIALOG_DATA) public data,
+        private formBuilder: FormBuilder,
+        private callPlanService: CallPlanService,
         private callPlanSharedService: CallPlanSharedService,
         private rateCardsService: RateCardsService
     ) { }
@@ -130,7 +130,7 @@ export class AddRateCardComponent implements OnInit {
         aggrid_attachRatecards(): void {
             const body = {
                 name: this.getSelectedRateCardName(),
-            }
+            };
 
             this.event_onAdd.emit(body);
         }

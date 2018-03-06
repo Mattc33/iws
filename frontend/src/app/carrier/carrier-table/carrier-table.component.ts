@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { GridApi } from 'ag-grid';
-import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
+import { GridApi, ColumnApi } from 'ag-grid';
 
 import { DelCarrierDialogComponent } from '../carrier-table/dialog/del-carrier/del-carrier-dialog.component';
 import { AddCarrierDialogComponent } from '../carrier-table/dialog/add-carrier/add-carrier-dialog.component';
@@ -9,20 +8,19 @@ import { AddCarrierDialogComponent } from '../carrier-table/dialog/add-carrier/a
 import { CarrierService } from './../services/carrier.api.service';
 import { CarrierSharedService } from './../services/carrier.shared.service';
 
-
 @Component({
   selector: 'app-carrier-table',
   templateUrl: './carrier-table.component.html',
   styleUrls: ['./carrier-table.component.scss'],
   providers: [ CarrierService ],
 })
-export class CarrierTableComponent implements OnInit {
+export class CarrierTableComponent implements OnInit, AfterViewChecked {
 
     // row data and column definitions
     private rowData;
     private columnDefs;
     private rowSelection;
-    private quickSearchValue: string = '';
+    private quickSearchValue = '';
 
     // gridApi and columnApi
     private gridApi: GridApi;
@@ -32,15 +30,14 @@ export class CarrierTableComponent implements OnInit {
     private rowObj;
 
     // UI Props
-    private buttonToggleBoolean: boolean = true;
+    private buttonToggleBoolean = true;
     private gridSelectionStatus: number;
 
     constructor( // inject your service
-        private carrierService: CarrierService, 
+        private carrierService: CarrierService,
         private carrierSharedService: CarrierSharedService,
         private dialog: MatDialog
-    ) 
-    {
+    ) {
         this.columnDefs = this.createColumnDefs();
         this.rowSelection = 'single';
     }
@@ -48,6 +45,10 @@ export class CarrierTableComponent implements OnInit {
     ngOnInit() {
         this.get_InitializeRows();
         this.carrierSharedService.currentRowObj.subscribe( giveRowObj => this.rowObj = giveRowObj);
+    }
+
+    ngAfterViewChecked() {
+        this.gridApi.sizeColumnsToFit();
     }
 
     /*
@@ -74,12 +75,12 @@ export class CarrierTableComponent implements OnInit {
         this.columnApi = params.columnApi;
         this.gridApi.sizeColumnsToFit();
     }
-    
+
     private createColumnDefs() {
         return [
             {
                 headerName: 'Name', field: 'name',
-                editable: true, checkboxSelection: true, 
+                editable: true, checkboxSelection: true,
             },
             {
                 headerName: 'Phone Number', field: 'phone',
@@ -95,13 +96,13 @@ export class CarrierTableComponent implements OnInit {
                 editable: true
             },
             {
-                headerName: 'Taxable', field: 'taxable', editable: true, 
-                cellEditor: 'select', cellEditorParams: {values: [ "true", "false"]}
+                headerName: 'Taxable', field: 'taxable', editable: true,
+                cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']}
             },
             {
                 headerName: 'Tier Number', field: 'tier', editable: true,
                 cellEditor: 'select', cellEditorParams: {values: [ 1, 2, 3, 4, 5]},
-                filter: "agNumberColumnFilter"
+                filter: 'agNumberColumnFilter'
             },
             {
                 headerName: 'Carrier Code', field: 'code',
@@ -113,10 +114,6 @@ export class CarrierTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
     */
-    on_GridSizeChanged(params): void {
-        params.api.sizeColumnsToFit();
-    }
-
     aggrid_addRow(obj): void {
         this.gridApi.updateRowData({ add: [obj] });
     }
@@ -206,6 +203,6 @@ export class CarrierTableComponent implements OnInit {
             sub.unsubscribe();
             console.log('The dialog was closed');
         });
-    } 
+    }
 
-} 
+}

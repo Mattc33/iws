@@ -5,7 +5,7 @@ import { RateCardsTableComponent } from './../../rate-cards-table.component';
 
 import { RateCardsService } from './../../../services/rate-cards.api.service';
 import { RateCardsSharedService } from './../../../services/rate-cards.shared.service';
-import { RatesService } from './../../../../rates/services/rates.api.service';
+
 
 @Component({
   selector: 'app-delete-rates',
@@ -22,7 +22,6 @@ export class DeleteRatesComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         private rateCardsService: RateCardsService,
         private rateCardsSharedService: RateCardsSharedService,
-        private ratesService: RatesService,
     ) { }
 
     ngOnInit() {
@@ -31,20 +30,20 @@ export class DeleteRatesComponent implements OnInit {
     }
 
     click_deleteRates() {
-        this.del_delRates();
+        // this.del_delRates();
         this.aggrid_deleteRates();
 
         this.closeDialog();
     }
 
-    del_delRates() {
-        let rowRatesId: number;
-        for( let i = 0; i<this.rowRatesObj.length; i++ ) {
-            rowRatesId = this.rowRatesObj[i].id;
-            this.ratesService.del_Rates(rowRatesId)
-                .subscribe(resp => console.log(resp))
-        }
-    };
+    // del_delRates() {
+    //     let rowRatesId: number;
+    //     for( let i = 0; i<this.rowRatesObj.length; i++ ) {
+    //         rowRatesId = this.rowRatesObj[i].id;
+    //         this.ratesService.del_Rates(rowRatesId)
+    //             .subscribe(resp => console.log(resp))
+    //     }
+    // };
 
     aggrid_deleteRates() {
         this.event_onDel.emit('delete-rates');

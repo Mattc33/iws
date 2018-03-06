@@ -44,13 +44,21 @@ import { DelCarrierDialogComponent } from './carrier/carrier-table/dialog/del-ca
 import { CarrierService } from './carrier/services/carrier.api.service';
 import { CarrierSharedService } from './carrier/services/carrier.shared.service';
 
+// Ratecard Importer
+import { RatecardImporterComponent } from './ratecard-importer/ratecard-importer.component';
+import { ImporterTableComponent } from './ratecard-importer/importer-table/importer-table.component';
+
+import { ImporterService } from './ratecard-importer/services/importer.api.service';
+import { ImporterSharedService } from './ratecard-importer/services/importer.shared.service';
+
+import { UploadRatesDialogComponent } from './ratecard-importer/importer-table/dialog/upload-rates/upload-rates-dialog.component';
+
 // Rates Card
 import { RateCardsComponent } from './rate-cards/rate-cards.component';
 import { RateCardsTableComponent } from './rate-cards/rate-cards-table/rate-cards-table.component';
 
 import { AttachTrunksDialogComponent } from './rate-cards/rate-cards-table/dialog/attach-trunks/attach-trunks-dialog.component';
 import { DeleteRateCardsDialogComponent } from './rate-cards/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component';
-import { UploadRatesDialogComponent } from './rate-cards/rate-cards-table/dialog/upload-rates/upload-rates-dialog.component';
 
 import { RateCardsService } from './rate-cards/services/rate-cards.api.service';
 import { RateCardsSharedService } from './rate-cards/services/rate-cards.shared.service';
@@ -66,18 +74,6 @@ import { DetachTrunksComponent } from './rate-cards/rate-cards-table/dialog/deta
 
 import { TrunksService } from './trunks/services/trunks.api.service';
 import { TrunksSharedService } from './trunks/services/trunks.shared.service';
-
-// Rates
-import { RatesComponent } from './rates/rates.component';
-import { RatesTableComponent } from './rates/rates-table/rates-table.component';
-import { RatesTableTeleUComponent } from './rates/rates-table/rates-table-tele-u/rates-table-tele-u.component';
-import { RatesTableAllComponent } from './rates/rates-table/rates-table-all/rates-table-all.component';
-
-import { DeleteTeleuRatesDialogComponent } from './rates/rates-table/rates-table-tele-u/dialog/delete-rates-teleu/delete-rates-teleu-dialog.component';
-import { DeleteAllRatesDialogComponent } from './rates/rates-table/rates-table-all/dialog/delete-rates-all/delete-rates-all-dialog.component';
-
-import { RatesService } from './rates/services/rates.api.service';
-import { RatesSharedService } from './rates/services/rates.shared.service';
 
 // Call Plan
 import { CallPlanComponent } from './call-plan/call-plan.component';
@@ -99,21 +95,22 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 
- 
+
 @NgModule({
   declarations:
   [
-    AppComponent, SideNavComponent, TopNavComponent, LoginComponent, RegistrationComponent, // Main 
+    AppComponent, SideNavComponent, TopNavComponent, LoginComponent, RegistrationComponent, // Main
     DashboardComponent, // Dashboard
     CarrierComponent, CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
     RateCardsComponent, RateCardsTableComponent, AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, // RateCards
+    UploadRatesDialogComponent,
     TrunksComponent,  TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DeleteRatesComponent, // Trunks
-    DetachTrunksComponent, 
-    RatesComponent, RatesTableComponent, UploadRatesDialogComponent, DeleteAllRatesDialogComponent, // Rates History
-    RatesTableTeleUComponent, RatesTableAllComponent, DeleteTeleuRatesDialogComponent, 
+    DetachTrunksComponent,
     CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
     AddRateCardComponent, AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
     AccountsComponent,
+    RatecardImporterComponent,
+    ImporterTableComponent,
   ],
   imports:
   [
@@ -132,30 +129,30 @@ import { RegistrationComponent } from './registration/registration.component';
       {path: '', component: DashboardComponent},
       {path: 'dashboard', component: DashboardComponent},
       {path: 'carrier', component: CarrierComponent},
+      {path: 'ratecard-importer', component: RatecardImporterComponent},
       {path: 'rate-cards', component: RateCardsComponent},
       {path: 'trunks', component: TrunksComponent},
-      {path: 'rates', component: RatesComponent},
       {path: 'call-plan', component: CallPlanComponent},
       {path: 'accounts', component: AccountsComponent},
       {path: 'login', component: LoginComponent},
-      {path: 'registration', component: RegistrationComponent},
+      {path: 'registration', component: RegistrationComponent}
     ])
   ],
-    providers: [ 
+    providers: [
         CarrierService, CarrierSharedService,
+        ImporterService, ImporterSharedService,
         RateCardsService, RateCardsSharedService,
-        RatesService, RatesSharedService,
         TrunksService, TrunksSharedService,
-        CallPlanService, CallPlanSharedService  
+        CallPlanService, CallPlanSharedService
     ], // Applications services
     bootstrap: [ AppComponent ],
-    entryComponents: [ 
+    entryComponents: [
         AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
-        AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, UploadRatesDialogComponent, // Ratecards
+        UploadRatesDialogComponent, // Importer
+        AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, // Ratecards
         DeleteTrunksComponent, AddTrunksComponent, DeleteRatesComponent, DetachTrunksComponent, // Trunks
-        DeleteAllRatesDialogComponent, DeleteTeleuRatesDialogComponent, // Rates
         AddCallPlanComponent, DelCallPlanComponent, AddRateCardComponent, AddCodeComponent, // Callplans
-        DettachRatecardsComponent, DettachCodesComponent,
+        DettachRatecardsComponent, DettachCodesComponent
     ] , // Add in dialog
 })
 

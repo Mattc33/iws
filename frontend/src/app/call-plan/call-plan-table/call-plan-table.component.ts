@@ -360,11 +360,10 @@ export class CallPlanTableComponent implements OnInit {
             }
             if (string === 'detach-codes') {
                 this.gridApiCodes.updateRowData({ remove: this.rowSelectionCodes });
-            }
-            else {
+            } else {
                 return;
             }
-        };
+        }
 
         /*
             ~~~~~~ Addition ~~~~
@@ -463,8 +462,8 @@ export class CallPlanTableComponent implements OnInit {
             this.callPlanSharedService.changeRowAll(this.rowIdAll);
 
             const dialogRef = this.dialog.open(AddRateCardComponent, {
-                height: 'auto',
-                width: '40%',
+                height: '100%',
+                width: '150%',
             });
 
             const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
