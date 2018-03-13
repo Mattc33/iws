@@ -20,7 +20,6 @@ export class CarrierService {
         this.options = new RequestOptions({ headers: this.headers });
     }
 
-
     /*
     initialLoad() is returning an obj of type Observable that is an array defined in Carriers Model as an obj
     we .map is as json format then return the data
@@ -32,7 +31,7 @@ export class CarrierService {
         return this.http.get(this.url + 'carriers/')
             .map(res => res.json())
             .catch(this.handleError)
-            .do(data => console.table(data));
+            .do(data => console.log(data));
     }
 
     post_AddRow(body: any): Observable<any> {

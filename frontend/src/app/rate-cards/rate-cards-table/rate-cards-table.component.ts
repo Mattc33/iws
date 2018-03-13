@@ -1,8 +1,6 @@
-import { AgGridModule } from 'ag-grid-angular';
-import { Component, OnInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
-import { GridApi, Column } from 'ag-grid';
+import { GridApi, ColumnApi } from 'ag-grid';
 
 import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.component';
 import { DeleteRateCardsDialogComponent } from './dialog/delete-rate-cards/delete-rate-cards-dialog.component';
@@ -12,13 +10,19 @@ import { DetachTrunksComponent } from './dialog/detach-trunks/detach-trunks.comp
 import { RateCardsService } from '../services/rate-cards.api.service';
 import { RateCardsSharedService } from '../services/rate-cards.shared.service';
 
+declare global { // declare global interface, set custom fn groupBy with type any
+    interface Array<T> {
+      groupBy(elem: T): Array<T>;
+    }
+}
+
 @Component({
     selector: 'app-rate-cards-table',
     templateUrl: './rate-cards-table.component.html',
     styleUrls: ['./rate-cards-table.component.scss'],
     providers: [ RateCardsService ],
 })
-export class RateCardsTableComponent implements OnInit, AfterViewChecked {
+export class RateCardsTableComponent implements OnInit {
 
     // Define row and column data
     private rowData; // All
@@ -71,10 +75,6 @@ export class RateCardsTableComponent implements OnInit, AfterViewChecked {
         this.on_InitializeRows();
     }
 
-    ngAfterViewChecked() {
-        this.activeFilter();
-    }
-
     /*
         ~~~~~~~~~~ Ratecard API services ~~~~~~~~~~
     */
@@ -86,7 +86,7 @@ export class RateCardsTableComponent implements OnInit, AfterViewChecked {
             );
     }
 
-    put_editRateCard(rateCardObj:object, id: number) {
+    put_editRateCard(rateCardObj: object, id: number) {
         this.rateCardsService.put_EditRateCard(rateCardObj, id)
             .subscribe(resp => console.log(resp));
     }
@@ -266,8 +266,11 @@ export class RateCardsTableComponent implements OnInit, AfterViewChecked {
         };
         this.rowData = this.rowData.groupBy('name');
 
-        for (let item in this.rowData) {
-            this.groupedArr.push(this.rowData[item]);
+        for (const item in this.rowData) {
+            if ( item !== '' ) {
+                this.groupedArr.push(this.rowData[item]);
+            } else {
+            }
         }
         console.log(this.groupedArr);
     }

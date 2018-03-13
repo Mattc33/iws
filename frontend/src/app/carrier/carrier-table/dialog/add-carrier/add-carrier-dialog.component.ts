@@ -1,11 +1,19 @@
 import { Component, Inject, OnInit, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, ErrorStateMatcher } from '@angular/material';
+import { FormGroup, FormBuilder, Validators, FormControl, NgForm, FormGroupDirective } from '@angular/forms';
 
 import { CarrierTableComponent } from './../../carrier-table.component';
 
 import { CarrierService } from '../../../services/carrier.api.service';
 import { CarrierSharedService } from './../../../services/carrier.shared.service';
+
+/** Error when invalid control is dirty, touched, or submitted. */
+export class CarrierErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+      const isSubmitted = form && form.submitted;
+      return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    }
+}
 
 @Component({
     selector: 'app-add-carrier-dialog-inner',
@@ -20,11 +28,10 @@ export class AddCarrierDialogComponent implements OnInit {
     // Form Group
     private addCarrierFormGroup: FormGroup;
 
-    // Pattern
-    private emailPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+';
-    // phonePattern = '^[0-9]+$';
+    // Validation
     private taxablePattern = '^[0-1]+$';
     private codePattern = '^[a-zA-Z0-9]{3}';
+    private matcher = new CarrierErrorStateMatcher();
 
     // Input Props
     private taxableOptions = [
@@ -43,7 +50,7 @@ export class AddCarrierDialogComponent implements OnInit {
     private finalCarrierObj;
 
     constructor(
-        public dialogRef: MatDialogRef <CarrierTableComponent>, 
+        public dialogRef: MatDialogRef <CarrierTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private formBuilder: FormBuilder,
         private carrierService: CarrierService
@@ -52,16 +59,16 @@ export class AddCarrierDialogComponent implements OnInit {
     ngOnInit() {
         this.addCarrierFormGroup = this.formBuilder.group({
             nameCtrl: ['', Validators.required],
-            emailCtrl: ['', Validators.required, Validators.pattern(this.emailPattern)],
+            emailCtrl: ['', [Validators.required, Validators.email]],
             addressCtrl: ['', Validators.required],
-            phoneCtrl: ['', Validators.required],
+            phoneCtrl: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
             taxableCtrl: ['', Validators.required],
             tierCtrl: ['', Validators.required],
-            codeCtrl: ['', Validators.required, Validators.pattern(this.codePattern)]
-        })
+            codeCtrl: ['', [Validators.required, Validators.pattern('[A-Z]{3}')]]
+        });
     }
 
-    click_addCarrier(post) {
+    formCarrierObj() {
         this.finalCarrierObj = {
             code: this.addCarrierFormGroup.get('codeCtrl').value,
             name: this.addCarrierFormGroup.get('nameCtrl').value,
@@ -71,7 +78,9 @@ export class AddCarrierDialogComponent implements OnInit {
             taxable: this.addCarrierFormGroup.get('taxableCtrl').value,
             tier: this.addCarrierFormGroup.get('tierCtrl').value
         };
+    }
 
+    click_addCarrier(post) {
         this.aggrid_addCarrier(this.finalCarrierObj);
         this.post_addCarrier(this.finalCarrierObj);
 

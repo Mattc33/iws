@@ -5,6 +5,9 @@ section {
 
     ag-grid-angular {
         width: 92vw; height: 85vh;
+
+        /deep/ .teleu-buyrate-highlight { color: #006400; font-weight: bold; }
+        /deep/ .teleu_db-buyrate-highlight { color: #8b0000; font-weight: bold; }
     }
 
     mat-toolbar-row {

@@ -4,10 +4,9 @@
             [getNodeChildDetails]="getNodeChildDetails"
             [columnDefs]="columnDefs" [rowData]="formattedRowData" [animateRows]="true"
             [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="aggrid_selectionChanged($event)" (rowSelected)="rowSelected($event)"
-            [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
-            [floatingFilter]="true"
-            [enableSorting]="true"
-            [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+            [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [singleClickEdit]="true" [suppressRowClickSelection]="true"
+            [floatingFilter]="true" [enableSorting]="true"
+            [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"
             [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
 

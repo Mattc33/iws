@@ -25,3 +25,11 @@ pre {
     height: 20vh;
     overflow-y: scroll;
 }
+
+.profiles {
+    margin-bottom: 2%;
+}
+
+/deep/ .mat-horizontal-stepper-header{
+    pointer-events: none !important;
+}

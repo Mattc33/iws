@@ -221,7 +221,7 @@ export class UploadRatesDialogComponent implements OnInit {
             console.log('using VoxBeam Profile');
             this.voxBeamProfile(data);
         }
-        if (currentCarrierName === 'Alcazar Networks Inc') {
+        if (currentCarrierName === 'Alcazar') {
             console.log('using Alcazar Networks Inc Profile');
             this.alcazarNetworksProfile(data);
         }
@@ -232,7 +232,7 @@ export class UploadRatesDialogComponent implements OnInit {
             console.log('using PCCW Global Profile');
             this.pccwGlobalProfile(data);
         }
-        if (currentCarrierName === 'StarSSip LLC') {
+        if (currentCarrierName === 'StarSSip') {
             console.log('using Starsipp Profile');
             this.starsippProfile(data);
         }
@@ -247,30 +247,33 @@ export class UploadRatesDialogComponent implements OnInit {
         if (currentCarrierName === 'VOIP Routes') {
             console.log('using VOIP Routes Profile');
             this.voipRoutesProfile(data);
+        } 
+        if (currentCarrierName === 'Megatel') {
+            console.log('uing Megatel Profile');
+            this.megatelProfile(data);
         } else {
-            return;
         }
     }
 
     generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview
-        this.finalRatecardObj.rates.push( 
-            { destination: destination, 
-                prefix: prefix, 
-                buy_rate: buyrate, 
-                buy_rate_minimum: buyrate, 
+        this.finalRatecardObj.rates.push(
+            { destination: destination,
+                prefix: prefix,
+                buy_rate: buyrate,
+                buy_rate_minimum: buyrate,
                 buy_rate_increment: 0,
                 sell_rate: sellrate,
                 sell_rate_minimum: sellrate,
                 sell_rate_increment: 0
-            }, 
+            },
         );
         this.ratesPreviewObj.push(
-            { destination: destination, 
-                prefix: prefix, 
-                buy_rate: buyrate, 
-                buy_rate_minimum: buyrate, 
+            { destination: destination,
+                prefix: prefix,
+                buy_rate: buyrate,
+                buy_rate_minimum: buyrate,
                 buy_rate_increment: 0,
-                sell_rate: sellrate, 
+                sell_rate: sellrate,
                 sell_rate_minimum: sellrate,
                 sell_rate_increment: 0
             },
@@ -279,15 +282,9 @@ export class UploadRatesDialogComponent implements OnInit {
 
     powerNetGlobalProfile(data) {
         const dataSliced = data.slice(3);
-
         for (let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][0];
-            let prefix: string = dataSliced[i][1];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
-                    destination = destination.slice(1, -1);
-                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
-                    prefix = prefix.slice(1, -1);
-                }
+            const destination: string = dataSliced[i][0];
+            const prefix: string = dataSliced[i][1];
             const buyrate: number = dataSliced[i][2].slice(1) * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
@@ -296,15 +293,9 @@ export class UploadRatesDialogComponent implements OnInit {
 
     voxBeamProfile(data) {
         const dataSliced = data.slice(1);
-
         for (let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][2];
-            let prefix: string = dataSliced[i][0];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
-                    destination = destination.slice(1, -1);
-                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
-                    prefix = prefix.slice(1, -1);
-                }
+            const destination: string = dataSliced[i][2];
+            const prefix: string = dataSliced[i][0];
             const buyrate: number = dataSliced[i][3] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
@@ -317,7 +308,7 @@ export class UploadRatesDialogComponent implements OnInit {
         for(let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
                 }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
@@ -330,11 +321,10 @@ export class UploadRatesDialogComponent implements OnInit {
 
     bankaiGroupProfile(data) {
         const dataSliced = data.slice(1);
-    
-        for(let i = 0; i < dataSliced.length; i++) {
+        for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { 
                     destination = destination.slice(1, -1);
                 }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
@@ -347,11 +337,10 @@ export class UploadRatesDialogComponent implements OnInit {
 
     pccwGlobalProfile(data) {
         const dataSliced = data.slice(13);
-    
-        for(let i = 0; i < dataSliced.length; i++) {
+        for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { 
                     destination = destination.slice(1, -1);
                 }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
@@ -364,11 +353,10 @@ export class UploadRatesDialogComponent implements OnInit {
 
     starsippProfile(data) {
         const dataSliced = data.slice(1);
-    
-        for(let i = 0; i < dataSliced.length; i++) {
+        for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][1];
             let prefix: string = dataSliced[i][2];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
                 }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
@@ -381,11 +369,10 @@ export class UploadRatesDialogComponent implements OnInit {
 
     teleinxProfile(data) {
         const dataSliced = data.slice(1);
-    
-        for(let i = 0; i < dataSliced.length; i++) {
+        for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][1];
             let prefix: string = dataSliced[i][2];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
                 }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
@@ -398,11 +385,27 @@ export class UploadRatesDialogComponent implements OnInit {
 
     voiPlatinumProfile(data) {
         const dataSliced = data.slice(1, -1);
-
-        for(let i = 0; i < dataSliced.length; i++) {
+        for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
+                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
+                    destination = destination.slice(1, -1);
+                }
+                if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                    prefix = prefix.slice(1, -1);
+                }
+            const buyrate: number = dataSliced[i][2] * 1;
+            const sellrate: number = buyrate;
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
+        }
+    }
+
+    voipRoutesProfile(data) {
+        const dataSliced = data.slice(9);
+        for (let i = 0; i < dataSliced.length; i++) {
+            let destination: string = dataSliced[i][1];
+            let prefix: string = dataSliced[i][0];
+                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
                 }
                 if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
@@ -411,22 +414,15 @@ export class UploadRatesDialogComponent implements OnInit {
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
-        } 
+        }
     }
 
-    voipRoutesProfile(data) {
-        const dataSliced = data.slice(9);
-    
-        for(let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][1];
-            let prefix: string = dataSliced[i][0];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { //if quotes are detected in char[0] slice first and last char.
-                    destination = destination.slice(1, -1);
-                }
-                if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
-                    prefix = prefix.slice(1, -1);
-                }
-            const buyrate: number = dataSliced[i][2] * 1;
+    megatelProfile(data) { // not functionining correctly
+        const dataSliced = data.slice(2);
+        for (let i = 0; i < dataSliced.length; i++) {
+            const destination: string = dataSliced[i][0];
+            const prefix: string = dataSliced[i][2];
+            const buyrate: number = dataSliced[i][4] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
         }

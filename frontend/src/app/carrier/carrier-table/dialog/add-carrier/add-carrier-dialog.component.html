@@ -1,27 +1,45 @@
-<mat-horizontal-stepper>
+<mat-horizontal-stepper linear>
 
     <!-- Enter Carrier Info Step -->
     <mat-step [stepControl]="addCarrierFormGroup" [completed]="false">
         <form [formGroup]="addCarrierFormGroup">
         <ng-template matStepLabel>Enter Carrier Info</ng-template>
 
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="half-width">
                 <input matInput placeholder="Name" formControlName="nameCtrl">
+                <mat-error *ngIf="addCarrierFormGroup.get('nameCtrl').hasError('required')">
+                    Name is <strong>required</strong>
+                </mat-error>
             </mat-form-field>
 
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="half-width">
                 <input matInput placeholder="Email" formControlName="emailCtrl">
+                <mat-error *ngIf="addCarrierFormGroup.get('emailCtrl').hasError('email') && !addCarrierFormGroup.get('emailCtrl').hasError('required')">
+                    Please enter a valid email address
+                </mat-error>
+                <mat-error *ngIf="addCarrierFormGroup.get('emailCtrl').hasError('required')">
+                    Email is <strong>required</strong>
+                </mat-error>
             </mat-form-field>
 
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="half-width">
                 <input matInput placeholder="Address" formControlName="addressCtrl">
+                <mat-error *ngIf="addCarrierFormGroup.get('addressCtrl').hasError('required')">
+                    Address is <strong>required</strong>
+                </mat-error>
             </mat-form-field>
 
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="half-width">
                 <input matInput placeholder="Phone Number" formControlName="phoneCtrl">
+                <mat-error *ngIf="addCarrierFormGroup.get('phoneCtrl').hasError('email') && !addCarrierFormGroup.get('phoneCtrl').hasError('required')">
+                    Please enter a valid Phone Number
+                </mat-error>
+                <mat-error *ngIf="addCarrierFormGroup.get('phoneCtrl').hasError('required')">
+                    Phone Number is <strong>required</strong>
+                </mat-error>
             </mat-form-field>
 
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="half-width">
                 <mat-select matInput placeholder="Taxable" formControlName="taxableCtrl">
                     <mat-option *ngFor="let taxable of taxableOptions" [value]="taxable.value">
                         {{taxable.viewValue}}
@@ -29,7 +47,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="half-width">
                 <mat-select matInput placeholder="Tier" formControlName="tierCtrl">
                     <mat-option *ngFor="let tier of tierOptions" [value]="tier.value">
                         {{tier.viewValue}}
@@ -37,14 +55,20 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field class="example-full-width">
-                <input matInput placeholder="Code" formControlName="codeCtrl">
+            <mat-form-field class="half-width" hintLabel="Max 3 characters">
+                <input matInput #input maxlength="3" placeholder="Code" formControlName="codeCtrl">
+                <mat-hint align="end">{{input.value?.length || 0}} / 3</mat-hint>
+                <mat-error *ngIf="addCarrierFormGroup.get('codeCtrl').hasError('pattern') && !addCarrierFormGroup.get('codeCtrl').hasError('required')">
+                    Please use Capital Alphabetical characters only
+                </mat-error>
+                <mat-error *ngIf="addCarrierFormGroup.get('codeCtrl').hasError('required')">
+                    Code is <strong>required</strong>
+                </mat-error>
             </mat-form-field>
 
             <div mat-dialog-actions>
-                <button mat-button matStepperNext> Next </button>
+                <button mat-button matStepperNext (click)="formCarrierObj()" [disabled]="!addCarrierFormGroup.valid"> Next </button>
             </div>
-            <!-- [disabled]="!addCarrierFormGroup.valid" -->
         </form>
     </mat-step>
 
@@ -52,7 +76,7 @@
     <mat-step [completed]="false">
         <ng-template matStepLabel>Review, Submit</ng-template>
             <div class="details">
-                {{finalCarrierObj | json}}
+                <pre>{{ finalCarrierObj | json }}</pre>
             </div>
         <div>
             <button mat-button matStepperPrevious>Back</button>  

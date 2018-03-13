@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { GridApi, ColumnApi } from 'ag-grid';
 
@@ -14,7 +14,7 @@ import { CarrierSharedService } from './../services/carrier.shared.service';
   styleUrls: ['./carrier-table.component.scss'],
   providers: [ CarrierService ],
 })
-export class CarrierTableComponent implements OnInit, AfterViewChecked {
+export class CarrierTableComponent implements OnInit {
 
     // row data and column definitions
     private rowData;
@@ -47,10 +47,6 @@ export class CarrierTableComponent implements OnInit, AfterViewChecked {
         this.carrierSharedService.currentRowObj.subscribe( giveRowObj => this.rowObj = giveRowObj);
     }
 
-    ngAfterViewChecked() {
-        this.gridApi.sizeColumnsToFit();
-    }
-
     /*
         ~~~~~~~~~~ Carrier API services ~~~~~~~~~~
     */
@@ -73,7 +69,7 @@ export class CarrierTableComponent implements OnInit, AfterViewChecked {
     on_GridReady(params): void {
         this.gridApi = params.api;
         this.columnApi = params.columnApi;
-        this.gridApi.sizeColumnsToFit();
+        params.api.sizeColumnsToFit();
     }
 
     private createColumnDefs() {
@@ -92,12 +88,12 @@ export class CarrierTableComponent implements OnInit, AfterViewChecked {
             },
             {
                 headerName: 'Address', field: 'address',
-                width: 300,
+                width: 400,
                 editable: true
             },
             {
                 headerName: 'Taxable', field: 'taxable', editable: true,
-                cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']}
+                cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
             },
             {
                 headerName: 'Tier Number', field: 'tier', editable: true,
@@ -114,25 +110,19 @@ export class CarrierTableComponent implements OnInit, AfterViewChecked {
     /*
         ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
     */
-    aggrid_addRow(obj): void {
-        this.gridApi.updateRowData({ add: [obj] });
+    gridSizeChanged(params) {
+        params.api.sizeColumnsToFit();
     }
 
-    on_SelectionChanged(): void {
+    selectionChanged(): void {
         const selectedRows = this.gridApi.getSelectedRows();
         this.rowObj = selectedRows;
-        console.log(this.rowObj);
     }
 
-    aggrid_delRow(boolean): void {
-        if (boolean === true) {
-            this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
-        } else {
-            return;
-        }
-    }
-
-    aggrid_rowSelected(): void {
+    /*
+        ~~~~~~~~~~ Grid Toolbar ~~~~~~~~~~
+    */
+    rowSelected(): void { // Toggle button boolean if rowSelected > 0
         this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
     }
 
@@ -145,7 +135,26 @@ export class CarrierTableComponent implements OnInit, AfterViewChecked {
         return this.buttonToggleBoolean;
     }
 
-    aggrid_onCellValueChanged(params: any): void {
+    onQuickFilterChanged() { // external global search
+        this.gridApi.setQuickFilter(this.quickSearchValue);
+    }
+
+    /*
+        ~~~~~~~~~~ Grid CRUD ~~~~~~~~~~
+    */
+    aggrid_addRow(obj): void {
+        this.gridApi.updateRowData({ add: [obj] });
+    }
+
+    aggrid_delRow(boolean): void {
+        if (boolean === true) {
+            this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
+        } else {
+            return;
+        }
+    }
+
+    onCellValueChanged(params: any): void {
         const id = params.data.id;
         let taxable = params.data.taxable;
             if (taxable === 'false') {
@@ -162,12 +171,7 @@ export class CarrierTableComponent implements OnInit, AfterViewChecked {
             taxable: taxable,
             tier: parseInt(params.data.tier),
           };
-
         this.put_editCarrier(carrierObj, id);
-    }
-
-    onQuickFilterChanged() { // external global search
-        this.gridApi.setQuickFilter(this.quickSearchValue);
     }
 
     /*
@@ -175,7 +179,6 @@ export class CarrierTableComponent implements OnInit, AfterViewChecked {
     */
     openDialogAdd() {
         const dialogRef = this.dialog.open(AddCarrierDialogComponent, {
-            // height: 'auto',
             width: '40%',
         });
 
@@ -195,7 +198,6 @@ export class CarrierTableComponent implements OnInit, AfterViewChecked {
         const dialogRef = this.dialog.open(DelCarrierDialogComponent, {});
 
         const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
-            // do something with event data
             this.aggrid_delRow(data);
         });
 
