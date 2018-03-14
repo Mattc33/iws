@@ -107,13 +107,21 @@ export class TrunksTableComponent implements OnInit, AfterViewChecked {
             },
             {
                 headerName: 'Active?', field: 'active', editable: true,
+                valueFormatter: function(params) {
+                    if (params.value === 1) {
+                        return true;
+                    }
+                    if (params.value === 0) {
+                        return false;
+                    }
+                },
                 cellEditor: 'select', cellEditorParams: {values: [true, false]}
             },
             {
                 headerName: 'Metadata', field: 'metadata',
                 editable: true,
             }
-        ]
+        ];
     }
 
     /*
@@ -142,15 +150,22 @@ export class TrunksTableComponent implements OnInit, AfterViewChecked {
 
     aggrid_onCellValueChanged(params: any) {
         const id = params.data.id;
+        let active: boolean;
+        if ( params.data.active === 1 || params.data.active === 'true' ) {
+            active = true;
+        }
+        if ( params.data.active === 0 || params.data.active === 'false') {
+            active = false;
+        }
         const trunkObj = {
             carrier_id: params.data.carrier_id,
             trunk_name: params.data.trunk_name,
             trunk_ip: params.data.trunk_ip,
             trunk_port: params.data.trunk_port,
             transport: params.data.transport,
-            direction: 'outbound',
+            direction: params.data.direction,
             prefix: params.data.prefix,
-            active: params.data.active,
+            active: active,
             metadata: params.data.metadata
         };
 

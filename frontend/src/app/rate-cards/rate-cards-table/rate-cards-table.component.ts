@@ -68,6 +68,9 @@ export class RateCardsTableComponent implements OnInit {
         private rateCardsSharedService: RateCardsSharedService,
         private dialog: MatDialog
     ) {
+        this.columnDefs = this.createColumnDefs();
+        this.columnDefsRates = this.createColumnDefsRates();
+        this.columnDefsTrunks = this.createColumnsDefsTrunks();
     }
 
     ngOnInit() {
@@ -100,23 +103,21 @@ export class RateCardsTableComponent implements OnInit {
         ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
     */
     on_GridReady(params): void {
-        this.columnDefs = this.createColumnDefs();
         this.gridApi = params.api;
         this.columnApi = params.columnApi;
+        params.api.sizeColumnsToFit();
     }
 
     on_GridReady_Rates(params): void {
-        this.columnDefsRates = this.createColumnDefsRates();
         this.gridApiRates = params.api;
         this.columnApiRates = params.ColumnApi;
+        params.api.sizeColumnsToFit();
     }
 
     on_GridReady_Trunks(params): void {
-        this.columnDefsTrunks = this.createColumnsDefsTrunks();
         this.gridApiTrunks = params.api;
         this.columnApiTrunks = params.ColumnApi;
-
-        this.gridApi.sizeColumnsToFit();
+        params.api.sizeColumnsToFit();
     }
 
     private createColumnDefs() {
@@ -156,7 +157,7 @@ export class RateCardsTableComponent implements OnInit {
                 checkboxSelection: true, headerCheckboxSelection: true,
             },
             {
-                headerName: 'Destination', field: 'destination',
+                headerName: 'Destination', field: 'destination', width: 400,
             },
             {
                 headerName: 'Buy Rate', field: 'buy_rate', editable: true,

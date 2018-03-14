@@ -102,6 +102,37 @@ export class CallPlanService {
         .do(data => console.log('server data:', data));
     }
 
+    /*
+        ~~~~~~~~~~ LCR ~~~~~~~~~~
+    */
+    post_carrierToLCR(carrier_id: number, body: any): Observable<any> {
+        return this.http
+            .post(this.url + 'lcr/carriers/' + carrier_id, body)
+            .catch(this.handleError)
+            .do(data => console.log('server data:', data));
+    }
+
+    post_ratecardsToLCR(ratecard_id: number, body: any): Observable<any> {
+        return this.http
+            .post(this.url + 'lcr/ratecards/' + ratecard_id, body)
+            .catch(this.handleError)
+            .do(data => console.log('server data:', data));
+    }
+
+    post_trunksToLCR(trunk_id: number, body: any): Observable<any> {
+        return this.http
+            .post(this.url + 'lcr/trunks/' + trunk_id, body)
+            .catch(this.handleError)
+            .do(data => console.log('server data:', data));
+    }
+
+    post_callplanToLCR(callplan_id: number, body: any): Observable<any> {
+        return this.http
+            .post(this.url + 'lcr/callplans/' + callplan_id, body)
+            .catch(this.handleError)
+            .do(data => console.log('server data:', data));
+    }
+
     handleError(error: any): any {
         const errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';

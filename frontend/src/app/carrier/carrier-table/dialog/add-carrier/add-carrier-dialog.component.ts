@@ -7,7 +7,7 @@ import { CarrierTableComponent } from './../../carrier-table.component';
 import { CarrierService } from '../../../services/carrier.api.service';
 import { CarrierSharedService } from './../../../services/carrier.shared.service';
 
-/** Error when invalid control is dirty, touched, or submitted. */
+/* Error when invalid control is dirty, touched, or submitted. */
 export class CarrierErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
       const isSubmitted = form && form.submitted;

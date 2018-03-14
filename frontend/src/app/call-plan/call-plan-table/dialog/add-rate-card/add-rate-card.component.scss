@@ -1,7 +1,40 @@
-button {
-    border: 1px solid black;
+//   button {
+//     width: 100px; height: 50px;
+//   }
+
+.my-full-screen-dialog {
+    background-color: red;
+}
+  
+.ratecardAll-container {
+    width: 30vw; height: 100%;
+    float: left;
+
+    #ratecardgroup-table {
+        width: 100%; height: 80vh;
+        float: left;
+    }
+}
+  
+.ratecard-importer {
+    width: 30vw; height: 100%;
+    float: left;
+    border-left: 1px solid black;
+
+    #ratecardReview-table {
+        width: 100%; height: 80vh;
+        float: left;
+    }
 }
 
-mat-form-field {
-    width: 100%;
-}
+
+  
+//   .ratecard-json {
+//     width: 15vw; height: 100%;
+//     float: right;
+//     border-left: 1px solid black;
+//   }
+  
+  
+  
+  

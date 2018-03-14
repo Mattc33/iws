@@ -21,7 +21,7 @@ import { DettachCodesComponent } from './dialog/dettach-codes/dettach-codes.comp
 })
 export class CallPlanTableComponent implements OnInit {
 
-    // AG grid row/col 
+    // AG grid row/col
     private rowData; // All
     private columnDefs;
     private columnDefsDetail;
@@ -50,11 +50,11 @@ export class CallPlanTableComponent implements OnInit {
     private quickSearchValue = ''; // Default value for global search
 
     // Props for button Toggle
-    private buttonToggleBoolean: boolean = true;
+    private buttonToggleBoolean = true;
     private gridSelectionStatus: number;
-    private buttonToggleBoolean_ratecards: boolean = true;
+    private buttonToggleBoolean_ratecards = true;
     private gridSelectionStatus_ratecards: number;
-    private buttonToggleBoolean_codes: boolean = true;
+    private buttonToggleBoolean_codes = true;
     private gridSelectionStatus_codes: number;
 
     // Props for internal service
@@ -62,11 +62,16 @@ export class CallPlanTableComponent implements OnInit {
     private rowIdAll: number;
 
     constructor(
-        private callPlanService: CallPlanService, 
+        private callPlanService: CallPlanService,
         private callPlanSharedService: CallPlanSharedService,
-        private dialog: MatDialog, 
-        private formBuilder: FormBuilder 
-    ) { 
+        private dialog: MatDialog,
+        private formBuilder: FormBuilder
+    ) {
+        this.columnDefs = this.createColumnDefs();
+        this.columnDefsDetail = this.createColumnDefsDetail();
+        this.columnDefsDetail2 = this.createColumnDefsDetail2();
+        this.columnDefsRatecards = this.createColumnDefsRatecards();
+        this.columnDefsCodes = this.createColumnDefsCodes();
     }
 
     ngOnInit() {
@@ -76,97 +81,86 @@ export class CallPlanTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Call Plan API services ~~~~~~~~~~
     */
-        get_allCallPlansData(): void {
+        private get_allCallPlansData(): void {
             this.callPlanService.get_allCallPlan()
                 .subscribe(
                     data => { this.rowData = data; },
                     error => { console.log(error); }
-                )
-        };
+                );
+        }
 
-        get_specificCallPlanData(callPlanId: number) { //updates shared obj and grid right after api call
+        private get_specificCallPlanData(callPlanId: number) { 
             this.callPlanService.get_callPlan(callPlanId)
                 .subscribe(
-                    data => { 
-                        this.callPlanSharedService.changeCallPlanObj(data); 
+                    data => {
+                        this.callPlanSharedService.changeCallPlanObj(data);
                         this.gridApiDetail.updateRowData({ add: [data] });
                         this.gridApiDetail2.updateRowData({ add: [data] });
                         this.gridApiRatecards.updateRowData({ add: data.ratecards });
                         this.gridApiCodes.updateRowData({ add: data.codes });
                     },
                 );
-        };
+        }
 
-        put_editCallPlan(callPlanObj, callplan_id): void {
-            this.callPlanService.put_editCallPlan(callPlanObj, callplan_id) 
+        private put_editCallPlan(callPlanObj, callplan_id): void {
+            this.callPlanService.put_editCallPlan(callPlanObj, callplan_id)
                 .subscribe(resp => console.log(resp));
-        };
+        }
 
     /*
         ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
     */
         private on_GridReady(params): void { // init grid for all call plans table
-            this.columnDefs = this.createColumnDefs();
             this.gridApi = params.api;
             this.columnApi = params.columnApi;
-            this.gridApi.sizeColumnsToFit();
+            params.api.sizeColumnsToFit();
         }
 
         private on_GridReady_Details(params): void { // init grid for details table
-            this.columnDefsDetail = this.createColumnDefsDetail();
             this.gridApiDetail = params.api;
             this.columnApiDetail = params.columnApi;
-            this.gridApiDetail.sizeColumnsToFit();
+            params.api.sizeColumnsToFit();
         }
 
         private on_GridReady_Details2(params): void { // init grid for details table2
-            this.columnDefsDetail2 = this.createColumnDefsDetail2();
             this.gridApiDetail2 = params.api;
             this.columnApiDetail2 = params.columnApi;
-            this.gridApiDetail2.sizeColumnsToFit();
+            params.api.sizeColumnsToFit();
         }
 
         private on_GridReady_Ratecards(params): void { // init grid for ratecards table
-            this.columnDefsRatecards = this.createColumnDefsRatecards();
             this.gridApiRatecards = params.api;
             this.columnApiRatecards = params.ColumnApi;
-            this.gridApiRatecards.sizeColumnsToFit();
+            params.api.sizeColumnsToFit();
         }
 
         private on_GridReady_Codes(params): void { // init grid for codes table
-            this.columnDefsCodes = this.createColumnDefsCodes();
             this.gridApiCodes = params.api;
             this.columnApiCodes = params.ColumnApi;
-            this.gridApiCodes.sizeColumnsToFit();
+            params.api.sizeColumnsToFit();
         }
 
         private createColumnDefs(): object { // All Call plans columns
             return [
                 {
                     headerName: 'Call Plans', field: 'title',
-                    checkboxSelection: true, 
+                    checkboxSelection: true, editable: true,
                     width: 250,
                 },
                 {
                     headerName: 'Carrier Name', field: 'carrier_name',
                 },
                 {
-                    headerName: 'Available', field: 'available'
-                }
-            ]
+                    headerName: 'Available', field: 'available', editable: true,
+                    cellEditor: 'select', cellEditorParams: {values: ['available', 'unavailable', 'deleted', 'staged', 'deleted']},
+                },
+            ];
         }
 
         private createColumnDefsDetail(): object { // Detailed Call plan table
             return [
                 {
-                    headerName: 'Title', field: 'title', editable: true,
-                },
-                {
                     headerName: 'Sub Title', field: 'subtitle', editable: true,
-                },
-                {
-                    headerName: 'Available', field: 'available', editable: true,
-                    cellEditor: 'select', cellEditorParams: {values: ['available', 'unavailable', 'deleted', 'staged', 'deleted']},
                 },
                 {
                     headerName: 'Valid Through', field: 'valid_through', editable: true,
@@ -176,13 +170,13 @@ export class CallPlanTableComponent implements OnInit {
                 },
                 {
                     headerName: 'Buy Price', field: 'buy_price',
-                    editable: true, filter: "agNumberColumnFilter"
+                    editable: true, filter: 'agNumberColumnFilter'
                 },
                 {
                     headerName: 'Sell Price', field: 'sell_price',
-                    editable: true, filter: "agNumberColumnFilter"
+                    editable: true, filter: 'agNumberColumnFilter'
                 },
-            ]
+            ];
         }
 
         private createColumnDefsDetail2(): object {
@@ -193,23 +187,23 @@ export class CallPlanTableComponent implements OnInit {
                 },
                 {
                     headerName: 'Activated on?', field: 'activeWhen', editable: true,
-                    cellEditor: "select", cellEditorParams: {values: ['IMMEDIATELY','SUCCESS_CALL']}
+                    cellEditor: 'select', cellEditorParams: {values: ['IMMEDIATELY', 'SUCCESS_CALL']}
                 },
                 {
-                    headerName: 'Promotion?', field: 'isForPromotion', editable: true,
+                    headerName: 'Promotion?', editable: true, field: 'isPurchasable',
                     valueFormatter: function(params) {
-                        if(params.value === 1) {
-                            return true
+                        if (params.value === 1) {
+                            return true;
                         }
-                        if(params.value === 0) {
-                            return false
+                        if (params.value === 0) {
+                            return false;
                         }
                     },
-                    cellEditor: "select", cellEditorParams: {values: ['true','false']}
+                    cellEditor: 'select', cellEditorParams: {values: ['true','false']}
                 },
                 {
-                    headerName: 'Plan Type', field: 'planTypeName', editable: true,
-                    cellEditor: 'select', cellEditorParams: {values: ['UNLIMITED_CALL_PLAN','PAY_AS_YOU_GO_CALL_PLAN','MINUTES_CALL_PLAN']}
+                    headerName: 'Plan Type', field: 'planTypeName', editable: true, cellEditor: 'select',
+                    cellEditorParams: {values: ['UNLIMITED_CALL_PLAN', 'PAY_AS_YOU_GO_CALL_PLAN', 'MINUTES_CALL_PLAN']}
                 },
                 {
                     headerName: 'For Unlimited Call Plans',
@@ -224,7 +218,7 @@ export class CallPlanTableComponent implements OnInit {
                         },
                     ]
                 }
-            ]
+            ];
         }
 
         private createColumnDefsRatecards(): object {
@@ -245,7 +239,7 @@ export class CallPlanTableComponent implements OnInit {
                 {
                     headerName: 'Add TS', field: 'add_ts',
                 },
-            ]
+            ];
         }
 
         private createColumnDefsCodes(): object {
@@ -272,7 +266,7 @@ export class CallPlanTableComponent implements OnInit {
                 {
                     headerName: 'Plan Number', field: 'planNumber',
                 }
-            ]
+            ];
         }
 
     /*
@@ -280,7 +274,7 @@ export class CallPlanTableComponent implements OnInit {
     */
         aggrid_gridSizeChanged(params): void {
             params.api.sizeColumnsToFit();
-        };
+        }
         /*
             ~~~~~ Selection ~~~~~
         */
@@ -294,12 +288,12 @@ export class CallPlanTableComponent implements OnInit {
                 this.rowIdAll = this.rowSelectionAll[0].id; // pass callplan row id to global var
 
                 this.get_specificCallPlanData(this.rowIdAll);
-            };
+            }
 
             aggrid_rateCards_selectionChanged(): void { // Selection event for ratecards table
                 this.rowSelectionRatecards = this.gridApiRatecards.getSelectedRows();
                 console.log(this.rowSelectionRatecards);
-            };
+            }
 
             aggrid_codes_selectionChanged(): void {
                 this.rowSelectionCodes = this.gridApiCodes.getSelectedRows();
@@ -308,7 +302,7 @@ export class CallPlanTableComponent implements OnInit {
 
         /*
             ~~~~~~~~~~ Button Toggle ~~~~~~~~~~
-        */    
+        */
             aggrid_rowSelected() {
                 this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
             }
@@ -347,7 +341,7 @@ export class CallPlanTableComponent implements OnInit {
                 }
                 return this.buttonToggleBoolean_codes;
             }
-        
+
         /*
             ~~~~~~ Deletion ~~~~~~
         */
@@ -382,15 +376,16 @@ export class CallPlanTableComponent implements OnInit {
 
         /*
             ~~~~~~ Edits ~~~~
-        */           
-            aggrid_detail_onCellValueChanged(params: any): void {
-                const id = params.data.id; // rates ID
-                const date = Date.parse(params.data.valid_through);
-                let isForPromotion: boolean;
-                if( params.data.isForPromotion === 1 ) {
-                    isForPromotion = true
-                } else{
-                    isForPromotion = false
+        */
+            onCellValueChanged(params: any): void {
+                const id = params.data.id;
+                const date = Date.parse(params.data.valid_through).toString();
+                let forPromotion: boolean;
+                if ( params.data.isPurchasable === 1 || params.data.isPurchasable === 'true' ) {
+                    forPromotion = true;
+                }
+                if ( params.data.isPurchasable === 0 || params.data.isPurchasable === 'false') {
+                    forPromotion = false;
                 }
 
                 const detailObj = {
@@ -399,19 +394,19 @@ export class CallPlanTableComponent implements OnInit {
                     subtitle: params.data.subtitle,
                     available: params.data.available,
                     valid_through: date,
-                    buy_price: params.data.buy_price,
-                    sell_price: params.data.sell_price,
-                    day_period: params.data.day_period,
+                    buy_price: parseFloat(params.data.buy_price),
+                    sell_price: parseFloat(params.data.sell_price),
+                    day_period: parseInt(params.data.day_period),
                     planTypeName: params.data.planTypeName,
                     activeWhen: params.data.activeWhen,
-                    ranking: params.data.ranking,
-                    isForPromotion: isForPromotion,
-                    maxDestNumbers: params.data.maxDestNumbers,
-                    maxMinutes: params.data.maxMinutes
+                    ranking: parseInt(params.data.ranking),
+                    isPurchasable: forPromotion,
+                    maxDestNumbers: parseInt(params.data.maxDestNumbers),
+                    maxMinutes: parseInt(params.data.maxMinutes)
                 };
 
                 this.put_editCallPlan(detailObj, id);
-            };
+            }
 
     /*
         ~~~~~~~~~~ Toolbar ~~~~~~~~~~
@@ -462,8 +457,7 @@ export class CallPlanTableComponent implements OnInit {
             this.callPlanSharedService.changeRowAll(this.rowIdAll);
 
             const dialogRef = this.dialog.open(AddRateCardComponent, {
-                height: '100%',
-                width: '150%',
+                panelClass: 'my-full-screen-dialog',
             });
 
             const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {

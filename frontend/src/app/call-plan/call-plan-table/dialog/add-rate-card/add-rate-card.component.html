@@ -1,52 +1,35 @@
-<mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
+<mat-horizontal-stepper linear> 
     
-    <!-- Choose Rate Card Step -->
-    <mat-step [stepControl]="attachRateCardFormGroup" [completed]="false">
-        <form [formGroup]="attachRateCardFormGroup">
-            <ng-template matStepLabel>Choose Rate Card</ng-template>
-            <mat-form-field class="example-full-width">
-                <mat-select placeholder="Rate Card" formControlName="ratecardCtrl">
-                    <mat-option *ngFor="let option of finalRateCardObj" [value]="option.id">
-                        {{option.value}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext [disabled]="attachRateCardFormGroup.invalid">Next</button>
-            </div>
-        </form>
-    </mat-step>
-
-    <!-- Choose Plan Priority Step -->
-    <!-- <mat-step [stepControl]="choosePriorityFormGroup" [completed]="false">
-        <form [formGroup]="choosePriorityFormGroup">
-            <ng-template matStepLabel>Choose Rate Card Priority</ng-template>
-            <mat-form-field>
-                <mat-select placeholder="Priority" formControlName="priorityCtrl" matTooltip="Larger number = higher priority">
-                    <mat-option *ngFor="let plan of planPriorityList" [value]="plan.num">
-                    {{plan.num}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext [disabled]="choosePriorityFormGroup.invalid"> Next </button>
-            </div>
-        </form>
-    </mat-step> -->
-
-    <!-- Details & Finalize  -->
     <mat-step [completed]="false">
-        <ng-template matStepLabel>Review, Submit</ng-template>
-            <div class="details">
-                Press submit to attach rate card.
-                <br><br>
-            </div>
-        <div>
-            <button mat-button matStepperPrevious>Back</button>  
-            <button mat-button (click)="click_attachRatecard()">Submit</button>
-        </div>
+    <div class="ratecardAll-container">
+        <ag-grid-angular id="ratecardgroup-table" class="ag-theme-material" 
+            [columnDefs]="columnDefs" [rowData]="formattedRowData"
+            [enableFilter]="true" [floatingFilter]="true"
+            [rowSelection]="rowSelection" [suppressRowClickSelection]="true" [groupSelectsChildren]="true"
+            (selectionChanged)="onSelectionChanged($event)" [enableSorting]="true"
+            [enableColResize]="true"
+            [getNodeChildDetails]="getNodeChildDetails"
+            [pagination]="true" [paginationAutoPageSize]="true"
+        
+            (gridReady)="on_GridReady($event)"
+        >
+        </ag-grid-angular>
+      
+        <button (click)="deselectAll()"> Deselect All </button>
+        <button (click)="submitRatecards()"> Submit Ratecards </button>
+    </div>
     </mat-step>
-    
+
+    <div class="ratecard-importer">
+        <ag-grid-angular id="ratecardReview-table" class="ag-theme-material" 
+            [columnDefs]="columnDefsReview" [rowData]=""
+            [enableFilter]="true" [floatingFilter]="true"
+            [enableColResize]="true" [enableSorting]="true"
+            [pagination]="true" [paginationAutoPageSize]="true"
+        
+            (gridReady)="on_GridReady_Review($event)"
+        >
+        </ag-grid-angular>
+    </div>
+
 </mat-horizontal-stepper>

@@ -19,11 +19,14 @@
 
     <!-- Attach Call Plan Step -->
     <mat-step [stepControl]="attachCallPlanFormGroup" [completed]="false">
-        <form [formGroup]="attachCallPlanFormGroup" > 
-            <ng-template matStepLabel>Add Call Plan</ng-template>
+        <form [formGroup]="attachCallPlanFormGroup"> 
+        <ng-template matStepLabel>Add Call Plan</ng-template>
 
             <mat-form-field class="half-width">
                 <input matInput placeholder="Title" formControlName="titleCtrl" >
+                <mat-error *ngIf="attachCallPlanFormGroup.get('titleCtrl').hasError('required')">
+                    Title is <strong>required</strong>
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field class="half-width">
@@ -47,25 +50,46 @@
             <mat-form-field class="half-width"> <!-- Buy price input -->
                 <span matPrefix>$ &nbsp;</span>
                 <input matInput placeholder="Buying Price of Call Plan" formControlName="buypriceCtrl" >
-                <mat-error *ngIf="attachCallPlanFormGroup.get('buypriceCtrl').invalid">
-                    {{priceErr()}}</mat-error>
+                <mat-hint align="end">Please type price in currency format ~##.##</mat-hint>
+                <mat-error *ngIf="attachCallPlanFormGroup.get('buypriceCtrl').hasError('required')">
+                    Buy Price is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="attachCallPlanFormGroup.get('buypriceCtrl').hasError('pattern') && !attachCallPlanFormGroup.get('buypriceCtrl').hasError('required')">
+                    Type amount in currency format ~##.##
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field class="half-width"> <!-- Sell price input -->
                 <span matPrefix>$ &nbsp;</span>
                 <input matInput placeholder="Selling Price of Call Plan" formControlName="sellpriceCtrl" >
-                <mat-error *ngIf="attachCallPlanFormGroup.get('sellpriceCtrl').invalid">
-                    {{priceErr()}}</mat-error>
+                <mat-hint align="end">Please type price in currency format ~##.##</mat-hint>
+                <mat-error *ngIf="attachCallPlanFormGroup.get('sellpriceCtrl').hasError('required')">
+                    Sell Price is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="attachCallPlanFormGroup.get('sellpriceCtrl').hasError('pattern') && !attachCallPlanFormGroup.get('sellpriceCtrl').hasError('required')">
+                    Type amount in currency format ~##.##
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field class="half-width">
-                <input matInput placeholder="Length of plan in days" formControlName="dayperiodCtrl" matTooltip="Type 0 for unlimited days">
-                <mat-error *ngIf="attachCallPlanFormGroup.get('dayperiodCtrl').invalid">
-                    {{isNaNErr()}}</mat-error>
+                <input matInput placeholder="Length of plan in days" formControlName="dayperiodCtrl">
+                <mat-hint align="end">Type 0 for unlimited days</mat-hint>
+                <mat-error *ngIf="attachCallPlanFormGroup.get('dayperiodCtrl').hasError('required')">
+                    Plan in days is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="attachCallPlanFormGroup.get('dayperiodCtrl').hasError('pattern') && !attachCallPlanFormGroup.get('dayperiodCtrl').hasError('required')">
+                    Please enter numbers only
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field class="half-width">
                 <input matInput placeholder="Call Plan Rank" formControlName="rankingCtrl" >
+                <mat-error *ngIf="attachCallPlanFormGroup.get('rankingCtrl').hasError('required')">
+                    Call plan rank is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="attachCallPlanFormGroup.get('rankingCtrl').hasError('pattern') && !attachCallPlanFormGroup.get('rankingCtrl').hasError('required')">
+                    Please enter numbers only
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field> 
@@ -78,15 +102,21 @@
             
             <mat-form-field class="half-width" *ngIf="onChangePlanType()">
                 <input matInput placeholder="Maximum Destination Numbers" formControlName="maxdestinationCtrl" >
-                <mat-error  *ngIf="attachCallPlanFormGroup.get('maxdestinationCtrl').invalid">
-                    {{isNaNErr()}}                                                   
+                <mat-error *ngIf="attachCallPlanFormGroup.get('maxdestinationCtrl').hasError('required')">
+                    Call plan rank is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="attachCallPlanFormGroup.get('maxdestinationCtrl').hasError('pattern') && !attachCallPlanFormGroup.get('maxdestinationCtrl').hasError('required')">
+                    Please enter numbers only
                 </mat-error>
             </mat-form-field>
  
             <mat-form-field class="half-width" *ngIf="onChangePlanType()">
                 <input matInput placeholder="Maximum Minutes" formControlName="maxminutesCtrl" >
-                <mat-error  *ngIf="attachCallPlanFormGroup.get('maxminutesCtrl').invalid">
-                    {{isNaNErr()}}                                                   
+                <mat-error *ngIf="attachCallPlanFormGroup.get('maxminutesCtrl').hasError('required')">
+                    Call plan rank is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="attachCallPlanFormGroup.get('maxminutesCtrl').hasError('pattern') && !attachCallPlanFormGroup.get('maxminutesCtrl').hasError('required')">
+                    Please enter numbers only
                 </mat-error>
             </mat-form-field>
 
@@ -109,21 +139,14 @@
         <div> 
             <button mat-button matStepperPrevious >Back</button>
             <button mat-button matStepperNext [disabled]="
-                attachCallPlanFormGroup.get('titleCtrl').invalid ||
-                attachCallPlanFormGroup.get('availableCtrl').invalid ||
-                attachCallPlanFormGroup.get('buypriceCtrl').invalid ||
-                attachCallPlanFormGroup.get('sellpriceCtrl').invalid ||
-                attachCallPlanFormGroup.get('dayperiodCtrl').invalid ||
-                attachCallPlanFormGroup.get('rankingCtrl').invalid ||
-                attachCallPlanFormGroup.get('plantypeCtrl').invalid ||
-                attachCallPlanFormGroup.get('activewhenCtrl').invalid ||
-                attachCallPlanFormGroup.get('promoCtrl').invalid
-            "> Next</button>
-            <button mat-button (click)="insertDummyDataCallPlan()" > Insert Dummy Data </button>
+            attachCallPlanFormGroup.get('titleCtrl').invalid || attachCallPlanFormGroup.get('promoCtrl').invalid
+            || attachCallPlanFormGroup.get('buypriceCtrl').invalid
+            "
+            > Next</button>
+            <button mat-button (click)="insertDummyDataCallPlan()"> Insert Dummy Data </button>
         </div>     
         </form>
     </mat-step> 
-    <!-- attachCallPlanFormGroup.get('validthroughCtrl').invalid || -->
 
     <!-- Enter Code Initial Step -->
     <mat-step [stepControl]="attachCodesFormGroup" [completed]="false">
@@ -155,11 +178,25 @@
             </mat-form-field>
 
             <mat-form-field >
-                    <input matInput placeholder="Length of plan in days" formControlName="dayperiodCtrl" matTooltip="Type 0 for unlimited days" >
+                    <input matInput placeholder="Length of plan in days" formControlName="dayperiodCtrl">
+                    <mat-hint align="end">Type 0 for unlimited days</mat-hint>
+                    <mat-error *ngIf="attachCodesFormGroup.get('dayperiodCtrl').hasError('required')">
+                        Plan in days is <strong>required</strong>
+                    </mat-error>
+                    <mat-error *ngIf="attachCodesFormGroup.get('dayperiodCtrl').hasError('pattern') && !attachCodesFormGroup.get('dayperiodCtrl').hasError('required')">
+                        Please enter numbers only
+                    </mat-error>
             </mat-form-field>
 
             <mat-form-field >
                     <input matInput placeholder="Enter Plan Number" formControlName="plannumberCtrl" >
+                    <mat-hint align="end">Plan number 00 -> 20</mat-hint>
+                    <mat-error *ngIf="attachCodesFormGroup.get('plannumberCtrl').hasError('required')">
+                       Plan number days is <strong>required</strong>
+                    </mat-error>
+                    <mat-error *ngIf="attachCodesFormGroup.get('plannumberCtrl').hasError('pattern') && !attachCodesFormGroup.get('plannumberCtrl').hasError('required')">
+                        Please enter numbers only
+                    </mat-error>
             </mat-form-field>
 
         <div>
@@ -186,22 +223,6 @@
                                 </mat-option>   
                             </mat-select>
                         </mat-form-field>
-
-                        <!--
-                                <mat-select placeholder="Origination Country" formControlName="originationCtrl">
-                                <mat-option *ngFor="let code of countryCodeList" [value]="code.code">
-                                    {{code.code}} - {{code.country}}
-                                </mat-option>   
-                                </mat-select>
-                            
-
-                                <input placeholder="Pick one" matInput [formControl]="myControl" [matAutocomplete]="auto">
-                                <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.code">
-                                    {{ option.country }} | {{ option.code }}
-                                </mat-option>
-                                </mat-autocomplete>
-                        -->
 
                         <mat-form-field class="half-width"> 
                             <mat-select placeholder="Destination Country" formControlName="destinationCtrl">
