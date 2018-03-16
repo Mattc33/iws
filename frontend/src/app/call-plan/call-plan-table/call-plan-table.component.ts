@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
 import { GridApi } from 'ag-grid';
 
+import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
 import { CallPlanService } from './../services/call-plan.api.service';
 import { CallPlanSharedService } from './../services/call-plan.shared.service';
 
@@ -23,10 +24,12 @@ export class CallPlanTableComponent implements OnInit {
 
     // AG grid row/col
     private rowData; // All
+    private rowDataRatecards;
     private columnDefs;
     private columnDefsDetail;
     private columnDefsDetail2;
     private columnDefsRatecards;
+    private getNodeChildDetails;
     private columnDefsCodes;
 
     // AG grid controllers
@@ -60,10 +63,13 @@ export class CallPlanTableComponent implements OnInit {
     // Props for internal service
     private callPlanRowObj;
     private rowIdAll: number;
+    private callplanTitle: string;
+    private selectedCallplanIndex;
 
     constructor(
         private callPlanService: CallPlanService,
         private callPlanSharedService: CallPlanSharedService,
+        private nestedAgGridService: NestedAgGridService,
         private dialog: MatDialog,
         private formBuilder: FormBuilder
     ) {
@@ -75,6 +81,7 @@ export class CallPlanTableComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.getNodeChildDetails = this.setGroups();
         this.get_allCallPlansData(); // Get all plans API
     }
 
@@ -89,14 +96,17 @@ export class CallPlanTableComponent implements OnInit {
                 );
         }
 
-        private get_specificCallPlanData(callPlanId: number) { 
+        private get_specificCallPlanData(callPlanId: number) {
             this.callPlanService.get_callPlan(callPlanId)
                 .subscribe(
                     data => {
                         this.callPlanSharedService.changeCallPlanObj(data);
                         this.gridApiDetail.updateRowData({ add: [data] });
                         this.gridApiDetail2.updateRowData({ add: [data] });
-                        this.gridApiRatecards.updateRowData({ add: data.ratecards });
+
+                        // Convert data
+                        const ratecardData = this.nestedAgGridService.formatDataToNestedArr(data.ratecards);
+                        this.gridApiRatecards.setRowData( ratecardData );
                         this.gridApiCodes.updateRowData({ add: data.codes });
                     },
                 );
@@ -224,21 +234,18 @@ export class CallPlanTableComponent implements OnInit {
         private createColumnDefsRatecards(): object {
             return [
                 {
-                    headerName: 'Ratecard Name', field: 'name', checkboxSelection: true,
-                    headerCheckboxSelection: true
+                    headerName: 'Ratecard Name', field: 'ratecard_bundle', checkboxSelection: true,
+                    headerCheckboxSelection: true, cellRenderer: 'agGroupCellRenderer',
+                },
+                {
+                    headerName: 'Country', field: 'country',
+                },
+                {
+                    headerName: 'Offer', field: 'offer',
                 },
                 {
                     headerName: 'Carrier Name', field: 'carrier_name',
-                },
-                {
-                    headerName: 'Start TS', field: 'start_ts',
-                },
-                {
-                    headerName: 'End TS', field: 'end_ts',
-                },
-                {
-                    headerName: 'Add TS', field: 'add_ts',
-                },
+                }
             ];
         }
 
@@ -269,78 +276,95 @@ export class CallPlanTableComponent implements OnInit {
             ];
         }
 
+    setGroups() {
+        return function getNodeChildDetails(rowItem) {
+            if (rowItem.children) {
+                return {
+                    group: true,
+                    children: rowItem.children,
+                    key: rowItem.ratecard_bundle
+                };
+            } else {
+                return null;
+            }
+        };
+    }
+
     /*
         ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
     */
         aggrid_gridSizeChanged(params): void {
             params.api.sizeColumnsToFit();
         }
+
         /*
             ~~~~~ Selection ~~~~~
         */
-            aggrid_selectionChanged(): void { // Selection event for All table
-                this.gridApiDetail.setRowData([]); // resets row data
-                this.gridApiDetail2.setRowData([]);
-                this.gridApiRatecards.setRowData([]);
-                this.gridApiCodes.setRowData([]);
+        aggrid_selectionChanged(): void { // Selection event for All table
+            this.gridApiDetail.setRowData([]); // resets row data
+            this.gridApiDetail2.setRowData([]);
+            this.gridApiRatecards.setRowData([]);
+            this.gridApiCodes.setRowData([]);
 
-                this.rowSelectionAll = this.gridApi.getSelectedRows(); // pass global row obj to row selection global var 
-                this.rowIdAll = this.rowSelectionAll[0].id; // pass callplan row id to global var
+            this.rowSelectionAll = this.gridApi.getSelectedRows(); // pass global row obj to row selection global var
+            this.rowIdAll = this.rowSelectionAll[0].id; // pass callplan row id to global var
+            this.callplanTitle = this.rowSelectionAll[0].title;
 
-                this.get_specificCallPlanData(this.rowIdAll);
-            }
+            this.get_specificCallPlanData(this.rowIdAll);
+        }
 
-            aggrid_rateCards_selectionChanged(): void { // Selection event for ratecards table
-                this.rowSelectionRatecards = this.gridApiRatecards.getSelectedRows();
-                console.log(this.rowSelectionRatecards);
-            }
+        aggrid_rateCards_selectionChanged(): void { // Selection event for ratecards table
+            this.rowSelectionRatecards = this.gridApiRatecards.getSelectedRows();
+            console.log(this.rowSelectionRatecards);
+        }
 
-            aggrid_codes_selectionChanged(): void {
-                this.rowSelectionCodes = this.gridApiCodes.getSelectedRows();
-                console.log(this.rowSelectionCodes);
-            }
+        aggrid_codes_selectionChanged(): void {
+            this.rowSelectionCodes = this.gridApiCodes.getSelectedRows();
+            console.log(this.rowSelectionCodes);
+        }
 
         /*
             ~~~~~~~~~~ Button Toggle ~~~~~~~~~~
         */
-            aggrid_rowSelected() {
-                this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
-            }
+        aggrid_rowSelected() {
+            this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
+            this.selectedCallplanIndex = this.gridApi.getSelectedNodes()[0].rowIndex; // Get rowindex of callplan;
+        }
 
-            toggleButtonStatus() {
-                if ( this.gridSelectionStatus > 0 ) {
-                    this.buttonToggleBoolean = false;
-                } else {
-                    this.buttonToggleBoolean = true;
-                }
-                return this.buttonToggleBoolean;
+        toggleButtonStatus() {
+            if ( this.gridSelectionStatus > 0 ) {
+                this.buttonToggleBoolean = false;
+            } else {
+                this.buttonToggleBoolean = true;
             }
+            return this.buttonToggleBoolean;
+        }
 
-            aggrid_rowSelected_ratecards() {
-                this.gridSelectionStatus_ratecards = this.gridApiRatecards.getSelectedNodes().length;
-            }
+        aggrid_rowSelected_ratecards() {
+            this.gridSelectionStatus_ratecards = this.gridApiRatecards.getSelectedNodes().length;
+        }
 
-            toggleButtonStatus_ratecards() {
-                if ( this.gridSelectionStatus_ratecards > 0 ) {
-                    this.buttonToggleBoolean_ratecards = false;
-                } else {
-                    this.buttonToggleBoolean_ratecards = true;
-                }
-                return this.buttonToggleBoolean_ratecards;
+        toggleButtonStatus_ratecards() {
+            if ( this.gridSelectionStatus_ratecards > 0 ) {
+                this.buttonToggleBoolean_ratecards = false;
+            } else {
+                this.buttonToggleBoolean_ratecards = true;
             }
+            return this.buttonToggleBoolean_ratecards;
+        }
 
-            aggrid_rowSelected_codes() {
-                this.gridSelectionStatus_codes = this.gridApiCodes.getSelectedNodes().length;
-            }
+        aggrid_rowSelected_codes() {
+            this.gridSelectionStatus_codes = this.gridApiCodes.getSelectedNodes().length;
+        }
 
-            toggleButtonStatus_codes() {
-                if ( this.gridSelectionStatus_codes > 0 ) {
-                    this.buttonToggleBoolean_codes = false;
-                } else {
-                    this.buttonToggleBoolean_codes = true;
-                }
-                return this.buttonToggleBoolean_codes;
+        toggleButtonStatus_codes() {
+            if ( this.gridSelectionStatus_codes > 0 ) {
+                this.buttonToggleBoolean_codes = false;
+            } else {
+                this.buttonToggleBoolean_codes = true;
             }
+            return this.buttonToggleBoolean_codes;
+        }
 
         /*
             ~~~~~~ Deletion ~~~~~~
@@ -350,7 +374,9 @@ export class CallPlanTableComponent implements OnInit {
                 this.gridApi.updateRowData({ remove: this.rowSelectionAll });
             }
             if (string === 'detach-ratecards') {
-                this.gridApiRatecards.updateRowData({ remove: this.rowSelectionRatecards });
+                console.log('del this -->');
+                this.gridApi.deselectAll();
+                this.gridApi.selectIndex(this.selectedCallplanIndex, false, false);
             }
             if (string === 'detach-codes') {
                 this.gridApiCodes.updateRowData({ remove: this.rowSelectionCodes });
@@ -362,51 +388,51 @@ export class CallPlanTableComponent implements OnInit {
         /*
             ~~~~~~ Addition ~~~~
         */
-            aggrid_addRow_ratecards(obj): void {
-                this.gridApiRatecards.updateRowData({ add: [obj] });
-            };
+        aggrid_addRow_ratecards(obj): void {
+            this.gridApiRatecards.updateRowData({ add: obj });
+        }
 
-            aggrid_addRow_codes(obj): void {
-                this.gridApiCodes.updateRowData({ add: [obj] });
-            }
+        aggrid_addRow_codes(obj): void {
+            this.gridApiCodes.updateRowData({ add: [obj] });
+        }
 
-            aggrid_addRow_callplans(obj): void {
-                this.gridApi.updateRowData({ add: [obj] });
-            }
+        aggrid_addRow_callplans(obj): void {
+            this.gridApi.updateRowData({ add: [obj] });
+        }
 
         /*
             ~~~~~~ Edits ~~~~
         */
-            onCellValueChanged(params: any): void {
-                const id = params.data.id;
-                const date = Date.parse(params.data.valid_through).toString();
-                let forPromotion: boolean;
-                if ( params.data.isPurchasable === 1 || params.data.isPurchasable === 'true' ) {
-                    forPromotion = true;
-                }
-                if ( params.data.isPurchasable === 0 || params.data.isPurchasable === 'false') {
-                    forPromotion = false;
-                }
-
-                const detailObj = {
-                    carrier_id: params.data.carrier_id,
-                    title: params.data.title,
-                    subtitle: params.data.subtitle,
-                    available: params.data.available,
-                    valid_through: date,
-                    buy_price: parseFloat(params.data.buy_price),
-                    sell_price: parseFloat(params.data.sell_price),
-                    day_period: parseInt(params.data.day_period),
-                    planTypeName: params.data.planTypeName,
-                    activeWhen: params.data.activeWhen,
-                    ranking: parseInt(params.data.ranking),
-                    isPurchasable: forPromotion,
-                    maxDestNumbers: parseInt(params.data.maxDestNumbers),
-                    maxMinutes: parseInt(params.data.maxMinutes)
-                };
-
-                this.put_editCallPlan(detailObj, id);
+        onCellValueChanged(params: any): void {
+            const id = params.data.id;
+            const date = Date.parse(params.data.valid_through).toString();
+            let forPromotion: boolean;
+            if ( params.data.isPurchasable === 1 || params.data.isPurchasable === 'true' ) {
+                forPromotion = true;
             }
+            if ( params.data.isPurchasable === 0 || params.data.isPurchasable === 'false') {
+                forPromotion = false;
+            }
+
+            const detailObj = {
+                carrier_id: params.data.carrier_id,
+                title: params.data.title,
+                subtitle: params.data.subtitle,
+                available: params.data.available,
+                valid_through: date,
+                buy_price: parseFloat(params.data.buy_price),
+                sell_price: parseFloat(params.data.sell_price),
+                day_period: parseInt(params.data.day_period),
+                planTypeName: params.data.planTypeName,
+                activeWhen: params.data.activeWhen,
+                ranking: parseInt(params.data.ranking),
+                isPurchasable: forPromotion,
+                maxDestNumbers: parseInt(params.data.maxDestNumbers),
+                maxMinutes: parseInt(params.data.maxMinutes)
+            };
+
+            this.put_editCallPlan(detailObj, id);
+        }
 
     /*
         ~~~~~~~~~~ Toolbar ~~~~~~~~~~
@@ -418,7 +444,7 @@ export class CallPlanTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Dialog CallPlans ~~~~~~~~~~
     */
-        openDialogDel(): void { 
+        openDialogDel(): void {
             this.callPlanSharedService.changeRowAll(this.rowIdAll);
 
             const dialogRef = this.dialog.open(DelCallPlanComponent, {});
@@ -453,76 +479,83 @@ export class CallPlanTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Dialog Rate Card ~~~~~~~~~~
     */
-        openDialogAttachRateCard() { // Add Rate Card to Call Plan
-            this.callPlanSharedService.changeRowAll(this.rowIdAll);
+    openDialogAttachRateCard() { // Add Rate Card to Call Plan
+        this.callPlanSharedService.changeRowAll(this.rowIdAll);
 
-            const dialogRef = this.dialog.open(AddRateCardComponent, {
-                panelClass: 'my-full-screen-dialog',
-            });
+        const dialogRef = this.dialog.open(AddRateCardComponent, {
+            panelClass: 'ratecard-callplan-screen-dialog',
+            maxWidth: '90vw',
+            autoFocus: false,
+            data: this.gridApi.getSelectedRows()[0].title
+        });
 
-            const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-                this.aggrid_addRow_ratecards(data);
-            });
+        const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
+            console.log('aggrid data --->');
+            console.log(data);
+            this.aggrid_addRow_ratecards(data);
+        });
 
-            dialogRef.afterClosed().subscribe(() => {
-                sub.unsubscribe();
-                console.log('The dialog was closed');
-            });
-        }
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
+            this.gridApi.deselectAll();
+            this.gridApi.selectIndex(this.selectedCallplanIndex, false, false);
+            console.log('The dialog was closed');
+        });
+    }
 
-        openDialogDetachRatecards(): void { // Dettach Rate Cards
-            this.callPlanSharedService.changeRowAll(this.rowIdAll);
-            this.callPlanSharedService.changeRowRatecards(this.rowSelectionRatecards);
+    openDialogDetachRatecards(): void { // Dettach Rate Cards
+        this.callPlanSharedService.changeRowAll(this.rowIdAll);
+        this.callPlanSharedService.changeRowRatecards(this.rowSelectionRatecards);
 
-            const dialogRef = this.dialog.open(DettachRatecardsComponent, {});
+        const dialogRef = this.dialog.open(DettachRatecardsComponent, {});
 
-            const sub = dialogRef.componentInstance.event_onDettach
-            .subscribe((data) => { // do something with event data
+        const sub = dialogRef.componentInstance.event_onDettach
+            .subscribe((data) => {
                 this.aggrid_delRow(data);
             });
 
-            dialogRef.afterClosed().subscribe(() => {
-                sub.unsubscribe();
-                console.log('The dialog was closed');
-            });
-        }
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
+            console.log('The dialog was closed');
+        });
+    }
 
     /*
         ~~~~~~~~~~ Dialog Codes ~~~~~~~~~~
     */
-        openDialogAttachCode() { // Add a Code to Call Plan
-            this.callPlanSharedService.changeRowAll(this.rowIdAll);
+    openDialogAttachCode() { // Add a Code to Call Plan
+        this.callPlanSharedService.changeRowAll(this.rowIdAll);
 
-            const dialogRef = this.dialog.open(AddCodeComponent, {
-                height: 'auto',
-                width: '40%',
-            });
+        const dialogRef = this.dialog.open(AddCodeComponent, {
+            height: 'auto',
+            width: '40%',
+        });
 
-            const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-                this.aggrid_addRow_codes(data);
-            });
+        const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
+            this.aggrid_addRow_codes(data);
+        });
 
-            dialogRef.afterClosed().subscribe(() => {
-                sub.unsubscribe();
-                console.log('The dialog was closed');
-            });
-        }
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
+            console.log('The dialog was closed');
+        });
+    }
 
-        openDialogDetachCodes() { // Detach a code from callplan
-            this.callPlanSharedService.changeRowAll(this.rowIdAll);
-            this.callPlanSharedService.changeRowCodes(this.rowSelectionCodes);
+    openDialogDetachCodes() { // Detach a code from callplan
+        this.callPlanSharedService.changeRowAll(this.rowIdAll);
+        this.callPlanSharedService.changeRowCodes(this.rowSelectionCodes);
 
-            const dialogRef = this.dialog.open(DettachCodesComponent, {});
+        const dialogRef = this.dialog.open(DettachCodesComponent, {});
 
-            const sub = dialogRef.componentInstance.event_onDettach
-            .subscribe((data) => { // On dialog event subscription pass event data to method
-                this.aggrid_delRow(data);
-            });
+        const sub = dialogRef.componentInstance.event_onDettach
+        .subscribe((data) => { // On dialog event subscription pass event data to method
+            this.aggrid_delRow(data);
+        });
 
-            dialogRef.afterClosed().subscribe(() => {
-                sub.unsubscribe();
-                console.log('The dialog was closed');
-            });
-        }
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
+            console.log('The dialog was closed');
+        });
+    }
 
 }

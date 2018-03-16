@@ -38,7 +38,7 @@ export class AddTrunksComponent implements OnInit {
 
 
     // Validation Patterns
-    
+
     constructor(
         public dialogRef: MatDialogRef <TrunksTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
@@ -75,14 +75,14 @@ export class AddTrunksComponent implements OnInit {
                 data => { this.extractCarrierNames(data); },
                 error => { console.log(error); },
             );
-    };
+    }
 
     post_addTrunk(body): void {
         this.trunksService.post_addTrunk(body)
             .subscribe(
-                resp => {console.log(resp)}
-            )
-    };
+                resp => { console.log(resp); }
+            );
+    }
 
     /*
         ~~~~~~~~~~ Extract Necessary Data ~~~~~~~~~~
@@ -91,7 +91,7 @@ export class AddTrunksComponent implements OnInit {
         for ( let i = 0; i < data.length ; i++) {
             this.carrierNames.push( { value: data[i].name, id: data[i].id }, );
         }
-    };
+    }
 
     on_getCarrierId(): number {
         const carrierNameFromInput = this.on_getCarrierName();
@@ -104,10 +104,9 @@ export class AddTrunksComponent implements OnInit {
             } else {
             }
         }
-
         this.currentCarrierId = carrierId;
         return carrierId;
-    };
+    }
 
 
     /*
@@ -117,24 +116,24 @@ export class AddTrunksComponent implements OnInit {
         const carrierName = this.carrierFormGroup.get('carrierCtrl').value;
             this.carrierName = carrierName;
             return carrierName;
-    };
+    }
 
     /*
-        ~~~~~~~~~~ AG Grid Methods ~~~~~~~~~~ 
+        ~~~~~~~~~~ AG Grid Methods ~~~~~~~~~~
     */
     aggrid_addTrunks(body): void {
         this.event_onAdd.emit(body);
-    };
+    }
 
     /*
         ~~~~~~~~~~ Dialog ~~~~~~~~~~
     */
     createTrunkObj() {
-        const randomNum = Math.floor(Math.random() * 9999); 
+        const randomNum = Math.floor(Math.random() * 9999);
         this.finalTrunkObj = {
             carrier_id: this.on_getCarrierId(),
             carrier_name: this.carrierName,
-            trunk_name: this.trunksFormGroup.get('nameCtrl').value + " " + randomNum,
+            trunk_name: this.trunksFormGroup.get('nameCtrl').value + ' ' + randomNum,
             trunk_ip: this.trunksFormGroup.get('ipCtrl').value,
             trunk_port: parseInt(this.trunksFormGroup.get('portCtrl').value),
             transport: this.trunksFormGroup.get('transportCtrl').value,
@@ -142,21 +141,22 @@ export class AddTrunksComponent implements OnInit {
             prefix: this.trunksFormGroup.get('prefixCtrl').value,
             active: this.trunksFormGroup.get('activeCtrl').value,
             metadata: this.trunksFormGroup.get('metadataCtrl').value
-        }
+        };
     }
 
     click_addTrunks(): void {
+        this.createTrunkObj();
         this.aggrid_addTrunks(this.finalTrunkObj);
         this.post_addTrunk(this.finalTrunkObj);
 
         this.closeDialog();
-    };
+    }
 
     closeDialog(): void {
         this.dialogRef.close();
-    };
+    }
 
-    /* 
+    /*
         ~~~~~~~~~~ TEST ~~~~~~~~~~
     */
     insertTrunkTestData() {

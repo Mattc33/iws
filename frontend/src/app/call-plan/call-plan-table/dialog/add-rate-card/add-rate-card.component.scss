@@ -1,14 +1,37 @@
-//   button {
-//     width: 100px; height: 50px;
-//   }
+button {
+    border: 1px solid #E0E0E0;
+    width: auto; height: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+}
 
-.my-full-screen-dialog {
-    background-color: red;
+.submit {
+    float: right;
+    border: 2px solid green;
+}
+
+.toolbar-ratecards-list {
+    float: left;
+    width: auto; height: auto;
+}
+
+.toolbar-callplan-list {
+    float: left;
+    width: auto; height: auto;
+    margin-left: 1%;
+}
+
+
+/deep/ .ratecard-callplan-screen-dialog { 
+    width: 100vw;
+    height: 98vh;
+    overflow: hidden;
 }
   
 .ratecardAll-container {
-    width: 30vw; height: 100%;
+    width: 35vw; height: auto;
     float: left;
+    border-top: 1px solid #E0E0E0;
 
     #ratecardgroup-table {
         width: 100%; height: 80vh;
@@ -17,24 +40,21 @@
 }
   
 .ratecard-importer {
-    width: 30vw; height: 100%;
+    width: 52.5vw; height: auto;
     float: left;
-    border-left: 1px solid black;
+    border-top: 1px solid #E0E0E0;
 
     #ratecardReview-table {
-        width: 100%; height: 80vh;
+        width: 99%; height: 80vh;
         float: left;
+        border-left: 1px solid #E0E0E0;
+    }
+
+    mat-slider {
+        width: 20vw;
     }
 }
 
-
-  
-//   .ratecard-json {
-//     width: 15vw; height: 100%;
-//     float: right;
-//     border-left: 1px solid black;
-//   }
-  
   
   
   

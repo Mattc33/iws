@@ -7,6 +7,7 @@ import { DeleteRateCardsDialogComponent } from './dialog/delete-rate-cards/delet
 import { AttachTrunksDialogComponent } from './dialog/attach-trunks/attach-trunks-dialog.component';
 import { DetachTrunksComponent } from './dialog/detach-trunks/detach-trunks.component';
 
+import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
 import { RateCardsService } from '../services/rate-cards.api.service';
 import { RateCardsSharedService } from '../services/rate-cards.shared.service';
 
@@ -40,8 +41,8 @@ export class RateCardsTableComponent implements OnInit {
     private columnApiTrunks: ColumnApi;
 
     // Props for AG Grid
-    private defineRowSelectionType = 'multiple';
-    private defineRowSelectionTypeS = 'single';
+    private rowSelectionTypeM = 'multiple';
+    private rowSelectionTypeS = 'single';
     private rowSelectionAll;
     private rowSelectionRates;
     private rowSelectionTrunks;
@@ -58,14 +59,10 @@ export class RateCardsTableComponent implements OnInit {
     private rowIdAll;
     private selectedRatecardId: number;
 
-    // Properties for response formatting
-    private groupedArr = [];
-    private formattedObj = [];
-    private formattedRowData;
-
     constructor(
         private rateCardsService: RateCardsService,
         private rateCardsSharedService: RateCardsSharedService,
+        private nestedAgGridService: NestedAgGridService,
         private dialog: MatDialog
     ) {
         this.columnDefs = this.createColumnDefs();
@@ -84,7 +81,10 @@ export class RateCardsTableComponent implements OnInit {
     on_InitializeRows(): void {
         this.rateCardsService.get_RateCard()
             .subscribe(
-                data => {this.rowData = data; this.formatDataToNestedArr(); },
+                data => {
+                    // pass json to internal service to return formatted obj
+                    this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
+                },
                 error => console.log(error)
             );
     }
@@ -127,10 +127,10 @@ export class RateCardsTableComponent implements OnInit {
                 cellRenderer: 'agGroupCellRenderer', checkboxSelection: true,
             },
             {
-                headerName: 'Country', field: 'country', width: 100
+                headerName: 'Country', field: 'country', width: 180
             },
             {
-                headerName: 'Offer', field: 'offer', width: 100
+                headerName: 'Offer', field: 'offer', width: 100,
             },
             {
                 headerName: 'Approve?', editable: true, field: 'confirmed', width: 80,
@@ -145,7 +145,7 @@ export class RateCardsTableComponent implements OnInit {
                 cellEditor: 'select', cellEditorParams: {values: [true, false]},
             },
             {
-                headerName: 'Active', field: 'active', filter: 'agNumberColumnFilter', hide: true
+                headerName: 'Enabled?', field: 'active', filter: 'agNumberColumnFilter', hide: true, width: 100
             }
         ];
     }
@@ -161,11 +161,11 @@ export class RateCardsTableComponent implements OnInit {
             },
             {
                 headerName: 'Buy Rate', field: 'buy_rate', editable: true,
-                filter: 'agNumberColumnFilter'
+                filter: 'agNumberColumnFilter', width: 150
             },
             {
                 headerName: 'Sell Rate', field: 'sell_rate', editable: true,
-                filter: 'agNumberColumnFilter'
+                filter: 'agNumberColumnFilter', width: 150
             },
             {
                 headerName: 'Difference',
@@ -191,16 +191,8 @@ export class RateCardsTableComponent implements OnInit {
                 },
             },
             {
-                headerName: 'Active?', field: 'active', editable: true,
-                cellEditor: 'select', cellEditorParams: {values: [ true, false]},
-                valueFormatter: function(params) {
-                    if (params.value === 1) {
-                        return true;
-                    }
-                    if (params.value === 0) {
-                        return false;
-                    }
-                },
+                headerName: 'Enabled?', field: 'active', editable: true, width: 100,
+                cellEditor: 'select', cellEditorParams: {values: [ true, false]}, hide: true,
             }
         ];
     }
@@ -226,89 +218,17 @@ export class RateCardsTableComponent implements OnInit {
         ];
     }
 
-    /*
-        ~~~~~~~~~~ Format Data ~~~~~~~~~~
-    */
-    formatDataToNestedArr() {
-        this.addAdditionalFieldsToArr();
-        this.groupDataByName();
-        this.formNewJSONObj();
-        this.insertObjInNestedChildrenArr();
-    }
-
-    addAdditionalFieldsToArr() {
-        const insertNewFieldsArr = [];
-        for (let i = 0; i < this.rowData.length; i++) {
-            const currentNameString = this.rowData[i].name;
-            const splitPound = currentNameString.split('#');
-
-            insertNewFieldsArr.push({
-            ratecard_bundle: splitPound[0],
-            name: splitPound[0],
-            offer: splitPound[2],
-            country: splitPound[3],
-            id: this.rowData[i].id,
-            carrier_id: this.rowData[i].carrier_id,
-            carrier_name: this.rowData[i].carrier_name,
-            confirmed: this.rowData[i].confirmed,
-            active: this.rowData[i].active
-            });
-        }
-        this.rowData = insertNewFieldsArr;
-    }
-
-    groupDataByName() {
-        Array.prototype.groupBy = function (prop): any {
-            return this.reduce(function (groups, item) {
-                groups[item[prop]] = groups[item[prop]] || [];
-                groups[item[prop]].push(item);
-                return groups;
-            }, {});
-        };
-        this.rowData = this.rowData.groupBy('name');
-
-        for (const item in this.rowData) {
-            if ( item !== '' ) {
-                this.groupedArr.push(this.rowData[item]);
-            } else {
-            }
-        }
-        console.log(this.groupedArr);
-    }
-
-    formNewJSONObj() {
-        for (let i = 0; i < this.groupedArr.length; i++) {
-            this.formattedObj.push(
-            {
-                ratecard_bundle: this.groupedArr[i][0].name,
-                children: []
-            }
-            );
-        }
-    }
-
-    insertObjInNestedChildrenArr() {
-        for (let i = 0; i < this.formattedObj.length; i++) {
-            for (let x = 0; x < this.groupedArr[i].length; x++) {
-                this.formattedObj[i].children.push(
-                    this.groupedArr[i][x]
-                );
-            }
-            }
-        this.formattedRowData = this.formattedObj;
-    }
-
     setGroups() {
         return function getNodeChildDetails(rowItem) {
             if (rowItem.children) {
-            return {
-                group: true,
-                // expanded: rowItem.group === "Group C",
-                children: rowItem.children,
-                key: rowItem.ratecard_bundle
-            };
+                return {
+                    group: true,
+                    // expanded: rowItem.group === "Group C",
+                    children: rowItem.children,
+                    key: rowItem.ratecard_bundle
+                };
             } else {
-            return null;
+                return null;
             }
         };
     }
@@ -316,7 +236,7 @@ export class RateCardsTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Grid UI Interctions ~~~~~~~~~~
     */
-        aggrid_gridSizeChanged(params) {
+        gridSizeChanged(params) {
             params.api.sizeColumnsToFit();
         }
 
@@ -331,6 +251,14 @@ export class RateCardsTableComponent implements OnInit {
                 filter: 0
             });
             this.gridApi.onFilterChanged();
+        }
+
+        expandAll(expand: boolean) {
+            this.gridApi.forEachNode((node) => {
+                if ( node.group) {
+                    node.setExpanded(expand);
+                }
+            });
         }
 
         /*

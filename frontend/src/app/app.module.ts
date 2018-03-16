@@ -12,20 +12,22 @@ import { FileSelectDirective } from 'ng2-file-upload';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MatButtonModule, MatInputModule, MatStepperModule, MatSelectModule } from '@angular/material';
 import { MatIconModule, MatRadioModule, MatDialogModule, MatDatepickerModule } from '@angular/material';
-import { MatNativeDateModule, MatAutocompleteModule } from '@angular/material';
+import { MatNativeDateModule, MatAutocompleteModule, MatSliderModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-/* --------------------------------------------------------------------------------------------------------------------------------------
-   -------------------------------------------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------------------------------------------------------------------- */
 
 // Main components
 import { AppComponent } from './app.component';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
+
+// Global Services
+import { NestedAgGridService } from './global-service/nestedAgGrid.shared.service';
 
 // Third Party Components
 import { AgGridModule } from 'ag-grid-angular';
@@ -122,7 +124,7 @@ import { RegistrationComponent } from './registration/registration.component';
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatTooltipModule, MatDatepickerModule, MatNativeDateModule,
-    MatTabsModule, MatAutocompleteModule, MatExpansionModule,
+    MatTabsModule, MatAutocompleteModule, MatExpansionModule, MatSliderModule,
     // Ag Grid & Routing
     AgGridModule.withComponents([ ]),
     RouterModule.forRoot([
@@ -139,6 +141,7 @@ import { RegistrationComponent } from './registration/registration.component';
     ])
   ],
     providers: [
+        NestedAgGridService,
         CarrierService, CarrierSharedService,
         ImporterService, ImporterSharedService,
         RateCardsService, RateCardsSharedService,

@@ -6,14 +6,33 @@ section {
     width: 100%; height: 100%;
 
     .all-ratecards-container {
-        width: 33vw; height: 100vh;
+        width: 40vw; height: 100vh;
         border-right: 1px solid #E0E0E0;
         float: left;
 
         #all-ratecards-table {
-            width: 97%; height: 85vh;
+            width: 98%; height: 85vh;
             margin-left: 10px;
             float: left;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .top-toolbar {
+            height: 40px;
+
+            button {
+                width: 40px; height: 40px;
+                background-color: Transparent;
+                border: none;
+            }
+
+            button:hover {
+                background-color: #E0E0E0;
+            }
+
+            button:focus {
+                outline:0;
+            }
         }
 
         mat-toolbar-row {
@@ -60,7 +79,7 @@ section {
         }
 
         /deep/ mat-tab-header { //Because of view encapsulation /deep/ are needed to apply styles
-            height: 55px;
+            height: 40px;
         }
 
         mat-toolbar-row {
@@ -90,17 +109,12 @@ section {
             }
         }
 
-        #ratesBreakdown-table {
-            width: 100%; height: 80vh;
-            overflow-x: hidden;
-        }
-
         #rates-table {
-            width: 100%; height: 80vh;
+            width: 100%; height: 85vh;
         }
 
         #trunks-table {
-            width: 100%; height: 80vh;
+            width: 100%; height: 85vh;
         }
     }
 

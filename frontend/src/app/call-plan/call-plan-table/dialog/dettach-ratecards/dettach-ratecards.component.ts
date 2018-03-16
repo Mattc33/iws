@@ -22,7 +22,7 @@ export class DettachRatecardsComponent implements OnInit {
         public dialogRef: MatDialogRef <CallPlanTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private callPlanService: CallPlanService,
-        private callPlanSharedServce: CallPlanSharedService 
+        private callPlanSharedServce: CallPlanSharedService
     ) { }
 
     ngOnInit() {

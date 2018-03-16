@@ -4,6 +4,7 @@ import { ColumnApi, GridApi } from 'ag-grid';
 
 import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-table.component';
 
+import { NestedAgGridService } from './../../../../global-service/nestedAgGrid.shared.service';
 import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
 import { RateCardsService } from './../../../../rate-cards/services/rate-cards.api.service';
@@ -39,24 +40,22 @@ export class AddRateCardComponent implements OnInit {
 
     // AG grid UI props
     private rowSelection;
+    private currentSliderValue;
 
-    // Format Data Props
-    private groupedArr = [];
-    private formattedObj = [];
-    private formattedRowData;
+    // UI Props
+    private buttonToggleBoolean = true;
+    private gridSelectionStatus: number;
 
     // Internal Service Props
-    // private rateCardsFromService;
-    // private finalRateCardObj = [];
-    // private callPlanObj = [];
     private currentRowId;
 
     constructor(
         public dialogRef: MatDialogRef<CallPlanTableComponent>,
-        @Inject(MAT_DIALOG_DATA) public data,
+        @Inject(MAT_DIALOG_DATA) public callplanTitle,
         private callPlanService: CallPlanService,
         private callPlanSharedService: CallPlanSharedService,
-        private rateCardsService: RateCardsService
+        private rateCardsService: RateCardsService,
+        private nestedAgGridService: NestedAgGridService
     ) {
         this.getNodeChildDetails = this.setGroups();
         this.columnDefs = this.createColumnDefs();
@@ -74,21 +73,25 @@ export class AddRateCardComponent implements OnInit {
     get_RateCards(): void {
         this.rateCardsService.get_RateCard().subscribe(
             data => {
-                this.rowData = data;
-                this.formatDataToNestedArr();
+                this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
             },
             error => { console.log(error); },
         );
     }
 
-    // post_attachRateCard(): void {
-    //     const callplanId = this.currentRowId;
-    //     // const body = {
-    //     //     priority: this.choosePriorityFormGroup.get('priorityCtrl').value
-    //     // };
-    //     this.callPlanService.post_attachRateCard(callplanId, ratecardId, body)
-    //             .subscribe(resp => console.log(resp));
-    // }
+    post_attachRateCard(): void {
+        const callplanId = this.currentRowId;
+        const selectedRows = this.gridApi.getSelectedRows();
+        for (let i = 0; i < selectedRows.length; i++) {
+            const ratecardId = selectedRows[i].id;
+            const body = {
+                priority: selectedRows[i].priority
+            };
+
+            this.callPlanService.post_attachRateCard(callplanId, ratecardId, body)
+                .subscribe(resp => console.log(resp));
+        }
+    }
 
     /*
         ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
@@ -134,6 +137,9 @@ export class AddRateCardComponent implements OnInit {
             },
             {
                 headerName: 'Carrier', field: 'carrier_name'
+            },
+            {
+                headerName: 'Priority', field: 'priority', hide: true,
             }
         ];
     }
@@ -144,7 +150,7 @@ export class AddRateCardComponent implements OnInit {
                 headerName: 'ID', field: 'id',
             },
             {
-                headerName: 'Ratecard', field: 'ratecard_bundle',
+                headerName: 'Ratecard Name', field: 'ratecard_bundle',
             },
             {
                 headerName: 'Country', field: 'country'
@@ -162,102 +168,68 @@ export class AddRateCardComponent implements OnInit {
     }
 
     /*
-        ~~~~~~~~~~ Format Data ~~~~~~~~~~
-    */
-   formatDataToNestedArr() {
-        this.addAdditionalFieldsToArr();
-        this.groupDataByName();
-        this.formNewJSONObj();
-        this.insertObjInNestedChildrenArr();
-    }
-
-    addAdditionalFieldsToArr() {
-        const insertNewFieldsArr = [];
-        for (let i = 0; i < this.rowData.length; i++) {
-            const currentNameString = this.rowData[i].name;
-            const splitPound = currentNameString.split('#');
-
-            insertNewFieldsArr.push({
-            ratecard_bundle: splitPound[0],
-            name: splitPound[0],
-            offer: splitPound[2],
-            country: splitPound[3],
-            id: this.rowData[i].id,
-            carrier_id: this.rowData[i].carrier_id,
-            carrier_name: this.rowData[i].carrier_name,
-            confirmed: this.rowData[i].confirmed,
-            active: this.rowData[i].active
-            });
-        }
-        this.rowData = insertNewFieldsArr;
-    }
-
-    groupDataByName() {
-        Array.prototype.groupBy = function (prop): any {
-            return this.reduce(function (groups, item) {
-                groups[item[prop]] = groups[item[prop]] || [];
-                groups[item[prop]].push(item);
-                return groups;
-            }, {});
-        };
-        this.rowData = this.rowData.groupBy('name');
-
-        for (const item in this.rowData) {
-            if ( item !== '' ) {
-                this.groupedArr.push(this.rowData[item]);
-            } else {
-            }
-        }
-        console.log(this.groupedArr);
-    }
-
-    formNewJSONObj() {
-        for (let i = 0; i < this.groupedArr.length; i++) {
-            this.formattedObj.push(
-            {
-                ratecard_bundle: this.groupedArr[i][0].name,
-                children: []
-            }
-            );
-        }
-    }
-
-    insertObjInNestedChildrenArr() {
-        for (let i = 0; i < this.formattedObj.length; i++) {
-            for (let x = 0; x < this.groupedArr[i].length; x++) {
-                this.formattedObj[i].children.push(
-                    this.groupedArr[i][x]
-                );
-            }
-            }
-        this.formattedRowData = this.formattedObj;
-    }
-
-    /*
         ~~~~~~~~~~ Grid UI Interctions ~~~~~~~~~~
     */
     aggrid_gridSizeChanged(params) {
         params.api.sizeColumnsToFit();
     }
 
+    onSelectionChanged() {
+        this.gridApiDetails.setRowData([]);
+        const selectedRow = this.gridApi.getSelectedRows();
+        this.gridApiDetails.setRowData(selectedRow);
+    }
+
+    deselectAll() {
+        this.gridApi.deselectAll();
+    }
+
     /*
         ~~~~~~~~~~ UI Interactions ~~~~~~~~~~
     */
-        // click_attachRatecard(): void { // trigger on submit click
-        //     this.post_attachRateCard();
-        //     this.aggrid_attachRatecards();
-        //     this.closeDialog();
-        // }
+    handleSliderChange(params) {
+        const currentSliderValue = params.value;
+        this.currentSliderValue = currentSliderValue;
+        this.updateDetailGridData(currentSliderValue);
+    }
 
-        // aggrid_attachRatecards(): void {
-        //     const body = {
-        //         // name: this.getSelectedRateCardName(),
-        //     };
+    updateDetailGridData(currentSliderValue) {
+        const itemsToUpdate = [];
+        this.gridApiDetails.forEachNodeAfterFilterAndSort(function(rowNode) {
+            const data = rowNode.data;
+            data.priority = currentSliderValue;
+            itemsToUpdate.push(data);
+        });
 
-        //     this.event_onAdd.emit(body);
-        // }
+        this.gridApiDetails.updateRowData({update: itemsToUpdate });
+        this.gridApi.updateRowData({update: itemsToUpdate});
+    }
 
-        // closeDialog(): void { // close dialog
-        //     this.dialogRef.close();
-        // }
+    rowSelected(): void { // Toggle button boolean if rowSelected > 0
+        this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
+    }
+
+    toggleButtonStates(): boolean {
+        if ( this.gridSelectionStatus > 0 ) {
+          this.buttonToggleBoolean = false;
+        } else {
+          this.buttonToggleBoolean = true;
+        }
+        return this.buttonToggleBoolean;
+    }
+
+    click_attachRatecard(): void { // trigger on submit click
+        this.post_attachRateCard();
+        this.aggrid_attachRatecards();
+        this.closeDialog();
+    }
+
+    aggrid_attachRatecards(): void {
+        const body = this.gridApi.getSelectedRows();
+        this.event_onAdd.emit(body);
+    }
+
+    closeDialog(): void { // close dialog
+        this.dialogRef.close();
+    }
 }

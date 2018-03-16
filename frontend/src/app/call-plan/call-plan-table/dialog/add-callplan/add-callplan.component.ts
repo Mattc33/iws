@@ -62,26 +62,29 @@ export class AddCallPlanComponent implements OnInit {
     private callPlanObj = [];
 
     // Patterns
-        private currencyPattern = /^\d+\.\d{2}$/;
-        private numPattern = '^[0-9]+$';
+    private currencyPattern = /^\d+\.\d{2}$/;
+    private numPattern = '^[0-9]+$';
 
     // codes
-        private countryCodeList;
-        private planNumber = [
-            {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}, {num: 10}, 
-            {num: 11}, {num: 12}, {num: 13}, {num: 14}, {num: 15}, {num: 16}, {num: 17}, {num: 18}, {num: 19}, {num: 20}
-        ];
-        private planTypes = [
-            {code: 0, name: 'Pay as you go'},
-            {code: 1, name: 'Unlimited plan'},
-            {code: 2, name: 'Minute plan'},
-            {code: 3, name: 'Money plan'}
-        ];
-        private planPriorityList = [
-            {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}
-        ];
-        filteredOptions: Observable<any>;
-        private finalCallPlanObj;
+    private countryCodeList;
+    private planNumber = [
+        {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}, {num: 10}, 
+        {num: 11}, {num: 12}, {num: 13}, {num: 14}, {num: 15}, {num: 16}, {num: 17}, {num: 18}, {num: 19}, {num: 20}
+    ];
+    private planTypes = [
+        {code: 0, name: 'Pay as you go'},
+        {code: 1, name: 'Unlimited plan'},
+        {code: 2, name: 'Minute plan'},
+        {code: 3, name: 'Money plan'}
+    ];
+    private planPriorityList = [
+        {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}
+    ];
+    filteredOptions: Observable<any>;
+    private finalCallPlanObj;
+
+    // Internal Service
+    public callplan: string;
 
     constructor(
         public dialogRef: MatDialogRef<CallPlanTableComponent>,

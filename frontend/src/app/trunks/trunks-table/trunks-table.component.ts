@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ColumnApi } from 'ag-grid/dist/lib/columnController/columnController';
@@ -15,7 +15,7 @@ import { TrunksSharedService } from './../services/trunks.shared.service';
   templateUrl: './trunks-table.component.html',
   styleUrls: ['./trunks-table.component.scss']
 })
-export class TrunksTableComponent implements OnInit, AfterViewChecked {
+export class TrunksTableComponent implements OnInit {
 
     // AG grid
     private rowData;
@@ -41,14 +41,11 @@ export class TrunksTableComponent implements OnInit, AfterViewChecked {
         private trunksSharedService: TrunksSharedService,
     ) {
         this.rowSelection = 'multiple';
+        this.columnDefs = this.createColumnDefs();
     }
 
     ngOnInit() {
         this.get_allTrunksData();
-    }
-
-    ngAfterViewChecked() {
-        this.gridApi.sizeColumnsToFit();
     }
 
     /*
@@ -71,9 +68,9 @@ export class TrunksTableComponent implements OnInit, AfterViewChecked {
         ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
     */
     on_GridReady(params): void {
-        this.columnDefs = this.createColumnDefs();
         this.gridApi = params.api;
         this.columnApi = params.columnApi;
+        params.api.sizeColumnsToFit();
     }
 
     private createColumnDefs(): object {
