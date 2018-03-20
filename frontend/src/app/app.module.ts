@@ -90,6 +90,7 @@ import { DettachCodesComponent } from './call-plan/call-plan-table/dialog/dettac
 
 import { CallPlanService } from './call-plan/services/call-plan.api.service';
 import { CallPlanSharedService } from './call-plan/services/call-plan.shared.service';
+import { CodesSharedService } from './call-plan/services/codes.shared.service';
 
 // Accounts
 import { AccountsComponent } from './accounts/accounts.component';
@@ -146,7 +147,7 @@ import { RegistrationComponent } from './registration/registration.component';
         ImporterService, ImporterSharedService,
         RateCardsService, RateCardsSharedService,
         TrunksService, TrunksSharedService,
-        CallPlanService, CallPlanSharedService
+        CallPlanService, CallPlanSharedService, CodesSharedService,
     ], // Applications services
     bootstrap: [ AppComponent ],
     entryComponents: [

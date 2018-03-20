@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, ErrorStateMatcher } from '@angular/material';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 
@@ -11,6 +11,7 @@ import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-tab
 import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
 import { CarrierService } from './../../../../carrier/services/carrier.api.service';
+import { CodesSharedService } from './../../../services/codes.shared.service';
 
 /* Error when invalid control is dirty, touched, or submitted. */
 export class CarrierErrorStateMatcher implements ErrorStateMatcher {
@@ -34,7 +35,7 @@ export class AddCallPlanComponent implements OnInit {
     private addCarrierFormGroup: FormGroup;
     private attachCallPlanFormGroup: FormGroup;
     private attachCodesFormGroup: FormGroup;
-    private attachCountryCodeFormGroup: FormGroup;
+    private attachCountryCodesFormGroup: FormGroup;
 
     // callplan
     private carrierObj = [];
@@ -67,10 +68,7 @@ export class AddCallPlanComponent implements OnInit {
 
     // codes
     private countryCodeList;
-    private planNumber = [
-        {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}, {num: 10}, 
-        {num: 11}, {num: 12}, {num: 13}, {num: 14}, {num: 15}, {num: 16}, {num: 17}, {num: 18}, {num: 19}, {num: 20}
-    ];
+
     private planTypes = [
         {code: 0, name: 'Pay as you go'},
         {code: 1, name: 'Unlimited plan'},
@@ -86,16 +84,20 @@ export class AddCallPlanComponent implements OnInit {
     // Internal Service
     public callplan: string;
 
+
     constructor(
         public dialogRef: MatDialogRef<CallPlanTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
         private formBuilder: FormBuilder,
         private callPlanService: CallPlanService,
         private callPlanSharedService: CallPlanSharedService,
-        private carrierService: CarrierService
+        private carrierService: CarrierService,
+        private codesSharedService: CodesSharedService
     ) { }
 
     ngOnInit() {
+        this.countryCodeList = this.codesSharedService.getCountryCodes();
+
         this.addCarrierFormGroup = this.formBuilder.group({
             carrierCtrl: ['', Validators.required]
         });
@@ -122,14 +124,11 @@ export class AddCallPlanComponent implements OnInit {
             dayperiodCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
             plannumberCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]]
         });
-        this.attachCountryCodeFormGroup = this.formBuilder.group({
+        this.attachCountryCodesFormGroup = this.formBuilder.group({
             codes: this.formBuilder.array([
                 this.initCountryCodeFormGroup()
             ])
         });
-
-        // Call internal service and grab country codes json obj
-        this.callPlanSharedService.currentCountryCode.subscribe( receivedCountryCodeObj => this.countryCodeList = receivedCountryCodeObj);
 
         this.get_CarrierCodes();
         this.attachCallPlanFormGroup.get('validthroughCtrl').disable();
@@ -180,12 +179,12 @@ export class AddCallPlanComponent implements OnInit {
     }
 
     addCodes(): void {
-        const control = <FormArray>this.attachCountryCodeFormGroup.controls['codes'];
+        const control = <FormArray>this.attachCountryCodesFormGroup.controls['codes'];
             control.push(this.initCountryCodeFormGroup());
     }
 
-    removeAddress(index: number) {
-        const control = <FormArray>this.attachCountryCodeFormGroup.controls['codes'];
+    removeGroup(index: number) {
+        const control = <FormArray>this.attachCountryCodesFormGroup.controls['codes'];
         control.removeAt(index);
     }
 
@@ -233,28 +232,43 @@ export class AddCallPlanComponent implements OnInit {
 
     codesObjBuilder() {
         this.pushStaticCallPlanFieldToObj();
-        const finalCallPlanObj = this.finalCallPlanObj;
-
-        const countryCodeArr = this.attachCountryCodeFormGroup.value.codes;
-
-        for (let i = 0; i < countryCodeArr.length; i++) {
-            finalCallPlanObj['codes'].push(
-                {
-                    ori_cc: parseInt(countryCodeArr[i].originationCtrl),
-                    des_cc: parseInt(countryCodeArr[i].destinationCtrl),
-                    carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
-                    planType: this.attachCodesFormGroup.get('plantypeCtrl').value,
-                    priority: this.attachCodesFormGroup.get('planpriorityCtrl').value,
-                    dayPeriod: this.attachCodesFormGroup.get('dayperiodCtrl').value,
-                    planNumber: parseInt(this.attachCodesFormGroup.get('plannumberCtrl').value)
-                },
-            );
+        const countryCodeArr = this.attachCountryCodesFormGroup.get('codes').value;
+        for ( let i = 0; i < countryCodeArr.length; i++ ) {
+            const ori_cc = countryCodeArr[i].originationCtrl;
+            const destinationLen = countryCodeArr[i].destinationCtrl.length;
+            for ( let x = 0; x < destinationLen; x++ ) {
+                this.finalCallPlanObj.codes.push(
+                    {
+                        ori_cc: parseInt(ori_cc),
+                        dest_cc: parseInt(countryCodeArr[i].destinationCtrl[x]),
+                        carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
+                        planType: this.attachCodesFormGroup.get('plantypeCtrl').value,
+                        priority: this.attachCodesFormGroup.get('planpriorityCtrl').value,
+                        day_period: this.attachCodesFormGroup.get('dayperiodCtrl').value,
+                        planNumber: this.attachCodesFormGroup.get('plannumberCtrl').value
+                    },
+                );
+            }
         }
     }
 
     /*
         ~~~~~~~~~~ UI Interactions ~~~~~~~~~~~
     */
+    onSelectChangeDest(params) {
+        const formArrLen = this.attachCountryCodesFormGroup.get('codes').value.length;
+        for ( let i = 0; i < formArrLen; i++) {
+            const destinationCtrl = this.attachCountryCodesFormGroup.get('codes')['controls'][i].get('destinationCtrl').value;
+            for (let x = 0; x < destinationCtrl.length; x++) {
+                const destinationSetValue = this.attachCountryCodesFormGroup.get('codes')['controls'][i].get('destinationCtrl');
+                if (destinationCtrl[0] === '0') {
+                    destinationSetValue.setValue(['0']);
+                } else {
+                }
+            }
+        }
+    }
+
     click_addCallPlan() {
         this.post_callPlan();
         this.aggrid_addCallPlan();

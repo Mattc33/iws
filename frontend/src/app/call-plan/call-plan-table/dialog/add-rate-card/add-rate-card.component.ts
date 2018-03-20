@@ -191,6 +191,7 @@ export class AddRateCardComponent implements OnInit {
         const currentSliderValue = params.value;
         this.currentSliderValue = currentSliderValue;
         this.updateDetailGridData(currentSliderValue);
+        // this.gridApiDetails.
     }
 
     updateDetailGridData(currentSliderValue) {

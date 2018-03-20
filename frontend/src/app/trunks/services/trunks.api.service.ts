@@ -49,7 +49,7 @@ export class TrunksService {
         return this.http.put(this.url + 'trunks/' + trunkId, body)
             .map(res => res.json())
             .catch(this.handleError)
-            .do(data => console.log('server data:', data)); 
+            .do(data => console.log('server data:', data));
     }
 
     handleError(error: any): any {

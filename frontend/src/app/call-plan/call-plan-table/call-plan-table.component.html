@@ -18,7 +18,7 @@
         <mat-toolbar-row>
             <button (click)="openDialogDel()" [disabled]="toggleButtonStatus()" class="del"> <i class="fas fa-trash-alt"></i> </button>
             <button (click)="openDialogAddCallPlan()"> <i class="fas fa-plus"></i> Call Plan</button>
-            <button [disabled]="toggleButtonStatus()"> <i class="fas fa-server"></i> Send Callplan</button>
+            <button [disabled]="toggleButtonStatus()" (click)="click_sendToLCR()"> <i class="fas fa-server"></i> Send Callplan</button>
     
             <mat-form-field class="search-bar">
                     <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
@@ -82,7 +82,7 @@
                 <ag-grid-angular class="ag-theme-material" id="call-plans-codes" [animateRows]="true"
                     [columnDefs]="columnDefsCodes" [rowData]="" (rowSelected)="aggrid_rowSelected_codes($event)"
                     [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_codes_selectionChanged($event)" [suppressRowClickSelection]="true"
-                    [stopEditingWhenGridLosesFocus]="true" 
+                    [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged_codes($event)"
                     [enableFilter]="true" [floatingFilter]="true"
                     [enableSorting]="true"
                     [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"

@@ -260,22 +260,22 @@ export class UploadRatesDialogComponent implements OnInit {
             { destination: destination,
                 prefix: prefix,
                 buy_rate: buyrate,
-                buy_rate_minimum: buyrate,
-                buy_rate_increment: 0,
+                buy_rate_minimum: 1,
+                buy_rate_increment: 1,
                 sell_rate: sellrate,
-                sell_rate_minimum: sellrate,
-                sell_rate_increment: 0
+                sell_rate_minimum: 60,
+                sell_rate_increment: 60
             },
         );
         this.ratesPreviewObj.push(
             { destination: destination,
                 prefix: prefix,
                 buy_rate: buyrate,
-                buy_rate_minimum: buyrate,
-                buy_rate_increment: 0,
+                buy_rate_minimum: 1,
+                buy_rate_increment: 1,
                 sell_rate: sellrate,
-                sell_rate_minimum: sellrate,
-                sell_rate_increment: 0
+                sell_rate_minimum: 60,
+                sell_rate_increment: 60
             },
         );
     }

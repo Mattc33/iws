@@ -112,8 +112,28 @@ export class CallPlanTableComponent implements OnInit {
                 );
         }
 
-        private put_editCallPlan(callPlanObj, callplan_id): void {
+        put_editCallPlan(callPlanObj, callplan_id): void {
             this.callPlanService.put_editCallPlan(callPlanObj, callplan_id)
+                .subscribe(resp => console.log(resp));
+        }
+
+        put_editCodes(callplanId: number, codesId: number, body): void {
+            this.callPlanService.put_editPlanCode(callplanId, codesId, body)
+                .subscribe(resp => console.log(resp));
+        }
+
+        post_carrierToLCR(carrier_id: number, body: any): void {
+            this.callPlanService.post_carrierToLCR(carrier_id, body)
+                .subscribe(resp => console.log(resp));
+        }
+
+        post_ratecardsToLCR(ratecard_id: number, body: any): void {
+            this.callPlanService.post_ratecardsToLCR(ratecard_id, body)
+                .subscribe(resp => console.log(resp));
+        }
+
+        post_callplanToLCR(callplan_id: number, body: any): void {
+            this.callPlanService.post_trunksToLCR(callplan_id, body)
                 .subscribe(resp => console.log(resp));
         }
 
@@ -253,25 +273,25 @@ export class CallPlanTableComponent implements OnInit {
             return [
                 {
                     headerName: 'Codes', field: 'code', checkboxSelection: true,
-                    headerCheckboxSelection: true
+                    headerCheckboxSelection: true, width: 300,
                 },
                 {
-                    headerName: 'Origination Country', field: 'ori_cc',
+                    headerName: 'Origination Country', field: 'ori_cc', editable: true,
                 },
                 {
-                    headerName: 'Destination Country', field: 'des_cc',
+                    headerName: 'Destination Country', field: 'des_cc', editable: true,
                 },
                 {
-                    headerName: 'Carrier Code', field: 'carrier_code'
+                    headerName: 'Carrier Code', field: 'carrier_code',
                 },
                 {
-                    headerName: 'Plan Type', field: 'planType',
+                    headerName: 'Plan Type', field: 'planType', editable: true,
                 },
                 {
-                    headerName: 'Days in Code', field: 'day_period',
+                    headerName: 'Days in Code', field: 'day_period', editable: true,
                 },
                 {
-                    headerName: 'Plan Number', field: 'planNumber',
+                    headerName: 'Plan Number', field: 'planNumber', editable: true,
                 }
             ];
         }
@@ -434,11 +454,54 @@ export class CallPlanTableComponent implements OnInit {
             this.put_editCallPlan(detailObj, id);
         }
 
+        onCellValueChanged_codes(params) {
+            const callplanId = this.gridApi.getSelectedRows()[0].id;
+            const codesId = params.data.id;
+
+            const codesObj = {
+                ori_cc: parseInt(params.data.ori_cc),
+                des_cc: parseInt(params.data.des_cc),
+                carrier_code: params.data.carrier_code,
+                planType: parseInt(params.data.planType),
+                priority: parseInt(params.data.priority),
+                day_period: parseInt(params.data.day_period),
+                planNumber: parseInt(params.data.planNumber)
+            };
+
+            this.put_editCodes(callplanId, codesId, codesObj);
+        }
+
     /*
         ~~~~~~~~~~ Toolbar ~~~~~~~~~~
     */
         onQuickFilterChanged(): void { // external global search
             this.gridApi.setQuickFilter(this.quickSearchValue);
+        }
+
+        click_sendToLCR() {
+            this.sendCallplanToLCR();
+            this.sendRatecardToLCR();
+        }
+
+        sendCallplanToLCR() {
+            const callplan_id = this.selectedCallplanIndex;
+            const body = {};
+
+            console.log(callplan_id);
+
+            // this.post_callplanToLCR(callplan_id, body);
+        }
+
+        sendRatecardToLCR() {
+            const ratecardIdArr = [];
+            const body = {};
+            this.gridApiRatecards.forEachLeafNode( function(rowNode) {
+                ratecardIdArr.push( rowNode.data.id, );
+            });
+
+            for ( let i = 0; i < ratecardIdArr.length; i++) {
+                this.post_ratecardsToLCR(ratecardIdArr[i], body);
+            }
         }
 
     /*
@@ -516,6 +579,7 @@ export class CallPlanTableComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(() => {
             sub.unsubscribe();
+            
             console.log('The dialog was closed');
         });
     }
@@ -532,11 +596,12 @@ export class CallPlanTableComponent implements OnInit {
         });
 
         const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-            this.aggrid_addRow_codes(data);
         });
 
         dialogRef.afterClosed().subscribe(() => {
             sub.unsubscribe();
+            this.gridApi.deselectAll();
+            this.gridApi.selectIndex(this.selectedCallplanIndex, false, false);
             console.log('The dialog was closed');
         });
     }

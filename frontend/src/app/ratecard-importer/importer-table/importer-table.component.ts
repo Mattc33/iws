@@ -223,6 +223,14 @@ export class ImporterTableComponent implements OnInit {
         params.api.sizeColumnsToFit();
     }
 
+    expandAll(expand: boolean) {
+        this.gridApi.forEachNode((node) => {
+            if ( node.group) {
+                node.setExpanded(expand);
+            }
+        });
+    }
+
     /*
         ~~~~~~~~~~ Grid CRUD  ~~~~~~~~~~
     */

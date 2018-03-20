@@ -1,4 +1,8 @@
 <section id="grid-wrapper">
+    <div class="top-toolbar">
+        <button (click)="expandAll(true)"> <i class="fas fa-expand"></i> </button>
+        <button (click)="expandAll(false)"> <i class="fas fa-compress"></i> </button>
+    </div>
     <ag-grid-angular class="ag-theme-material" 
     [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
     [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"

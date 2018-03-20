@@ -158,7 +158,7 @@ export class TrunksTableComponent implements OnInit {
             carrier_id: params.data.carrier_id,
             trunk_name: params.data.trunk_name,
             trunk_ip: params.data.trunk_ip,
-            trunk_port: params.data.trunk_port,
+            trunk_port: parseInt(params.data.trunk_port),
             transport: params.data.transport,
             direction: params.data.direction,
             prefix: params.data.prefix,
@@ -167,6 +167,14 @@ export class TrunksTableComponent implements OnInit {
         };
 
         this.put_editTrunks(id, trunkObj);
+    }
+
+    /*
+        Toolbar UI
+    */
+    sendTrunksToLcr() {
+        const body = this.gridApi.getSelectedRows()[0];
+        const trunksId = this.gridApi.getSelectedRows()[0].cx_trunk_id;
     }
 
     /*

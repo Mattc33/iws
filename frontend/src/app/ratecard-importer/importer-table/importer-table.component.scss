@@ -10,6 +10,24 @@ section {
         /deep/ .teleu_db-buyrate-highlight { color: #8b0000; font-weight: bold; }
     }
 
+    .top-toolbar {
+        height: 30px;
+
+        button {
+            width: 30px; height: 30px;
+            background-color: Transparent;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #E0E0E0;
+        }
+
+        button:focus {
+            outline:0;
+        }
+    }
+
     mat-toolbar-row {
         width: 89vw; height: auto;
 

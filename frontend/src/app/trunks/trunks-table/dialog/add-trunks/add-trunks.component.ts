@@ -1,12 +1,20 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, ErrorStateMatcher } from '@angular/material';
+import { FormGroup, FormBuilder, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 
 import { TrunksTableComponent } from './../../trunks-table.component';
 
 import { TrunksService } from './../../../services/trunks.api.service';
 import { TrunksSharedService } from './../../../services/trunks.shared.service';
 import { CarrierService } from './../../../../carrier/services/carrier.api.service';
+
+/* Error when invalid control is dirty, touched, or submitted. */
+export class CarrierErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+      const isSubmitted = form && form.submitted;
+      return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    }
+}
 
 @Component({
   selector: 'app-add-trunks',
