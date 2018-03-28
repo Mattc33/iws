@@ -462,16 +462,19 @@ export class RateCardsTableComponent implements OnInit {
         openDialogAttachTrunks(): void {
             this.rateCardsSharedService.changeRowAllObj(this.rowRatecardObj);
 
-            const dialogRef = this.dialog.open(AttachTrunksDialogComponent, {});
+            const dialogRef = this.dialog.open(AttachTrunksDialogComponent, {
+                panelClass: 'ratecard-trunks-screen-dialog',
+                maxWidth: '90vw',
+                autoFocus: false
+            });
 
             const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-                console.log('--->');
-                console.table(data);
-                this.aggrid_trunks_addRow(data);
             });
 
             dialogRef.afterClosed().subscribe(() => {
                 sub.unsubscribe();
+                this.gridApi.deselectAll();
+                this.gridApi.selectIndex(this.selectedRatecardId, false, false);
                 console.log('The dialog was closed');
             });
         }

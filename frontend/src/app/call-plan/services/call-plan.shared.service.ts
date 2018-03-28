@@ -23,22 +23,18 @@ export class CallPlanSharedService {
 
   changeRowAll(rowAllId: number) {
     this.rowAllSource.next(rowAllId);
-    console.log('updated rowID: ' + rowAllId);
   }
 
   changeRowRatecards(rowRatecardsObj: object) {
     this.rowRatecardsObjSource.next(rowRatecardsObj);
-    console.log(rowRatecardsObj);
   }
 
   changeRowCodes(rowCodesObj: object) {
       this.rowCodesObjSource.next(rowCodesObj);
-      console.log(rowCodesObj);
   }
 
   changeCallPlanObj(callPlanObj: object) {
     this.callPlanObjSource.next(callPlanObj);
-    console.log(callPlanObj);
   }
 
 }

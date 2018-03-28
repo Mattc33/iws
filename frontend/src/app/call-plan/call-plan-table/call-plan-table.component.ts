@@ -65,6 +65,7 @@ export class CallPlanTableComponent implements OnInit {
     private rowIdAll: number;
     private callplanTitle: string;
     private selectedCallplanIndex;
+    private nodeSelection;
 
     constructor(
         private callPlanService: CallPlanService,
@@ -104,10 +105,11 @@ export class CallPlanTableComponent implements OnInit {
                         this.gridApiDetail.updateRowData({ add: [data] });
                         this.gridApiDetail2.updateRowData({ add: [data] });
 
-                        // Convert data
+                        // Convert data for ratecard table
                         const ratecardData = this.nestedAgGridService.formatDataToNestedArr(data.ratecards);
                         this.gridApiRatecards.setRowData( ratecardData );
-                        this.gridApiCodes.updateRowData({ add: data.codes });
+
+                        this.gridApiCodes.setRowData( data.codes );
                     },
                 );
         }
@@ -122,18 +124,8 @@ export class CallPlanTableComponent implements OnInit {
                 .subscribe(resp => console.log(resp));
         }
 
-        post_carrierToLCR(carrier_id: number, body: any): void {
-            this.callPlanService.post_carrierToLCR(carrier_id, body)
-                .subscribe(resp => console.log(resp));
-        }
-
-        post_ratecardsToLCR(ratecard_id: number, body: any): void {
-            this.callPlanService.post_ratecardsToLCR(ratecard_id, body)
-                .subscribe(resp => console.log(resp));
-        }
-
         post_callplanToLCR(callplan_id: number, body: any): void {
-            this.callPlanService.post_trunksToLCR(callplan_id, body)
+            this.callPlanService.post_callplanToLCR(callplan_id, body)
                 .subscribe(resp => console.log(resp));
         }
 
@@ -313,9 +305,9 @@ export class CallPlanTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
     */
-        aggrid_gridSizeChanged(params): void {
-            params.api.sizeColumnsToFit();
-        }
+    aggrid_gridSizeChanged(params): void {
+        params.api.sizeColumnsToFit();
+    }
 
         /*
             ~~~~~ Selection ~~~~~
@@ -328,7 +320,7 @@ export class CallPlanTableComponent implements OnInit {
 
             this.rowSelectionAll = this.gridApi.getSelectedRows(); // pass global row obj to row selection global var
             this.rowIdAll = this.rowSelectionAll[0].id; // pass callplan row id to global var
-            this.callplanTitle = this.rowSelectionAll[0].title;
+            this.callplanTitle = this.rowSelectionAll[0].title; // pass call plan title to ratecard dialog
 
             this.get_specificCallPlanData(this.rowIdAll);
         }
@@ -413,7 +405,9 @@ export class CallPlanTableComponent implements OnInit {
         }
 
         aggrid_addRow_codes(obj): void {
-            this.gridApiCodes.updateRowData({ add: [obj] });
+            // this.gridApiCodes.updateRowData({ add: obj });
+            this.gridApi.deselectAll();
+            this.gridApi.selectNode(this.nodeSelection);
         }
 
         aggrid_addRow_callplans(obj): void {
@@ -480,64 +474,51 @@ export class CallPlanTableComponent implements OnInit {
 
         click_sendToLCR() {
             this.sendCallplanToLCR();
-            this.sendRatecardToLCR();
         }
 
         sendCallplanToLCR() {
-            const callplan_id = this.selectedCallplanIndex;
+            const callplan_id = this.gridApi.getSelectedNodes()[0].data.id;
             const body = {};
 
             console.log(callplan_id);
 
-            // this.post_callplanToLCR(callplan_id, body);
-        }
-
-        sendRatecardToLCR() {
-            const ratecardIdArr = [];
-            const body = {};
-            this.gridApiRatecards.forEachLeafNode( function(rowNode) {
-                ratecardIdArr.push( rowNode.data.id, );
-            });
-
-            for ( let i = 0; i < ratecardIdArr.length; i++) {
-                this.post_ratecardsToLCR(ratecardIdArr[i], body);
-            }
+            this.post_callplanToLCR(callplan_id, body);
         }
 
     /*
         ~~~~~~~~~~ Dialog CallPlans ~~~~~~~~~~
     */
-        openDialogDel(): void {
-            this.callPlanSharedService.changeRowAll(this.rowIdAll);
+    openDialogDel(): void {
+        this.callPlanSharedService.changeRowAll(this.rowIdAll);
 
-            const dialogRef = this.dialog.open(DelCallPlanComponent, {});
+        const dialogRef = this.dialog.open(DelCallPlanComponent, {});
 
-            const sub = dialogRef.componentInstance.event_onDel
-            .subscribe((data) => { // do something with event data
-                this.aggrid_delRow(data);
-            });
+        const sub = dialogRef.componentInstance.event_onDel
+        .subscribe((data) => { // do something with event data
+            this.aggrid_delRow(data);
+        });
 
-            dialogRef.afterClosed().subscribe(() => {
-                sub.unsubscribe();
-                console.log('The dialog was closed');
-            });
-        }
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
+            console.log('The dialog was closed');
+        });
+    }
 
-        openDialogAddCallPlan(): void { // Add a Call Plan
-            const dialogRef = this.dialog.open(AddCallPlanComponent, {
-                height: 'auto',
-                width: '50%'
-            });
+    openDialogAddCallPlan(): void { // Add a Call Plan
+        const dialogRef = this.dialog.open(AddCallPlanComponent, {
+            height: 'auto',
+            width: '50%'
+        });
 
-            const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-                this.aggrid_addRow_callplans(data);
-            });
+        const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
+            this.aggrid_addRow_callplans(data);
+        });
 
-            dialogRef.afterClosed().subscribe(() => {
-                sub.unsubscribe();
-                console.log('The dialog was closed');
-            });
-        }
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
+            console.log('The dialog was closed');
+        });
+    }
 
     /*
         ~~~~~~~~~~ Dialog Rate Card ~~~~~~~~~~
@@ -552,14 +533,7 @@ export class CallPlanTableComponent implements OnInit {
             data: this.gridApi.getSelectedRows()[0].title
         });
 
-        const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-            console.log('aggrid data --->');
-            console.log(data);
-            this.aggrid_addRow_ratecards(data);
-        });
-
         dialogRef.afterClosed().subscribe(() => {
-            sub.unsubscribe();
             this.gridApi.deselectAll();
             this.gridApi.selectIndex(this.selectedCallplanIndex, false, false);
             console.log('The dialog was closed');
@@ -579,7 +553,6 @@ export class CallPlanTableComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(() => {
             sub.unsubscribe();
-            
             console.log('The dialog was closed');
         });
     }
@@ -595,11 +568,7 @@ export class CallPlanTableComponent implements OnInit {
             width: '40%',
         });
 
-        const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-        });
-
         dialogRef.afterClosed().subscribe(() => {
-            sub.unsubscribe();
             this.gridApi.deselectAll();
             this.gridApi.selectIndex(this.selectedCallplanIndex, false, false);
             console.log('The dialog was closed');

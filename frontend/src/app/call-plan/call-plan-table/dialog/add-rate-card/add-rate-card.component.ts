@@ -22,9 +22,6 @@ declare global { // declare global interface, set custom fn groupBy with type an
 })
 export class AddRateCardComponent implements OnInit {
 
-    // Events
-    event_onAdd = new EventEmitter();
-
     // AG grid setup props
     private rowData;
     private columnDefs;
@@ -191,7 +188,6 @@ export class AddRateCardComponent implements OnInit {
         const currentSliderValue = params.value;
         this.currentSliderValue = currentSliderValue;
         this.updateDetailGridData(currentSliderValue);
-        // this.gridApiDetails.
     }
 
     updateDetailGridData(currentSliderValue) {
@@ -221,13 +217,7 @@ export class AddRateCardComponent implements OnInit {
 
     click_attachRatecard(): void { // trigger on submit click
         this.post_attachRateCard();
-        this.aggrid_attachRatecards();
         this.closeDialog();
-    }
-
-    aggrid_attachRatecards(): void {
-        const body = this.gridApi.getSelectedRows();
-        this.event_onAdd.emit(body);
     }
 
     closeDialog(): void { // close dialog

@@ -104,7 +104,6 @@ export class AddCallPlanComponent implements OnInit {
         this.attachCallPlanFormGroup = this.formBuilder.group({
             titleCtrl: ['', Validators.required],
             subtitleCtrl: [''],
-            descriptionCtrl: ['', Validators.required],
             availableCtrl: ['', Validators.required],
             validthroughCtrl: ['', Validators.required],
             buypriceCtrl: ['', [Validators.required, Validators.pattern(this.currencyPattern)]],
@@ -115,7 +114,8 @@ export class AddCallPlanComponent implements OnInit {
             maxdestinationCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
             maxminutesCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
             activewhenCtrl: ['', Validators.required],
-            promoCtrl: ['', Validators.required]
+            promoCtrl: ['', Validators.required],
+            descriptionCtrl: ['', Validators.required]
         });
         this.attachCodesFormGroup = this.formBuilder.group({
             carrierCtrl: ['', Validators.required],
@@ -226,6 +226,7 @@ export class AddCallPlanComponent implements OnInit {
             maxMinutes: maxMinutes,
             activeWhen: this.attachCallPlanFormGroup.get('activewhenCtrl').value,
             isPurchasable: this.attachCallPlanFormGroup.get('promoCtrl').value,
+            description: this.attachCallPlanFormGroup.get('descriptionCtrl').value,
             codes: []
         };
     }
@@ -296,6 +297,7 @@ export class AddCallPlanComponent implements OnInit {
         this.attachCallPlanFormGroup.get('maxminutesCtrl').setValue(`0`);
         this.attachCallPlanFormGroup.get('activewhenCtrl').setValue(`IMMEDIATELY`);
         this.attachCallPlanFormGroup.get('promoCtrl').setValue(true);
+        this.attachCallPlanFormGroup.get('descriptionCtrl').setValue('this is a description');
         console.log(this.attachCallPlanFormGroup.value);
     }
 

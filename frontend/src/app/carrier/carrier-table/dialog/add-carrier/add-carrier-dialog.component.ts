@@ -6,6 +6,7 @@ import { CarrierTableComponent } from './../../carrier-table.component';
 
 import { CarrierService } from '../../../services/carrier.api.service';
 import { CarrierSharedService } from './../../../services/carrier.shared.service';
+import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
 
 /* Error when invalid control is dirty, touched, or submitted. */
 export class CarrierErrorStateMatcher implements ErrorStateMatcher {
@@ -53,7 +54,8 @@ export class AddCarrierDialogComponent implements OnInit {
         public dialogRef: MatDialogRef <CarrierTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private formBuilder: FormBuilder,
-        private carrierService: CarrierService
+        private carrierService: CarrierService,
+        private snackbarSharedService: SnackbarSharedService
     ) {}
 
     ngOnInit() {
@@ -66,6 +68,24 @@ export class AddCarrierDialogComponent implements OnInit {
             tierCtrl: ['', Validators.required],
             codeCtrl: ['', [Validators.required, Validators.pattern('[A-Z]{3}')]]
         });
+    }
+
+    /*
+        ~~~~~~~~~~ Services ~~~~~~~~~~
+    */
+    post_addCarrier(body) {
+        this.carrierService.post_AddRow(body)
+            .subscribe(
+                resp => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this.snackbarSharedService.snackbar_success('Carrier successfully inserted.', 5000);
+                    } else {
+                        alert(resp);
+                    }
+                },
+                err => {console.log(err); }
+            );
     }
 
     formCarrierObj() {
@@ -87,11 +107,6 @@ export class AddCarrierDialogComponent implements OnInit {
         this.closeDialog();
     }
 
-    post_addCarrier(body) {
-        this.carrierService.post_AddRow(body)
-            .subscribe(resp => console.log(resp));
-    }
-
     aggrid_addCarrier(body) {
         this.event_onAdd.emit(body);
     }
@@ -99,4 +114,10 @@ export class AddCarrierDialogComponent implements OnInit {
     closeDialog(): void {
       this.dialogRef.close();
     }
+
+    /*
+        ~~~~~~~~~~ snackbar ~~~~~~~~~~~
+    */
+
+
 }

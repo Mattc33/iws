@@ -7,6 +7,7 @@ import { AddCarrierDialogComponent } from '../carrier-table/dialog/add-carrier/a
 
 import { CarrierService } from './../services/carrier.api.service';
 import { CarrierSharedService } from './../services/carrier.shared.service';
+import { SnackbarSharedService } from './../../global-service/snackbar.shared.service';
 
 @Component({
   selector: 'app-carrier-table',
@@ -36,7 +37,8 @@ export class CarrierTableComponent implements OnInit {
     constructor( // inject your service
         private carrierService: CarrierService,
         private carrierSharedService: CarrierSharedService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private snackbarSharedService: SnackbarSharedService
     ) {
         this.columnDefs = this.createColumnDefs();
         this.rowSelection = 'single';
@@ -60,7 +62,15 @@ export class CarrierTableComponent implements OnInit {
 
     put_editCarrier(carrierObj, id) {
         this.carrierService.put_EditCarrier(carrierObj, id)
-            .subscribe(resp => console.log(resp));
+            .subscribe(resp => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this.snackbarSharedService.snackbar_success('Edit Successful.', 5000);
+                    } else {
+
+                    }
+                }
+            );
     }
 
     /*

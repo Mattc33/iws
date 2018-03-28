@@ -12,12 +12,8 @@ import { FileSelectDirective } from 'ng2-file-upload';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MatButtonModule, MatInputModule, MatStepperModule, MatSelectModule } from '@angular/material';
 import { MatIconModule, MatRadioModule, MatDialogModule, MatDatepickerModule } from '@angular/material';
-import { MatNativeDateModule, MatAutocompleteModule, MatSliderModule } from '@angular/material';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatNativeDateModule, MatAutocompleteModule, MatSliderModule, MatSnackBarModule } from '@angular/material';
+import { MatToolbarModule, MatTabsModule, MatExpansionModule, MatCheckboxModule } from '@angular/material';
 
 /* -------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -28,6 +24,9 @@ import { TopNavComponent } from './top-nav/top-nav.component';
 
 // Global Services
 import { NestedAgGridService } from './global-service/nestedAgGrid.shared.service';
+import { SnackbarSharedService } from './global-service/snackbar.shared.service';
+import { SuccessSnackbarComponent } from './snackbars/success/success.snackbar.component';
+import { ErrorSnackbarComponent } from './snackbars/error/error.snackbar.component';
 
 // Third Party Components
 import { AgGridModule } from 'ag-grid-angular';
@@ -98,6 +97,12 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 
+// LCR
+import { LcrComponent } from './lcr/lcr.component';
+import { LcrTableComponent } from './lcr/lcr-table/lcr-table.component';
+
+import { LCRService } from './lcr/services/lcr.api.service';
+
 
 @NgModule({
   declarations:
@@ -105,15 +110,16 @@ import { RegistrationComponent } from './registration/registration.component';
     AppComponent, SideNavComponent, TopNavComponent, LoginComponent, RegistrationComponent, // Main
     DashboardComponent, // Dashboard
     CarrierComponent, CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
+    RatecardImporterComponent, ImporterTableComponent, // Importer
     RateCardsComponent, RateCardsTableComponent, AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, // RateCards
     UploadRatesDialogComponent,
     TrunksComponent,  TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DeleteRatesComponent, // Trunks
     DetachTrunksComponent,
     CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
     AddRateCardComponent, AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
+    LcrComponent, LcrTableComponent, // LCR
     AccountsComponent,
-    RatecardImporterComponent,
-    ImporterTableComponent,
+    SuccessSnackbarComponent, ErrorSnackbarComponent,
   ],
   imports:
   [
@@ -124,8 +130,8 @@ import { RegistrationComponent } from './registration/registration.component';
     PapaParseModule,
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
-    MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatTooltipModule, MatDatepickerModule, MatNativeDateModule,
-    MatTabsModule, MatAutocompleteModule, MatExpansionModule, MatSliderModule,
+    MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatDatepickerModule, MatNativeDateModule,
+    MatTabsModule, MatAutocompleteModule, MatExpansionModule, MatSliderModule, MatSnackBarModule,
     // Ag Grid & Routing
     AgGridModule.withComponents([ ]),
     RouterModule.forRoot([
@@ -138,19 +144,22 @@ import { RegistrationComponent } from './registration/registration.component';
       {path: 'call-plan', component: CallPlanComponent},
       {path: 'accounts', component: AccountsComponent},
       {path: 'login', component: LoginComponent},
-      {path: 'registration', component: RegistrationComponent}
+      {path: 'registration', component: RegistrationComponent},
+      {path: 'lcr', component: LcrComponent}
     ])
   ],
     providers: [
-        NestedAgGridService,
+        NestedAgGridService, SnackbarSharedService, // Global services
         CarrierService, CarrierSharedService,
         ImporterService, ImporterSharedService,
         RateCardsService, RateCardsSharedService,
         TrunksService, TrunksSharedService,
         CallPlanService, CallPlanSharedService, CodesSharedService,
+        LCRService,
     ], // Applications services
     bootstrap: [ AppComponent ],
     entryComponents: [
+        SuccessSnackbarComponent, ErrorSnackbarComponent,
         AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
         UploadRatesDialogComponent, // Importer
         AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, // Ratecards

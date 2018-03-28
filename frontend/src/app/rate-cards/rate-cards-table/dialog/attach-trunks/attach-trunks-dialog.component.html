@@ -1,35 +1,44 @@
-<mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
-    
-    <!-- Enter Rate Card Name Step -->
-    <mat-step [stepControl]="trunksFormGroup" [completed]="false">
-        <form [formGroup]="trunksFormGroup">
-            <ng-template matStepLabel>Enter Rate Card Name</ng-template>
-                <mat-form-field>
-                    <mat-select placeholder="Select Trunks" formControlName="trunksCtrl">
-                        <mat-option *ngFor="let option of trunksFormObj" [value]="option.name">
-                            {{option.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-            </div>
-        </form>
-    </mat-step>
-    
-    <!-- Details & Finalize  -->
-    <mat-step [completed]="false">
-        <ng-template matStepLabel>Review, Submit</ng-template>
-        <div class="details">
-            {{extract_trunksId()}}
-            <hr>
-            Press Submit to add new rate card. <br><br>
-        </div>
-        <div>
-            <button mat-button matStepperPrevious>Back</button>  
-            <button mat-button (click)="click_attachTrunks()">Submit</button>
-        </div>
-    </mat-step>
-    
-</mat-horizontal-stepper>
+<div mat-dialog-title> Insert Trunk into Ratecards:
+    <button mat-button class="close" (click)="closeDialog()"> Close Dialog </button>
+</div>
+
+<div class="ratecardAll-container">
+    <ag-grid-angular id="ratecardgroup-table" class="ag-theme-material" 
+    [columnDefs]="columnDefs" [rowData]="rowData"
+    [enableFilter]="true" [floatingFilter]="true"
+    [rowSelection]="rowSelection" [suppressRowClickSelection]="true" [groupSelectsChildren]="true" 
+    [enableSorting]="true"
+    [enableColResize]="true"
+    [getNodeChildDetails]="getNodeChildDetails"
+    [pagination]="true" [paginationAutoPageSize]="true"
+
+    (gridReady)="on_GridReady($event)"
+    >
+    </ag-grid-angular>
+    <div class="toolbar-ratecards-list">
+        <button mat-button (click)="deselectAll()"> Deselect All </button>
+    </div>
+</div>
+
+<div class="trunk-container">
+    <ag-grid-angular id="trunk-table" class="ag-theme-material" 
+    [columnDefs]="columnDefsTrunk" [rowData]="rowDataTrunk"
+    [enableFilter]="true" [floatingFilter]="true"
+    [enableColResize]="true" [enableSorting]="true"
+    (selectionChanged)="onSelectionChangedTrunk($event)"
+    (gridReady)="on_GridReady_trunk($event)"
+    >   
+    </ag-grid-angular>
+</div>
+<div class="ratecard-importer">
+    <ag-grid-angular id="review-table" class="ag-theme-material" 
+    [columnDefs]="columnDefsReview" [rowData]=""
+    [enableFilter]="true" [floatingFilter]="true"
+    [enableColResize]="true" [enableSorting]="true"
+    [pagination]="true" [paginationAutoPageSize]="true"
+    (gridReady)="on_GridReady_review($event)"
+    >
+    </ag-grid-angular>
+    <button mat-button class="submit" (click)="click_attachTrunks()"> Attach Trunks </button>
+</div>
+

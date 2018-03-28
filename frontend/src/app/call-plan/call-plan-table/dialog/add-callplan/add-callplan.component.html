@@ -136,6 +136,13 @@
                 </mat-select>
             </mat-form-field>  
 
+            <mat-form-field>
+                <input matInput placeholder="Description" formControlName="descriptionCtrl" >
+                <mat-error *ngIf="attachCallPlanFormGroup.get('descriptionCtrl').hasError('required')">
+                    Call plan rank is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+
         <div> 
             <button mat-button matStepperPrevious >Back</button>
             <button mat-button matStepperNext [disabled]="

@@ -16,7 +16,7 @@ import { CodesSharedService } from './../../../services/codes.shared.service';
 })
 export class AddCodeComponent implements OnInit {
 
-    event_onAdd = new EventEmitter();
+    // event_onAdd = new EventEmitter();
 
     // Form Group
     private addCallPlanFormGroup: FormGroup;
@@ -153,12 +153,12 @@ export class AddCodeComponent implements OnInit {
                     this.finalCodesObj.push(
                         {
                             ori_cc: parseInt(ori_cc),
-                            dest_cc: parseInt(countryCodeArr[i].destinationCtrl[x]),
+                            des_cc: parseInt(countryCodeArr[i].destinationCtrl[x]),
                             carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
                             planType: this.attachCodesFormGroup.get('plantypeCtrl').value,
                             priority: this.attachCodesFormGroup.get('planpriorityCtrl').value,
-                            day_period: this.attachCodesFormGroup.get('dayperiodCtrl').value,
-                            planNumber: this.attachCodesFormGroup.get('plannumberCtrl').value
+                            day_period: parseInt(this.attachCodesFormGroup.get('dayperiodCtrl').value),
+                            planNumber: parseInt(this.attachCodesFormGroup.get('plannumberCtrl').value)
                         },
                     );
                 }
@@ -170,13 +170,13 @@ export class AddCodeComponent implements OnInit {
     */
         click_attachCodes(): void {
             this.post_attachCodes();
-            this.aggrid_attachCodes();
+            // this.aggrid_attachCodes();
             this.closeDialog();
         }
 
-        aggrid_attachCodes(): void {
-            this.event_onAdd.emit();
-        }
+        // aggrid_attachCodes(): void {
+        //     this.event_onAdd.emit(this.finalCodesObj);
+        // }
 
         post_attachCodes() {
             for ( let i = 0; i < this.finalCodesObj.length; i++) {
