@@ -30,6 +30,10 @@ pre {
     margin-bottom: 2%;
 }
 
-/deep/ .mat-horizontal-stepper-header{
-    pointer-events: none !important;
+#trunks-table {
+    height: 50vh; width: 100%;
 }
+
+// /deep/ .mat-horizontal-stepper-header{
+//     pointer-events: none !important;
+// }

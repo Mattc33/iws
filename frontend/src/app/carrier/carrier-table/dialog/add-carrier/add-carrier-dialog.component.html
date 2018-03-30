@@ -31,7 +31,7 @@
 
             <mat-form-field class="half-width">
                 <input matInput placeholder="Phone Number" formControlName="phoneCtrl">
-                <mat-error *ngIf="addCarrierFormGroup.get('phoneCtrl').hasError('email') && !addCarrierFormGroup.get('phoneCtrl').hasError('required')">
+                <mat-error *ngIf="addCarrierFormGroup.get('phoneCtrl').hasError('pattern') && !addCarrierFormGroup.get('phoneCtrl').hasError('required')">
                     Please enter a valid Phone Number
                 </mat-error>
                 <mat-error *ngIf="addCarrierFormGroup.get('phoneCtrl').hasError('required')">

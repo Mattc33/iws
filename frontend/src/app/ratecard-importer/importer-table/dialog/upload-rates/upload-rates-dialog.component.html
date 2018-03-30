@@ -91,14 +91,34 @@
     
     <!-- Details & Finalize  -->
     <mat-step [completed]="false">
-        <ng-template matStepLabel>Review, Submit</ng-template>
+        <ng-template matStepLabel>Review</ng-template>
         <div class="details">
             <pre>{{finalRatecardPreviewObj | json}}</pre>
         </div>
         <div>
             <button mat-button matStepperPrevious>Back</button>
-            <button mat-button (click)="click_addRates()" >Submit</button>
+            <button mat-button matStepperNext (click)="post_addRates()" >Next</button>
         </div>
+    </mat-step>
+
+    <!-- Add Trunks -->
+    <mat-step [completed]="false">
+        <ng-template matStepLabel>Attach Trunk to Ratecards, Submit</ng-template>
+        <ag-grid-angular id="trunks-table" class="ag-theme-material" [animateRows]="true"
+        [columnDefs]="columnDefs" [rowData]="rowData" [suppressRowClickSelection]="true" (rowSelected)="rowSelected($event)"
+        [rowSelection]="rowSelection"
+        [enableFilter]="true" [floatingFilter]="true"
+        [enableSorting]="true" [enableColResize]="true"
+        [pagination]="true" [paginationAutoPageSize]="true"
+        [suppressNoRowsOverlay]="true" [enableCellChangeFlash]="true"
+
+        (gridReady)="on_GridReady($event)"
+    >
+    </ag-grid-angular>
+    <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="click_addRates()" [disabled]="toggleButtonStates()">Submit</button>
+    </div>
     </mat-step>
     
 </mat-horizontal-stepper>

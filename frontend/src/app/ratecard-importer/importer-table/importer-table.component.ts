@@ -4,37 +4,37 @@ import { GridApi, ColumnApi } from 'ag-grid';
 
 import { ImporterService } from './../services/importer.api.service';
 import { ImporterSharedService } from './../services/importer.shared.service';
+import { RateCardsService } from './../../rate-cards/services/rate-cards.api.service';
+import { SnackbarSharedService } from './../../global-service/snackbar.shared.service';
 
 import { UploadRatesDialogComponent } from './dialog/upload-rates/upload-rates-dialog.component';
-import { constructDependencies } from '@angular/core/src/di/reflective_provider';
 
 @Component({
     selector: 'app-importer-table',
     templateUrl: './importer-table.component.html',
-    styleUrls: ['./importer-table.component.scss'],
-    providers: [ ImporterService ]
+    styleUrls: ['./importer-table.component.scss']
 })
 export class ImporterTableComponent implements OnInit {
 
     // row data and column defs
     private rowData;
     private columnDefs;
+
+    // gridApi & gridUI
+    private gridApi: GridApi;
     private getNodeChildDetails;
     private rowSelection;
     private quickSearchValue = '';
 
-    // gridApi and columnApi
-    private gridApi: GridApi;
-    private columnApi: ColumnApi;
-
-    // Shared Service props
+    // Internal Service props
     private rowObj;
     private postTableArr;
 
     constructor(
         private importerService: ImporterService,
         private importerSharedService: ImporterSharedService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private rateCardsService: RateCardsService
     ) {
         this.columnDefs = this.createColumnDefs();
     }
@@ -54,13 +54,22 @@ export class ImporterTableComponent implements OnInit {
             .subscribe(resp => console.log(resp));
     }
 
+    post_attachTrunkToRatecard(ratecardId: number, trunkId: number) {
+        this.rateCardsService.post_AttachTrunk(ratecardId, trunkId)
+            .subscribe(resp => console.log(resp));
+    }
+
+    put_editTeleuDbRates(teleu_db_rate_id: number, body: any) {
+        this.rateCardsService.put_EditTeleuDbRates(teleu_db_rate_id, body)
+            .subscribe(resp => console.log(resp));
+    }
+
     /*
         ~~~~~~~~~~ AG Grid Initialization ~~~~~~~~~~
     */
     on_GridReady(params): void {
         this.gridApi = params.api;
-        this.columnApi = params.columnApi;
-        params.api.sizeColumnsToFit(); // generate columns in contructor 1st before applying grid size
+        params.api.sizeColumnsToFit();
     }
 
     private createColumnDefs() {
@@ -110,7 +119,6 @@ export class ImporterTableComponent implements OnInit {
                             const percent = ((diff) / params.data.teleu_db_buy_rate) * 100;
                             const diffFixed = diff.toFixed(4);
                             const percentFixed = percent.toFixed(2);
-
                             return `${diffFixed}(${percentFixed}%)`;
                         } else {
                             return '';
@@ -237,6 +245,7 @@ export class ImporterTableComponent implements OnInit {
     onCellValueChanged(params): void {
         const teleu_rate_id = params.data.teleu_rate_id;
         const private_rate_id = params.data.private_rate_id;
+        const teleu_db_rate_id = params.data.teleu_db_rate_id;
         const body_TeleU = {
             buy_rate: parseFloat(params.data.teleu_buy_rate),
             sell_rate: parseFloat(params.data.teleu_sell_rate)
@@ -245,12 +254,20 @@ export class ImporterTableComponent implements OnInit {
             buy_rate: parseFloat(params.data.private_buy_rate),
             sell_rate: parseFloat(params.data.private_sell_rate)
         };
+        const body_TeleU_DB = {
+            buy_rate: parseFloat(params.data.teleu_db_buy_rate),
+            sell_rate: parseFloat(params.data.teleu_db_sell_rate),
+            isFixed: JSON.parse(params.data.fixed);
+        };
 
         if ( params.data.teleu_buy_rate ) {
             this.put_EditRates(teleu_rate_id, body_TeleU);
         }
         if ( params.data.private_buy_rate ) {
             this.put_EditRates(private_rate_id, body_Private);
+        }
+        if ( params.data.teleu_db_buy_rate ) {
+            this.put_editTeleuDbRates(teleu_db_rate_id, body_TeleU_DB);
         }
 
         params.api.redrawRows(); // reset view for css changes on edit
@@ -261,9 +278,30 @@ export class ImporterTableComponent implements OnInit {
     */
     openDialogUpload(): void {
         const dialogRef = this.dialog.open(UploadRatesDialogComponent, {
+            width: '60vw'
+        });
+
+        const sub = dialogRef.componentInstance.event_passTrunkId.subscribe((data) => {
+            const ratecardIdArr = [];
+            const trunkId = data;
+
+            this.gridApi.forEachNode( function(rowNode) {
+                if ( rowNode.data['ratecard_id (Private)'] ) {
+                    ratecardIdArr.push( rowNode.data['ratecard_id (Private)'], );
+                }
+                if ( rowNode.data['ratecard_id (TeleU)'] ) {
+                    ratecardIdArr.push(rowNode.data['ratecard_id (TeleU)'], );
+                } else {
+                }
+            });
+
+            for ( let i = 0; i < ratecardIdArr.length; i ++ ) {
+                this.post_attachTrunkToRatecard(ratecardIdArr[i], trunkId);
+            }
         });
 
         dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
             console.log('The dialog was closed');
         });
     }

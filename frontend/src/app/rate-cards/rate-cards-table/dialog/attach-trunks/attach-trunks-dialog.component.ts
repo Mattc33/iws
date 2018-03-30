@@ -8,6 +8,7 @@ import { RateCardsService } from '../../../services/rate-cards.api.service';
 import { RateCardsSharedService } from './../../../services/rate-cards.shared.service';
 import { TrunksService } from './../../../../trunks/services/trunks.api.service';
 import { NestedAgGridService } from './../../../../global-service/nestedAgGrid.shared.service';
+import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
 
 @Component({
     selector: 'app-attach-trunks-dialog',
@@ -52,7 +53,8 @@ export class AttachTrunksDialogComponent implements OnInit {
         private rateCardsService: RateCardsService,
         private rateCardsSharedService: RateCardsSharedService,
         private trunksService: TrunksService,
-        private nestedAgGridService: NestedAgGridService
+        private nestedAgGridService: NestedAgGridService,
+        private snackbarSharedService: SnackbarSharedService
     ) {
         this.getNodeChildDetails = this.setGroups();
         this.columnDefs = this.createColumnDefs();
@@ -89,7 +91,14 @@ export class AttachTrunksDialogComponent implements OnInit {
 
     post_attachTrunksToRatecard(ratecardId: number, trunkId: number): void {
         this.rateCardsService.post_AttachTrunk(ratecardId, trunkId)
-            .subscribe(resp => console.log(resp));
+            .subscribe((resp: Response) => {
+                    console.log(resp.status);
+                    if ( resp.status === 200 ) {
+                        this.snackbarSharedService.snackbar_success('Trunk Successfully attached to Ratecard.', 5000);
+                    } else {
+                    }
+                }
+            );
     }
 
     /*
@@ -205,7 +214,7 @@ export class AttachTrunksDialogComponent implements OnInit {
                     offer: selectedRatecards[i].offer,
                     carrier_name: selectedRatecards[i].carrier_name,
                     trunk_name: selectedTrunk[0].trunk_name,
-                    cx_trunk_id: selectedTrunk[0].cx_trunk_id
+                    trunk_id: selectedTrunk[0].id
                 },
             );
         }
@@ -218,10 +227,12 @@ export class AttachTrunksDialogComponent implements OnInit {
             finalRatecardToTrunkArr.push(
                 {
                     ratecard_id: rowNode.data.ratecard_id,
-                    trunk_id: rowNode.data.cx_trunk_id
+                    trunk_id: rowNode.data.trunk_id
                 },
             );
         });
+
+        console.log(finalRatecardToTrunkArr);
 
         for ( let i = 0; i < finalRatecardToTrunkArr.length; i++ ) {
             this.post_attachTrunksToRatecard(finalRatecardToTrunkArr[i].ratecard_id, finalRatecardToTrunkArr[i].trunk_id);

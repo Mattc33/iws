@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { GridApi, ColumnApi } from 'ag-grid';
+import { GridApi } from 'ag-grid';
 
 import { DelCarrierDialogComponent } from '../carrier-table/dialog/del-carrier/del-carrier-dialog.component';
 import { AddCarrierDialogComponent } from '../carrier-table/dialog/add-carrier/add-carrier-dialog.component';
@@ -8,6 +8,7 @@ import { AddCarrierDialogComponent } from '../carrier-table/dialog/add-carrier/a
 import { CarrierService } from './../services/carrier.api.service';
 import { CarrierSharedService } from './../services/carrier.shared.service';
 import { SnackbarSharedService } from './../../global-service/snackbar.shared.service';
+import { ToggleButtonStateService } from './../../global-service/buttonStates.shared.service';
 
 @Component({
   selector: 'app-carrier-table',
@@ -21,24 +22,23 @@ export class CarrierTableComponent implements OnInit {
     private rowData;
     private columnDefs;
     private rowSelection;
+
+    // gridApi & gridUI props
+    private gridApi: GridApi;
     private quickSearchValue = '';
 
-    // gridApi and columnApi
-    private gridApi: GridApi;
-    private columnApi: ColumnApi;
-
-    // pass Data using shared service
+    // Internal Service
     private rowObj;
 
     // UI Props
-    private buttonToggleBoolean = true;
     private gridSelectionStatus: number;
 
     constructor( // inject your service
         private carrierService: CarrierService,
         private carrierSharedService: CarrierSharedService,
         private dialog: MatDialog,
-        private snackbarSharedService: SnackbarSharedService
+        private snackbarSharedService: SnackbarSharedService,
+        private toggleButtonStateService: ToggleButtonStateService
     ) {
         this.columnDefs = this.createColumnDefs();
         this.rowSelection = 'single';
@@ -62,13 +62,16 @@ export class CarrierTableComponent implements OnInit {
 
     put_editCarrier(carrierObj, id) {
         this.carrierService.put_EditCarrier(carrierObj, id)
-            .subscribe(resp => {
+            .subscribe(
+                (resp: Response) => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
                         this.snackbarSharedService.snackbar_success('Edit Successful.', 5000);
-                    } else {
-
                     }
+                },
+                error => {
+                    console.log(error);
+                    this.snackbarSharedService.snackbar_error('Edit failed.', 5000);
                 }
             );
     }
@@ -78,7 +81,6 @@ export class CarrierTableComponent implements OnInit {
     */
     on_GridReady(params): void {
         this.gridApi = params.api;
-        this.columnApi = params.columnApi;
         params.api.sizeColumnsToFit();
     }
 
@@ -132,17 +134,13 @@ export class CarrierTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Grid Toolbar ~~~~~~~~~~
     */
+    // For button Toggle
     rowSelected(): void { // Toggle button boolean if rowSelected > 0
         this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
     }
 
     toggleButtonStates(): boolean {
-        if ( this.gridSelectionStatus > 0 ) {
-          this.buttonToggleBoolean = false;
-        } else {
-          this.buttonToggleBoolean = true;
-        }
-        return this.buttonToggleBoolean;
+        return this.toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus);
     }
 
     onQuickFilterChanged() { // external global search
@@ -179,8 +177,8 @@ export class CarrierTableComponent implements OnInit {
             phone: params.data.phone,
             address: params.data.address,
             taxable: taxable,
-            tier: parseInt(params.data.tier),
-          };
+            tier: parseInt(params.data.tier, 0)
+        };
         this.put_editCarrier(carrierObj, id);
     }
 

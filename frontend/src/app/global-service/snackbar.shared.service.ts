@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 
 import { SuccessSnackbarComponent } from './../snackbars/success/success.snackbar.component';
+import { ErrorSnackbarComponent } from './../snackbars/error/error.snackbar.component';
 
 @Injectable()
 export class SnackbarSharedService {
@@ -19,12 +20,12 @@ export class SnackbarSharedService {
     }
 
     snackbar_error(msg: string, duration: number): void {
-        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        this.snackBar.openFromComponent(ErrorSnackbarComponent, {
           duration: duration,
           data: msg,
           horizontalPosition: 'right',
           verticalPosition: 'top',
-          panelClass: 'snackbar-success-container'
+          panelClass: 'snackbar-error-container'
         });
     }
 }

@@ -7,6 +7,7 @@ import { GridApi } from 'ag-grid';
 import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
 import { CallPlanService } from './../services/call-plan.api.service';
 import { CallPlanSharedService } from './../services/call-plan.shared.service';
+import { SnackbarSharedService } from './../../global-service/snackbar.shared.service';
 
 import { DelCallPlanComponent } from './dialog/del-callplan/del-callplan.component';
 import { AddCallPlanComponent } from './dialog/add-callplan/add-callplan.component';
@@ -72,7 +73,8 @@ export class CallPlanTableComponent implements OnInit {
         private callPlanSharedService: CallPlanSharedService,
         private nestedAgGridService: NestedAgGridService,
         private dialog: MatDialog,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private snackbarSharedService: SnackbarSharedService
     ) {
         this.columnDefs = this.createColumnDefs();
         this.columnDefsDetail = this.createColumnDefsDetail();
@@ -126,7 +128,19 @@ export class CallPlanTableComponent implements OnInit {
 
         post_callplanToLCR(callplan_id: number, body: any): void {
             this.callPlanService.post_callplanToLCR(callplan_id, body)
-                .subscribe(resp => console.log(resp));
+                .subscribe(
+                    resp => {
+                        console.log(resp);
+                        if ( resp.status === 200 ) {
+                            this.snackbarSharedService.snackbar_success('Callplan successfully inserted into LCR.', 5000);
+                        } else {
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                        this.snackbarSharedService.snackbar_error(`Error: Something is wrong. Check if Callplan has codes, ratecards, and trunks.`, 5000);
+                    }
+                );
         }
 
     /*
@@ -479,8 +493,6 @@ export class CallPlanTableComponent implements OnInit {
         sendCallplanToLCR() {
             const callplan_id = this.gridApi.getSelectedNodes()[0].data.id;
             const body = {};
-
-            console.log(callplan_id);
 
             this.post_callplanToLCR(callplan_id, body);
         }

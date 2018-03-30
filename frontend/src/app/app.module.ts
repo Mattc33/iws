@@ -27,6 +27,7 @@ import { NestedAgGridService } from './global-service/nestedAgGrid.shared.servic
 import { SnackbarSharedService } from './global-service/snackbar.shared.service';
 import { SuccessSnackbarComponent } from './snackbars/success/success.snackbar.component';
 import { ErrorSnackbarComponent } from './snackbars/error/error.snackbar.component';
+import { ToggleButtonStateService } from './global-service/buttonStates.shared.service';
 
 // Third Party Components
 import { AgGridModule } from 'ag-grid-angular';
@@ -99,9 +100,11 @@ import { RegistrationComponent } from './registration/registration.component';
 
 // LCR
 import { LcrComponent } from './lcr/lcr.component';
-import { LcrTableComponent } from './lcr/lcr-table/lcr-table.component';
-
+import { LcrCallPlanTableComponent } from './lcr/lcr-callplan-table/lcr-callplan-table.component';
 import { LCRService } from './lcr/services/lcr.api.service';
+import { LcrCarrierTableComponent } from './lcr/lcr-carrier-table/lcr-carrier-table.component';
+import { LcrRatecardTableComponent } from './lcr/lcr-ratecard-table/lcr-ratecard-table.component';
+import { LcrTrunkTableComponent } from './lcr/lcr-trunk-table/lcr-trunk-table.component';
 
 
 @NgModule({
@@ -117,7 +120,7 @@ import { LCRService } from './lcr/services/lcr.api.service';
     DetachTrunksComponent,
     CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
     AddRateCardComponent, AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
-    LcrComponent, LcrTableComponent, // LCR
+    LcrComponent, LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent, // LCR
     AccountsComponent,
     SuccessSnackbarComponent, ErrorSnackbarComponent,
   ],
@@ -149,7 +152,7 @@ import { LCRService } from './lcr/services/lcr.api.service';
     ])
   ],
     providers: [
-        NestedAgGridService, SnackbarSharedService, // Global services
+        NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, // Global services
         CarrierService, CarrierSharedService,
         ImporterService, ImporterSharedService,
         RateCardsService, RateCardsSharedService,

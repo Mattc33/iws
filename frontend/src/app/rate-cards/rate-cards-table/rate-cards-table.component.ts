@@ -46,6 +46,7 @@ export class RateCardsTableComponent implements OnInit {
     private rowSelectionAll;
     private rowSelectionRates;
     private rowSelectionTrunks;
+    private isRowSelectable = false;
 
     // Props for button toggle
     private buttonToggleBoolean = true;
@@ -125,6 +126,9 @@ export class RateCardsTableComponent implements OnInit {
             {
                 headerName: 'RateCard Group', field: 'ratecard_bundle',
                 cellRenderer: 'agGroupCellRenderer', checkboxSelection: true,
+                isSelectable: function(rowNode) {
+                    return false;
+                }
             },
             {
                 headerName: 'Country', field: 'country', width: 180

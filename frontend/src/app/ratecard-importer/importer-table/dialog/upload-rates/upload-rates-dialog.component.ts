@@ -1,14 +1,16 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatStepper } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { MatStepper } from '@angular/material';
+import { GridApi } from 'ag-grid';
 
 import { PapaParseService } from 'ngx-papaparse';
 
 import { ImporterTableComponent } from './../../importer-table.component';
-
 import { ImporterService } from './../../../services/importer.api.service';
 import { ImporterSharedService } from './../../../services/importer.shared.service';
+import { TrunksService } from './../../../../trunks/services/trunks.api.service';
+import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
+import { ToggleButtonStateService } from './../../../../global-service/buttonStates.shared.service';
 
 @Component({
   selector: 'app-upload-rates',
@@ -17,13 +19,22 @@ import { ImporterSharedService } from './../../../services/importer.shared.servi
 })
 export class UploadRatesDialogComponent implements OnInit {
 
-    event_onAdd = new EventEmitter;
+    // event
+    event_passTrunkId = new EventEmitter;
 
     // Form Group var
     private carrierFormGroup: FormGroup;
     private ratecardFormGroup: FormGroup;
     private percentFormGroup: FormGroup;
     private uploadRatesFormGroup: FormGroup;
+
+    // Ag Grid row & column defs
+    private rowData;
+    private columnDefs;
+
+    // Ag grid api & ui 
+    private gridApi: GridApi;
+    private gridSelectionStatus: number;
 
     // DB Objects
     private carrierObj = [];
@@ -56,11 +67,17 @@ export class UploadRatesDialogComponent implements OnInit {
         private papa: PapaParseService,
         private formBuilder: FormBuilder,
         private importerService: ImporterService,
-        private importerSharedService: ImporterSharedService
+        private importerSharedService: ImporterSharedService,
+        private trunksService: TrunksService,
+        private snackbarSharedService: SnackbarSharedService,
+        private toggleButtonStateService: ToggleButtonStateService
     ) {}
 
     ngOnInit() {
         this.get_carrier();
+        this.get_trunks();
+
+        this.columnDefs = this.createColumnDefs();
 
         this.carrierFormGroup = this.formBuilder.group({
             carrierCtrl: ['', Validators.required]
@@ -93,9 +110,54 @@ export class UploadRatesDialogComponent implements OnInit {
             );
     }
 
+    get_trunks(): void {
+        this.trunksService.get_allTrunks()
+        .subscribe(
+            data => { this.rowData = data; },
+            error => { console.log(error); }
+        );
+    }
+
     post_addRates(): void {
         this.importerService.post_AddRateCard(this.finalRatecardObj)
-            .subscribe();
+            .subscribe(
+                (resp: Response) => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this.snackbarSharedService.snackbar_success('Ratecards successful imported.', 5000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this.snackbarSharedService.snackbar_error('Ratecards failed to import.', 5000);
+                }
+            );
+    }
+
+    /*
+        ~~~~~~~~~~ Grid Initiation ~~~~~~~~~~
+    */
+    on_GridReady(params): void {
+        this.gridApi = params.api;
+        params.api.sizeColumnsToFit();
+    }
+
+    private createColumnDefs() {
+        return [
+            {
+                headerName: 'Trunk Name', field: 'trunk_name',
+                checkboxSelection: true, width: 350
+            },
+            {
+                headerName: 'Carrier', field: 'carrier_name',
+            },
+            {
+                headerName: 'Trunk IP', field: 'trunk_ip',
+            },
+            {
+                headerName: 'Trunk Port', field: 'trunk_port',
+            }
+        ];
     }
 
     /*
@@ -123,6 +185,15 @@ export class UploadRatesDialogComponent implements OnInit {
     /*
         ~~~~~~~~~~ UI Interactions ~~~~~~~~~~
     */
+    // For button Toggle
+    rowSelected(): void { // Toggle button boolean if rowSelected > 0
+        this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
+    }
+
+    toggleButtonStates(): boolean {
+        return this.toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus);
+    }
+
     checkBoxValueTeleU(): boolean {
         return !this.percentFormGroup.get('teleUCheckboxCtrl').value;
     }
@@ -156,7 +227,7 @@ export class UploadRatesDialogComponent implements OnInit {
     */
     aggrid_addRatecard() {
         this.importerSharedService.currentPostTableObj.subscribe( data => { this.postTableArr = data; });
-        this.event_onAdd.emit();
+        this.event_passTrunkId.emit(this.gridApi.getSelectedRows[0]);
     }
 
     /*
@@ -192,12 +263,14 @@ export class UploadRatesDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    click_addRates(): void {
-        this.post_addRates();
-        this.aggrid_addRatecard();
-        this.closeDialog();
+    passTrunkId () {
+        this.event_passTrunkId.emit(this.gridApi.getSelectedRows()[0].id);
     }
 
+    click_addRates(): void {
+        this.passTrunkId();
+        this.closeDialog();
+    }
     /*
         ~~~~~~~~~~ CSV Parser ~~~~~~~~~~
     */
@@ -305,7 +378,7 @@ export class UploadRatesDialogComponent implements OnInit {
     alcazarNetworksProfile(data) {
         const dataSliced = data.slice(7);
 
-        for(let i = 0; i < dataSliced.length; i++) {
+        for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
                 if(destination.charAt(0) === '"' || destination.charAt(0) === "'") {
@@ -324,9 +397,9 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { 
+                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") { 
                     destination = destination.slice(1, -1);
-                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
@@ -340,9 +413,9 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") { 
+                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") { 
                     destination = destination.slice(1, -1);
-                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][4] * 1;
@@ -380,7 +453,7 @@ export class UploadRatesDialogComponent implements OnInit {
             const buyrate: number = dataSliced[i][3] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
-        } 
+        }
     }
 
     voiPlatinumProfile(data) {
@@ -405,10 +478,10 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][1];
             let prefix: string = dataSliced[i][0];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") {
+                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
                 }
-                if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][2] * 1;

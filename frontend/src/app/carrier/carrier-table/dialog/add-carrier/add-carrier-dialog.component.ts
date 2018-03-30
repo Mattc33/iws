@@ -8,14 +8,6 @@ import { CarrierService } from '../../../services/carrier.api.service';
 import { CarrierSharedService } from './../../../services/carrier.shared.service';
 import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
 
-/* Error when invalid control is dirty, touched, or submitted. */
-export class CarrierErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-      const isSubmitted = form && form.submitted;
-      return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-    }
-}
-
 @Component({
     selector: 'app-add-carrier-dialog-inner',
     templateUrl: './add-carrier-dialog.component.html',
@@ -24,15 +16,11 @@ export class CarrierErrorStateMatcher implements ErrorStateMatcher {
   })
 export class AddCarrierDialogComponent implements OnInit {
 
+    // Events
     event_onAdd = new EventEmitter;
 
     // Form Group
     private addCarrierFormGroup: FormGroup;
-
-    // Validation
-    private taxablePattern = '^[0-1]+$';
-    private codePattern = '^[a-zA-Z0-9]{3}';
-    private matcher = new CarrierErrorStateMatcher();
 
     // Input Props
     private taxableOptions = [
@@ -76,18 +64,22 @@ export class AddCarrierDialogComponent implements OnInit {
     post_addCarrier(body) {
         this.carrierService.post_AddRow(body)
             .subscribe(
-                resp => {
+                (resp: Response) => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
                         this.snackbarSharedService.snackbar_success('Carrier successfully inserted.', 5000);
-                    } else {
-                        alert(resp);
                     }
                 },
-                err => {console.log(err); }
+                error => {
+                    console.log(error);
+                        this.snackbarSharedService.snackbar_error('Carrier failed to insert.', 5000);
+                }
             );
     }
 
+    /*
+        ~~~~~~~~~~ Form Obj from Input ~~~~~~~~~~
+    */
     formCarrierObj() {
         this.finalCarrierObj = {
             code: this.addCarrierFormGroup.get('codeCtrl').value,
@@ -100,10 +92,12 @@ export class AddCarrierDialogComponent implements OnInit {
         };
     }
 
+    /*
+        ~~~~~~~~~~ Dialog ~~~~~~~~~~
+    */
     click_addCarrier(post) {
         this.aggrid_addCarrier(this.finalCarrierObj);
         this.post_addCarrier(this.finalCarrierObj);
-
         this.closeDialog();
     }
 
@@ -114,10 +108,5 @@ export class AddCarrierDialogComponent implements OnInit {
     closeDialog(): void {
       this.dialogRef.close();
     }
-
-    /*
-        ~~~~~~~~~~ snackbar ~~~~~~~~~~~
-    */
-
 
 }

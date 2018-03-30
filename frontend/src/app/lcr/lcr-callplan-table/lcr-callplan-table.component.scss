@@ -18,7 +18,13 @@ section {
         float: left;
 
         #callplan-detail-table {
-            width: 98%; height: 85vh;
+            width: 98%; height: 20vh;
+            float: left;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        #callplan-detail-table2 {
+            width: 98%; height: 20vh;
             float: left;
             border-top: 1px solid #E0E0E0;
         }

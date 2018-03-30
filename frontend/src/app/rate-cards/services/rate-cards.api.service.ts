@@ -81,6 +81,13 @@ export class RateCardsService {
             .do(res => console.log('server data', res));
     }
 
+    put_EditTeleuDbRates(teleuDbRatesId: number, body: any): Observable<any> {
+        return this.http.put(this.url + '/teleu/rate/' + teleuDbRatesId, body)
+            .map(res => res.json())
+            .catch(this.handleError)
+            .do(res => console.log('server data', res));
+    }
+
     handleError(error: any): any {
         const errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
