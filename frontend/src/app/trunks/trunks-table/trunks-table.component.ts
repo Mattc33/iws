@@ -9,6 +9,8 @@ import { AddTrunksComponent } from './dialog/add-trunks/add-trunks.component';
 
 import { TrunksService } from '../services/trunks.api.service';
 import { TrunksSharedService } from './../services/trunks.shared.service';
+import { ToggleButtonStateService } from './../../global-service/buttonStates.shared.service';
+import { SnackbarSharedService } from './../../global-service/snackbar.shared.service';
 
 @Component({
   selector: 'app-trunks-table',
@@ -39,6 +41,8 @@ export class TrunksTableComponent implements OnInit {
         private formBuilder: FormBuilder,
         private trunksService: TrunksService,
         private trunksSharedService: TrunksSharedService,
+        private toggleButtonStateService: ToggleButtonStateService,
+        private snackbarSharedService: SnackbarSharedService
     ) {
         this.rowSelection = 'multiple';
         this.columnDefs = this.createColumnDefs();
@@ -61,7 +65,16 @@ export class TrunksTableComponent implements OnInit {
 
     put_editTrunks(trunkId: number, body): void {
         this.trunksService.put_editTrunk(trunkId, body)
-            .subscribe(resp => console.log(resp));
+            .subscribe(
+                (resp: Response) => {
+                    console.log(resp);
+                    this.snackbarSharedService.snackbar_success('Edit Successful.', 5000);
+                },
+                error => {
+                    console.log(error);
+                    this.snackbarSharedService.snackbar_error('Edit failed.', 5000);
+                }
+            );
     }
 
     /*
@@ -184,13 +197,8 @@ export class TrunksTableComponent implements OnInit {
         this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
     }
 
-    toggleButtonStates() {
-        if ( this.gridSelectionStatus > 0 ) {
-            this.buttonToggleBoolean = false;
-        } else {
-            this.buttonToggleBoolean = true;
-        }
-        return this.buttonToggleBoolean;
+    toggleButtonStates(): boolean {
+        return this.toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus);
     }
 
     /*

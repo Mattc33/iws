@@ -7,6 +7,7 @@ import { TrunksTableComponent } from './../../trunks-table.component';
 import { TrunksService } from './../../../services/trunks.api.service';
 import { TrunksSharedService } from './../../../services/trunks.shared.service';
 import { CarrierService } from './../../../../carrier/services/carrier.api.service';
+import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
 
 /* Error when invalid control is dirty, touched, or submitted. */
 export class CarrierErrorStateMatcher implements ErrorStateMatcher {
@@ -23,6 +24,7 @@ export class CarrierErrorStateMatcher implements ErrorStateMatcher {
 })
 export class AddTrunksComponent implements OnInit {
 
+    // Events
     event_onAdd = new EventEmitter;
 
     // Form Group var
@@ -44,16 +46,14 @@ export class AddTrunksComponent implements OnInit {
     private carrierName: string;
     private finalTrunkObj;
 
-
-    // Validation Patterns
-
     constructor(
         public dialogRef: MatDialogRef <TrunksTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private formBuilder: FormBuilder,
         private trunksService: TrunksService,
         private trunksSharedService: TrunksSharedService,
-        private carrierService: CarrierService
+        private carrierService: CarrierService,
+        private snackbarSharedService: SnackbarSharedService
     ) { }
 
     ngOnInit() {
@@ -88,7 +88,16 @@ export class AddTrunksComponent implements OnInit {
     post_addTrunk(body): void {
         this.trunksService.post_addTrunk(body)
             .subscribe(
-                resp => { console.log(resp); }
+                (resp: Response) => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this.snackbarSharedService.snackbar_success('Trunk added succesfully.', 5000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this.snackbarSharedService.snackbar_error('Trunk failed to add.', 5000);
+                }
             );
     }
 

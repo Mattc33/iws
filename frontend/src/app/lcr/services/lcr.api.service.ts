@@ -53,7 +53,7 @@ export class LCRService {
             .do(data => console.log(data));
     }
 
-    get_rates(ratecard_id: number): Observable<any> {
+    get_ratesInRatecard(ratecard_id: number): Observable<any> {
         return this.http.get(this.url + 'lcr/ratecards/' + ratecard_id + '/rates')
             .map(res => res.json())
             .catch(this.handleError)

@@ -52,10 +52,10 @@ export class LcrTrunkTableComponent implements OnInit {
                 headerName: 'Id', field: 'id', width: 100,
             },
             {
-                headerName: 'Name', field: 'name',
+                headerName: 'Cloudonix Id', field: 'cx_trunk_id',
             },
             {
-                headerName: 'Rates Email', field: 'alerts_email',
+                headerName: 'Provider Id', field: 'provider_id',
             },
             {
                 headerName: 'Active?', field: 'active',

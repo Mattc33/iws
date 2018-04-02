@@ -34,7 +34,8 @@ export class ImporterTableComponent implements OnInit {
         private importerService: ImporterService,
         private importerSharedService: ImporterSharedService,
         private dialog: MatDialog,
-        private rateCardsService: RateCardsService
+        private rateCardsService: RateCardsService,
+        private snackbarSharedService: SnackbarSharedService
     ) {
         this.columnDefs = this.createColumnDefs();
     }
@@ -51,17 +52,50 @@ export class ImporterTableComponent implements OnInit {
     */
     put_EditRates(id, ratecardObj) {
         this.importerService.put_EditRates(id, ratecardObj)
-            .subscribe(resp => console.log(resp));
+            .subscribe(
+                (resp: Response) => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this.snackbarSharedService.snackbar_success('Edit Successful.', 5000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this.snackbarSharedService.snackbar_error('Edit failed.', 5000);
+                }
+            );
     }
 
     post_attachTrunkToRatecard(ratecardId: number, trunkId: number) {
         this.rateCardsService.post_AttachTrunk(ratecardId, trunkId)
-            .subscribe(resp => console.log(resp));
+            .subscribe(
+                (resp: Response) => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this.snackbarSharedService.snackbar_success('Trunk successfully attached.', 5000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this.snackbarSharedService.snackbar_error('Trunk failed to attach.', 5000);
+                }
+            );
     }
 
     put_editTeleuDbRates(teleu_db_rate_id: number, body: any) {
         this.rateCardsService.put_EditTeleuDbRates(teleu_db_rate_id, body)
-            .subscribe(resp => console.log(resp));
+            .subscribe(
+                (resp: Response) => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this.snackbarSharedService.snackbar_success('Edit Successful.', 5000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this.snackbarSharedService.snackbar_error('Edit failed.', 5000);
+                }
+            );
     }
 
     /*
@@ -257,7 +291,7 @@ export class ImporterTableComponent implements OnInit {
         const body_TeleU_DB = {
             buy_rate: parseFloat(params.data.teleu_db_buy_rate),
             sell_rate: parseFloat(params.data.teleu_db_sell_rate),
-            isFixed: JSON.parse(params.data.fixed);
+            isFixed: JSON.parse(params.data.fixed)
         };
 
         if ( params.data.teleu_buy_rate ) {

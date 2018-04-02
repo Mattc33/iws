@@ -21,7 +21,7 @@ export class LcrRatecardTableComponent implements OnInit {
         private lcrService: LCRService,
     ) {
         this.columnDefs = this.createColumnDefs();
-        this.columnDefsDetails = this.createColumnDefsReview();
+        this.columnDefsRates = this.createColumnDefsRates();
     }
 
     ngOnInit() {
@@ -42,7 +42,7 @@ export class LcrRatecardTableComponent implements OnInit {
     }
 
     get_rates(ratecard_id: number): void {
-        this.lcrService.get_rates(ratecard_id)
+        this.lcrService.get_ratesInRatecard(ratecard_id)
             .subscribe(
                 data => {
                     this.gridApiRates.setRowData( data );
@@ -70,13 +70,10 @@ export class LcrRatecardTableComponent implements OnInit {
                 headerName: 'Id', field: 'id', checkboxSelection: true, width: 100,
             },
             {
-                headerName: 'code', field: 'code',
+                headerName: 'Name', field: 'name',
             },
             {
-                headerName: 'Description', field: 'description',
-            },
-            {
-                headerName: 'Valid Through', field: 'valid_through',
+                headerName: 'Active', field: 'active', width: 100,
             },
         ];
     }
@@ -84,19 +81,19 @@ export class LcrRatecardTableComponent implements OnInit {
     private createColumnDefsRates() {
         return [
             {
-                headerName: 'Day Period', field: 'dayPeriod',
+                headerName: 'Id', field: 'id',
             },
             {
-                headerName: 'Max Dest #', field: 'maxDestNumbers',
+                headerName: 'Destination Id', field: 'destination_id',
             },
             {
-                headerName: 'Max Minutes', field: 'maxMinutes',
+                headerName: 'Buy Rate', field: 'buyrate',
             },
             {
-                headerName: 'Ranking', field: 'ranking',
+                headerName: 'Sell Rate', field: 'sellrate',
             },
             {
-                headerName: 'Purchasable?', field: 'isPurchasable',
+                headerName: 'Active?', field: 'active',
             },
         ];
     }
@@ -110,6 +107,7 @@ export class LcrRatecardTableComponent implements OnInit {
 
     selectionChanged(params) {
         const id = this.gridApi.getSelectedRows()[0].id;
+        console.log(id);
         this.get_rates(id);
     }
 

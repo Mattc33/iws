@@ -92,20 +92,20 @@ import { CallPlanService } from './call-plan/services/call-plan.api.service';
 import { CallPlanSharedService } from './call-plan/services/call-plan.shared.service';
 import { CodesSharedService } from './call-plan/services/codes.shared.service';
 
+// LCR
+import { LcrComponent } from './lcr/lcr.component';
+import { LcrCallPlanTableComponent } from './lcr/lcr-callplan-table/lcr-callplan-table.component';
+import { LcrCarrierTableComponent } from './lcr/lcr-carrier-table/lcr-carrier-table.component';
+import { LcrRatecardTableComponent } from './lcr/lcr-ratecard-table/lcr-ratecard-table.component';
+import { LcrTrunkTableComponent } from './lcr/lcr-trunk-table/lcr-trunk-table.component';
+
+import { LCRService } from './lcr/services/lcr.api.service';
+
 // Accounts
 import { AccountsComponent } from './accounts/accounts.component';
 
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
-
-// LCR
-import { LcrComponent } from './lcr/lcr.component';
-import { LcrCallPlanTableComponent } from './lcr/lcr-callplan-table/lcr-callplan-table.component';
-import { LCRService } from './lcr/services/lcr.api.service';
-import { LcrCarrierTableComponent } from './lcr/lcr-carrier-table/lcr-carrier-table.component';
-import { LcrRatecardTableComponent } from './lcr/lcr-ratecard-table/lcr-ratecard-table.component';
-import { LcrTrunkTableComponent } from './lcr/lcr-trunk-table/lcr-trunk-table.component';
-
 
 @NgModule({
   declarations:

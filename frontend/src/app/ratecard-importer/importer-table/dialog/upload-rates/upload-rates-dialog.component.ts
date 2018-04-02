@@ -124,12 +124,12 @@ export class UploadRatesDialogComponent implements OnInit {
                 (resp: Response) => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Ratecards successful imported.', 5000);
+                        this.snackbarSharedService.snackbar_success('Ratecards successful imported.', 3000);
                     }
                 },
                 error => {
                     console.log(error);
-                    this.snackbarSharedService.snackbar_error('Ratecards failed to import.', 5000);
+                    this.snackbarSharedService.snackbar_error('Ratecards failed to import.', 3000);
                 }
             );
     }
