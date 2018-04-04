@@ -6,8 +6,8 @@
         <ng-template matStepLabel>Choose Carrier</ng-template>
         <mat-form-field>
             <mat-select placeholder="Carrier" formControlName="carrierCtrl">
-            <mat-option *ngFor="let carrier of carrierNames" [value]="carrier.value">
-                {{carrier.value}}
+            <mat-option *ngFor="let carrier of carrierNames" [value]="carrier.name">
+                {{carrier.name}}
             </mat-option>
             </mat-select>
         </mat-form-field>

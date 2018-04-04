@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { GridApi, ColumnApi } from 'ag-grid';
+import { GridApi } from 'ag-grid';
 
 import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.component';
 import { DeleteRateCardsDialogComponent } from './dialog/delete-rate-cards/delete-rate-cards-dialog.component';
@@ -10,12 +10,6 @@ import { DetachTrunksComponent } from './dialog/detach-trunks/detach-trunks.comp
 import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
 import { RateCardsService } from '../services/rate-cards.api.service';
 import { RateCardsSharedService } from '../services/rate-cards.shared.service';
-
-declare global { // declare global interface, set custom fn groupBy with type any
-    interface Array<T> {
-      groupBy(elem: T): Array<T>;
-    }
-}
 
 @Component({
     selector: 'app-rate-cards-table',
@@ -34,11 +28,8 @@ export class RateCardsTableComponent implements OnInit {
 
     // AG grid props
     private gridApi: GridApi;
-    private columnApi: ColumnApi;
     private gridApiRates: GridApi;
-    private columnApiRates: ColumnApi;
     private gridApiTrunks: GridApi;
-    private columnApiTrunks: ColumnApi;
 
     // Props for AG Grid
     private rowSelectionTypeM = 'multiple';
@@ -105,19 +96,16 @@ export class RateCardsTableComponent implements OnInit {
     */
     on_GridReady(params): void {
         this.gridApi = params.api;
-        this.columnApi = params.columnApi;
         params.api.sizeColumnsToFit();
     }
 
     on_GridReady_Rates(params): void {
         this.gridApiRates = params.api;
-        this.columnApiRates = params.ColumnApi;
         params.api.sizeColumnsToFit();
     }
 
     on_GridReady_Trunks(params): void {
         this.gridApiTrunks = params.api;
-        this.columnApiTrunks = params.ColumnApi;
         params.api.sizeColumnsToFit();
     }
 
@@ -126,9 +114,7 @@ export class RateCardsTableComponent implements OnInit {
             {
                 headerName: 'RateCard Group', field: 'ratecard_bundle',
                 cellRenderer: 'agGroupCellRenderer', checkboxSelection: true,
-                isSelectable: function(rowNode) {
-                    return false;
-                }
+                width: 300
             },
             {
                 headerName: 'Country', field: 'country', width: 180
@@ -137,7 +123,7 @@ export class RateCardsTableComponent implements OnInit {
                 headerName: 'Offer', field: 'offer', width: 100,
             },
             {
-                headerName: 'Approve?', editable: true, field: 'confirmed', width: 80,
+                headerName: 'Approve?', editable: true, field: 'confirmed', width: 100,
                 valueFormatter: function(params) {
                     if (params.value === 1) {
                         return true;
@@ -238,7 +224,7 @@ export class RateCardsTableComponent implements OnInit {
     }
 
     /*
-        ~~~~~~~~~~ Grid UI Interctions ~~~~~~~~~~
+        ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
     */
         gridSizeChanged(params) {
             params.api.sizeColumnsToFit();

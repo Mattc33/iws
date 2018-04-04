@@ -86,6 +86,7 @@ export class LcrCallPlanTableComponent implements OnInit {
             },
             {
                 headerName: 'Valid Through', field: 'valid_through',
+                valueFormatter: params => new Date(params.value * 1000).toDateString()
             },
         ];
     }

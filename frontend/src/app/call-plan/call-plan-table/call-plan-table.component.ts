@@ -200,6 +200,10 @@ export class CallPlanTableComponent implements OnInit {
                 },
                 {
                     headerName: 'Valid Through', field: 'valid_through', editable: true,
+                    // valueFormatter: function(params) {
+                    //     const epoch = new Date(params.value).getTime();
+                    //     return new Date(epoch * 1000).toDateString();
+                    // },
                 },
                 {
                     headerName: 'Days in Plan', field: 'day_period', editable: true,
@@ -227,7 +231,7 @@ export class CallPlanTableComponent implements OnInit {
                 },
                 {
                     headerName: 'Promotion?', editable: true, field: 'isPurchasable',
-                    valueFormatter: function(params) {
+                    valueFormatter: params => {
                         if (params.value === 1) {
                             return true;
                         }

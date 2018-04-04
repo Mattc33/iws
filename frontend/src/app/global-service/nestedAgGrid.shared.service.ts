@@ -1,39 +1,74 @@
 import { Injectable } from '@angular/core';
 
+declare global { // declare global interface, set custom fn groupBy with type any
+    interface Array<T> {
+      groupBy(elem: T): Array<T>;
+    }
+}
+
 @Injectable()
 export class NestedAgGridService {
 
-    formatDataToNestedArr(data) {
-        const addFieldData = addAdditionalFieldsToArr(data);
+    formatDataToNestedArr(input) {
+        const splitName = splitNameStringByPound(input);
+        const addFieldData = formJSONWithNewFields(input);
         const groupedData = groupDataByName(addFieldData);
         const formattedData = formNewJSONObj(groupedData);
         const finalData = insertObjInNestedChildrenArr(formattedData, groupedData);
 
-        function addAdditionalFieldsToArr(data): object {
-            const insertNewFieldsArr = [];
-            for (let i = 0; i < data.length; i++) {
-            const currentNameString = data[i].name;
-            const splitPound = currentNameString.split('#');
-
-            insertNewFieldsArr.push({
-                ratecard_bundle: splitPound[0],
-                name: splitPound[0],
-                offer: splitPound[2],
-                country: splitPound[3],
-                id: data[i].id,
-                carrier_id: data[i].carrier_id,
-                carrier_name: data[i].carrier_name,
-                confirmed: data[i].confirmed,
-                active: data[i].active,
-                priority: 1
-            });
-            }
-            data = insertNewFieldsArr;
-            // console.log(data);
-            return data;
+        function splitNameStringByPound(json) {
+            return json.map(data => data.name.split('#'));
         }
 
-        function groupDataByName(addFieldData) {
+        function formJSONWithNewFields(json) {
+            const splitNameFields = splitNameStringByPound(input);
+            const insertNewFieldsArrPrivate = [];
+            const insertNewFieldsArrTeleU = [];
+
+            for (let i = 0; i < json.length; i++) {
+                if ( splitNameFields[i][2] === 'private' ) {
+                    insertNewFieldsArrPrivate.push(
+                        {
+                            ratecard_bundle: splitNameFields[i][0] + ': [Private]',
+                            name: splitNameFields[i][0],
+                            dateAdded: splitNameFields[i][1],
+                            offer: splitNameFields[i][2],
+                            country: splitNameFields[i][3],
+                            id: json[i].id,
+                            carrier_id: json[i].carrier_id,
+                            carrier_name: json[i].carrier_name,
+                            confirmed: json[i].confirmed,
+                            active: json[i].active,
+                            priority: 1
+                        }
+                    );
+                }
+                if ( splitNameFields[i][2] === 'teleU' ) {
+                    insertNewFieldsArrTeleU.push(
+                        {
+                            ratecard_bundle: splitNameFields[i][0] + ': [TeleU]',
+                            name: splitNameFields[i][0],
+                            dateAdded: splitNameFields[i][1],
+                            offer: splitNameFields[i][2],
+                            country: splitNameFields[i][3],
+                            id: json[i].id,
+                            carrier_id: json[i].carrier_id,
+                            carrier_name: json[i].carrier_name,
+                            confirmed: json[i].confirmed,
+                            active: json[i].active,
+                            priority: 1
+                        }
+                    );
+                } else {
+                }
+            }
+
+            const combinedNewFieldsArr = insertNewFieldsArrPrivate.concat(insertNewFieldsArrTeleU);
+            return combinedNewFieldsArr;
+        }
+
+
+        function groupDataByName(json) {
             Array.prototype.groupBy = function (prop) {
                 return this.reduce(function (groups, item) {
                     groups[item[prop]] = groups[item[prop]] || [];
@@ -42,30 +77,27 @@ export class NestedAgGridService {
                 }, {});
             };
 
-            data = addFieldData.groupBy('name');
+            const data = json.groupBy('ratecard_bundle');
             const dataArr = [];
-
             for (const item in data) {
                 if ( item ) {
                     dataArr.push(data[item]);
                 } else {
                 }
             }
-            // console.log(dataArr);
             return dataArr;
         }
 
-        function formNewJSONObj(groupedData) {
+        function formNewJSONObj(groupDataByNameObj) {
             const formattedObj = [];
-            for (let i = 0; i < groupedData.length; i++) {
+            for (let i = 0; i < groupDataByNameObj.length; i++) {
             formattedObj.push(
                 {
-                ratecard_bundle: groupedData[i][0].name,
-                children: []
+                    ratecard_bundle: groupDataByNameObj[i][0].ratecard_bundle,
+                    children: []
                 }
             );
             }
-            // console.log(formattedObj);
             return formattedObj;
         }
 
@@ -77,7 +109,6 @@ export class NestedAgGridService {
                 );
             }
             }
-            // console.log(formattedData);
             return formattedData;
         }
 

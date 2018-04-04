@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, ErrorStateMatcher } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 
 import { TrunksTableComponent } from './../../trunks-table.component';
@@ -8,14 +8,6 @@ import { TrunksService } from './../../../services/trunks.api.service';
 import { TrunksSharedService } from './../../../services/trunks.shared.service';
 import { CarrierService } from './../../../../carrier/services/carrier.api.service';
 import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
-
-/* Error when invalid control is dirty, touched, or submitted. */
-export class CarrierErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-      const isSubmitted = form && form.submitted;
-      return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-    }
-}
 
 @Component({
   selector: 'app-add-trunks',
@@ -31,18 +23,14 @@ export class AddTrunksComponent implements OnInit {
     private carrierFormGroup: FormGroup;
     private trunksFormGroup: FormGroup;
 
-    // Var
+    // Input variables
     private carrierNames = [];
+
+    // 
     private currentCarrierId: number;
-    private transportMethods = [
-        {value: 'udp'}, {value: 'tcp'}, {value: 'both'}
-    ];
-    private activeValues = [
-        {value: true}, {value: false}
-    ];
-    private directionValues = [
-        {value: 'inbound'}, {value: 'outbound'}
-    ];
+    private transportMethods = [ {value: 'udp'}, {value: 'tcp'}, {value: 'both'} ];
+    private activeValues = [ {value: true}, {value: false} ];
+    private directionValues = [ {value: 'inbound'}, {value: 'outbound'} ];
     private carrierName: string;
     private finalTrunkObj;
 
@@ -104,35 +92,34 @@ export class AddTrunksComponent implements OnInit {
     /*
         ~~~~~~~~~~ Extract Necessary Data ~~~~~~~~~~
     */
+    filterMatchDataToAnyObjField(nameInput: any, arrayOfObj: any, field: any ): any {
+        return arrayOfObj.filter(data => data.name === nameInput);
+    }
+
+    returnCarrierId(): number {
+        return this.filterMatchDataToAnyObjField(this.carrierFormGroup.get('carrierCtrl').value, this.carrierNames, name)[0].id;
+    }
+
+    // filter reduced the below function to a more compact easier to read fn
+    // on_getCarrierId(): number {
+    //     const carrierNameFromInput = this.on_getCarrierName();
+    //     const carrierNameFromArr = this.carrierNames;
+    //     let carrierId: number;
+
+    //     for (let i = 0; i < this.carrierNames.length; i++) {
+    //         if ( carrierNameFromInput === carrierNameFromArr[i].value) {
+    //             carrierId = this.carrierNames[i].id;
+    //         } else {
+    //         }
+    //     }
+    //     this.currentCarrierId = carrierId;
+    //     return carrierId;
+    // }
+
     extractCarrierNames(data): void {
         for ( let i = 0; i < data.length ; i++) {
-            this.carrierNames.push( { value: data[i].name, id: data[i].id }, );
+            this.carrierNames.push( {name: data[i].name, id: data[i].id} );
         }
-    }
-
-    on_getCarrierId(): number {
-        const carrierNameFromInput = this.on_getCarrierName();
-        const carrierNameFromArr = this.carrierNames;
-        let carrierId: number;
-
-        for (let i = 0; i < this.carrierNames.length; i++) {
-            if ( carrierNameFromInput === carrierNameFromArr[i].value) {
-                carrierId = this.carrierNames[i].id;
-            } else {
-            }
-        }
-        this.currentCarrierId = carrierId;
-        return carrierId;
-    }
-
-
-    /*
-        ~~~~~~~~~~ Get Input Values ~~~~~~~~~~
-    */
-    on_getCarrierName(): string {
-        const carrierName = this.carrierFormGroup.get('carrierCtrl').value;
-            this.carrierName = carrierName;
-            return carrierName;
     }
 
     /*
@@ -148,11 +135,11 @@ export class AddTrunksComponent implements OnInit {
     createTrunkObj() {
         const randomNum = Math.floor(Math.random() * 9999);
         this.finalTrunkObj = {
-            carrier_id: this.on_getCarrierId(),
+            carrier_id: this.returnCarrierId(),
             carrier_name: this.carrierName,
             trunk_name: this.trunksFormGroup.get('nameCtrl').value + ' ' + randomNum,
             trunk_ip: this.trunksFormGroup.get('ipCtrl').value,
-            trunk_port: parseInt(this.trunksFormGroup.get('portCtrl').value),
+            trunk_port: parseInt(this.trunksFormGroup.get('portCtrl').value, 0),
             transport: this.trunksFormGroup.get('transportCtrl').value,
             direction: this.trunksFormGroup.get('directionCtrl').value,
             prefix: this.trunksFormGroup.get('prefixCtrl').value,

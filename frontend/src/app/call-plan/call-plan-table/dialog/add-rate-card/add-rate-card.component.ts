@@ -9,12 +9,6 @@ import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
 import { RateCardsService } from './../../../../rate-cards/services/rate-cards.api.service';
 
-declare global { // declare global interface, set custom fn groupBy with type any
-    interface Array<T> {
-      groupBy(elem: T): Array<T>;
-    }
-}
-
 @Component({
   selector: 'app-add-rate-card',
   templateUrl: './add-rate-card.component.html',
@@ -128,9 +122,6 @@ export class AddRateCardComponent implements OnInit {
             },
             {
                 headerName: 'Country', field: 'country'
-            },
-            {
-                headerName: 'Offer', field: 'offer'
             },
             {
                 headerName: 'Carrier', field: 'carrier_name'

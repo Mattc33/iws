@@ -21,7 +21,8 @@
             [enableFilter]="true" [floatingFilter]="true" [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
             [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
-        
+            [pagination]="true" [paginationAutoPageSize]="true"
+            
             (gridReady)="on_gridReady_rates($event)"
         >
         </ag-grid-angular>
