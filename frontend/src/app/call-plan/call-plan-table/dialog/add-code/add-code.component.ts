@@ -7,7 +7,7 @@ import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-tab
 import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
 import { CarrierService } from './../../../../carrier/services/carrier.api.service';
-import { CodesSharedService } from './../../../services/codes.shared.service';
+import { CodesSharedService } from './../../../../global-service/codes.shared.service';
 
 @Component({
   selector: 'app-add-code',
@@ -152,13 +152,13 @@ export class AddCodeComponent implements OnInit {
                 for ( let x = 0; x < destinationLen; x++ ) {
                     this.finalCodesObj.push(
                         {
-                            ori_cc: parseInt(ori_cc),
-                            des_cc: parseInt(countryCodeArr[i].destinationCtrl[x]),
+                            ori_cc: parseInt(ori_cc, 0),
+                            des_cc: parseInt(countryCodeArr[i].destinationCtrl[x], 0),
                             carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
                             planType: this.attachCodesFormGroup.get('plantypeCtrl').value,
                             priority: this.attachCodesFormGroup.get('planpriorityCtrl').value,
-                            day_period: parseInt(this.attachCodesFormGroup.get('dayperiodCtrl').value),
-                            planNumber: parseInt(this.attachCodesFormGroup.get('plannumberCtrl').value)
+                            day_period: parseInt(this.attachCodesFormGroup.get('dayperiodCtrl').value, 0),
+                            planNumber: parseInt(this.attachCodesFormGroup.get('plannumberCtrl').value, 0)
                         },
                     );
                 }

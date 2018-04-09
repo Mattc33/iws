@@ -90,7 +90,7 @@ import { DettachCodesComponent } from './call-plan/call-plan-table/dialog/dettac
 
 import { CallPlanService } from './call-plan/services/call-plan.api.service';
 import { CallPlanSharedService } from './call-plan/services/call-plan.shared.service';
-import { CodesSharedService } from './call-plan/services/codes.shared.service';
+import { CodesSharedService } from './global-service/codes.shared.service';
 
 // LCR
 import { LcrComponent } from './lcr/lcr.component';
@@ -107,6 +107,11 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 
+// Carrier-Selector
+import { CarrierSelectorComponent } from './carrier-selector/carrier-selector.component';
+import { CarrierSelectorTableComponent } from './carrier-selector/carrier-selector-table/carrier-selector-table.component';
+import { CarrierSelectorService } from './carrier-selector/services/carrier-selector.api.service';
+
 @NgModule({
   declarations:
   [
@@ -122,7 +127,7 @@ import { RegistrationComponent } from './registration/registration.component';
     AddRateCardComponent, AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
     LcrComponent, LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent, // LCR
     AccountsComponent,
-    SuccessSnackbarComponent, ErrorSnackbarComponent,
+    SuccessSnackbarComponent, ErrorSnackbarComponent, CarrierSelectorComponent, CarrierSelectorTableComponent,
   ],
   imports:
   [
@@ -148,17 +153,19 @@ import { RegistrationComponent } from './registration/registration.component';
       {path: 'accounts', component: AccountsComponent},
       {path: 'login', component: LoginComponent},
       {path: 'registration', component: RegistrationComponent},
-      {path: 'lcr', component: LcrComponent}
+      {path: 'lcr', component: LcrComponent},
+      {path: 'carrier-selector', component: CarrierSelectorComponent}
     ])
   ],
     providers: [
-        NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, // Global services
+        NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, CodesSharedService,  // Global services
         CarrierService, CarrierSharedService,
         ImporterService, ImporterSharedService,
         RateCardsService, RateCardsSharedService,
         TrunksService, TrunksSharedService,
-        CallPlanService, CallPlanSharedService, CodesSharedService,
+        CallPlanService, CallPlanSharedService,
         LCRService,
+        CarrierSelectorService,
     ], // Applications services
     bootstrap: [ AppComponent ],
     entryComponents: [

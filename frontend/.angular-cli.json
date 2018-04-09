@@ -1,7 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "angular-tut-employee"
+    "name": "angular-tut-employee",
+    "ejected": true
   },
   "apps": [
     {

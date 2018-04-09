@@ -103,11 +103,11 @@ export class NestedAgGridService {
 
         function insertObjInNestedChildrenArr(formattedData, groupedData) {
             for (let i = 0; i < formattedData.length; i++) {
-            for (let x = 0; x < groupedData[i].length; x++) {
-                formattedData[i].children.push(
-                groupedData[i][x]
-                );
-            }
+                for (let x = 0; x < groupedData[i].length; x++) {
+                    formattedData[i].children.push(
+                    groupedData[i][x]
+                    );
+                }
             }
             return formattedData;
         }

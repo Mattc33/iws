@@ -8,6 +8,7 @@ import { NestedAgGridService } from './../../../../global-service/nestedAgGrid.s
 import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
 import { RateCardsService } from './../../../../rate-cards/services/rate-cards.api.service';
+import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
 
 @Component({
   selector: 'app-add-rate-card',
@@ -46,7 +47,8 @@ export class AddRateCardComponent implements OnInit {
         private callPlanService: CallPlanService,
         private callPlanSharedService: CallPlanSharedService,
         private rateCardsService: RateCardsService,
-        private nestedAgGridService: NestedAgGridService
+        private nestedAgGridService: NestedAgGridService,
+        private snackbarSharedService: SnackbarSharedService
     ) {
         this.getNodeChildDetails = this.setGroups();
         this.columnDefs = this.createColumnDefs();
@@ -80,7 +82,18 @@ export class AddRateCardComponent implements OnInit {
             };
 
             this.callPlanService.post_attachRateCard(callplanId, ratecardId, body)
-                .subscribe(resp => console.log(resp));
+                .subscribe(
+                    (resp: Response) => {
+                        console.log(resp);
+                        if ( resp.status === 200 ) {
+                            this.snackbarSharedService.snackbar_success('Ratecard attached successful.', 5000);
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                        this.snackbarSharedService.snackbar_error('Ratecard failed to attach.', 5000);
+                    }
+                );
         }
     }
 
