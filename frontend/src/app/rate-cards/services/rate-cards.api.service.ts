@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { ApiSettingsSharedService } from './../../global-service/api-settings.shared.service';
 
 // Observable operators
 import 'rxjs/add/operator/map';
@@ -9,13 +10,17 @@ import 'rxjs/add/operator/do';
 
 @Injectable()
 export class RateCardsService {
-    url = 'http://172.20.13.129:8943/';
+    url: string;
     headers: Headers;
     options: RequestOptions;
 
-    constructor(private http: Http) {
+    constructor(
+        private http: Http,
+        private apiSettingsSharedService: ApiSettingsSharedService
+    ) {
         this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
         this.options = new RequestOptions({ headers: this.headers });
+        this.url = this.apiSettingsSharedService.getUrl();
     }
 
     get_RateCard(): Observable<any> {

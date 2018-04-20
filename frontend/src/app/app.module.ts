@@ -28,6 +28,7 @@ import { SnackbarSharedService } from './global-service/snackbar.shared.service'
 import { SuccessSnackbarComponent } from './snackbars/success/success.snackbar.component';
 import { ErrorSnackbarComponent } from './snackbars/error/error.snackbar.component';
 import { ToggleButtonStateService } from './global-service/buttonStates.shared.service';
+import { ApiSettingsSharedService } from './global-service/api-settings.shared.service';
 
 // Third Party Components
 import { AgGridModule } from 'ag-grid-angular';
@@ -158,7 +159,8 @@ import { CarrierSelectorService } from './carrier-selector/services/carrier-sele
     ])
   ],
     providers: [
-        NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, CodesSharedService,  // Global services
+        NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, CodesSharedService,   // Global services
+        ApiSettingsSharedService, // Global services
         CarrierService, CarrierSharedService,
         ImporterService, ImporterSharedService,
         RateCardsService, RateCardsSharedService,
