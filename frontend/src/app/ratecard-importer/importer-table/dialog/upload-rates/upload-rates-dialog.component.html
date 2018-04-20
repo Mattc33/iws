@@ -54,7 +54,7 @@
 
             <mat-checkbox disableRipple formControlName="privateCheckboxCtrl" [disabled]="true">Add to Private</mat-checkbox>  
             <mat-form-field class="percent-dropdown" >              
-                <mat-select placeholder="Percent" formControlName="privatePercentCtrl" [disabled]="true">
+                <mat-select placeholder="Percent" formControlName="privatePercentCtrl">
                     <mat-option *ngFor="let option of percents" [value]="option.value">
                         {{option.viewValue}}
                     </mat-option>

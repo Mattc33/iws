@@ -324,7 +324,8 @@ export class UploadRatesDialogComponent implements OnInit {
         if (currentCarrierName === 'Megatel') {
             console.log('uing Megatel Profile');
             this.megatelProfile(data);
-        } else {
+        }
+        if (currentCarrierName === '') {
             console.log('using Default Profile');
             this.defaultProfile(data);
         }
