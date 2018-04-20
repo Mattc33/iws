@@ -325,6 +325,8 @@ export class UploadRatesDialogComponent implements OnInit {
             console.log('uing Megatel Profile');
             this.megatelProfile(data);
         } else {
+            console.log('using Default Profile');
+            this.defaultProfile(data);
         }
     }
 
@@ -353,7 +355,18 @@ export class UploadRatesDialogComponent implements OnInit {
         );
     }
 
-    powerNetGlobalProfile(data) {
+    defaultProfile(data): void {
+        const dataSliced = data.slice(1);
+        for ( let i = 0; i < dataSliced.length; i++) {
+            const destination: string = dataSliced[i][0];
+            const prefix: string = dataSliced[i][1];
+            const buyrate: number = dataSliced[i][2].slice(1) * 1;
+            const sellrate: number = buyrate;
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
+        }
+    }
+
+    powerNetGlobalProfile(data): void {
         const dataSliced = data.slice(3);
         for (let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];
@@ -397,7 +410,7 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") { 
+                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
                 }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
@@ -429,9 +442,9 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][1];
             let prefix: string = dataSliced[i][2];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") {
+                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
-                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
@@ -445,9 +458,9 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][1];
             let prefix: string = dataSliced[i][2];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") {
+                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
-                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
