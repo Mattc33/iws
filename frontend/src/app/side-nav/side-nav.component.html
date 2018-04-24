@@ -1,13 +1,27 @@
-<nav>
-    <a routerLink="dashboard" routerLinkActive="active-link"><span><i class="fas fa-home"></i>  Dashboard</span></a>
-    <a routerLink="carrier"  routerLinkActive="active-link"><span><i class="fas fa-signal"></i>  Carrier</span></a>
-    <a routerLink="ratecard-importer"  routerLinkActive="active-link"><span><i class="fas fa-upload"></i>  RC Importer</span></a>
-    <a routerLink="rate-cards"  routerLinkActive="active-link"><span><i class="far fa-copy"></i>  Rate Cards</span></a>
-    <a routerLink="trunks" routerLinkActive="active-link"><span><i class="fas fa-sitemap"></i> Create Trunks</span></a>
-    <a routerLink="call-plan"  routerLinkActive="active-link"><span><i class="fas fa-phone-square"></i>  Call Plans</span></a>
-    <a routerLink="lcr" routerLinkActive="active-link"><span><i class="fas fa-server"></i>  LCR server</span></a>
-    <a routerLink="carrier-selector" routerLinkActive="active-link"><span><i class="fas fa-sort-amount-up"></i> Carrier Selector</span></a>
-    <a routerLink="accounts"  routerLinkActive="active-link"><span><i class="fas fa-id-card"></i>  Accounts</span></a>
+<nav [class.active]="isSideBarMini">
+    <a routerLink="dashboard" routerLinkActive="active-link">
+        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-home" ></i>  <span *ngIf="isExpanded">Dashboard</span></span>
+    </a>
+    <a routerLink="carrier"  routerLinkActive="active-link">
+        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-signal"></i>  <span *ngIf="isExpanded">Carrier</span></span>
+    </a>
+    <a routerLink="ratecard-importer"  routerLinkActive="active-link">
+        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-upload"></i>  <span *ngIf="isExpanded">RC Importer</span></span>
+    </a>
+    <a routerLink="rate-cards"  routerLinkActive="active-link">
+        <span class="icon" [class.active]="isSideBarMini"><i class="far fa-copy"></i>  <span *ngIf="isExpanded">Rate Cards</span></span></a>
+    <a routerLink="trunks" routerLinkActive="active-link">
+        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-sitemap"></i> <span *ngIf="isExpanded">Create Trunks</span></span>
+    </a>
+    <a routerLink="call-plan"  routerLinkActive="active-link">
+        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-phone-square"></i>  <span *ngIf="isExpanded">Call Plans</span></span>
+    </a>
+    <a routerLink="lcr" routerLinkActive="active-link">
+        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-server"></i>  <span *ngIf="isExpanded">LCR server</span></span>
+    </a>
+    <a routerLink="accounts"  routerLinkActive="active-link">
+        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-id-card"></i>  <span *ngIf="isExpanded">Accounts</span></span>
+    </a>
 </nav>
 
 

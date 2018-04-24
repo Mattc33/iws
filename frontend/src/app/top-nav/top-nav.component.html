@@ -1,6 +1,11 @@
 <header class="top-nav-container>">
-  <aside class="app-title"><span>OBIE</span>-IWS</aside>
-  <aside class="account-container">
-    <span class="login" routerLink="login" >LogIn</span> / <span class="registration" routerLink="registration">Registration</span>
-  </aside>
+
+    <aside class="app-title" [class.active]="isSideBarMini">
+        <span *ngIf="isExpanded"><span>OBIE</span>-IWS</span>
+        <span class="toggle-sidenav" (click)="onToggleSidenav($event)" [class.active]="isSideBarMini" ><i class="fas fa-bars"></i></span>
+    </aside>
+
+    <aside class="account-container">
+        <span class="login" routerLink="login" >LogIn</span> / <span class="registration" routerLink="registration">Registration</span>
+    </aside>
 </header>

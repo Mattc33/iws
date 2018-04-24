@@ -1,13 +1,14 @@
 <section>
     <div class="lcr-ratecard-all-container">
-        <ag-grid-angular id="ratecard-table" class="ag-theme-material" 
+        <ag-grid-angular id="ratecard-table" class="ag-theme-balham" 
             [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
             [enableFilter]="true" [floatingFilter]="true"
             [rowSelection]="rowSelection" (selectionChanged)="selectionChanged($event)" [suppressRowClickSelection]="true"
             [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"
-        
+            [headerHeight]="40" [floatingFiltersHeight]="30"
+
             (gridReady)="on_gridReady($event)"
         >
         </ag-grid-angular>
@@ -16,12 +17,13 @@
     </div>
 
     <div class="lcr-rates-container">
-        <ag-grid-angular id="rates-table" class="ag-theme-material" 
+        <ag-grid-angular id="rates-table" class="ag-theme-balham" 
             [columnDefs]="columnDefsRates" [rowData]=""
             [enableFilter]="true" [floatingFilter]="true" [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
             [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
             [pagination]="true" [paginationAutoPageSize]="true"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
             
             (gridReady)="on_gridReady_rates($event)"
         >

@@ -14,7 +14,7 @@ export class SnackbarSharedService {
           duration: duration,
           data: msg,
           horizontalPosition: 'right',
-          verticalPosition: 'top',
+          verticalPosition: 'bottom',
           panelClass: 'snackbar-success-container'
         });
     }
@@ -24,7 +24,7 @@ export class SnackbarSharedService {
           duration: duration,
           data: msg,
           horizontalPosition: 'right',
-          verticalPosition: 'top',
+          verticalPosition: 'bottom',
           panelClass: 'snackbar-error-container'
         });
     }

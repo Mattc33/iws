@@ -1,7 +1,9 @@
+
 import { Component, OnInit } from '@angular/core';
 import { GridApi } from 'ag-grid';
 
 import { LCRService } from './../services/lcr.api.service';
+import { LCRSharedService } from './../services/lcr.shared.service';
 
 @Component({
   selector: 'app-lcr-trunk-table',
@@ -10,15 +12,19 @@ import { LCRService } from './../services/lcr.api.service';
 })
 export class LcrTrunkTableComponent implements OnInit {
 
-    private rowData;
+    private trunkData;
+    private providerData;
+    private finalrowData;
     private columnDefs;
 
     private gridApi: GridApi;
 
     constructor(
         private lcrService: LCRService,
+        private lcrSharedService: LCRSharedService
     ) {
         this.columnDefs = this.createColumnDefs();
+
     }
 
     ngOnInit() {
@@ -32,10 +38,16 @@ export class LcrTrunkTableComponent implements OnInit {
         this.lcrService.get_allTrunks()
             .subscribe(
                 data => {
-                    this.rowData = data;
-                    console.log(data);
+                    this.get_allProviders();
+                    this.trunkData = this.lcrSharedService.get_rowDataWithProviderName(data, this.providerData);
                 }
             );
+    }
+
+    get_allProviders(): void {
+        this.lcrSharedService.current_providerJson.subscribe(
+            data => { this.providerData = data; }
+        );
     }
 
     /*
@@ -55,7 +67,7 @@ export class LcrTrunkTableComponent implements OnInit {
                 headerName: 'Cloudonix Id', field: 'cx_trunk_id',
             },
             {
-                headerName: 'Provider Id', field: 'provider_id',
+                headerName: 'Provider', field: 'provider_name',
             },
             {
                 headerName: 'Active?', field: 'active',

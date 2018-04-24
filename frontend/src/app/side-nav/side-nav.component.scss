@@ -15,8 +15,13 @@ nav{
         text-decoration: none;
         border-bottom: .5px dotted white;
 
-        span {
+        .icon {
             margin-left: 10px;
+        }
+
+        span.active {
+            margin-left: 20px;
+            text-align: center;
         }
     }
 
@@ -57,4 +62,8 @@ nav{
         color: white;
     }
     
+}
+
+nav.active {
+    width: 60px;
 }

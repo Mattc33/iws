@@ -3,24 +3,23 @@
 }
 
 section {
-    width: 100%; height: 100%;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    overflow: hidden;
 
     .all-callplans-container { // All Call Plans --Left Section
-        width: 30vw; height: 100vh;
+        width: 30%; height: 100%;
         border-right: 1px solid #E0E0E0; 
         float: left;
 
         #all-callplans {
-            width: 98%; height: 85vh;  
-            margin-left: 10px; 
+            width: 99.7%; height: 85vh;  
             float: left;
         }
 
         mat-toolbar-row {
-            width: 29vw; height: auto;
-            margin-left: 20px;
+            width: 99.7%; height: auto;
             float: left;
     
             span {
@@ -52,30 +51,22 @@ section {
                 padding-left: 6px;
             }
     
-            .search-bar {
-                float: right;
-                margin-right: 20px;
-                position: relative;
-                width: 30%;
-            }
-    
         }
     }
 
     .details-container {
-        width: 93%; height: 100vh; 
+        width: 99.8%; height: 90vh; 
 
         mat-tab-group {
             width: auto; height: 100vh;
         }
 
         /deep/ mat-tab-header { //Because of view encapsulation /deep/ are needed to apply styles
-            height: 55px ;
+            height: 40px ;
         }
 
         #call-plans-detail { //details tables
-            width: 100%; height: 180px;
-            border-top: 2px solid #F39C12;
+            width: 100%; height: 80px;
             overflow: none;
 
             /deep/ ag-header-row,  {
@@ -84,8 +75,7 @@ section {
         }
 
         #call-plans-detail2 { //details tables
-            width: 100%; height: 200px;
-            border-top: 2px solid #F39C12;
+            width: 100%; height: 120px;
             overflow: none;
 
             /deep/ ag-header-row,  {
@@ -94,11 +84,11 @@ section {
         }
 
         #call-plans-ratecards {
-            width: 100%; height: 80vh;
+            width: 100%; height: 80.5vh;
         }
 
         .toolbar-details {
-            width: 62vw; height: 34px;
+            width: 100%; height: 34px;
             float: left; 
 
             button {
@@ -117,7 +107,6 @@ section {
 
             .search-bar {
                 float: right;
-                margin-right: 20px;
                 position: relative;
                 width: 30%;
                 font-size: 11px;
@@ -125,13 +114,11 @@ section {
         }
 
         #call-plans-codes {
-            width: 100%; height: 79.9vh;
+            width: 100%; height: 80.5vh;
         }
 
     }
 }
-
-
 
 .mat-button {
     margin-left: 20px;
@@ -167,7 +154,7 @@ section {
     color: #ffffff;
 }
 
-.ag-theme-material .ag-floating-filter-body input {
+.ag-theme-balham .ag-floating-filter-body input {
     border-bottom: 1.5px solid #ffffff;
 }
 

@@ -18,7 +18,33 @@ header {
             font-weight: bold;
         }
 
+        .toggle-sidenav {
+            margin-left: 10px;
+            font-size: 20px;
+            border: 1px solid lightgray;
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+
+        .toggle-sidenav:hover {
+            color: lightgray;
+            border: 1px solid white;
+        }
     }
+
+    .app-title.active {
+        min-width: 60px;
+    }
+
+    .toggle-sidenav.active {
+        text-align: center;
+        margin-left: 0px;
+        margin-right: 9px;
+    }
+
+
 
     .account-container {
         min-height: 50px; min-width: 200px;
@@ -26,6 +52,10 @@ header {
         line-height: 50px; text-align: center;
         color: white;
         right: 0;
+
+        .toggle-sidenav {
+            float: left;
+        }
 
         .login:hover, .registration:hover {
             color: #E3E3E3;

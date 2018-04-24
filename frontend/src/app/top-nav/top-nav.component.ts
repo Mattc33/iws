@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-top-nav',
   templateUrl: './top-nav.component.html',
   styleUrls: ['./top-nav.component.scss']
 })
-export class TopNavComponent implements OnInit {
+export class TopNavComponent {
 
-  constructor() { }
+    @Output() sidenavToggleEvent = new EventEmitter<boolean>();
 
-  ngOnInit() {
-  }
+    isExpanded = true;
+    isSideBarMini = false;
+
+    onToggleSidenav($event) {
+        this.isExpanded = !this.isExpanded;
+        this.isSideBarMini = !this.isSideBarMini;
+        this.sidenavToggleEvent.emit(this.isSideBarMini);
+    }
 
 }

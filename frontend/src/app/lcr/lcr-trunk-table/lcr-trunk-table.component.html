@@ -1,12 +1,13 @@
 <section>
     <div class="lcr-trunk-all-container">
-        <ag-grid-angular id="trunk-table" class="ag-theme-material" 
-            [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+        <ag-grid-angular id="trunk-table" class="ag-theme-balham" 
+            [columnDefs]="columnDefs" [rowData]="trunkData" [animateRows]="true"
             [enableFilter]="true" [floatingFilter]="true"
             [rowSelection]="rowSelection" (selectionChanged)="selectionChanged($event)" [suppressRowClickSelection]="true"
             [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
         
             (gridReady)="on_gridReady($event)"
         >

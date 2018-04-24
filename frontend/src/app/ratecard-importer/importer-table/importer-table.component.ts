@@ -134,7 +134,7 @@ export class ImporterTableComponent implements OnInit {
             children: [
                 {
                     headerName: 'Buy Rate', field: 'teleu_db_buy_rate', width: 140,
-                    editable: true,
+                    editable: true, columnGroupShow: 'closed',
                     cellClassRules: {
                         'teleu_db-buyrate-highlight': function(params) {
                             return params.value < params.data.teleu_buy_rate;
@@ -143,10 +143,10 @@ export class ImporterTableComponent implements OnInit {
                 },
                 {
                     headerName: 'Sell Rate', field: 'teleu_db_sell_rate', width: 140,
-                    editable: true,
+                    editable: true, columnGroupShow: 'closed',
                 },
                 {
-                    headerName: 'Diff', width: 170,
+                    headerName: 'Difference', width: 170,
                     valueGetter: function(params) {
                         if (params.data.teleu_db_buy_rate > 0) {
                             const diff = (params.data.teleu_db_sell_rate - params.data.teleu_db_buy_rate);
@@ -157,11 +157,12 @@ export class ImporterTableComponent implements OnInit {
                         } else {
                             return '';
                         }
-                    },
+                    }, columnGroupShow: 'closed',
                 },
                 {
                     headerName: 'Fixed', field: 'fixed', width: 120, editable: true,
                     cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
+                    columnGroupShow: 'closed',
                 }
             ]
         },
@@ -171,7 +172,7 @@ export class ImporterTableComponent implements OnInit {
             children: [
                 {
                     headerName: 'Buy Rate', field: 'teleu_buy_rate', width: 140,
-                    editable: true, volatile: true,
+                    editable: true, volatile: true, columnGroupShow: 'closed',
                     cellClassRules: {
                         'teleu-buyrate-highlight': function(params) {
                             return params.value > params.data.teleu_db_buy_rate;
@@ -183,10 +184,10 @@ export class ImporterTableComponent implements OnInit {
                 },
                 {
                     headerName: 'Sell Rate', field: 'teleu_sell_rate', width: 140,
-                    editable: true,
+                    editable: true, columnGroupShow: 'closed',
                 },
                 {
-                    headerName: 'Diff', width: 170,
+                    headerName: 'Difference', width: 170, columnGroupShow: 'closed',
                     valueGetter: function(params) {
                         if (params.data.teleu_buy_rate > 0) {
                             const diff = (params.data.teleu_sell_rate - params.data.teleu_buy_rate);
@@ -200,11 +201,11 @@ export class ImporterTableComponent implements OnInit {
                     }
                 },
                 {
-                    headerName: 'C', field: 'teleu_confirmed', width: 120, editable: true,
+                    headerName: 'Confirmed?', field: 'teleu_confirmed', width: 120, editable: true,
                     cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
                     cellStyle: {
                         'border-right': '1px solid #E0E0E0'
-                    },
+                    }, columnGroupShow: 'closed',
                 }
             ]
         },
@@ -213,22 +214,21 @@ export class ImporterTableComponent implements OnInit {
             marryChildren: true,
             children: [
                 {
-                    headerName: 'Buy Rate', field: 'private_buy_rate', width: 140,
-                    editable: true
+                    headerName: 'Buy Rate', field: 'private_buy_rate', width: 160,
+                    editable: true,
                 },
                 {
                     headerName: 'Sell Rate', field: 'private_sell_rate', width: 140,
-                    editable: true
+                    editable: true,
                 },
                 {
-                    headerName: 'Diff', width: 170,
+                    headerName: 'Difference', width: 170,
                     valueGetter: function(params) {
                         if (params.data.private_buy_rate > 0) {
                             const diff = (params.data.private_sell_rate - params.data.private_buy_rate);
                             const percent = ((diff) / params.data.private_buy_rate) * 100;
                             const diffFixed = diff.toFixed(4);
                             const percentFixed = percent.toFixed(2);
-
                             return `${diffFixed}(${percentFixed}%)`;
                         } else {
                             return '';
@@ -236,7 +236,7 @@ export class ImporterTableComponent implements OnInit {
                     },
                 },
                 {
-                    headerName: 'C', field: 'private_confirmed', width: 120, editable: true,
+                    headerName: 'Confirmed?', field: 'private_confirmed', width: 120, editable: true,
                     cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
                 }
             ]

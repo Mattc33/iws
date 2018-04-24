@@ -51,7 +51,6 @@ export class CallPlanTableComponent implements OnInit {
     private rowSelectionAll;
     private rowSelectionRatecards;
     private rowSelectionCodes;
-    private quickSearchValue = ''; // Default value for global search
 
     // Props for button Toggle
     private buttonToggleBoolean = true;
@@ -181,10 +180,11 @@ export class CallPlanTableComponent implements OnInit {
                 {
                     headerName: 'Call Plans', field: 'title',
                     checkboxSelection: true, editable: true,
-                    width: 250,
+                    width: 250, cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Carrier Name', field: 'carrier_name',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Available', field: 'available', editable: true,
@@ -197,24 +197,25 @@ export class CallPlanTableComponent implements OnInit {
             return [
                 {
                     headerName: 'Sub Title', field: 'subtitle', editable: true,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Valid Through', field: 'valid_through', editable: true,
-                    // valueFormatter: function(params) {
-                    //     const epoch = new Date(params.value).getTime();
-                    //     return new Date(epoch * 1000).toDateString();
-                    // },
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Days in Plan', field: 'day_period', editable: true,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Buy Price', field: 'buy_price',
-                    editable: true, filter: 'agNumberColumnFilter'
+                    editable: true, filter: 'agNumberColumnFilter',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Sell Price', field: 'sell_price',
-                    editable: true, filter: 'agNumberColumnFilter'
+                    editable: true, filter: 'agNumberColumnFilter',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
             ];
         }
@@ -223,11 +224,12 @@ export class CallPlanTableComponent implements OnInit {
             return [
                 {
                     headerName: 'Plan Rank', field: 'ranking',
-                    editable: true,
+                    editable: true, cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Activated on?', field: 'activeWhen', editable: true,
-                    cellEditor: 'select', cellEditorParams: {values: ['IMMEDIATELY', 'SUCCESS_CALL']}
+                    cellEditor: 'select', cellEditorParams: {values: ['IMMEDIATELY', 'SUCCESS_CALL']},
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Promotion?', editable: true, field: 'isPurchasable',
@@ -239,11 +241,13 @@ export class CallPlanTableComponent implements OnInit {
                             return false;
                         }
                     },
-                    cellEditor: 'select', cellEditorParams: {values: ['true','false']}
+                    cellEditor: 'select', cellEditorParams: {values: ['true', 'false']},
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Plan Type', field: 'planTypeName', editable: true, cellEditor: 'select',
-                    cellEditorParams: {values: ['UNLIMITED_CALL_PLAN', 'PAY_AS_YOU_GO_CALL_PLAN', 'MINUTES_CALL_PLAN']}
+                    cellEditorParams: {values: ['UNLIMITED_CALL_PLAN', 'PAY_AS_YOU_GO_CALL_PLAN', 'MINUTES_CALL_PLAN']},
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'For Unlimited Call Plans',
@@ -265,16 +269,20 @@ export class CallPlanTableComponent implements OnInit {
             return [
                 {
                     headerName: 'Ratecard Name', field: 'ratecard_bundle', checkboxSelection: true,
-                    headerCheckboxSelection: true, cellRenderer: 'agGroupCellRenderer',
+                    headerCheckboxSelection: true, cellRenderer: 'agGroupCellRenderer', width: 400,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Country', field: 'country',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Offer', field: 'offer',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Carrier Name', field: 'carrier_name',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 }
             ];
         }
@@ -284,21 +292,27 @@ export class CallPlanTableComponent implements OnInit {
                 {
                     headerName: 'Codes', field: 'code', checkboxSelection: true,
                     headerCheckboxSelection: true, width: 300,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Origination Country', field: 'ori_cc', editable: true,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Destination Country', field: 'des_cc', editable: true,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Carrier Code', field: 'carrier_code',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Plan Type', field: 'planType', editable: true,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Days in Code', field: 'day_period', editable: true,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Plan Number', field: 'planNumber', editable: true,
@@ -471,13 +485,13 @@ export class CallPlanTableComponent implements OnInit {
             const codesId = params.data.id;
 
             const codesObj = {
-                ori_cc: parseInt(params.data.ori_cc),
-                des_cc: parseInt(params.data.des_cc),
+                ori_cc: parseInt(params.data.ori_cc, 0),
+                des_cc: parseInt(params.data.des_cc, 0),
                 carrier_code: params.data.carrier_code,
-                planType: parseInt(params.data.planType),
-                priority: parseInt(params.data.priority),
-                day_period: parseInt(params.data.day_period),
-                planNumber: parseInt(params.data.planNumber)
+                planType: parseInt(params.data.planType, 0),
+                priority: parseInt(params.data.priority, 0),
+                day_period: parseInt(params.data.day_period, 0),
+                planNumber: parseInt(params.data.planNumber, 0)
             };
 
             this.put_editCodes(callplanId, codesId, codesObj);
@@ -486,10 +500,6 @@ export class CallPlanTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Toolbar ~~~~~~~~~~
     */
-        onQuickFilterChanged(): void { // external global search
-            this.gridApi.setQuickFilter(this.quickSearchValue);
-        }
-
         click_sendToLCR() {
             this.sendCallplanToLCR();
         }

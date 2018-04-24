@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+
+import { SideNavComponent } from './side-nav/side-nav.component';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +10,13 @@ import { Component, OnInit } from '@angular/core';
 
 export class AppComponent {
 
+    @ViewChild(SideNavComponent) topNavChild: SideNavComponent;
+
+    isSideBarMini = false;
+
+    eventReceiveSidenavToggle($event) {
+        this.isSideBarMini = !this.isSideBarMini;
+        this.topNavChild.toggleSideNav();
+    }
 
 }

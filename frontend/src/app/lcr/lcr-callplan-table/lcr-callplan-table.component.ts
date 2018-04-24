@@ -77,12 +77,15 @@ export class LcrCallPlanTableComponent implements OnInit {
         return [
             {
                 headerName: 'Id', field: 'id', checkboxSelection: true, width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'code', field: 'code',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Description', field: 'description',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Valid Through', field: 'valid_through',
@@ -95,21 +98,27 @@ export class LcrCallPlanTableComponent implements OnInit {
         return [
             {
                 headerName: 'Title', field: 'title',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Subtitle', field: 'subtitle',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Type Name', field: 'typeName',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Active When', field: 'activeWhen',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Buy Price', field: 'buyPrice', width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Sell Price', field: 'sellPrice', width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
         ];
     }
@@ -118,15 +127,19 @@ export class LcrCallPlanTableComponent implements OnInit {
         return [
             {
                 headerName: 'Day Period', field: 'dayPeriod',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Max Dest #', field: 'maxDestNumbers',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Max Minutes', field: 'maxMinutes',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Ranking', field: 'ranking',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Purchasable?', field: 'isPurchasable',

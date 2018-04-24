@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 
@@ -6,11 +6,16 @@ import { Router } from '@angular/router';
   selector: 'app-side-nav',
   templateUrl: './side-nav.component.html',
   styleUrls: ['./side-nav.component.scss'],
-  encapsulation : ViewEncapsulation.None
 })
 export class SideNavComponent {
 
-    constructor() { }
+    isExpanded = true;
+    isSideBarMini = false;
+
+    toggleSideNav() {
+        this.isExpanded = !this.isExpanded;
+        this.isSideBarMini = !this.isSideBarMini;
+    }
 
 }
 

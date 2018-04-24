@@ -90,30 +90,34 @@ export class TrunksTableComponent implements OnInit {
         return [
             {
                 headerName: 'Trunk Name', field: 'trunk_name',
-                editable: true, checkboxSelection: true
+                editable: true, checkboxSelection: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Carrier', field: 'carrier_name',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Trunk IP', field: 'trunk_ip',
-                editable: true,
+                editable: true, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Trunk Port', field: 'trunk_port',
-                editable: true,
+                editable: true, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Transport Method', field: 'transport', editable: true,
-                cellEditor: 'select', cellEditorParams: {values: ['udp','tcp', 'both']}
+                cellEditor: 'select', cellEditorParams: {values: ['udp','tcp', 'both']},
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Direction', field: 'direction', editable: true,
-                cellEditor: 'select', cellEditorParams: {values: ['inbound', 'outbound']}
+                cellEditor: 'select', cellEditorParams: {values: ['inbound', 'outbound']},
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Prefix', field: 'prefix',
-                editable: true,
+                editable: true, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Active?', field: 'active', editable: true,
@@ -125,11 +129,12 @@ export class TrunksTableComponent implements OnInit {
                         return false;
                     }
                 },
-                cellEditor: 'select', cellEditorParams: {values: [true, false]}
+                cellEditor: 'select', cellEditorParams: {values: [true, false]},
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Metadata', field: 'metadata',
-                editable: true,
+                editable: true, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             }
         ];
     }

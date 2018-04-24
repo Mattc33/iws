@@ -4,7 +4,7 @@
             <button (click)="expandAll(true)"> <i class="fas fa-expand"></i> </button>
             <button (click)="expandAll(false)"> <i class="fas fa-compress"></i> </button>
         </div>
-        <ag-grid-angular class="ag-theme-material" id="all-ratecards-table"
+        <ag-grid-angular class="ag-theme-balham" id="all-ratecards-table"
             [getNodeChildDetails]="getNodeChildDetails"
             [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
             [rowSelection]="rowSelectionTypeS" (selectionChanged)="aggrid_selectionChanged($event)" (rowSelected)="rowSelected($event)"
@@ -13,6 +13,7 @@
             [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"
             [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
 
             [enableCellChangeFlash]="true"
 
@@ -28,14 +29,13 @@
                     <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                     <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
             </mat-form-field>
-                
         </mat-toolbar-row>
     </div>
 
     <div class="details-container">
         <mat-tab-group>
            <mat-tab label="Rates">
-                <ag-grid-angular class="ag-theme-material" id="rates-table" [animateRows]="true"
+                <ag-grid-angular class="ag-theme-balham" id="rates-table" [animateRows]="true"
                     [columnDefs]="columnDefsRates" [rowData]="" 
                     [enableColResize]="true"
                     [rowSelection]="rowSelectionTypeM" (selectionChanged)="aggrid_rates_selectionChanged($event)"  [suppressRowClickSelection]="true"
@@ -43,7 +43,8 @@
                     [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true"
                     [enableFilter]="true" [floatingFilter]="true" [enableSorting]="true"
                     [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
-                    [pagination]="true" paginationPageSize="15"
+                    [pagination]="true" [paginationAutoPageSize]="true"
+                    [headerHeight]="40" [floatingFiltersHeight]="30"
                 
                     [enableCellChangeFlash]="true"
                 
@@ -62,7 +63,7 @@
                 </mat-toolbar-row>
             </mat-tab>
             <mat-tab label="Trunks">
-                <ag-grid-angular class="ag-theme-material" id="trunks-table"
+                <ag-grid-angular class="ag-theme-balham" id="trunks-table"
                     [columnDefs]="columnDefsTrunks" [rowData]="" [animateRows]="true"
                     [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_trunks_selectionChanged($event)" (rowSelected)="rowSelected_trunks($event)"
                     [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
@@ -71,6 +72,7 @@
                     [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
                     [pagination]="true" [paginationAutoPageSize]="true"
                     [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+                    [headerHeight]="40" [floatingFiltersHeight]="30"
         
                     [enableCellChangeFlash]="true"
         

@@ -37,7 +37,7 @@ export class RateCardsTableComponent implements OnInit {
     private rowSelectionAll;
     private rowSelectionRates;
     private rowSelectionTrunks;
-    private isRowSelectable = false;
+    private isRowSelectable;
 
     // Props for button toggle
     private buttonToggleBoolean = true;
@@ -60,6 +60,7 @@ export class RateCardsTableComponent implements OnInit {
         this.columnDefs = this.createColumnDefs();
         this.columnDefsRates = this.createColumnDefsRates();
         this.columnDefsTrunks = this.createColumnsDefsTrunks();
+
     }
 
     ngOnInit() {
@@ -107,6 +108,7 @@ export class RateCardsTableComponent implements OnInit {
     on_GridReady_Trunks(params): void {
         this.gridApiTrunks = params.api;
         params.api.sizeColumnsToFit();
+
     }
 
     private createColumnDefs() {
@@ -114,13 +116,15 @@ export class RateCardsTableComponent implements OnInit {
             {
                 headerName: 'RateCard Group', field: 'ratecard_bundle',
                 cellRenderer: 'agGroupCellRenderer', checkboxSelection: true,
-                width: 300
+                width: 300, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Country', field: 'country', width: 180
+                headerName: 'Country', field: 'country', width: 180,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Offer', field: 'offer', width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Approve?', editable: true, field: 'confirmed', width: 100,
@@ -133,9 +137,10 @@ export class RateCardsTableComponent implements OnInit {
                     }
                 },
                 cellEditor: 'select', cellEditorParams: {values: [true, false]},
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Enabled?', field: 'active', filter: 'agNumberColumnFilter', hide: true, width: 100
+                headerName: 'Enabled?', field: 'active', filter: 'agNumberColumnFilter', hide: true, width: 100,
             }
         ];
     }
@@ -145,17 +150,21 @@ export class RateCardsTableComponent implements OnInit {
             {
                 headerName: 'Prefix', field: 'prefix',
                 checkboxSelection: true, headerCheckboxSelection: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Destination', field: 'destination', width: 400,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Buy Rate', field: 'buy_rate', editable: true,
-                filter: 'agNumberColumnFilter', width: 150
+                filter: 'agNumberColumnFilter', width: 150,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Sell Rate', field: 'sell_rate', editable: true,
-                filter: 'agNumberColumnFilter', width: 150
+                filter: 'agNumberColumnFilter', width: 150,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Difference',
@@ -166,7 +175,7 @@ export class RateCardsTableComponent implements OnInit {
                     const percentFixed = percent.toFixed(2);
 
                     return `${diffFixed}(${percentFixed}%)`;
-                },
+                }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Approved?', field: 'confirmed', editable: true,
@@ -178,7 +187,7 @@ export class RateCardsTableComponent implements OnInit {
                     if (params.value === 0) {
                         return false;
                     }
-                },
+                }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Enabled?', field: 'active', editable: true, width: 100,
@@ -191,16 +200,19 @@ export class RateCardsTableComponent implements OnInit {
         return [
             {
                 headerName: 'Trunk Id', field: 'cx_trunk_id',
-                checkboxSelection: true,
+                checkboxSelection: true, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Carrier Name', field: 'carrier_name',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Trunk IP', field: 'trunk_ip',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Trunk Port', field: 'trunk_port',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Meta Data', field: 'metadata',
@@ -213,7 +225,6 @@ export class RateCardsTableComponent implements OnInit {
             if (rowItem.children) {
                 return {
                     group: true,
-                    // expanded: rowItem.group === "Group C",
                     children: rowItem.children,
                     key: rowItem.ratecard_bundle
                 };

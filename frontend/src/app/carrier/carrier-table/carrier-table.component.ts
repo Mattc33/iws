@@ -21,6 +21,7 @@ export class CarrierTableComponent implements OnInit {
     // row data and column definitions
     private rowData;
     private columnDefs;
+    private defaultColDef;
     private rowSelection;
 
     // gridApi & gridUI props
@@ -66,12 +67,12 @@ export class CarrierTableComponent implements OnInit {
                 (resp: Response) => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Edit Successful.', 5000);
+                        this.snackbarSharedService.snackbar_success('Edit Successful.', 2000);
                     }
                 },
                 error => {
                     console.log(error);
-                    this.snackbarSharedService.snackbar_error('Edit failed.', 5000);
+                    this.snackbarSharedService.snackbar_error('Edit failed.', 2000);
                 }
             );
     }
@@ -89,32 +90,37 @@ export class CarrierTableComponent implements OnInit {
             {
                 headerName: 'Name', field: 'name',
                 editable: true, checkboxSelection: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Phone Number', field: 'phone',
-                editable: true
+                editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Email', field: 'email',
-                editable: true
+                editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Address', field: 'address',
-                width: 400,
-                editable: true
+                width: 400, editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Taxable', field: 'taxable', editable: true,
                 cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Tier Number', field: 'tier', editable: true,
                 cellEditor: 'select', cellEditorParams: {values: [ 1, 2, 3, 4, 5]},
-                filter: 'agNumberColumnFilter'
+                filter: 'agNumberColumnFilter',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Carrier Code', field: 'code',
-                editable: true
+                editable: true,
             },
         ];
     }

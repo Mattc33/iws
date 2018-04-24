@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GridApi } from 'ag-grid';
 
 import { LCRService } from './../services/lcr.api.service';
+import { LCRSharedService } from './../services/lcr.shared.service';
 
 @Component({
   selector: 'app-lcr-ratecard-table',
@@ -14,11 +15,14 @@ export class LcrRatecardTableComponent implements OnInit {
     private columnDefs;
     private columnDefsRates;
 
+    private providerData;
+
     private gridApi: GridApi;
     private gridApiRates: GridApi;
 
     constructor(
         private lcrService: LCRService,
+        private lcrSharedService: LCRSharedService
     ) {
         this.columnDefs = this.createColumnDefs();
         this.columnDefsRates = this.createColumnDefsRates();
@@ -35,8 +39,8 @@ export class LcrRatecardTableComponent implements OnInit {
         this.lcrService.get_allRatecards()
             .subscribe(
                 data => {
-                    this.rowData = data;
-                    console.log(data);
+                    this.get_allProviders();
+                    this.rowData = this.lcrSharedService.get_rowDataWithProviderName(data, this.providerData);
                 }
             );
     }
@@ -49,6 +53,12 @@ export class LcrRatecardTableComponent implements OnInit {
                     console.log(data.metadata);
                 }
             );
+    }
+
+    get_allProviders(): void {
+        this.lcrSharedService.current_providerJson.subscribe(
+            data => { this.providerData = data; }
+        );
     }
 
     /*
@@ -68,12 +78,19 @@ export class LcrRatecardTableComponent implements OnInit {
         return [
             {
                 headerName: 'Id', field: 'id', checkboxSelection: true, width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Provider', field: 'provider_name',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Name', field: 'name',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Active', field: 'active', width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
         ];
     }
@@ -82,15 +99,19 @@ export class LcrRatecardTableComponent implements OnInit {
         return [
             {
                 headerName: 'Id', field: 'id',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Destination Id', field: 'destination_id',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Buy Rate', field: 'buyrate',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Sell Rate', field: 'sellrate',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Active?', field: 'active',

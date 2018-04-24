@@ -101,17 +101,13 @@ import { LcrRatecardTableComponent } from './lcr/lcr-ratecard-table/lcr-ratecard
 import { LcrTrunkTableComponent } from './lcr/lcr-trunk-table/lcr-trunk-table.component';
 
 import { LCRService } from './lcr/services/lcr.api.service';
+import { LCRSharedService } from './lcr/services/lcr.shared.service';
 
 // Accounts
 import { AccountsComponent } from './accounts/accounts.component';
 
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
-
-// Carrier-Selector
-import { CarrierSelectorComponent } from './carrier-selector/carrier-selector.component';
-import { CarrierSelectorTableComponent } from './carrier-selector/carrier-selector-table/carrier-selector-table.component';
-import { CarrierSelectorService } from './carrier-selector/services/carrier-selector.api.service';
 
 @NgModule({
   declarations:
@@ -128,7 +124,7 @@ import { CarrierSelectorService } from './carrier-selector/services/carrier-sele
     AddRateCardComponent, AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
     LcrComponent, LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent, // LCR
     AccountsComponent,
-    SuccessSnackbarComponent, ErrorSnackbarComponent, CarrierSelectorComponent, CarrierSelectorTableComponent,
+    SuccessSnackbarComponent, ErrorSnackbarComponent,
   ],
   imports:
   [
@@ -155,7 +151,6 @@ import { CarrierSelectorService } from './carrier-selector/services/carrier-sele
       {path: 'login', component: LoginComponent},
       {path: 'registration', component: RegistrationComponent},
       {path: 'lcr', component: LcrComponent},
-      {path: 'carrier-selector', component: CarrierSelectorComponent}
     ])
   ],
     providers: [
@@ -166,8 +161,7 @@ import { CarrierSelectorService } from './carrier-selector/services/carrier-sele
         RateCardsService, RateCardsSharedService,
         TrunksService, TrunksSharedService,
         CallPlanService, CallPlanSharedService,
-        LCRService,
-        CarrierSelectorService,
+        LCRService, LCRSharedService,
     ], // Applications services
     bootstrap: [ AppComponent ],
     entryComponents: [

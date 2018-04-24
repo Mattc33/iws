@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GridApi } from 'ag-grid';
 
 import { LCRService } from './../services/lcr.api.service';
+import { LCRSharedService } from './../services/lcr.shared.service';
 
 @Component({
   selector: 'app-lcr-carrier-table',
@@ -17,6 +18,7 @@ export class LcrCarrierTableComponent implements OnInit {
 
     constructor(
         private lcrService: LCRService,
+        private lcrSharedService: LCRSharedService
     ) {
         this.columnDefs = this.createColumnDefs();
     }
@@ -33,7 +35,7 @@ export class LcrCarrierTableComponent implements OnInit {
             .subscribe(
                 data => {
                     this.rowData = data;
-                    console.log(data);
+                    this.lcrSharedService.change_providerJson(data);
                 }
             );
     }
@@ -50,12 +52,15 @@ export class LcrCarrierTableComponent implements OnInit {
         return [
             {
                 headerName: 'Id', field: 'id', width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Name', field: 'name',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Rates Email', field: 'alerts_email',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' }, 
             },
             {
                 headerName: 'Active?', field: 'active',

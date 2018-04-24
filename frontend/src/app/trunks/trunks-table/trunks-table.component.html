@@ -1,5 +1,6 @@
 <section>
-        <ag-grid-angular class="ag-theme-material" [animateRows]="true"
+    <div class="table-container">
+        <ag-grid-angular class="ag-theme-balham" [animateRows]="true"
             [columnDefs]="columnDefs" [rowData]="rowData" [suppressRowClickSelection]="true"
             [rowSelection]="rowSelection" (selectionChanged)="aggrid_selectionChanged($event)" (rowSelected)="rowSelected($event)"
             [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
@@ -8,6 +9,7 @@
             [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"
             [suppressNoRowsOverlay]="true"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
             
             [enableCellChangeFlash]="true"
 
@@ -24,4 +26,5 @@
                     <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
             </mat-form-field>
         </mat-toolbar-row>
+    </div>
 </section>
