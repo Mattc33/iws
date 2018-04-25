@@ -120,13 +120,13 @@ export class ImporterTableComponent implements OnInit {
                     return ratecard_name;
                 }
             },
-            cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            cellStyle: { 'border-right': '2px solid #E0E0E0' },
         },
         {
             headerName: 'Prefix', field: 'prefix', width: 150,
-            checkboxSelection: true, headerCheckboxSelection: true,
+            // checkboxSelection: true, headerCheckboxSelection: true,
             cellStyle: {
-                'border-right': '1px solid #E0E0E0'
+                'border-right': '2px solid #E0E0E0'
             },
         },
         {
@@ -167,7 +167,7 @@ export class ImporterTableComponent implements OnInit {
                     headerName: 'Fixed', field: 'fixed', width: 120, editable: true,
                     cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
                     columnGroupShow: 'closed',
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                    cellStyle: { 'border-right': '2px solid #E0E0E0' },
                 }
             ]
         },
@@ -184,7 +184,7 @@ export class ImporterTableComponent implements OnInit {
                         }
                     },
                     cellStyle: {
-                        'border-left': '1px solid #E0E0E0'
+                        'border-right': '1px solid #E0E0E0'
                     },
                 },
                 {
@@ -211,7 +211,7 @@ export class ImporterTableComponent implements OnInit {
                     headerName: 'Confirmed?', field: 'teleu_confirmed', width: 120, editable: true,
                     cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
                     cellStyle: {
-                        'border-right': '1px solid #E0E0E0'
+                        'border-right': '2px solid #E0E0E0'
                     }, columnGroupShow: 'closed',
                 }
             ]
