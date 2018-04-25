@@ -2,8 +2,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { GridApi } from 'ag-grid';
 import { PapaParseService } from 'ngx-papaparse';
-import { Http, Headers } from '@angular/http';
-import 'rxjs/add/operator/toPromise';
 import { saveAs } from 'file-saver/FileSaver';
 
 import { NestedAgGridService } from './../../../../global-service/nestedAgGrid.shared.service';
@@ -34,8 +32,7 @@ export class CsvConverterComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         private rateCardsService: RateCardsService,
         private nestedAgGridService: NestedAgGridService,
-        private papa: PapaParseService,
-        private http: Http
+        private papa: PapaParseService
     ) {
         this.getNodeChildDetails = this.setGroups();
         this.columnDefs = this.createColumnDefs();
@@ -135,8 +132,6 @@ export class CsvConverterComponent implements OnInit {
     // CSV conversion
     // ================================================================================
     onConvertJsonToCsv(): void {
-        console.log( this.currentSelectedRows );
-
         for ( let i = 0; i < this.currentSelectedRows.length; i++ ) {
             const eachRatecard = this.currentSelectedRows[i].id;
             const fileName = this.getSelectedFileNames(i);
@@ -149,11 +144,8 @@ export class CsvConverterComponent implements OnInit {
         const country = this.gridApi.getSelectedRows()[id].country;
         const carrier = this.gridApi.getSelectedRows()[id].carrier_name;
         const currentTime = Date.now();
-
         const fileName = `${ratecard_name}_${country}_${carrier}_${currentTime}`.replace(/\s/g, '');
-
         return fileName;
-
     }
 
     papaUnparse(json): string {
@@ -167,8 +159,8 @@ export class CsvConverterComponent implements OnInit {
     }
 
     saveToFileSystem(csv, filenameinput) {
-      const filename = filenameinput;
-      const blob = new Blob([csv], { type: 'text/plain' });
-      saveAs(blob, filename);
+        const filename = filenameinput;
+        const blob = new Blob([csv], { type: 'text/plain' });
+        saveAs(blob, filename);
     }
 }

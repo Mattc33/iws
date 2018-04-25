@@ -335,7 +335,6 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    
     generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview
         this.finalRatecardObj.rates.push(
             { destination: destination,
