@@ -325,6 +325,10 @@ export class UploadRatesDialogComponent implements OnInit {
             console.log('uing Megatel Profile');
             this.megatelProfile(data);
         }
+        if (currentCarrierName === 'Telia Carrier') {
+            console.log('using Telia Carrier Profile');
+            this.teliaCarrierProfile(data);
+        }
         if (currentCarrierName === '') {
             console.log('using Default Profile');
             this.defaultProfile(data);
@@ -511,6 +515,17 @@ export class UploadRatesDialogComponent implements OnInit {
             const destination: string = dataSliced[i][0];
             const prefix: string = dataSliced[i][2];
             const buyrate: number = dataSliced[i][4] * 1;
+            const sellrate: number = buyrate;
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
+        }
+    }
+
+    teliaCarrierProfile(data) { // not functionining correctly
+        const dataSliced = data.slice(18);
+        for (let i = 0; i < dataSliced.length; i++) {
+            const destination: string = dataSliced[i][1];
+            const prefix: string = dataSliced[i][2];
+            const buyrate: number = dataSliced[i][3] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
