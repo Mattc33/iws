@@ -62,6 +62,7 @@ import { RateCardsTableComponent } from './rate-cards/rate-cards-table/rate-card
 
 import { AttachTrunksDialogComponent } from './rate-cards/rate-cards-table/dialog/attach-trunks/attach-trunks-dialog.component';
 import { DeleteRateCardsDialogComponent } from './rate-cards/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component';
+import { CsvConverterComponent } from './rate-cards/rate-cards-table/dialog/csv-converter/csv-converter.component';
 
 import { RateCardsService } from './rate-cards/services/rate-cards.api.service';
 import { RateCardsSharedService } from './rate-cards/services/rate-cards.shared.service';
@@ -109,6 +110,7 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 
+
 @NgModule({
   declarations:
   [
@@ -117,7 +119,7 @@ import { RegistrationComponent } from './registration/registration.component';
     CarrierComponent, CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
     RatecardImporterComponent, ImporterTableComponent, // Importer
     RateCardsComponent, RateCardsTableComponent, AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, // RateCards
-    UploadRatesDialogComponent,
+    UploadRatesDialogComponent, CsvConverterComponent,
     TrunksComponent,  TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DeleteRatesComponent, // Trunks
     DetachTrunksComponent,
     CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
@@ -168,7 +170,7 @@ import { RegistrationComponent } from './registration/registration.component';
         SuccessSnackbarComponent, ErrorSnackbarComponent,
         AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
         UploadRatesDialogComponent, // Importer
-        AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, // Ratecards
+        AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, CsvConverterComponent, // Ratecards
         DeleteTrunksComponent, AddTrunksComponent, DeleteRatesComponent, DetachTrunksComponent, // Trunks
         AddCallPlanComponent, DelCallPlanComponent, AddRateCardComponent, AddCodeComponent, // Callplans
         DettachRatecardsComponent, DettachCodesComponent

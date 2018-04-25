@@ -26,7 +26,7 @@ export class AddTrunksComponent implements OnInit {
     // Input variables
     private carrierNames = [];
 
-    // 
+    //
     private currentCarrierId: number;
     private transportMethods = [ {value: 'udp'}, {value: 'tcp'}, {value: 'both'} ];
     private activeValues = [ {value: true}, {value: false} ];
@@ -60,6 +60,8 @@ export class AddTrunksComponent implements OnInit {
             activeCtrl: ['', Validators.required],
             metadataCtrl: ['', Validators.required]
         });
+
+        // , Validators.pattern('^[0-9]+$')
     }
 
     /*
@@ -99,22 +101,6 @@ export class AddTrunksComponent implements OnInit {
     returnCarrierId(): number {
         return this.filterMatchDataToAnyObjField(this.carrierFormGroup.get('carrierCtrl').value, this.carrierNames, name)[0].id;
     }
-
-    // filter reduced the below function to a more compact easier to read fn
-    // on_getCarrierId(): number {
-    //     const carrierNameFromInput = this.on_getCarrierName();
-    //     const carrierNameFromArr = this.carrierNames;
-    //     let carrierId: number;
-
-    //     for (let i = 0; i < this.carrierNames.length; i++) {
-    //         if ( carrierNameFromInput === carrierNameFromArr[i].value) {
-    //             carrierId = this.carrierNames[i].id;
-    //         } else {
-    //         }
-    //     }
-    //     this.currentCarrierId = carrierId;
-    //     return carrierId;
-    // }
 
     extractCarrierNames(data): void {
         for ( let i = 0; i < data.length ; i++) {
@@ -170,7 +156,7 @@ export class AddTrunksComponent implements OnInit {
         this.trunksFormGroup.get('portCtrl').setValue('3308');
         this.trunksFormGroup.get('transportCtrl').setValue('udp');
         this.trunksFormGroup.get('directionCtrl').setValue('outbound');
-        this.trunksFormGroup.get('prefixCtrl').setValue('prefix');
+        this.trunksFormGroup.get('prefixCtrl').setValue('1234');
         this.trunksFormGroup.get('activeCtrl').setValue(true);
         this.trunksFormGroup.get('metadataCtrl').setValue('meta data');
     }

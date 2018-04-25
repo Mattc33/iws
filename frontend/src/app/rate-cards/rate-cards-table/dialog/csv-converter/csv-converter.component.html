@@ -1,0 +1,22 @@
+<div mat-dialog-title> Select Ratecards to Convert to CSV files:</div>
+<section>
+    <div class="ratecards-table-container">
+        <ag-grid-angular class="ag-theme-balham" id="ratecards-table"
+        [getNodeChildDetails]="getNodeChildDetails"
+        [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+        [rowSelection]="rowSelectionTypeM" (rowSelected)="rowSelected($event)" [groupSelectsChildren]="true"
+        [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [singleClickEdit]="true" [suppressRowClickSelection]="true"
+        [floatingFilter]="true" [enableSorting]="true"
+        [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
+        [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+        [headerHeight]="40" [floatingFiltersHeight]="30"
+
+        [enableCellChangeFlash]="true"
+
+        (gridReady)="on_GridReady($event)"
+        >
+        </ag-grid-angular>
+
+        <button mat-button (click)="onConvertJsonToCsv()"> Convert to CSV Files </button>
+    </div>
+</section>

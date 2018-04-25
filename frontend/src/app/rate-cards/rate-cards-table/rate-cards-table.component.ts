@@ -6,6 +6,7 @@ import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.compone
 import { DeleteRateCardsDialogComponent } from './dialog/delete-rate-cards/delete-rate-cards-dialog.component';
 import { AttachTrunksDialogComponent } from './dialog/attach-trunks/attach-trunks-dialog.component';
 import { DetachTrunksComponent } from './dialog/detach-trunks/detach-trunks.component';
+import { CsvConverterComponent } from './dialog/csv-converter/csv-converter.component';
 
 import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
 import { RateCardsService } from '../services/rate-cards.api.service';
@@ -120,10 +121,6 @@ export class RateCardsTableComponent implements OnInit {
             },
             {
                 headerName: 'Country', field: 'country', width: 180,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Offer', field: 'offer', width: 100,
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
@@ -272,6 +269,8 @@ export class RateCardsTableComponent implements OnInit {
             this.rowRatecardObj = this.gridApi.getSelectedRows();
             this.selectedRatecardId = this.rowRatecardObj[0].id;
 
+            // UPDATE THIS SECTION
+            // These need to be in their own function
             this.rateCardsService.get_RatesInRatecard(this.selectedRatecardId)
                 .subscribe(
                     data => {
@@ -437,7 +436,6 @@ export class RateCardsTableComponent implements OnInit {
 
             dialogRef.afterClosed().subscribe(() => {
                 sub.unsubscribe();
-                console.log('The dialog was closed');
             });
         }
 
@@ -456,7 +454,6 @@ export class RateCardsTableComponent implements OnInit {
 
             dialogRef.afterClosed().subscribe(() => {
                 sub.unsubscribe();
-                console.log('The dialog was closed');
             });
         }
 
@@ -476,7 +473,21 @@ export class RateCardsTableComponent implements OnInit {
                 sub.unsubscribe();
                 this.gridApi.deselectAll();
                 this.gridApi.selectIndex(this.selectedRatecardId, false, false);
-                console.log('The dialog was closed');
             });
         }
+
+        /*
+            ~~~~~ CSV Converter ~~~~~
+        */
+        openDialogConvertCSV(): void {
+            const dialogRef = this.dialog.open(CsvConverterComponent, {
+                panelClass: 'ratecard-csv-screen-dialog',
+                maxWidth: '90vw',
+                autoFocus: false
+            });
+
+            dialogRef.afterClosed().subscribe(() => {
+            });
+        }
+
 }

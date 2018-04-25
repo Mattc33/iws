@@ -1,8 +1,17 @@
+// Ang Material Stepper 
+@media only screen and (max-width: 1800px) {
+    /deep/ .mat-step-label {
+        font-size: 11px;
+    }
+}
+
 .uploadBtn {
     border: 1px solid black;
     width: 100%;
     margin-bottom: 20px;
 }
+
+
 
 mat-form-field {
     width: 100%;
@@ -33,7 +42,3 @@ pre {
 #trunks-table {
     height: 50vh; width: 100%;
 }
-
-// /deep/ .mat-horizontal-stepper-header{
-//     pointer-events: none !important;
-// }

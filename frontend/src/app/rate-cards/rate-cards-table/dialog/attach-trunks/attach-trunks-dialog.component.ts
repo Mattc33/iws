@@ -142,15 +142,15 @@ export class AttachTrunksDialogComponent implements OnInit {
             {
                 headerName: 'Ratecard Group', field: 'ratecard_bundle', checkboxSelection: true,
                 cellRenderer: 'agGroupCellRenderer', width: 300,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Country', field: 'country',
+                headerName: 'Country', field: 'country', width: 120,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Offer', field: 'offer',
-            },
-            {
-                headerName: 'Carrier', field: 'carrier_name',
+                headerName: 'Carrier', field: 'carrier_name', width: 80,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Priority', field: 'priority', hide: true,
@@ -161,7 +161,7 @@ export class AttachTrunksDialogComponent implements OnInit {
     private createColumnsDefsTrunk() {
         return [
             {
-                headerName: 'Choose Trunk to Add', field: 'trunk_name', checkboxSelection: true,
+                headerName: 'Choose Trunk', field: 'trunk_name', checkboxSelection: true,
             }
         ];
     }
@@ -170,18 +170,19 @@ export class AttachTrunksDialogComponent implements OnInit {
         return [
             {
                 headerName: 'Ratecard Name', field: 'name', checkboxSelection: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Country', field: 'country'
+                headerName: 'Country', field: 'country',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Offer', field: 'offer'
+                headerName: 'Carrier', field: 'carrier_name',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Carrier', field: 'carrier_name'
-            },
-            {
-                headerName: 'Trunk Name', field: 'trunk_name'
+                headerName: 'Trunk Name', field: 'trunk_name',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
         ];
     }
@@ -198,6 +199,7 @@ export class AttachTrunksDialogComponent implements OnInit {
 
     click_deselectAll() {
         this.gridApi.deselectAll();
+        this.gridApiTrunk.deselectAll();
     }
 
     /*

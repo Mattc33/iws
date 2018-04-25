@@ -228,7 +228,7 @@ export class TrunksTableComponent implements OnInit {
     openDialogAddTrunks(): void {
         const dialogRef = this.dialog.open(AddTrunksComponent, {
             height: 'auto',
-            width: '30%',
+            width: '50%',
         });
 
         const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {

@@ -119,7 +119,8 @@ export class ImporterTableComponent implements OnInit {
                 } else {
                     return ratecard_name;
                 }
-            }
+            },
+            cellStyle: { 'border-right': '1px solid #E0E0E0' },
         },
         {
             headerName: 'Prefix', field: 'prefix', width: 150,
@@ -140,10 +141,12 @@ export class ImporterTableComponent implements OnInit {
                             return params.value < params.data.teleu_buy_rate;
                         }
                     },
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Sell Rate', field: 'teleu_db_sell_rate', width: 140,
                     editable: true, columnGroupShow: 'closed',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Difference', width: 170,
@@ -158,11 +161,13 @@ export class ImporterTableComponent implements OnInit {
                             return '';
                         }
                     }, columnGroupShow: 'closed',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Fixed', field: 'fixed', width: 120, editable: true,
                     cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
                     columnGroupShow: 'closed',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 }
             ]
         },
@@ -185,6 +190,7 @@ export class ImporterTableComponent implements OnInit {
                 {
                     headerName: 'Sell Rate', field: 'teleu_sell_rate', width: 140,
                     editable: true, columnGroupShow: 'closed',
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Difference', width: 170, columnGroupShow: 'closed',
@@ -198,7 +204,8 @@ export class ImporterTableComponent implements OnInit {
                         } else {
                             return '';
                         }
-                    }
+                    },
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Confirmed?', field: 'teleu_confirmed', width: 120, editable: true,
@@ -216,10 +223,12 @@ export class ImporterTableComponent implements OnInit {
                 {
                     headerName: 'Buy Rate', field: 'private_buy_rate', width: 160,
                     editable: true,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Sell Rate', field: 'private_sell_rate', width: 140,
                     editable: true,
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Difference', width: 170,
@@ -234,6 +243,7 @@ export class ImporterTableComponent implements OnInit {
                             return '';
                         }
                     },
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Confirmed?', field: 'private_confirmed', width: 120, editable: true,
@@ -312,7 +322,7 @@ export class ImporterTableComponent implements OnInit {
     */
     openDialogUpload(): void {
         const dialogRef = this.dialog.open(UploadRatesDialogComponent, {
-            width: '60vw'
+            width: '80vw'
         });
 
         const sub = dialogRef.componentInstance.event_passTrunkId.subscribe((data) => {
