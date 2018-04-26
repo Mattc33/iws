@@ -1,4 +1,3 @@
-<div mat-dialog-title> Select Ratecards to Convert to CSV files:</div>
 <section>
     <div class="ratecards-table-container">
         <ag-grid-angular class="ag-theme-balham" id="ratecards-table"
@@ -9,6 +8,7 @@
         [floatingFilter]="true" [enableSorting]="true"
         [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
         [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+        [pagination]="true" [paginationAutoPageSize]="true"
         [headerHeight]="40" [floatingFiltersHeight]="30"
 
         [enableCellChangeFlash]="true"

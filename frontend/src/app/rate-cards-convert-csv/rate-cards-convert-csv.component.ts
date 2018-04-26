@@ -1,19 +1,20 @@
+
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { GridApi } from 'ag-grid';
 import { PapaParseService } from 'ngx-papaparse';
 import { saveAs } from 'file-saver/FileSaver';
 
-import { NestedAgGridService } from './../../../../global-service/nestedAgGrid.shared.service';
-import { RateCardsService } from './../../../services/rate-cards.api.service';
-import { RateCardsTableComponent } from './../../rate-cards-table.component';
+import { NestedAgGridService } from './../global-service/nestedAgGrid.shared.service';
+import { RateCardsService } from './../rate-cards/services/rate-cards.api.service';
+import { RateCardsComponent } from './../rate-cards/rate-cards.component';
 
 @Component({
-  selector: 'app-csv-converter',
-  templateUrl: './csv-converter.component.html',
-  styleUrls: ['./csv-converter.component.scss']
+  selector: 'app-rate-cards-convert-csv',
+  templateUrl: './rate-cards-convert-csv.component.html',
+  styleUrls: ['./rate-cards-convert-csv.component.scss']
 })
-export class CsvConverterComponent implements OnInit {
+export class RateCardsConvertCsvComponent implements OnInit {
 
     private rowData;
     private columnDefs;
@@ -28,8 +29,6 @@ export class CsvConverterComponent implements OnInit {
     private download: string;
 
     constructor(
-        public dialogRef: MatDialogRef <RateCardsTableComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
         private rateCardsService: RateCardsService,
         private nestedAgGridService: NestedAgGridService,
         private papa: PapaParseService
@@ -163,4 +162,5 @@ export class CsvConverterComponent implements OnInit {
         const blob = new Blob([csv], { type: 'text/plain' });
         saveAs(blob, filename);
     }
+
 }

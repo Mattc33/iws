@@ -67,12 +67,12 @@ export class AddCarrierDialogComponent implements OnInit {
                 (resp: Response) => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Carrier successfully inserted.', 5000);
+                        this.snackbarSharedService.snackbar_success('Carrier successfully inserted.', 2000);
                     }
                 },
                 error => {
                     console.log(error);
-                        this.snackbarSharedService.snackbar_error('Carrier failed to insert.', 5000);
+                        this.snackbarSharedService.snackbar_error('Carrier failed to insert.', 2000);
                 }
             );
     }

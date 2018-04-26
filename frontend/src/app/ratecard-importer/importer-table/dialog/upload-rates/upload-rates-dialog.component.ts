@@ -329,6 +329,10 @@ export class UploadRatesDialogComponent implements OnInit {
             console.log('using Telia Carrier Profile');
             this.teliaCarrierProfile(data);
         }
+        if (currentCarrierName === 'All World Communications') {
+            console.log('using All World Communications Profile');
+            this.allWorldCommunications(data);
+        }
         if (currentCarrierName === '') {
             console.log('using Default Profile');
             this.defaultProfile(data);
@@ -508,7 +512,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    megatelProfile(data) { // not functionining correctly
+    megatelProfile(data) { 
         const dataSliced = data.slice(2);
         for (let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];
@@ -519,12 +523,23 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    teliaCarrierProfile(data) { // not functionining correctly
+    teliaCarrierProfile(data) { 
         const dataSliced = data.slice(18);
         for (let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][1];
             const prefix: string = dataSliced[i][2];
             const buyrate: number = dataSliced[i][3] * 1;
+            const sellrate: number = buyrate;
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
+        }
+    }
+
+    allWorldCommunications(data) {
+        const dataSliced = data.slice(9, -1);
+        for (let i = 0; i < dataSliced.length; i++) {
+            const destination: string = dataSliced[i][3];
+            const prefix: string = dataSliced[i][2];
+            const buyrate: number = dataSliced[i][4] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
         }

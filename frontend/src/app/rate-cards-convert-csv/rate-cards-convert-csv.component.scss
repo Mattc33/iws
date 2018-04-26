@@ -1,24 +1,22 @@
-/deep/ .ratecard-csv-screen-dialog {
-    width: 100vw; height: auto;
-}
-
 button {
     border: 1px solid black;
 }
 
 section {
-    width: 100%; height: 93%;
+    width: 100%; height: 100%;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
 
     .ratecards-table-container {
-        width: 100%; height: auto;
+        width: 99%; height: auto;
         float: left;
 
         #ratecards-table {
-            width: 99.7%; height: 80vh;
+            width: 100%; height: 80vh;
             float: left;
             margin-bottom: 10px;
         }
     }
-
 
 }

@@ -125,9 +125,7 @@ export class ImporterTableComponent implements OnInit {
         {
             headerName: 'Prefix', field: 'prefix', width: 150,
             // checkboxSelection: true, headerCheckboxSelection: true,
-            cellStyle: {
-                'border-right': '2px solid #E0E0E0'
-            },
+            cellStyle: { 'border-right': '2px solid #E0E0E0' },
         },
         {
             headerName: 'Tele-U(Data Base)',
@@ -183,9 +181,7 @@ export class ImporterTableComponent implements OnInit {
                             return params.value > params.data.teleu_db_buy_rate;
                         }
                     },
-                    cellStyle: {
-                        'border-right': '1px solid #E0E0E0'
-                    },
+                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
                     headerName: 'Sell Rate', field: 'teleu_sell_rate', width: 140,

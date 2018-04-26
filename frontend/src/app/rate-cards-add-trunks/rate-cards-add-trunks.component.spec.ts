@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CsvConverterComponent } from './csv-converter.component';
+import { RateCardsAddTrunksComponent } from './rate-cards-add-trunks.component';
 
-describe('CsvConverterComponent', () => {
-  let component: CsvConverterComponent;
-  let fixture: ComponentFixture<CsvConverterComponent>;
+describe('RateCardsAddTrunksComponent', () => {
+  let component: RateCardsAddTrunksComponent;
+  let fixture: ComponentFixture<RateCardsAddTrunksComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CsvConverterComponent ]
+      declarations: [ RateCardsAddTrunksComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CsvConverterComponent);
+    fixture = TestBed.createComponent(RateCardsAddTrunksComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

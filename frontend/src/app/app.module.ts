@@ -60,9 +60,7 @@ import { UploadRatesDialogComponent } from './ratecard-importer/importer-table/d
 import { RateCardsComponent } from './rate-cards/rate-cards.component';
 import { RateCardsTableComponent } from './rate-cards/rate-cards-table/rate-cards-table.component';
 
-import { AttachTrunksDialogComponent } from './rate-cards/rate-cards-table/dialog/attach-trunks/attach-trunks-dialog.component';
 import { DeleteRateCardsDialogComponent } from './rate-cards/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component';
-import { CsvConverterComponent } from './rate-cards/rate-cards-table/dialog/csv-converter/csv-converter.component';
 
 import { RateCardsService } from './rate-cards/services/rate-cards.api.service';
 import { RateCardsSharedService } from './rate-cards/services/rate-cards.shared.service';
@@ -109,6 +107,8 @@ import { AccountsComponent } from './accounts/accounts.component';
 
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { RateCardsAddTrunksComponent } from './rate-cards-add-trunks/rate-cards-add-trunks.component';
+import { RateCardsConvertCsvComponent } from './rate-cards-convert-csv/rate-cards-convert-csv.component';
 
 
 @NgModule({
@@ -118,15 +118,15 @@ import { RegistrationComponent } from './registration/registration.component';
     DashboardComponent, // Dashboard
     CarrierComponent, CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
     RatecardImporterComponent, ImporterTableComponent, // Importer
-    RateCardsComponent, RateCardsTableComponent, AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, // RateCards
-    UploadRatesDialogComponent, CsvConverterComponent,
+    RateCardsComponent, RateCardsTableComponent, DeleteRateCardsDialogComponent, // RateCards
+    UploadRatesDialogComponent, 
     TrunksComponent,  TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DeleteRatesComponent, // Trunks
     DetachTrunksComponent,
     CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
     AddRateCardComponent, AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
     LcrComponent, LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent, // LCR
     AccountsComponent,
-    SuccessSnackbarComponent, ErrorSnackbarComponent,
+    SuccessSnackbarComponent, ErrorSnackbarComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent,
   ],
   imports:
   [
@@ -142,17 +142,22 @@ import { RegistrationComponent } from './registration/registration.component';
     // Ag Grid & Routing
     AgGridModule.withComponents([ ]),
     RouterModule.forRoot([
-      {path: '', component: DashboardComponent},
-      {path: 'dashboard', component: DashboardComponent},
-      {path: 'carrier', component: CarrierComponent},
-      {path: 'ratecard-importer', component: RatecardImporterComponent},
-      {path: 'rate-cards', component: RateCardsComponent},
-      {path: 'trunks', component: TrunksComponent},
-      {path: 'call-plan', component: CallPlanComponent},
-      {path: 'accounts', component: AccountsComponent},
-      {path: 'login', component: LoginComponent},
-      {path: 'registration', component: RegistrationComponent},
-      {path: 'lcr', component: LcrComponent},
+        {path: '', component: DashboardComponent},
+        {path: 'dashboard', component: DashboardComponent},
+
+        {path: 'carrier-view', component: CarrierComponent},
+
+        {path: 'rate-card-importer', component: RatecardImporterComponent},
+        {path: 'rate-card-view', component: RateCardsComponent},
+        {path: 'rate-card-add-trunks', component: RateCardsAddTrunksComponent},
+        {path: 'rate-card-convert-csv', component: RateCardsConvertCsvComponent},
+
+        {path: 'trunks', component: TrunksComponent},
+        {path: 'call-plan', component: CallPlanComponent},
+        {path: 'accounts', component: AccountsComponent},
+        {path: 'login', component: LoginComponent},
+        {path: 'registration', component: RegistrationComponent},
+        {path: 'lcr', component: LcrComponent},
     ])
   ],
     providers: [
@@ -170,7 +175,7 @@ import { RegistrationComponent } from './registration/registration.component';
         SuccessSnackbarComponent, ErrorSnackbarComponent,
         AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
         UploadRatesDialogComponent, // Importer
-        AttachTrunksDialogComponent, DeleteRateCardsDialogComponent, CsvConverterComponent, // Ratecards
+        DeleteRateCardsDialogComponent,  // Ratecards
         DeleteTrunksComponent, AddTrunksComponent, DeleteRatesComponent, DetachTrunksComponent, // Trunks
         AddCallPlanComponent, DelCallPlanComponent, AddRateCardComponent, AddCodeComponent, // Callplans
         DettachRatecardsComponent, DettachCodesComponent

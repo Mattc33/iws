@@ -1,49 +1,86 @@
-<nav [class.active]="isSideBarMini">
+    <nav [class.active]="isSideBarMini">
 
-    <div class="main-menu-item" (click)="toggleExpandClass('parent1')">
-        <a routerLink="dashboard" routerLinkActive="active-link">
-            <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-home" ></i>  <span *ngIf="isExpanded">Dashboard</span></span>
-        </a>
+    <!-- Dashboard -->
+    <div class="main-menu-item" routerLink="dashboard" routerLinkActive="active-link-parent">
+        <i class="fas fa-home parent-icon"></i><span class="link-name">Dashboard</span>
     </div>
 
-    <div class="main-menu-item" (click)="toggleExpandClass('parent1')">
-        <a routerLink="carrier"  routerLinkActive="active-link">
-            <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-signal"></i>  <span *ngIf="isExpanded">Carrier</span></span>
-        </a>
+    <!-- Carrier -->
+    <div class="main-menu-item" (click)="toggleExpandClass('carrier')">
+        <i class="fas fa-signal parent-icon"></i><span class="link-name">Carrier</span><i class="fa fa-chevron-down carrierChev"></i>
+    </div>
+        <div class="nested-menu-container" [class.expand]="showNavChildrenCarrier">
+            <div class="nested-menu-item" routerLink="carrier-view" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">View Carrier</span>
+            </div>
+            <div class="nested-menu-item" routerLink="x" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Create Profile</span>
+            </div>
+        </div>
+
+    <!-- Ratecard -->
+    <div class="main-menu-item" (click)="toggleExpandClass('ratecard')">
+        <i class="fas fa-copy parent-icon"></i><span class="link-name">Ratecard</span><i class="fa fa-chevron-down ratecardChev"></i>
+    </div>
+        <div class="nested-menu-container" [class.expand]="showNavChildrenRatecard">
+            <div class="nested-menu-item" routerLink="rate-card-importer" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Import Ratecard</span>
+            </div>
+            <div class="nested-menu-item" routerLink="rate-card-view" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">View Ratecard</span>
+            </div>
+            <div class="nested-menu-item" routerLink="rate-card-add-trunks" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Add Trunks</span>
+            </div>
+            <div class="nested-menu-item" routerLink="rate-card-convert-csv" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Convert To CSV</span>
+            </div>
+        </div>
+
+    <!-- Trunks -->
+    <div class="main-menu-item" routerLink="trunks" routerLinkActive="active-link-parent">
+        <i class="fas fa-code-branch parent-icon"></i><span class="link-name">Trunks</span>
     </div>
 
-    <!-- <div class="main-menu-item" (click)="toggleExpandClass('parent1')">
-        <a><span><i class="far fa-plus-square icon"></i></span>Parent Menu Item 1</a>
-    </div> -->
+    <!-- Call Plan -->
+    <div class="main-menu-item" (click)="toggleExpandClass('callplan')">
+        <i class="fas fa-phone-volume parent-icon"></i><span class="link-name">Call Plan</span><i class="fa fa-chevron-down callplanChev"></i>
+    </div>
+        <div class="nested-menu-container" [class.expand]="showNavChildrenCallplan">
+            <div class="nested-menu-item" outerLink="call-plan" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">View Callplan</span>
+            </div>
+            <div class="nested-menu-item" routerLink="rate-cards" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Add Ratecard</span>
+            </div>
+            <div class="nested-menu-item" routerLink="x" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Add Code</span>
+            </div>
+        </div>
 
-    <!-- <div class="nested-menu-container" [class.expand]="showNavChildren1">
-        <div class="nested-menu-item"><a><span><i class="far fa-minus-square"></i></span>Child Menu Item 1</a></div>
-        <div class="nested-menu-item"><a><span><i class="far fa-minus-square"></i></span>Child Menu Item 2</a></div>
-        <div class="nested-menu-item"><a><span><i class="far fa-minus-square"></i></span>Child Menu Item 3</a></div>
-    </div> -->
+    <!-- LCR -->
+    <div class="main-menu-item" (click)="toggleExpandClass('lcr')">
+        <i class="fas fa-server parent-icon"></i><span class="link-name">LCR</span><i class="fa fa-chevron-down lcrChev"></i>
+    </div>
+        <div class="nested-menu-container" [class.expand]="showNavChildrenLcr">
+            <div class="nested-menu-item" routerLink="call-plan" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Carrier</span>
+            </div>
+            <div class="nested-menu-item" routerLink="rate-cards" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Ratecard</span>
+            </div>
+            <div class="nested-menu-item" routerLink="x" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Trunk</span>
+            </div>
+            <div class="nested-menu-item" routerLink="x" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name">Callplan</span>
+            </div>
+        </div>
 
-    <a routerLink="ratecard-importer"  routerLinkActive="active-link">
-        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-upload"></i>  <span *ngIf="isExpanded">RC Importer</span></span>
-    </a>
-
-    <a routerLink="rate-cards"  routerLinkActive="active-link">
-        <span class="icon" [class.active]="isSideBarMini"><i class="far fa-copy"></i>  <span *ngIf="isExpanded">Rate Cards</span></span></a>
-
-    <a routerLink="trunks" routerLinkActive="active-link">
-        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-sitemap"></i> <span *ngIf="isExpanded">Create Trunks</span></span>
-    </a>
-
-    <a routerLink="call-plan"  routerLinkActive="active-link">
-        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-phone-square"></i>  <span *ngIf="isExpanded">Call Plans</span></span>
-    </a>
-
-    <a routerLink="lcr" routerLinkActive="active-link">
-        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-server"></i>  <span *ngIf="isExpanded">LCR server</span></span>
-    </a>
-
-    <a routerLink="accounts"  routerLinkActive="active-link">
-        <span class="icon" [class.active]="isSideBarMini"><i class="fas fa-id-card"></i>  <span *ngIf="isExpanded">Accounts</span></span>
-    </a>
+    <!-- Account -->
+    <div class="main-menu-item" routerLink="accounts" routerLinkActive="active-link-parent">
+        <i class="fas fa-user-circle parent-icon"></i><span class="link-name">Account</span>
+    </div>
 
 </nav>
 

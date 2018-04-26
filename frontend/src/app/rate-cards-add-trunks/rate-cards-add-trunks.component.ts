@@ -1,24 +1,20 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ColumnApi, GridApi } from 'ag-grid';
+import { GridApi } from 'ag-grid';
 
-import { RateCardsTableComponent } from './../../rate-cards-table.component';
-
-import { RateCardsService } from '../../../services/rate-cards.api.service';
-import { RateCardsSharedService } from './../../../services/rate-cards.shared.service';
-import { TrunksService } from './../../../../trunks/services/trunks.api.service';
-import { NestedAgGridService } from './../../../../global-service/nestedAgGrid.shared.service';
-import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
+import { RateCardsService } from './../rate-cards/services/rate-cards.api.service';
+import { RateCardsSharedService } from './../rate-cards/services/rate-cards.shared.service';
+import { TrunksService } from './../trunks/services/trunks.api.service';
+import { NestedAgGridService } from './../global-service/nestedAgGrid.shared.service';
+import { SnackbarSharedService } from './../global-service/snackbar.shared.service';
 
 @Component({
-    selector: 'app-attach-trunks-dialog',
-    templateUrl: './attach-trunks-dialog.component.html',
-    styleUrls: ['./attach-trunks-dialog.component.scss'],
-    providers: [ RateCardsService ],
-  })
-export class AttachTrunksDialogComponent implements OnInit {
+  selector: 'app-rate-cards-add-trunks',
+  templateUrl: './rate-cards-add-trunks.component.html',
+  styleUrls: ['./rate-cards-add-trunks.component.scss']
+})
+export class RateCardsAddTrunksComponent implements OnInit {
 
-    event_onAdd = new EventEmitter;
+    public event_onAdd = new EventEmitter;
 
     // AG grid setup props
     private rowData;
@@ -31,11 +27,8 @@ export class AttachTrunksDialogComponent implements OnInit {
 
     // AG grid API props
     private gridApi: GridApi;
-    private columnApi: ColumnApi;
     private gridApiTrunk: GridApi;
-    private columnApiTrunk: ColumnApi;
     private gridApiReview: GridApi;
-    private columnApiReview: ColumnApi;
 
     // AG Gri UI props
     private rowSelection;
@@ -48,8 +41,6 @@ export class AttachTrunksDialogComponent implements OnInit {
     private finalRatecardToTrunkArr = [];
 
     constructor(
-        public dialogRef: MatDialogRef <RateCardsTableComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
         private rateCardsService: RateCardsService,
         private rateCardsSharedService: RateCardsSharedService,
         private trunksService: TrunksService,
@@ -68,9 +59,9 @@ export class AttachTrunksDialogComponent implements OnInit {
         this.rateCardsSharedService.currentRowAllObj.subscribe(data => this.ratecardsObj = data );
     }
 
-    /*
-        ~~~~~~~~~~ API Service ~~~~~~~~~~
-    */
+    // ================================================================================
+    // API Service
+    // ================================================================================
     get_ratecards(): void {
         this.rateCardsService.get_RateCard().subscribe(
             data => {
@@ -101,25 +92,22 @@ export class AttachTrunksDialogComponent implements OnInit {
             );
     }
 
-    /*
-        ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
-    */
+    // ================================================================================
+    // AG Grid Init
+    // ================================================================================
     on_GridReady(params): void {
         this.gridApi = params.api;
-        this.columnApi = params.ColumnApi;
         params.api.sizeColumnsToFit();
         this.rowSelection = 'multiple';
     }
 
     on_GridReady_trunk(params): void {
         this.gridApiTrunk = params.api;
-        this.columnApiTrunk = params.ColumnApi;
         params.api.sizeColumnsToFit();
     }
 
     on_GridReady_review(params): void {
         this.gridApiReview = params.api;
-        this.columnApiReview = params.ColumnApi;
         params.api.sizeColumnsToFit();
     }
 
@@ -241,18 +229,11 @@ export class AttachTrunksDialogComponent implements OnInit {
         }
     }
 
-    /*
-        ~~~~~~~~~~ Dialog ~~~~~~~~~~
-    */
     click_attachTrunks(): void {
         this.processReviewTableToSubmit();
 
         this.gridApiTrunk.deselectAll();
         this.gridApiReview.setRowData([]);
-    }
-
-    closeDialog(): void { // close dialog
-        this.dialogRef.close();
     }
 
 }

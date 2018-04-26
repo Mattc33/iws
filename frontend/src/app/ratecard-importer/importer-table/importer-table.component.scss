@@ -10,8 +10,8 @@ section {
         ag-grid-angular {
             width: 99.7%; height: 85vh;
 
-            /deep/ .teleu-buyrate-highlight { color: #006400; font-weight: bold; }
-            /deep/ .teleu_db-buyrate-highlight { color: #8b0000; font-weight: bold; }
+            /deep/ .teleu-buyrate-highlight { color: #ffffff; font-weight: bold; background-color: #006400; }
+            /deep/ .teleu_db-buyrate-highlight { color: #ffffff; font-weight: bold; background-color: #8b0000 }
         }
 
         .top-toolbar {

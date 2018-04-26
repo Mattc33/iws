@@ -4,9 +4,7 @@ import { GridApi } from 'ag-grid';
 
 import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.component';
 import { DeleteRateCardsDialogComponent } from './dialog/delete-rate-cards/delete-rate-cards-dialog.component';
-import { AttachTrunksDialogComponent } from './dialog/attach-trunks/attach-trunks-dialog.component';
 import { DetachTrunksComponent } from './dialog/detach-trunks/detach-trunks.component';
-import { CsvConverterComponent } from './dialog/csv-converter/csv-converter.component';
 
 import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
 import { RateCardsService } from '../services/rate-cards.api.service';
@@ -454,39 +452,6 @@ export class RateCardsTableComponent implements OnInit {
 
             dialogRef.afterClosed().subscribe(() => {
                 sub.unsubscribe();
-            });
-        }
-
-        openDialogAttachTrunks(): void {
-            this.rateCardsSharedService.changeRowAllObj(this.rowRatecardObj);
-
-            const dialogRef = this.dialog.open(AttachTrunksDialogComponent, {
-                panelClass: 'ratecard-trunks-screen-dialog',
-                maxWidth: '90vw',
-                autoFocus: false
-            });
-
-            const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-            });
-
-            dialogRef.afterClosed().subscribe(() => {
-                sub.unsubscribe();
-                this.gridApi.deselectAll();
-                this.gridApi.selectIndex(this.selectedRatecardId, false, false);
-            });
-        }
-
-        /*
-            ~~~~~ CSV Converter ~~~~~
-        */
-        openDialogConvertCSV(): void {
-            const dialogRef = this.dialog.open(CsvConverterComponent, {
-                panelClass: 'ratecard-csv-screen-dialog',
-                maxWidth: '90vw',
-                autoFocus: false
-            });
-
-            dialogRef.afterClosed().subscribe(() => {
             });
         }
 
