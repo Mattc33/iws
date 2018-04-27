@@ -17,8 +17,8 @@ import { SnackbarSharedService } from './../global-service/snackbar.shared.servi
 export class CallPlanAddRatecardComponent implements OnInit {
 
 // AG grid setup props
-private rowDataCallplan;
-private columnDefsRatecards;
+private rowDataCallPlan;
+private columnDefsCallPlan;
 
 private rowDataRatecard;
 private columnDefsRatecard;
@@ -28,7 +28,7 @@ private rowDataReview;
 private columnDefsReview;
 
 // AG grid API props
-private gridApiCallplan: GridApi;
+private gridApiCallPlan: GridApi;
 private gridApiRatecard: GridApi;
 private gridApiDetails: GridApi;
 
@@ -52,13 +52,15 @@ constructor(
     private snackbarSharedService: SnackbarSharedService
 ) {
     this.getNodeChildDetails = this.setGroups();
+    this.columnDefsCallPlan = this.createColumnDefsCallPlan();
     // this.columnDefsRatecards = this.createColumnDefs();
     // this.columnDefsReview = this.createColumnDefsReview();
 }
 
 ngOnInit() {
+    this.get_CallPlans();
     this.get_RateCards();
-    this.callPlanSharedService.currentRowAll.subscribe(data => this.currentRowId = data);
+    // this.callPlanSharedService.currentRowAll.subscribe(data => this.currentRowId = data);
 }
 
 // ================================================================================
@@ -67,7 +69,7 @@ ngOnInit() {
 get_CallPlans(): void {
     this.callPlanService.get_allCallPlan().subscribe(
         data => {
-            this.rowDataCallplan = data;
+            this.rowDataCallPlan = data;
         }
     );
 }
@@ -108,8 +110,8 @@ get_RateCards(): void {
 // ================================================================================
 // AG Grid Init
 // ================================================================================
-on_GridReady_Callplan(params): void {
-    this.gridApiCallplan = params.api;
+on_GridReady_CallPlan(params): void {
+    this.gridApiCallPlan = params.api;
     params.api.sizeColumnsToFit();
 }
 
@@ -137,7 +139,17 @@ private setGroups() {
     };
 }
 
-private createColumnDefs() {
+private createColumnDefsCallPlan() {
+    return [
+        {
+            headerName: 'Call Plan', field: 'title',
+            checkboxSelection: true,
+        }
+    ];
+
+}
+
+private createColumnDefsRatecard() {
     return [
         {
             headerName: 'Ratecard Group', field: 'ratecard_bundle', checkboxSelection: true,
@@ -185,15 +197,20 @@ aggrid_gridSizeChanged(params) {
     params.api.sizeColumnsToFit();
 }
 
-// onSelectionChanged() {
-//     this.gridApiDetails.setRowData([]);
-//     const selectedRow = this.gridApi.getSelectedRows();
-//     this.gridApiDetails.setRowData(selectedRow);
-// }
+onSelectionChangedCallPlanTable() {
+    console.log( this.getSelectedCallPlanTableData());
+}
 
-// deselectAll() {
-//     this.gridApi.deselectAll();
-// }
+deselectAll() {
+    this.gridApiCallPlan.deselectAll();
+}
+
+// ================================================================================
+// AG Grid Fetch Data
+// ================================================================================
+getSelectedCallPlanTableData(): Array<{}> {
+    return this.gridApiCallPlan.getSelectedRows();
+}
 
 // /*
 //     ~~~~~~~~~~ UI Interactions ~~~~~~~~~~

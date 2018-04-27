@@ -185,9 +185,15 @@ export class RateCardsConvertCsvComponent implements OnInit {
             const fileName = this.getSelectedFileNames(0);
             this.get_specificRatecardOneFile(eachRatecard, fileName);
         }
+        
+        setTimeout(3000);
 
+        this.flipButtonDisable();
+
+    }
+
+    flipButtonDisable() {
         this.disableStep2 = !this.disableStep2;
-
     }
 
     getSelectedFileNamesAZ(id): string {

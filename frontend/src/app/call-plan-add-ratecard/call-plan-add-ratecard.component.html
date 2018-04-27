@@ -2,14 +2,13 @@
 
     <div class="callplan-container">
         <ag-grid-angular id="callplan-table" class="ag-theme-balham" 
-            [columnDefs]="columnDefs" [rowData]="rowDataCallplan"
+            [columnDefs]="columnDefsCallPlan" [rowData]="rowDataCallPlan"
             [enableFilter]="true" [floatingFilter]="true"
             [rowSelection]="rowSelectionS" [suppressRowClickSelection]="true" (rowSelected)="rowSelected($event)"
-            (selectionChanged)="onSelectionChanged($event)" [enableSorting]="true"
+            (selectionChanged)="onSelectionChangedCallPlanTable($event)" [enableSorting]="true"
             [enableColResize]="true" [getNodeChildDetails]="getNodeChildDetails"
-            [pagination]="true" [paginationAutoPageSize]="true"
         
-            (gridReady)="on_GridReady_Callplan($event)"
+            (gridReady)="on_GridReady_CallPlan($event)"
         >
         </ag-grid-angular>
     </div>

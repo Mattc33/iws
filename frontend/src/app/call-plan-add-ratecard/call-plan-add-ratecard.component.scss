@@ -4,31 +4,31 @@ section {
     margin-right: 5px;
 
     .callplan-container {
-        width: 30%; height: auto;
+        width: 10%; height: auto;
         float: left;
 
         #callplan-table {
-            width: 100%; height: 80vw;
+            width: 100%; height: 82.5vh;
             float: left;
         }
     }
 
     .ratecard-container {
-        width: 30%; height: auto;
+        width: 40%; height: auto;
         float: left;
     
         #ratecardgroup-table {
-            width: 100%; height: 80vh;
+            width: 100%; height: 85vh;
             float: left;
         }
     }
 
     .ratecard-importer {
-        width: 40%; height: auto;
+        width: 50%; height: auto;
         float: left;
     
         #ratecardReview-table {
-            width: 99%; height: 80vh;
+            width: 99%; height: 85vh;
             float: left;
         }
     

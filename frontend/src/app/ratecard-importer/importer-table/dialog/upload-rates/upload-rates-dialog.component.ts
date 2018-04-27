@@ -119,6 +119,7 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     post_addRates(): void {
+        
         this.importerService.post_AddRateCard(this.finalRatecardObj)
             .subscribe(
                 (resp: Response) => {
@@ -532,6 +533,7 @@ export class UploadRatesDialogComponent implements OnInit {
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
+        console.log(this.finalRatecardObj);
     }
 
     allWorldCommunications(data) {
