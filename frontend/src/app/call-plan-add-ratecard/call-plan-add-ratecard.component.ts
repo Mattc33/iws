@@ -51,7 +51,7 @@ constructor(
     private nestedAgGridService: NestedAgGridService,
     private snackbarSharedService: SnackbarSharedService
 ) {
-    // this.getNodeChildDetails = this.setGroups();
+    this.getNodeChildDetails = this.setGroups();
     // this.columnDefsRatecards = this.createColumnDefs();
     // this.columnDefsReview = this.createColumnDefsReview();
 }
@@ -80,12 +80,6 @@ get_RateCards(): void {
     );
 }
 
-// ================================================================================
-// API Service
-// ================================================================================
-
-
-
 // post_attachRateCard(): void {
 //     const callplanId = this.currentRowId;
 //     const selectedRows = this.gridApiRatecard.getSelectedRows();
@@ -111,85 +105,85 @@ get_RateCards(): void {
 //     }
 // }
 
-// /*
-//     ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
-// */
-// on_GridReady_Callplan(params): void {
-//     this.gridApi = params.api;
-//     params.api.sizeColumnsToFit();
-//     this.rowSelection = 'multiple';
-// }
+// ================================================================================
+// AG Grid Init
+// ================================================================================
+on_GridReady_Callplan(params): void {
+    this.gridApiCallplan = params.api;
+    params.api.sizeColumnsToFit();
+}
 
-// on_GridReady_Ratecard(params): void {
+on_GridReady_Ratecard(params): void {
+    this.gridApiRatecard = params.api;
+    params.api.sizeColumnsToFit();
+}
 
-// }
+on_GridReady_Review(params): void {
+    this.gridApiDetails = params.api;
+    params.api.sizeColumnsToFit();
+}
 
-// on_GridReady_Review(params): void {
-//     this.gridApiDetails = params.api;
-//     params.api.sizeColumnsToFit();
-// }
+private setGroups() {
+    return function getNodeChildDetails(rowItem) {
+        if (rowItem.children) {
+            return {
+                group: true,
+                children: rowItem.children,
+                key: rowItem.ratecard_bundle
+            };
+        } else {
+            return null;
+        }
+    };
+}
 
-// private setGroups() {
-//     return function getNodeChildDetails(rowItem) {
-//         if (rowItem.children) {
-//             return {
-//                 group: true,
-//                 children: rowItem.children,
-//                 key: rowItem.ratecard_bundle
-//             };
-//         } else {
-//             return null;
-//         }
-//     };
-// }
+private createColumnDefs() {
+    return [
+        {
+            headerName: 'Ratecard Group', field: 'ratecard_bundle', checkboxSelection: true,
+            cellRenderer: 'agGroupCellRenderer', width: 300
+        },
+        {
+            headerName: 'Country', field: 'country'
+        },
+        {
+            headerName: 'Carrier', field: 'carrier_name'
+        },
+        {
+            headerName: 'Priority', field: 'priority', hide: true,
+        }
+    ];
+}
 
-// private createColumnDefs() {
-//     return [
-//         {
-//             headerName: 'Ratecard Group', field: 'ratecard_bundle', checkboxSelection: true,
-//             cellRenderer: 'agGroupCellRenderer', width: 300
-//         },
-//         {
-//             headerName: 'Country', field: 'country'
-//         },
-//         {
-//             headerName: 'Carrier', field: 'carrier_name'
-//         },
-//         {
-//             headerName: 'Priority', field: 'priority', hide: true,
-//         }
-//     ];
-// }
+private createColumnDefsReview() {
+    return [
+        {
+            headerName: 'ID', field: 'id',
+        },
+        {
+            headerName: 'Ratecard Name', field: 'ratecard_bundle',
+        },
+        {
+            headerName: 'Country', field: 'country'
+        },
+        {
+            headerName: 'Offer', field: 'offer'
+        },
+        {
+            headerName: 'Carrier', field: 'carrier_name'
+        },
+        {
+            headerName: 'Priority', field: 'priority', editable: true
+        }
+    ];
+}
 
-// private createColumnDefsReview() {
-//     return [
-//         {
-//             headerName: 'ID', field: 'id',
-//         },
-//         {
-//             headerName: 'Ratecard Name', field: 'ratecard_bundle',
-//         },
-//         {
-//             headerName: 'Country', field: 'country'
-//         },
-//         {
-//             headerName: 'Offer', field: 'offer'
-//         },
-//         {
-//             headerName: 'Carrier', field: 'carrier_name'
-//         },
-//         {
-//             headerName: 'Priority', field: 'priority', editable: true
-//         }
-//     ];
-// }
-
-// /*
-//     ~~~~~~~~~~ Grid UI Interctions ~~~~~~~~~~
-// */
-// aggrid_gridSizeChanged(params) {
-//     params.api.sizeColumnsToFit();
-// }
+// ================================================================================
+// AG Grid UI
+// ================================================================================
+aggrid_gridSizeChanged(params) {
+    params.api.sizeColumnsToFit();
+}
 
 // onSelectionChanged() {
 //     this.gridApiDetails.setRowData([]);
@@ -226,14 +220,14 @@ get_RateCards(): void {
 //     this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
 // }
 
-// toggleButtonStates(): boolean {
-//     if ( this.gridSelectionStatus > 0 ) {
-//       this.buttonToggleBoolean = false;
-//     } else {
-//       this.buttonToggleBoolean = true;
-//     }
-//     return this.buttonToggleBoolean;
-// }
+toggleButtonStates(): boolean {
+    if ( this.gridSelectionStatus > 0 ) {
+      this.buttonToggleBoolean = false;
+    } else {
+      this.buttonToggleBoolean = true;
+    }
+    return this.buttonToggleBoolean;
+}
 
 // click_attachRatecard(): void { // trigger on submit click
 //     this.post_attachRateCard();

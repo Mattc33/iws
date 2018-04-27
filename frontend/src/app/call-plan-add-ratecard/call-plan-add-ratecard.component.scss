@@ -3,8 +3,18 @@ section {
     margin-left: 5px;
     margin-right: 5px;
 
+    .callplan-container {
+        width: 30%; height: auto;
+        float: left;
+
+        #callplan-table {
+            width: 100%; height: 80vw;
+            float: left;
+        }
+    }
+
     .ratecard-container {
-        width: 40%; height: auto;
+        width: 30%; height: auto;
         float: left;
     
         #ratecardgroup-table {
@@ -14,7 +24,7 @@ section {
     }
 
     .ratecard-importer {
-        width: 60%; height: auto;
+        width: 40%; height: auto;
         float: left;
     
         #ratecardReview-table {

@@ -31,6 +31,8 @@ export class RateCardsConvertCsvComponent implements OnInit {
 
     private arrOfRates = [];
 
+    private disableStep2 = true;
+
     constructor(
         private rateCardsService: RateCardsService,
         private nestedAgGridService: NestedAgGridService,
@@ -181,10 +183,10 @@ export class RateCardsConvertCsvComponent implements OnInit {
         for ( let i = 0; i < this.currentSelectedRows.length; i++ ) {
             const eachRatecard = this.currentSelectedRows[i].id;
             const fileName = this.getSelectedFileNames(0);
-
             this.get_specificRatecardOneFile(eachRatecard, fileName);
-
         }
+
+        this.disableStep2 = !this.disableStep2;
 
     }
 
@@ -217,11 +219,11 @@ export class RateCardsConvertCsvComponent implements OnInit {
             );
         }
 
-        console.log(mergedWithCents);
-
         const csv = this.papaUnparse(mergedWithCents);
-        console.log(csv);
         this.saveToFileSystem(csv, fileName);
+
+        this.arrOfRates = [];
+        this.disableStep2 = !this.disableStep2;
     }
 
 
