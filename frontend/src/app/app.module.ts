@@ -83,7 +83,6 @@ import { CallPlanTableComponent } from './call-plan/call-plan-table/call-plan-ta
 
 import { AddCallPlanComponent } from './call-plan/call-plan-table/dialog/add-callplan/add-callplan.component';
 import { DelCallPlanComponent } from './call-plan/call-plan-table/dialog/del-callplan/del-callplan.component';
-import { AddRateCardComponent } from './call-plan/call-plan-table/dialog/add-rate-card/add-rate-card.component';
 import { AddCodeComponent } from './call-plan/call-plan-table/dialog/add-code/add-code.component';
 import { DettachRatecardsComponent } from './call-plan/call-plan-table/dialog/dettach-ratecards/dettach-ratecards.component';
 import { DettachCodesComponent } from './call-plan/call-plan-table/dialog/dettach-codes/dettach-codes.component';
@@ -109,6 +108,8 @@ import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { RateCardsAddTrunksComponent } from './rate-cards-add-trunks/rate-cards-add-trunks.component';
 import { RateCardsConvertCsvComponent } from './rate-cards-convert-csv/rate-cards-convert-csv.component';
+import { CallPlanAddRatecardComponent } from './call-plan-add-ratecard/call-plan-add-ratecard.component';
+import { CallPlanAddCodeComponent } from './call-plan-add-code/call-plan-add-code.component';
 
 
 @NgModule({
@@ -119,14 +120,15 @@ import { RateCardsConvertCsvComponent } from './rate-cards-convert-csv/rate-card
     CarrierComponent, CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
     RatecardImporterComponent, ImporterTableComponent, // Importer
     RateCardsComponent, RateCardsTableComponent, DeleteRateCardsDialogComponent, // RateCards
-    UploadRatesDialogComponent, 
+    UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent,
     TrunksComponent,  TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DeleteRatesComponent, // Trunks
     DetachTrunksComponent,
     CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
-    AddRateCardComponent, AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
+    CallPlanAddRatecardComponent, CallPlanAddCodeComponent,
+    AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
     LcrComponent, LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent, // LCR
     AccountsComponent,
-    SuccessSnackbarComponent, ErrorSnackbarComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent,
+    SuccessSnackbarComponent, ErrorSnackbarComponent,
   ],
   imports:
   [
@@ -153,7 +155,10 @@ import { RateCardsConvertCsvComponent } from './rate-cards-convert-csv/rate-card
         {path: 'rate-card-convert-csv', component: RateCardsConvertCsvComponent},
 
         {path: 'trunks', component: TrunksComponent},
-        {path: 'call-plan', component: CallPlanComponent},
+
+        {path: 'call-plan-view', component: CallPlanComponent},
+        {path: 'call-plan-add-ratecard', component: CallPlanAddRatecardComponent},
+
         {path: 'accounts', component: AccountsComponent},
         {path: 'login', component: LoginComponent},
         {path: 'registration', component: RegistrationComponent},
@@ -177,7 +182,7 @@ import { RateCardsConvertCsvComponent } from './rate-cards-convert-csv/rate-card
         UploadRatesDialogComponent, // Importer
         DeleteRateCardsDialogComponent,  // Ratecards
         DeleteTrunksComponent, AddTrunksComponent, DeleteRatesComponent, DetachTrunksComponent, // Trunks
-        AddCallPlanComponent, DelCallPlanComponent, AddRateCardComponent, AddCodeComponent, // Callplans
+        AddCallPlanComponent, DelCallPlanComponent, AddCodeComponent, // Callplans
         DettachRatecardsComponent, DettachCodesComponent
     ] , // Add in dialog
 })

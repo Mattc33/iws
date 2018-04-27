@@ -1,4 +1,3 @@
-
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { GridApi } from 'ag-grid';
@@ -28,6 +27,10 @@ export class RateCardsConvertCsvComponent implements OnInit {
 
     private download: string;
 
+    private oneCsv;
+
+    private arrOfRates = [];
+
     constructor(
         private rateCardsService: RateCardsService,
         private nestedAgGridService: NestedAgGridService,
@@ -55,13 +58,21 @@ export class RateCardsConvertCsvComponent implements OnInit {
 
     get_specificRatecard(ratecard_id: number, fileName: string): void {
         this.rateCardsService.get_RatesInRatecard(ratecard_id)
-        .subscribe(
-            data => {
-                console.log(data);
-                const csv = this.papaUnparse(data);
-                this.saveToFileSystem(csv, fileName);
-            }
-        );
+            .subscribe(
+                data => {
+                    const csv = this.papaUnparse(data);
+                    this.saveToFileSystem(csv, fileName);
+                }
+            );
+    }
+
+    get_specificRatecardOneFile(ratecard_id: number, fileName: string): void {
+        this.rateCardsService.get_RatesInRatecard(ratecard_id)
+            .subscribe(
+                data => {
+                    this.arrOfRates.push(data);
+                },
+            );
     }
 
     // ================================================================================
@@ -162,5 +173,37 @@ export class RateCardsConvertCsvComponent implements OnInit {
         const blob = new Blob([csv], { type: 'text/plain' });
         saveAs(blob, filename);
     }
+
+    // ================================================================================
+    // CSV conversion
+    // ================================================================================
+    onConvertJsonToCsvOneFile() {
+        for ( let i = 0; i < this.currentSelectedRows.length; i++ ) {
+            const eachRatecard = this.currentSelectedRows[i].id;
+            const fileName = this.getSelectedFileNames(0);
+
+            this.get_specificRatecardOneFile(eachRatecard, fileName);
+
+        }
+
+    }
+
+    getSelectedFileNamesAZ(id): string {
+        const ratecard_name = this.gridApi.getSelectedRows()[id].ratecard_bundle;
+        const country = this.gridApi.getSelectedRows()[id].country;
+        const carrier = this.gridApi.getSelectedRows()[id].carrier_name;
+        const currentTime = Date.now();
+        const fileName = `${ratecard_name}_AZ_${carrier}_${currentTime}`.replace(/\s/g, '');
+        return fileName;
+    }
+
+    formOneFile() {
+        const fileName = this.getSelectedFileNamesAZ(0);
+        const merged = [].concat.apply([], this.arrOfRates);
+        const csv = this.papaUnparse(merged);
+        console.log(csv);
+        this.saveToFileSystem(csv, fileName);
+    }
+
 
 }
