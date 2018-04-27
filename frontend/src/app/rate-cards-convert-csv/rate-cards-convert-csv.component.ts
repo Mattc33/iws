@@ -210,7 +210,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
                     sell_rate: merged[i].sell_rate * 100,
                     sell_rate_minimum: merged[i].sell_rate_minimum,
                     sell_rate_increment: merged[i].sell_rate_increment,
-                    buy_rate: merged[i].buy_rate,
+                    buy_rate: merged[i].buy_rate * 100,
                     buy_rate_minimum: merged[i].buy_rate_minimum,
                     buy_rate_increment: merged[i].buy_rate_increment
                 }
