@@ -89,7 +89,7 @@ export class UploadRatesDialogComponent implements OnInit {
             teleUCheckboxCtrl: [false],
             teleUPercentCtrl: [0],
             privateCheckboxCtrl: [true],
-            privatePercentCtrl: [1.5]
+            privatePercentCtrl: [1.05]
         });
         this.uploadRatesFormGroup = this.formBuilder.group({
             uploadRatesCtrl: ['', Validators.required]
@@ -119,7 +119,6 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     post_addRates(): void {
-        
         this.importerService.post_AddRateCard(this.finalRatecardObj)
             .subscribe(
                 (resp: Response) => {
