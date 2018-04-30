@@ -185,9 +185,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
             const fileName = this.getSelectedFileNames(0);
             this.get_specificRatecardOneFile(eachRatecard, fileName);
         }
-        
-        setTimeout(3000);
-
+        // setTimeout(30000);
         this.flipButtonDisable();
 
     }
@@ -206,6 +204,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
     }
 
     formOneFile() {
+        this.arrOfRates = [];
         const fileName = this.getSelectedFileNamesAZ(0);
         const merged = [].concat.apply([], this.arrOfRates);
         const mergedWithCents = [];
@@ -228,7 +227,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
         const csv = this.papaUnparse(mergedWithCents);
         this.saveToFileSystem(csv, fileName);
 
-        this.arrOfRates = [];
+        
         this.disableStep2 = !this.disableStep2;
     }
 

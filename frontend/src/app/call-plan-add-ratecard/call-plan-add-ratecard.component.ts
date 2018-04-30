@@ -53,7 +53,7 @@ constructor(
 ) {
     this.getNodeChildDetails = this.setGroups();
     this.columnDefsCallPlan = this.createColumnDefsCallPlan();
-    // this.columnDefsRatecards = this.createColumnDefs();
+    this.columnDefsRatecard = this.createColumnDefsRatecard();
     // this.columnDefsReview = this.createColumnDefsReview();
 }
 

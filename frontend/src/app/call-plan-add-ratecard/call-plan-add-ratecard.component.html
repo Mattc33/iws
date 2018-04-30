@@ -15,7 +15,7 @@
 
     <div class="ratecard-container">
         <ag-grid-angular id="ratecardgroup-table" class="ag-theme-balham" 
-            [columnDefs]="columnDefs" [rowData]="rowDataRatecard"
+            [columnDefs]="columnDefsRatecard" [rowData]="rowDataRatecard"
             [enableFilter]="true" [floatingFilter]="true"
             [rowSelection]="rowSelectionM" [suppressRowClickSelection]="true" [groupSelectsChildren]="true" (rowSelected)="rowSelected($event)"
             (selectionChanged)="onSelectionChanged($event)" [enableSorting]="true"
