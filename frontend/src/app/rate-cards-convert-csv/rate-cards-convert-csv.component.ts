@@ -204,7 +204,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
     }
 
     formOneFile() {
-        this.arrOfRates = [];
+        
         const fileName = this.getSelectedFileNamesAZ(0);
         const merged = [].concat.apply([], this.arrOfRates);
         const mergedWithCents = [];
@@ -227,7 +227,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
         const csv = this.papaUnparse(mergedWithCents);
         this.saveToFileSystem(csv, fileName);
 
-        
+        this.arrOfRates = [];
         this.disableStep2 = !this.disableStep2;
     }
 
