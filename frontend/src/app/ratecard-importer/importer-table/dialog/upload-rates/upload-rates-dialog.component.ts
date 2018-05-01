@@ -538,9 +538,9 @@ export class UploadRatesDialogComponent implements OnInit {
     allWorldCommunications(data) {
         const dataSliced = data.slice(9, -1);
         for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][3];
-            const prefix: string = dataSliced[i][2];
-            const buyrate: number = dataSliced[i][4] * 1;
+            const destination: string = dataSliced[i][2];
+            const prefix: string = dataSliced[i][1];
+            const buyrate: number = dataSliced[i][3] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
