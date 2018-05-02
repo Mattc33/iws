@@ -333,7 +333,11 @@ export class UploadRatesDialogComponent implements OnInit {
             console.log('using All World Communications Profile');
             this.allWorldCommunications(data);
         }
-        if (currentCarrierName === '') {
+        if (currentCarrierName === 'KFTel') {
+            console.log('using KFTel Profile');
+            this.kftelProfile(data);
+        }
+        if (currentCarrierName === 'default') {
             console.log('using Default Profile');
             this.defaultProfile(data);
         }
@@ -369,7 +373,7 @@ export class UploadRatesDialogComponent implements OnInit {
         for ( let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];
             const prefix: string = dataSliced[i][1];
-            const buyrate: number = dataSliced[i][2].slice(1) * 1;
+            const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
@@ -541,6 +545,17 @@ export class UploadRatesDialogComponent implements OnInit {
             const destination: string = dataSliced[i][2];
             const prefix: string = dataSliced[i][1];
             const buyrate: number = dataSliced[i][3] * 1;
+            const sellrate: number = buyrate;
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
+        }
+    }
+
+    kftelProfile(data) {
+        const dataSliced = data.slice(1);
+        for (let i = 0; i < dataSliced.length; i++) {
+            const destination: string = dataSliced[i][0];
+            const prefix: string = dataSliced[i][1];
+            const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
