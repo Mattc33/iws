@@ -204,7 +204,6 @@ export class RateCardsConvertCsvComponent implements OnInit {
     }
 
     formOneFile() {
-        
         const fileName = this.getSelectedFileNamesAZ(0);
         const merged = [].concat.apply([], this.arrOfRates);
         const mergedWithCents = [];

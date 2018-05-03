@@ -286,66 +286,72 @@ export class UploadRatesDialogComponent implements OnInit {
 
     profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
         const currentCarrierName = this.extract_CarrierName();
-        if (currentCarrierName === 'PowerNet Global') {
+        if (currentCarrierName.toLowerCase() === 'powerNet global') {
             console.log('using Power Net Global Profile');
             this.powerNetGlobalProfile(data);
         }
-        if (currentCarrierName === 'VoxBeam') {
+        if (currentCarrierName.toLowerCase() === 'voxbeam') {
             console.log('using VoxBeam Profile');
             this.voxBeamProfile(data);
         }
-        if (currentCarrierName === 'Alcazar') {
+        if (currentCarrierName.toLowerCase() === 'alcazar') {
             console.log('using Alcazar Networks Inc Profile');
             this.alcazarNetworksProfile(data);
         }
-        if (currentCarrierName === 'Bankai Group') {
+        if (currentCarrierName.toLowerCase() === 'bankai group') {
             this.bankaiGroupProfile(data);
         }
-        if (currentCarrierName === 'PCCW Global' ) {
+        if (currentCarrierName.toLowerCase() === 'pccw global' ) {
             console.log('using PCCW Global Profile');
             this.pccwGlobalProfile(data);
         }
-        if (currentCarrierName === 'StarSSip') {
+        if (currentCarrierName.toLowerCase() === 'starssip') {
             console.log('using Starsipp Profile');
             this.starsippProfile(data);
         }
-        if (currentCarrierName === 'Teleinx') {
+        if (currentCarrierName.toLowerCase() === 'teleinx') {
             console.log('using Teleinx Profile');
             this.teleinxProfile(data);
         }
-        if (currentCarrierName === 'VoiPlatinum Portal') {
+        if (currentCarrierName.toLowerCase() === 'voiplatinum portal') {
             console.log('using VoiPlatinum Profile');
             this.voiPlatinumProfile(data);
         }
-        if (currentCarrierName === 'VOIP Routes') {
+        if (currentCarrierName.toLowerCase() === 'voip routes') {
             console.log('using VOIP Routes Profile');
             this.voipRoutesProfile(data);
         } 
-        if (currentCarrierName === 'Megatel') {
+        if (currentCarrierName.toLowerCase() === 'megatel') {
             console.log('uing Megatel Profile');
             this.megatelProfile(data);
         }
-        if (currentCarrierName === 'Telia Carrier') {
+        if (currentCarrierName.toLowerCase() === 'telia carrier') {
             console.log('using Telia Carrier Profile');
             this.teliaCarrierProfile(data);
         }
-        if (currentCarrierName === 'All World Communications') {
+        if (currentCarrierName.toLowerCase() === 'all world communications') {
             console.log('using All World Communications Profile');
             this.allWorldCommunications(data);
         }
-        if (currentCarrierName === 'KFTel') {
+        if (currentCarrierName.toLowerCase() === 'kftel') {
             console.log('using KFTel Profile');
             this.kftelProfile(data);
         }
-        if (currentCarrierName === 'default') {
+        if (currentCarrierName.toLowerCase() === 'default') {
             console.log('using Default Profile');
             this.defaultProfile(data);
         }
     }
-
+// /#|_/g
     generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview
+        let destinationRemoveBadChar = destination.replace(/\\|'|\\'/ , '');
+        if  (destinationRemoveBadChar.length > 64) {
+            destinationRemoveBadChar =  destinationRemoveBadChar.substring(0, 64);
+            console.log(destinationRemoveBadChar);
+        }
+
         this.finalRatecardObj.rates.push(
-            { destination: destination,
+            {   destination: destinationRemoveBadChar,
                 prefix: prefix,
                 buy_rate: buyrate,
                 buy_rate_minimum: 1,
@@ -356,7 +362,7 @@ export class UploadRatesDialogComponent implements OnInit {
             },
         );
         this.ratesPreviewObj.push(
-            { destination: destination,
+            { destination: destinationRemoveBadChar,
                 prefix: prefix,
                 buy_rate: buyrate,
                 buy_rate_minimum: 1,
@@ -425,7 +431,7 @@ export class UploadRatesDialogComponent implements OnInit {
             let prefix: string = dataSliced[i][1];
                 if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
-                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
@@ -439,9 +445,9 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") { 
+                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') { 
                     destination = destination.slice(1, -1);
-                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][4] * 1;
@@ -455,9 +461,9 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][1];
             let prefix: string = dataSliced[i][2];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
+                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
                     destination = destination.slice(1, -1);
-                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
@@ -471,9 +477,9 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][1];
             let prefix: string = dataSliced[i][2];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
+                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
                     destination = destination.slice(1, -1);
-                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
@@ -487,10 +493,10 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
+                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
                     destination = destination.slice(1, -1);
                 }
-                if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][2] * 1;
@@ -504,10 +510,10 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][1];
             let prefix: string = dataSliced[i][0];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
+                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
                     destination = destination.slice(1, -1);
                 }
-                if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][2] * 1;
