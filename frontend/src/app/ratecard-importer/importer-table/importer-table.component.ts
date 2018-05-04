@@ -29,6 +29,8 @@ export class ImporterTableComponent implements OnInit {
     // Internal Service props
     private rowObj;
     private postTableArr;
+    private ratesInsertedIntoDB;
+    private totalRatesProcessed = 0;
 
     constructor(
         private importerService: ImporterService,
@@ -43,7 +45,10 @@ export class ImporterTableComponent implements OnInit {
     ngOnInit() {
         this.getNodeChildDetails = this.setGroups();
         this.importerSharedService.currentPostTableObj.subscribe(
-            data => { this.rowData = data; }
+            data => { 
+                this.rowData = data;
+                for ( let i = 0; i < this.rowData.length; i++ ) { this.totalRatesProcessed += this.rowData[i].rates.length; }
+            }
         );
     }
 

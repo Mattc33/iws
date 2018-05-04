@@ -32,7 +32,7 @@ export class UploadRatesDialogComponent implements OnInit {
     private rowData;
     private columnDefs;
 
-    // Ag grid api & ui 
+    // Ag grid api & ui
     private gridApi: GridApi;
     private gridSelectionStatus: number;
 
@@ -60,6 +60,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     // Internal Service
     private postTableArr;
+    private totalRatesProcessed = 0;
 
     constructor(
         public dialogRef: MatDialogRef <ImporterTableComponent>,
@@ -121,8 +122,8 @@ export class UploadRatesDialogComponent implements OnInit {
     post_addRates(): void {
         this.importerService.post_AddRateCard(this.finalRatecardObj)
             .subscribe(
-                (resp: Response) => {
-                    console.log(resp);
+                (resp) => {
+                    for ( let i = 0; i < resp.length; i++ ) { this.totalRatesProcessed += resp[i].rates.length; }
                     if ( resp.status === 200 ) {
                         this.snackbarSharedService.snackbar_success('Ratecards successful imported.', 3000);
                     }
@@ -286,7 +287,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
         const currentCarrierName = this.extract_CarrierName();
-        if (currentCarrierName.toLowerCase() === 'powerNet global') {
+        if (currentCarrierName.toLowerCase() === 'powernet global') {
             console.log('using Power Net Global Profile');
             this.powerNetGlobalProfile(data);
         }
@@ -342,7 +343,7 @@ export class UploadRatesDialogComponent implements OnInit {
             this.defaultProfile(data);
         }
     }
-// /#|_/g
+
     generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview
         let destinationRemoveBadChar = destination.replace(/\\|'|\\'/ , '');
         if  (destinationRemoveBadChar.length > 64) {
@@ -564,6 +565,7 @@ export class UploadRatesDialogComponent implements OnInit {
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
+            console.log(this.finalRatecardObj);
         }
     }
 
