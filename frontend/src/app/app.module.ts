@@ -90,7 +90,6 @@ import { CallPlanSharedService } from './call-plan/services/call-plan.shared.ser
 import { CodesSharedService } from './global-service/codes.shared.service';
 
 // LCR
-import { LcrComponent } from './lcr/lcr.component';
 import { LcrCallPlanTableComponent } from './lcr/lcr-callplan-table/lcr-callplan-table.component';
 import { LcrCarrierTableComponent } from './lcr/lcr-carrier-table/lcr-carrier-table.component';
 import { LcrRatecardTableComponent } from './lcr/lcr-ratecard-table/lcr-ratecard-table.component';
@@ -123,7 +122,7 @@ import { CallPlanAddCodeComponent } from './call-plan-add-code/call-plan-add-cod
     CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
     CallPlanAddRatecardComponent, CallPlanAddCodeComponent,
     AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
-    LcrComponent, LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent, // LCR
+    LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent, // LCR
     AccountsComponent,
     SuccessSnackbarComponent, ErrorSnackbarComponent,
   ],
@@ -156,10 +155,15 @@ import { CallPlanAddCodeComponent } from './call-plan-add-code/call-plan-add-cod
         {path: 'call-plan-view', component: CallPlanComponent},
         {path: 'call-plan-add-ratecard', component: CallPlanAddRatecardComponent},
 
+        {path: 'lcr-carrier', component: LcrCarrierTableComponent},
+        {path: 'lcr-ratecard', component: LcrRatecardTableComponent},
+        {path: 'lcr-trunk', component: LcrTrunkTableComponent},
+        {path: 'lcr-callplan', component: LcrCallPlanTableComponent},
+
         {path: 'accounts', component: AccountsComponent},
         {path: 'login', component: LoginComponent},
         {path: 'registration', component: RegistrationComponent},
-        {path: 'lcr', component: LcrComponent},
+
     ])
   ],
     providers: [
