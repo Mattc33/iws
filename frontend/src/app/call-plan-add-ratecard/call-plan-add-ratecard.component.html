@@ -1,12 +1,12 @@
 <section>
-
     <div class="callplan-container">
         <ag-grid-angular id="callplan-table" class="ag-theme-balham" 
             [columnDefs]="columnDefsCallPlan" [rowData]="rowDataCallPlan"
             [enableFilter]="true" [floatingFilter]="true"
-            [rowSelection]="rowSelectionS" [suppressRowClickSelection]="true" (rowSelected)="rowSelected($event)"
-            (selectionChanged)="onSelectionChangedCallPlanTable($event)" [enableSorting]="true"
-            [enableColResize]="true" [getNodeChildDetails]="getNodeChildDetails"
+            [rowSelection]="rowSelectionS" [suppressRowClickSelection]="true"
+            [enableSorting]="true" [suppressMovableColumns]="true"
+            [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
         
             (gridReady)="on_GridReady_CallPlan($event)"
         >
@@ -16,12 +16,13 @@
     <div class="ratecard-container">
         <ag-grid-angular id="ratecardgroup-table" class="ag-theme-balham" 
             [columnDefs]="columnDefsRatecard" [rowData]="rowDataRatecard"
-            [enableFilter]="true" [floatingFilter]="true"
-            [rowSelection]="rowSelectionM" [suppressRowClickSelection]="true" [groupSelectsChildren]="true" (rowSelected)="rowSelected($event)"
+            [enableFilter]="true" [floatingFilter]="true" [suppressMovableColumns]="true"
+            [rowSelection]="rowSelectionM" [suppressRowClickSelection]="true" [groupSelectsChildren]="true"
             (selectionChanged)="onSelectionChanged($event)" [enableSorting]="true"
-            [enableColResize]="true"
+            [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
             [getNodeChildDetails]="getNodeChildDetails"
             [pagination]="true" [paginationAutoPageSize]="true"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
         
             (gridReady)="on_GridReady_Ratecard($event)"
         >
@@ -36,13 +37,15 @@
             [enableFilter]="true" [floatingFilter]="true"
             [enableColResize]="true" [enableSorting]="true"
             [pagination]="true" [paginationAutoPageSize]="true"
-            [enableCellChangeFlash]="true"
+            [enableCellChangeFlash]="true" (gridSizeChanged)="onGridSizeChanged($event)"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
+
             (gridReady)="on_GridReady_Review($event)"
         >
         </ag-grid-angular>
-            <button mat-button> Attach Ratecards </button>
-            <mat-slider max="10" min="1" thumb-label="true" value="1" tickInterval="1" (change)="handleSliderChange($event)" [disabled]="toggleButtonStates()"></mat-slider>
-            <span><strong>Priority:</strong> {{currentSliderValue}}</span>
+            <span>Priority:</span>
+            <mat-slider max="10" min="1" thumb-label="true" value="1" tickInterval="1" (change)="handleSliderChange($event)" [disabled]="toggleButtonStates()" label="Priority"></mat-slider>
+            <button mat-button class="attach-ratecard" (click)="click_attachRatecard()"> Attach Ratecards </button>
     </div>
     
 </section>

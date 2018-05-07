@@ -1,12 +1,13 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { GridApi } from 'ag-grid';
 
-import { NestedAgGridService } from './../global-service/nestedAgGrid.shared.service';
 import { CallPlanService } from './../call-plan/services/call-plan.api.service';
 import { CallPlanSharedService } from './../call-plan/services/call-plan.shared.service';
-import { RateCardsService } from './../rate-cards/services/rate-cards.api.service';
-import { SnackbarSharedService } from './../global-service/snackbar.shared.service';
+import { RateCardsService } from './../ratecard/services/rate-cards.api.service';
+
+import { NestedAgGridService } from './../global-service/nestedAgGrid.shared.service';
+import { SnackbarSharedService } from './../shared/services/global/snackbar.shared.service';
+import { ToggleButtonStateService } from './../shared/services/global/buttonStates.shared.service';
 
 
 @Component({
@@ -17,15 +18,9 @@ import { SnackbarSharedService } from './../global-service/snackbar.shared.servi
 export class CallPlanAddRatecardComponent implements OnInit {
 
 // AG grid setup props
-private rowDataCallPlan;
-private columnDefsCallPlan;
-
-private rowDataRatecard;
-private columnDefsRatecard;
-private getNodeChildDetails;
-
-private rowDataReview;
-private columnDefsReview;
+private rowDataCallPlan; private columnDefsCallPlan;
+private rowDataRatecard; private columnDefsRatecard; private getNodeChildDetails;
+private rowDataReview; private columnDefsReview;
 
 // AG grid API props
 private gridApiCallPlan: GridApi;
@@ -38,29 +33,25 @@ private rowSelectionM = 'multiple';
 private currentSliderValue;
 
 // UI Props
-private buttonToggleBoolean = true;
-private gridSelectionStatus: number;
-
-// Internal Service Props
-private currentRowId;
+private gridSelectionStatus;
 
 constructor(
     private callPlanService: CallPlanService,
     private callPlanSharedService: CallPlanSharedService,
     private rateCardsService: RateCardsService,
     private nestedAgGridService: NestedAgGridService,
-    private snackbarSharedService: SnackbarSharedService
+    private snackbarSharedService: SnackbarSharedService,
+    private toggleButtonStateService: ToggleButtonStateService
 ) {
     this.getNodeChildDetails = this.setGroups();
     this.columnDefsCallPlan = this.createColumnDefsCallPlan();
     this.columnDefsRatecard = this.createColumnDefsRatecard();
-    // this.columnDefsReview = this.createColumnDefsReview();
+    this.columnDefsReview = this.createColumnDefsReview();
 }
 
 ngOnInit() {
     this.get_CallPlans();
     this.get_RateCards();
-    // this.callPlanSharedService.currentRowAll.subscribe(data => this.currentRowId = data);
 }
 
 // ================================================================================
@@ -68,44 +59,31 @@ ngOnInit() {
 // ================================================================================
 get_CallPlans(): void {
     this.callPlanService.get_allCallPlan().subscribe(
-        data => {
-            this.rowDataCallPlan = data;
-        }
+        data => { this.rowDataCallPlan = data; }
     );
 }
 
 get_RateCards(): void {
     this.rateCardsService.get_RateCard().subscribe(
-        data => {
-            this.rowDataRatecard = this.nestedAgGridService.formatDataToNestedArr(data);
-        }
+        data => { this.rowDataRatecard = this.nestedAgGridService.formatDataToNestedArr(data); }
     );
 }
 
-// post_attachRateCard(): void {
-//     const callplanId = this.currentRowId;
-//     const selectedRows = this.gridApiRatecard.getSelectedRows();
-//     for (let i = 0; i < selectedRows.length; i++) {
-//         const ratecardId = selectedRows[i].id;
-//         const body = {
-//             priority: selectedRows[i].priority
-//         };
-
-//         this.callPlanService.post_attachRateCard(callplanId, ratecardId, body)
-//             .subscribe(
-//                 (resp: Response) => {
-//                     console.log(resp);
-//                     if ( resp.status === 200 ) {
-//                         this.snackbarSharedService.snackbar_success('Ratecard attached successful.', 2000);
-//                     }
-//                 },
-//                 error => {
-//                     console.log(error);
-//                     this.snackbarSharedService.snackbar_error('Ratecard failed to attach.', 2000);
-//                 }
-//             );
-//     }
-// }
+post_attachRateCard(callplanId: number, ratecardId: number, body: any): void {
+    this.callPlanService.post_attachRateCard(callplanId, ratecardId, body)
+        .subscribe(
+            (resp) => {
+                console.log(resp);
+                if ( resp.status === 200 ) {
+                    this.snackbarSharedService.snackbar_success('Ratecard attached successful.', 2000);
+                }
+            },
+            error => {
+                console.log(error);
+                this.snackbarSharedService.snackbar_error('Ratecard failed to attach.', 2000);
+            }
+        );
+}
 
 // ================================================================================
 // AG Grid Init
@@ -153,13 +131,16 @@ private createColumnDefsRatecard() {
     return [
         {
             headerName: 'Ratecard Group', field: 'ratecard_bundle', checkboxSelection: true,
-            cellRenderer: 'agGroupCellRenderer', width: 300
+            cellRenderer: 'agGroupCellRenderer', width: 300,
+            cellStyle: { 'border-right': '1px solid #E0E0E0' },
         },
         {
-            headerName: 'Country', field: 'country'
+            headerName: 'Country', field: 'country',
+            cellStyle: { 'border-right': '1px solid #E0E0E0' },
         },
         {
-            headerName: 'Carrier', field: 'carrier_name'
+            headerName: 'Carrier', field: 'carrier_name',
+            cellStyle: { 'border-right': '1px solid #E0E0E0' },
         },
         {
             headerName: 'Priority', field: 'priority', hide: true,
@@ -170,84 +151,119 @@ private createColumnDefsRatecard() {
 private createColumnDefsReview() {
     return [
         {
-            headerName: 'ID', field: 'id',
+            headerName: 'ID', field: 'id', width: 80,
+            cellStyle: { 'border-right': '1px solid #E0E0E0' },
         },
         {
-            headerName: 'Ratecard Name', field: 'ratecard_bundle',
+            headerName: 'Ratecard Name', field: 'name',
+            cellStyle: { 'border-right': '1px solid #E0E0E0' },
         },
         {
-            headerName: 'Country', field: 'country'
+            headerName: 'Country', field: 'country',
+            cellStyle: { 'border-right': '1px solid #E0E0E0' },
         },
         {
-            headerName: 'Offer', field: 'offer'
+            headerName: 'Offer', field: 'offer', width: 100,
+            cellStyle: { 'border-right': '1px solid #E0E0E0' },
         },
         {
-            headerName: 'Carrier', field: 'carrier_name'
+            headerName: 'Carrier', field: 'carrier_name',
+            cellStyle: { 'border-right': '1px solid #E0E0E0' },
         },
         {
-            headerName: 'Priority', field: 'priority', editable: true
+            headerName: 'Priority', field: 'priority', editable: true,
         }
     ];
 }
 
 // ================================================================================
-// AG Grid UI
+// AG Grid UI events
 // ================================================================================
-aggrid_gridSizeChanged(params) {
+onGridSizeChanged(params) {
     params.api.sizeColumnsToFit();
-}
-
-onSelectionChangedCallPlanTable() {
-    console.log( this.getSelectedCallPlanTableData());
 }
 
 deselectAll() {
     this.gridApiCallPlan.deselectAll();
+    this.gridApiRatecard.deselectAll();
+    this.gridApiDetails.setRowData([]);
+}
+
+onSelectionChanged() {
+    this.gridApiDetails.setRowData(this.generateDetailsRowData());
+    this.gridSelectionStatus = this.generateDetailsRowData().length;
+}
+
+handleSliderChange(params) {
+    const currentSliderValue = params.value;
+    this.currentSliderValue = currentSliderValue;
+    this.updateDetailGridData(currentSliderValue);
+}
+
+click_attachRatecard(): void { // trigger on submit click
+    this.generateApiService();
+}
+
+// ================================================================================
+// UI States
+// ================================================================================
+toggleButtonStates(): boolean {
+    return this.toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus);
+}
+
+updateDetailGridData(currentSliderValue) {
+    const itemsToUpdate = [];
+    this.gridApiDetails.forEachNodeAfterFilterAndSort(function(rowNode) {
+        const data = rowNode.data;
+        data.priority = currentSliderValue;
+        itemsToUpdate.push(data);
+    });
+
+    this.gridApiDetails.updateRowData({update: itemsToUpdate });
 }
 
 // ================================================================================
 // AG Grid Fetch Data
 // ================================================================================
-getSelectedCallPlanTableData(): Array<{}> {
+getSelectedCallPlanData(): any {
     return this.gridApiCallPlan.getSelectedRows();
 }
 
-// /*
-//     ~~~~~~~~~~ UI Interactions ~~~~~~~~~~
-// */
-// handleSliderChange(params) {
-//     const currentSliderValue = params.value;
-//     this.currentSliderValue = currentSliderValue;
-//     this.updateDetailGridData(currentSliderValue);
-// }
-
-// updateDetailGridData(currentSliderValue) {
-//     const itemsToUpdate = [];
-//     this.gridApiDetails.forEachNodeAfterFilterAndSort(function(rowNode) {
-//         const data = rowNode.data;
-//         data.priority = currentSliderValue;
-//         itemsToUpdate.push(data);
-//     });
-
-//     this.gridApiDetails.updateRowData({update: itemsToUpdate });
-//     this.gridApi.updateRowData({update: itemsToUpdate});
-// }
-
-// rowSelected(): void { // Toggle button boolean if rowSelected > 0
-//     this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
-// }
-
-toggleButtonStates(): boolean {
-    if ( this.gridSelectionStatus > 0 ) {
-      this.buttonToggleBoolean = false;
-    } else {
-      this.buttonToggleBoolean = true;
-    }
-    return this.buttonToggleBoolean;
+getSelectedRatecardData(): any {
+    return this.gridApiRatecard.getSelectedRows();
 }
 
-// click_attachRatecard(): void { // trigger on submit click
-//     this.post_attachRateCard();
-// }
+getSelectedDetailsData(num: string): any {
+    return this.gridApiDetails.getRowNode(num);
+}
+
+generateDetailsRowData() {
+    const ratecardData = this.getSelectedRatecardData();
+    const detailsRowData = [];
+    for ( let i = 0; i < ratecardData.length; i++) {
+        detailsRowData.push(
+            {
+                id: ratecardData[i].id,
+                name: ratecardData[i].name,
+                country: ratecardData[i].country,
+                offer: ratecardData[i].offer,
+                carrier_name: ratecardData[i].carrier_name,
+                priority: 1
+            }
+        );
+    }
+    return detailsRowData;
+}
+
+generateApiService() {
+    const callplanId = this.getSelectedCallPlanData()[0].id;
+    const detailTableLen = this.gridApiDetails.paginationGetRowCount();
+
+    for ( let i = 0; i < detailTableLen; i++ ) {
+        const ratecardId = this.getSelectedDetailsData(`${i}`).data.id;
+        const body = { priority: this.getSelectedDetailsData(`${i}`).data.priority };
+        this.post_attachRateCard(callplanId, ratecardId, body);
+    }
+}
 
 }

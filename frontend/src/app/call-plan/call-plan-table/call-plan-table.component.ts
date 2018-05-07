@@ -6,7 +6,7 @@ import { GridApi } from 'ag-grid';
 import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
 import { CallPlanService } from './../services/call-plan.api.service';
 import { CallPlanSharedService } from './../services/call-plan.shared.service';
-import { SnackbarSharedService } from './../../global-service/snackbar.shared.service';
+import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
 
 import { DelCallPlanComponent } from './dialog/del-callplan/del-callplan.component';
 import { AddCallPlanComponent } from './dialog/add-callplan/add-callplan.component';

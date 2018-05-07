@@ -7,8 +7,8 @@ import { AddCarrierDialogComponent } from '../carrier-table/dialog/add-carrier/a
 
 import { CarrierService } from './../services/carrier.api.service';
 import { CarrierSharedService } from './../services/carrier.shared.service';
-import { SnackbarSharedService } from './../../global-service/snackbar.shared.service';
-import { ToggleButtonStateService } from './../../global-service/buttonStates.shared.service';
+import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
+import { ToggleButtonStateService } from './../../shared/services/global/buttonStates.shared.service';
 
 @Component({
   selector: 'app-carrier-table',

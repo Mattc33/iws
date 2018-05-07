@@ -4,8 +4,8 @@ import { GridApi, ColumnApi } from 'ag-grid';
 
 import { ImporterService } from './../services/importer.api.service';
 import { ImporterSharedService } from './../services/importer.shared.service';
-import { RateCardsService } from './../../rate-cards/services/rate-cards.api.service';
-import { SnackbarSharedService } from './../../global-service/snackbar.shared.service';
+import { RateCardsService } from './../../services/rate-cards.api.service';
+import { SnackbarSharedService } from './../../../shared/services/global/snackbar.shared.service';
 
 import { UploadRatesDialogComponent } from './dialog/upload-rates/upload-rates-dialog.component';
 

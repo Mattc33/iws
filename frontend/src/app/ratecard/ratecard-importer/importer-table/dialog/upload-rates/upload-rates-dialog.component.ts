@@ -8,9 +8,9 @@ import { PapaParseService } from 'ngx-papaparse';
 import { ImporterTableComponent } from './../../importer-table.component';
 import { ImporterService } from './../../../services/importer.api.service';
 import { ImporterSharedService } from './../../../services/importer.shared.service';
-import { TrunksService } from './../../../../trunks/services/trunks.api.service';
-import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
-import { ToggleButtonStateService } from './../../../../global-service/buttonStates.shared.service';
+import { TrunksService } from './../../../../../trunks/services/trunks.api.service';
+import { SnackbarSharedService } from './../../../../../shared/services/global/snackbar.shared.service';
+import { ToggleButtonStateService } from './../../../../../shared/services/global/buttonStates.shared.service';
 
 @Component({
   selector: 'app-upload-rates',

@@ -9,8 +9,8 @@ import { AddTrunksComponent } from './dialog/add-trunks/add-trunks.component';
 
 import { TrunksService } from '../services/trunks.api.service';
 import { TrunksSharedService } from './../services/trunks.shared.service';
-import { ToggleButtonStateService } from './../../global-service/buttonStates.shared.service';
-import { SnackbarSharedService } from './../../global-service/snackbar.shared.service';
+import { ToggleButtonStateService } from './../../shared/services/global/buttonStates.shared.service';
+import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
 
 @Component({
   selector: 'app-trunks-table',

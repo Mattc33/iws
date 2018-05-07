@@ -7,7 +7,7 @@ import { TrunksTableComponent } from './../../trunks-table.component';
 import { TrunksService } from './../../../services/trunks.api.service';
 import { TrunksSharedService } from './../../../services/trunks.shared.service';
 import { CarrierService } from './../../../../carrier/services/carrier.api.service';
-import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
+import { SnackbarSharedService } from './../../../../shared/services/global/snackbar.shared.service';
 
 @Component({
   selector: 'app-add-trunks',

@@ -3,7 +3,7 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angul
 import { Observable } from 'rxjs/Observable';
 
 import { ImporterSharedService } from './importer.shared.service';
-import { ApiSettingsSharedService } from './../../global-service/api-settings.shared.service';
+import { ApiSettingsSharedService } from './../../../global-service/api-settings.shared.service';
 
 // Observable operators
 import 'rxjs/add/operator/map';

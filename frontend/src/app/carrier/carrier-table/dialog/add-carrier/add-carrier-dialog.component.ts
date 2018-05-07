@@ -6,7 +6,7 @@ import { CarrierTableComponent } from './../../carrier-table.component';
 
 import { CarrierService } from '../../../services/carrier.api.service';
 import { CarrierSharedService } from './../../../services/carrier.shared.service';
-import { SnackbarSharedService } from './../../../../global-service/snackbar.shared.service';
+import { SnackbarSharedService } from './../../../../shared/services/global/snackbar.shared.service';
 
 @Component({
     selector: 'app-add-carrier-dialog-inner',

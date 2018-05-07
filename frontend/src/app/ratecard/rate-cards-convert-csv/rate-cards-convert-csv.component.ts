@@ -4,9 +4,9 @@ import { GridApi } from 'ag-grid';
 import { PapaParseService } from 'ngx-papaparse';
 import { saveAs } from 'file-saver/FileSaver';
 
-import { NestedAgGridService } from './../global-service/nestedAgGrid.shared.service';
-import { RateCardsService } from './../rate-cards/services/rate-cards.api.service';
-import { RateCardsComponent } from './../rate-cards/rate-cards.component';
+import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
+import { RateCardsService } from './../services/rate-cards.api.service';
+import { RateCardsTableComponent } from './../rate-cards-table/rate-cards-table.component';
 
 @Component({
   selector: 'app-rate-cards-convert-csv',

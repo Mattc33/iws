@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 
-import { SuccessSnackbarComponent } from './../snackbars/success/success.snackbar.component';
-import { ErrorSnackbarComponent } from './../snackbars/error/error.snackbar.component';
+import { SuccessSnackbarComponent } from './../../components/snackbars/success/success.snackbar.component';
+import { ErrorSnackbarComponent } from './../../components/snackbars/error/error.snackbar.component';
 
 @Injectable()
 export class SnackbarSharedService {
@@ -27,5 +27,9 @@ export class SnackbarSharedService {
           verticalPosition: 'bottom',
           panelClass: 'snackbar-error-container'
         });
+    }
+
+    snackbar_info(msg: string, duration: number): void {
+
     }
 }

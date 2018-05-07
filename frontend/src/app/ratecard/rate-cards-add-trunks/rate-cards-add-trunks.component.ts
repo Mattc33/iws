@@ -1,11 +1,11 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { GridApi } from 'ag-grid';
 
-import { RateCardsService } from './../rate-cards/services/rate-cards.api.service';
-import { RateCardsSharedService } from './../rate-cards/services/rate-cards.shared.service';
-import { TrunksService } from './../trunks/services/trunks.api.service';
-import { NestedAgGridService } from './../global-service/nestedAgGrid.shared.service';
-import { SnackbarSharedService } from './../global-service/snackbar.shared.service';
+import { RateCardsService } from './../services/rate-cards.api.service';
+import { RateCardsSharedService } from './../services/rate-cards.shared.service';
+import { TrunksService } from './../../trunks/services/trunks.api.service';
+import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
+import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
 
 @Component({
   selector: 'app-rate-cards-add-trunks',
