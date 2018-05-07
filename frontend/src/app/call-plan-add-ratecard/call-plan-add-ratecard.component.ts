@@ -183,7 +183,7 @@ onGridSizeChanged(params) {
     params.api.sizeColumnsToFit();
 }
 
-deselectAll() {
+resetAttachRatecardForm() {
     this.gridApiCallPlan.deselectAll();
     this.gridApiRatecard.deselectAll();
     this.gridApiDetails.setRowData([]);
@@ -200,8 +200,10 @@ handleSliderChange(params) {
     this.updateDetailGridData(currentSliderValue);
 }
 
-click_attachRatecard(): void { // trigger on submit click
+click_attachRatecard() { // trigger on submit click
     this.generateApiService();
+    this.gridApiRatecard.deselectAll();
+    this.gridApiDetails.setRowData([]);
 }
 
 // ================================================================================
