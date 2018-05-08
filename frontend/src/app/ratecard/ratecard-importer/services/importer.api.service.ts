@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
 
 import { ImporterSharedService } from './importer.shared.service';
 import { ApiSettingsSharedService } from './../../../global-service/api-settings.shared.service';
-
-// Observable operators
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
 
 @Injectable()
 export class ImporterService {
@@ -17,48 +13,54 @@ export class ImporterService {
     private options: RequestOptions;
 
     constructor(
-        private http: Http,
-        private importerSharedService: ImporterSharedService,
-        private apiSettingsSharedService: ApiSettingsSharedService
+        private _http: Http,
+        private _importer: ImporterSharedService,
+        private _apiSettings: ApiSettingsSharedService
     ) {
         this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
         this.options = new RequestOptions({ headers: this.headers });
-        this.url = this.apiSettingsSharedService.getUrl();
+        this.url = this._apiSettings.getUrl();
     }
 
     post_AddRateCard(body: any): Observable<any> {
-        return this.http.post(this.url + 'ratecards/', body)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => { this.importerSharedService.changePostTableObj(res); }); // Send post res to shared service
+        return this._http
+            .post(this.url + 'ratecards/', body)
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError),
+                tap(res => { this._importer.changePostTableObj(res); })
+            );
     }
 
     put_EditRates(ratesId: number, body: any): Observable<any> {
-        return this.http.put(this.url + 'rates/' + ratesId, body)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+        return this._http
+            .put(this.url + 'rates/' + ratesId, body)
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
     }
 
     put_EditTeleUDatabase(teleuId: number, body: object): Observable<any> {
-        return this.http.put(this.url + 'teleu/rate/' + teleuId, body)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+        return this._http
+            .put(this.url + 'teleu/rate/' + teleuId, body)
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
     }
 
     get_CarrierNames(): Observable<any> {
-        return this.http.get(this.url + 'carriers/')
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+        return this._http
+            .get(this.url + 'carriers/')
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
         }
 
     handleError(error: any): any {
-        const errMsg = (error.message) ? error.message :
-            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg); // log to console instead
-        return Observable.throw(errMsg);
+        console.error(error);
     }
 
 }

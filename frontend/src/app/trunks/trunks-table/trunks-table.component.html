@@ -2,18 +2,18 @@
     <div class="table-container">
         <ag-grid-angular class="ag-theme-balham" [animateRows]="true"
             [columnDefs]="columnDefs" [rowData]="rowData" [suppressRowClickSelection]="true"
-            [rowSelection]="rowSelection" (selectionChanged)="aggrid_selectionChanged($event)" (rowSelected)="rowSelected($event)"
+            [rowSelection]="rowSelection" (selectionChanged)="onSelectionChanged($event)" (rowSelected)="rowSelected($event)"
             [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
             [enableFilter]="true" [floatingFilter]="true"
             [enableSorting]="true"
-            [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+            [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"
             [suppressNoRowsOverlay]="true"
             [headerHeight]="40" [floatingFiltersHeight]="30"
             
             [enableCellChangeFlash]="true"
 
-            (gridReady)="on_GridReady($event)"
+            (gridReady)="onGridReady($event)"
         >
         </ag-grid-angular>
 
@@ -23,7 +23,7 @@
     
             <mat-form-field class="search-bar">
                     <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
-                    <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+                    <input matInput placeholder="Search Trunks Table..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
             </mat-form-field>
         </mat-toolbar-row>
     </div>

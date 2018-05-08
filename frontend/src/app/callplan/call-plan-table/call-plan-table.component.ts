@@ -85,7 +85,7 @@ export class CallPlanTableComponent implements OnInit {
         ~~~~~~~~~~ Call Plan API services ~~~~~~~~~~
     */
         private get_allCallPlansData(): void {
-            this.callPlanService.get_allCallPlan()
+            this.callPlanService.get_allCallplan()
                 .subscribe(
                     data => { this.rowData = data; },
                     error => { console.log(error); }
@@ -93,7 +93,7 @@ export class CallPlanTableComponent implements OnInit {
         }
 
         private get_specificCallPlanData(callPlanId: number) {
-            this.callPlanService.get_callPlan(callPlanId)
+            this.callPlanService.get_specificCallplan(callPlanId)
                 .subscribe(
                     data => {
                         this.callPlanSharedService.changeCallPlanObj(data);

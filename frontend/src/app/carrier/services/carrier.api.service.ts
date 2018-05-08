@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs';
+import { map, catchError} from 'rxjs/operators';
 import { ApiSettingsSharedService } from './../../global-service/api-settings.shared.service';
-
-// Observable operators
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
 
 @Injectable()
 export class CarrierService {
@@ -16,53 +12,48 @@ export class CarrierService {
     private options: RequestOptions;
 
     constructor(
-        private http: Http,
-        private apiSettingsSharedService: ApiSettingsSharedService
+        private _http: Http,
+        private _apiSettings: ApiSettingsSharedService
     ) {
         this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
         this.options = new RequestOptions({ headers: this.headers });
-        this.url = this.apiSettingsSharedService.getUrl();
+        this.url = this._apiSettings.getUrl();
     }
 
-    /*
-    initialLoad() is returning an obj of type Observable that is an array defined in Carriers Model as an obj
-    we .map is as json format then return the data
-    .do(logs the json object to console)
-    .catch(will catch errors and trigger handleError method)
-    our view components can later .subscribe to the data
-    */
     get_carriers(): Observable<any> {
-        return this.http.get(this.url + 'carriers/')
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(data => console.log(data));
+        return this._http
+            .get(this.url + 'carriers/')
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
     }
 
     post_AddRow(body: any): Observable<any> {
-        return this.http
+        return this._http
             .post(this.url + 'carriers/', body, this.options)
-            .catch(this.handleError)
-            .do(data => console.log('server data:', data));
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     del_DeleteRow(rowId: any): Observable<any> {
-        return this.http
+        return this._http
             .delete(this.url + 'carriers/' + rowId)
-            .catch(this.handleError)
-            .do(data => console.log('server data:', data));
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     put_EditCarrier(body: any, rowId: number): Observable<any> {
-        return this.http
+        return this._http
             .put(this.url + 'carriers/' + rowId, body)
-            .catch(this.handleError)
-            .do(data => console.log('server data:', data));
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     handleError(error: any): any {
-        const errMsg = (error.message) ? error.message :
-            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg); // log to console instead
-        return Observable.throw(errMsg);
+        console.error(error);
     }
 }

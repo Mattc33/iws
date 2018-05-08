@@ -1,13 +1,13 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { GridApi } from 'ag-grid';
 
-import { CallPlanService } from './../call-plan/services/call-plan.api.service';
-import { CallPlanSharedService } from './../call-plan/services/call-plan.shared.service';
-import { RateCardsService } from './../ratecard/services/rate-cards.api.service';
+import { CallPlanService } from './../services/call-plan.api.service';
+import { CallPlanSharedService } from './../services/call-plan.shared.service';
+import { RateCardsService } from './../../ratecard/services/rate-cards.api.service';
 
-import { NestedAgGridService } from './../global-service/nestedAgGrid.shared.service';
-import { SnackbarSharedService } from './../shared/services/global/snackbar.shared.service';
-import { ToggleButtonStateService } from './../shared/services/global/buttonStates.shared.service';
+import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
+import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
+import { ToggleButtonStateService } from './../../shared/services/global/buttonStates.shared.service';
 
 
 @Component({
@@ -18,7 +18,7 @@ import { ToggleButtonStateService } from './../shared/services/global/buttonStat
 export class CallPlanAddRatecardComponent implements OnInit {
 
 // AG grid setup props
-private rowDataCallPlan; private columnDefsCallPlan;
+private rowDataCallplan; private columnDefsCallplan;
 private rowDataRatecard; private columnDefsRatecard; private getNodeChildDetails;
 private rowDataReview; private columnDefsReview;
 
@@ -44,7 +44,7 @@ constructor(
     private toggleButtonStateService: ToggleButtonStateService
 ) {
     this.getNodeChildDetails = this.setGroups();
-    this.columnDefsCallPlan = this.createColumnDefsCallPlan();
+    this.columnDefsCallplan = this.createColumnDefsCallPlan();
     this.columnDefsRatecard = this.createColumnDefsRatecard();
     this.columnDefsReview = this.createColumnDefsReview();
 }
@@ -58,13 +58,13 @@ ngOnInit() {
 // API Service
 // ================================================================================
 get_CallPlans(): void {
-    this.callPlanService.get_allCallPlan().subscribe(
-        data => { this.rowDataCallPlan = data; }
+    this.callPlanService.get_allCallplan().subscribe(
+        data => { this.rowDataCallplan = data; }
     );
 }
 
 get_RateCards(): void {
-    this.rateCardsService.get_RateCard().subscribe(
+    this.rateCardsService.get_ratecard().subscribe(
         data => { this.rowDataRatecard = this.nestedAgGridService.formatDataToNestedArr(data); }
     );
 }

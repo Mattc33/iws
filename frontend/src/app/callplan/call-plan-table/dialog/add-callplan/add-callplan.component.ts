@@ -2,9 +2,8 @@ import { Component, OnInit, Inject, EventEmitter, Injectable } from '@angular/co
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, ErrorStateMatcher } from '@angular/material';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 
-import { Observable } from 'rxjs/Observable';
-import { startWith } from 'rxjs/operators/startWith';
-import { map } from 'rxjs/operators/map';
+import { Observable } from 'rxjs';
+import { startWith ,  map } from 'rxjs/operators';
 
 import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-table.component';
 

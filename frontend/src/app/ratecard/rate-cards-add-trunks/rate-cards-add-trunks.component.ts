@@ -63,7 +63,7 @@ export class RateCardsAddTrunksComponent implements OnInit {
     // API Service
     // ================================================================================
     get_ratecards(): void {
-        this.rateCardsService.get_RateCard().subscribe(
+        this.rateCardsService.get_ratecard().subscribe(
             data => {
                 this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
             },

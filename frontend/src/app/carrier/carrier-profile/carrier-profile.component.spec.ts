@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TrunksComponent } from './trunks.component';
+import { CarrierProfileComponent } from './carrier-profile.component';
 
-describe('TrunksComponent', () => {
-  let component: TrunksComponent;
-  let fixture: ComponentFixture<TrunksComponent>;
+describe('CarrierProfileComponent', () => {
+  let component: CarrierProfileComponent;
+  let fixture: ComponentFixture<CarrierProfileComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TrunksComponent ]
+      declarations: [ CarrierProfileComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TrunksComponent);
+    fixture = TestBed.createComponent(CarrierProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

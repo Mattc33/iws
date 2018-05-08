@@ -15,7 +15,6 @@ import { TrunksSharedService } from './../../../services/trunks.shared.service';
 })
 export class DeleteTrunksComponent implements OnInit {
 
-    event_onDel = new EventEmitter;
     private rowObj;
 
     constructor(
@@ -28,21 +27,15 @@ export class DeleteTrunksComponent implements OnInit {
     ngOnInit() {
         this.trunksSharedService.currentRowId.subscribe(data => this.rowObj = data);
     }
-    
+
     click_delCarrier() {
         this.del_delTrunks();
-        this.aggrid_delTrunks();
-
         this.closeDialog();
-    }
-
-    aggrid_delTrunks() {
-        this.event_onDel.emit(true);
     }
 
     del_delTrunks() {
         let rowId: number;
-        for( let i = 0; i < this.rowObj.length; i++) {
+        for ( let i = 0; i < this.rowObj.length; i++) {
             rowId = this.rowObj[i].id;
             this.trunksService.del_deleteTrunk(rowId)
                 .subscribe(resp => console.log(resp));

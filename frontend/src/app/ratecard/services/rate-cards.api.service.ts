@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { ApiSettingsSharedService } from './../../global-service/api-settings.shared.service';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs';
+import { map, catchError} from 'rxjs/operators';
 
-// Observable operators
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
+import { ApiSettingsSharedService } from './../../global-service/api-settings.shared.service';
 
 @Injectable()
 export class RateCardsService {
@@ -15,88 +12,100 @@ export class RateCardsService {
     options: RequestOptions;
 
     constructor(
-        private http: Http,
-        private apiSettingsSharedService: ApiSettingsSharedService
+        private _http: Http,
+        private _apiSettings: ApiSettingsSharedService
     ) {
         this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
         this.options = new RequestOptions({ headers: this.headers });
-        this.url = this.apiSettingsSharedService.getUrl();
+        this.url = this._apiSettings.getUrl();
     }
 
-    get_RateCard(): Observable<any> {
-        return this.http.get(this.url + 'ratecards')
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+    get_ratecard(): Observable<any> {
+        return this._http
+            .get(this.url + 'ratecards')
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
     }
 
-    get_RatesInRatecard(ratecardId: number): Observable<any> {
-        return this.http.get(this.url + 'ratecards/' + ratecardId + '/rates')
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+    get_ratesInRatecard(ratecardId: number): Observable<any> {
+        return this._http
+            .get(this.url + 'ratecards/' + ratecardId + '/rates')
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
     }
 
-    get_SpecificRatecard(ratecardId: number): Observable<any> {
-        return this.http.get(this.url + 'ratecards/' + ratecardId)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+    get_specificRatecard(ratecardId: number): Observable<any> {
+        return this._http
+            .get(this.url + 'ratecards/' + ratecardId)
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
     }
 
-    post_AddRateCard(body: any): Observable<any> {
-        return this.http.post(this.url + 'ratecards/', body)
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+    post_addRatecard(body: any): Observable<any> {
+        return this._http
+            .post(this.url + 'ratecards/', body)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
-    del_DeleteRateCard(rowId: number): Observable<any> {
-        return this.http.delete(this.url + 'ratecards/' + rowId)
-        .catch(this.handleError)
-        .do(res => console.log('server data', res));
+    del_deleteRatecard(rowId: number): Observable<any> {
+        return this._http
+            .delete(this.url + 'ratecards/' + rowId)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
-    put_EditRateCard(body: any, rowID: any): Observable<any> {
-        return this.http
+    put_editRatecard(body: any, rowID: any): Observable<any> {
+        return this._http
             .put(this.url + 'ratecards/' + rowID, body)
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     post_AttachTrunk(ratecardId: number, trunkId: number) {
         const body = {};
-        return this.http
+        return this._http
             .post(this.url + 'ratecards/' + ratecardId + '/trunks/' + trunkId, body)
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     del_DetachTrunk(ratecardId: number, trunkId: number) {
         const body = {};
-        return this.http
+        return this._http
             .delete(this.url + 'ratecards/' + ratecardId + '/trunks/' + trunkId, body)
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     put_EditRates(ratesId: number, body: any): Observable<any> {
-        return this.http.put(this.url + 'rates/' + ratesId, body)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+        return this._http
+            .put(this.url + 'rates/' + ratesId, body)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     put_EditTeleuDbRates(teleuDbRatesId: number, body: any): Observable<any> {
-        return this.http.put(this.url + '/teleu/rate/' + teleuDbRatesId, body)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(res => console.log('server data', res));
+        return this._http
+            .put(this.url + '/teleu/rate/' + teleuDbRatesId, body)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     handleError(error: any): any {
-        const errMsg = (error.message) ? error.message :
-            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg); // log to console instead
-        return Observable.throw(errMsg);
+        console.error(error);
     }
 }

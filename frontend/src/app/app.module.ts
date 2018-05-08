@@ -38,10 +38,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 // Carrier
 import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.component';
-
-import { AddCarrierDialogComponent } from './carrier/carrier-table/dialog/add-carrier/add-carrier-dialog.component';
-import { DelCarrierDialogComponent } from './carrier/carrier-table/dialog/del-carrier/del-carrier-dialog.component';
-
+    import { AddCarrierDialogComponent } from './carrier/carrier-table/dialog/add-carrier/add-carrier-dialog.component';
+    import { DelCarrierDialogComponent } from './carrier/carrier-table/dialog/del-carrier/del-carrier-dialog.component';
+import { CarrierProfileComponent } from './carrier/carrier-profile/carrier-profile.component';
 import { CarrierService } from './carrier/services/carrier.api.service';
 import { CarrierSharedService } from './carrier/services/carrier.shared.service';
 
@@ -61,10 +60,7 @@ import { ImporterService } from './ratecard/ratecard-importer/services/importer.
 import { ImporterSharedService } from './ratecard/ratecard-importer/services/importer.shared.service';
 import { UploadRatesDialogComponent } from './ratecard/ratecard-importer/importer-table/dialog/upload-rates/upload-rates-dialog.component';
 
-
-
 // Trunks
-import { TrunksComponent } from './trunks/trunks.component';
 import { TrunksTableComponent } from './trunks/trunks-table/trunks-table.component';
 
 import { AddTrunksComponent } from './trunks/trunks-table/dialog/add-trunks/add-trunks.component';
@@ -76,17 +72,17 @@ import { TrunksService } from './trunks/services/trunks.api.service';
 import { TrunksSharedService } from './trunks/services/trunks.shared.service';
 
 // Call Plan
-import { CallPlanComponent } from './call-plan/call-plan.component';
-import { CallPlanTableComponent } from './call-plan/call-plan-table/call-plan-table.component';
+import { CallPlanTableComponent } from './callplan/call-plan-table/call-plan-table.component';
+    import { AddCallPlanComponent } from './callplan/call-plan-table/dialog/add-callplan/add-callplan.component';
+    import { DelCallPlanComponent } from './callplan/call-plan-table/dialog/del-callplan/del-callplan.component';
+    import { DettachRatecardsComponent } from './callplan/call-plan-table/dialog/dettach-ratecards/dettach-ratecards.component';
+    import { DettachCodesComponent } from './callplan/call-plan-table/dialog/dettach-codes/dettach-codes.component';
+    import { AddCodeComponent } from './callplan/call-plan-table/dialog/add-code/add-code.component';
+import { CallPlanAddRatecardComponent } from './callplan/call-plan-add-ratecard/call-plan-add-ratecard.component';
+import { CallPlanAddCodeComponent } from './callplan/call-plan-add-code/call-plan-add-code.component';
 
-import { AddCallPlanComponent } from './call-plan/call-plan-table/dialog/add-callplan/add-callplan.component';
-import { DelCallPlanComponent } from './call-plan/call-plan-table/dialog/del-callplan/del-callplan.component';
-import { AddCodeComponent } from './call-plan/call-plan-table/dialog/add-code/add-code.component';
-import { DettachRatecardsComponent } from './call-plan/call-plan-table/dialog/dettach-ratecards/dettach-ratecards.component';
-import { DettachCodesComponent } from './call-plan/call-plan-table/dialog/dettach-codes/dettach-codes.component';
-
-import { CallPlanService } from './call-plan/services/call-plan.api.service';
-import { CallPlanSharedService } from './call-plan/services/call-plan.shared.service';
+import { CallPlanService } from './callplan/services/call-plan.api.service';
+import { CallPlanSharedService } from './callplan/services/call-plan.shared.service';
 import { CodesSharedService } from './global-service/codes.shared.service';
 
 // LCR
@@ -104,10 +100,6 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 
-import { CallPlanAddRatecardComponent } from './call-plan-add-ratecard/call-plan-add-ratecard.component';
-import { CallPlanAddCodeComponent } from './call-plan-add-code/call-plan-add-code.component';
-
-
 @NgModule({
   declarations:
   [
@@ -117,14 +109,14 @@ import { CallPlanAddCodeComponent } from './call-plan-add-code/call-plan-add-cod
     ImporterTableComponent, // Importer
     RateCardsTableComponent, DeleteRateCardsDialogComponent, // RateCards
     UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent,
-    TrunksComponent,  TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DeleteRatesComponent, // Trunks
+    TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DeleteRatesComponent, // Trunks
     DetachTrunksComponent,
-    CallPlanComponent, CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
+    CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
     CallPlanAddRatecardComponent, CallPlanAddCodeComponent,
     AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
     LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent, // LCR
     AccountsComponent,
-    SuccessSnackbarComponent, ErrorSnackbarComponent,
+    SuccessSnackbarComponent, ErrorSnackbarComponent, CarrierProfileComponent,
   ],
   imports:
   [
@@ -150,9 +142,9 @@ import { CallPlanAddCodeComponent } from './call-plan-add-code/call-plan-add-cod
         {path: 'rate-card-add-trunks', component: RateCardsAddTrunksComponent},
         {path: 'rate-card-convert-csv', component: RateCardsConvertCsvComponent},
 
-        {path: 'trunks', component: TrunksComponent},
+        {path: 'trunks', component: TrunksTableComponent},
 
-        {path: 'call-plan-view', component: CallPlanComponent},
+        {path: 'call-plan-view', component: CallPlanTableComponent},
         {path: 'call-plan-add-ratecard', component: CallPlanAddRatecardComponent},
 
         {path: 'lcr-carrier', component: LcrCarrierTableComponent},

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, AnimationKeyframe, EventEmitter } from '@angular/core';
+import { Component, Inject, OnInit, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
@@ -43,7 +43,7 @@ import { RateCardsSharedService } from '../../../services/rate-cards.shared.serv
 
     del_delCarrier() {
         const rowId = this.rowObj[0].id;
-            this.rateCardsService.del_DeleteRateCard(rowId)
+            this.rateCardsService.del_deleteRatecard(rowId)
                 .subscribe(resp => console.log(resp));
     }
 

@@ -71,7 +71,7 @@ export class RateCardsTableComponent implements OnInit {
         ~~~~~~~~~~ Ratecard API services ~~~~~~~~~~
     */
     on_InitializeRows(): void {
-        this.rateCardsService.get_RateCard()
+        this.rateCardsService.get_ratecard()
             .subscribe(
                 data => {
                     // pass json to internal service to return formatted obj
@@ -82,7 +82,7 @@ export class RateCardsTableComponent implements OnInit {
     }
 
     put_editRateCard(rateCardObj: object, id: number) {
-        this.rateCardsService.put_EditRateCard(rateCardObj, id)
+        this.rateCardsService.put_editRatecard(rateCardObj, id)
             .subscribe(resp => console.log(resp));
     }
 
@@ -269,14 +269,14 @@ export class RateCardsTableComponent implements OnInit {
 
             // UPDATE THIS SECTION
             // These need to be in their own function
-            this.rateCardsService.get_RatesInRatecard(this.selectedRatecardId)
+            this.rateCardsService.get_ratesInRatecard(this.selectedRatecardId)
                 .subscribe(
                     data => {
                         this.gridApiRates.updateRowData({ add: data });
                     }
                 );
 
-            this.rateCardsService.get_SpecificRatecard(this.selectedRatecardId)
+            this.rateCardsService.get_specificRatecard(this.selectedRatecardId)
                 .subscribe (
                     data => {
                         this.gridApiTrunks.updateRowData({ add: data.trunks });

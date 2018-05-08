@@ -13,20 +13,18 @@ import { ToggleButtonStateService } from './../../shared/services/global/buttonS
 @Component({
   selector: 'app-carrier-table',
   templateUrl: './carrier-table.component.html',
-  styleUrls: ['./carrier-table.component.scss'],
-  providers: [ CarrierService ],
+  styleUrls: ['./carrier-table.component.scss']
 })
 export class CarrierTableComponent implements OnInit {
 
     // row data and column definitions
     private rowData;
     private columnDefs;
-    private defaultColDef;
-    private rowSelection;
 
     // gridApi & gridUI props
     private gridApi: GridApi;
     private quickSearchValue = '';
+    private rowSelection = 'single';
 
     // Internal Service
     private rowObj;
@@ -42,20 +40,18 @@ export class CarrierTableComponent implements OnInit {
         private toggleButtonStateService: ToggleButtonStateService
     ) {
         this.columnDefs = this.createColumnDefs();
-        this.rowSelection = 'single';
     }
 
     ngOnInit() {
-        this.get_InitializeRows();
+        this.get_carrierRowData();
         this.carrierSharedService.currentRowObj.subscribe( giveRowObj => this.rowObj = giveRowObj);
     }
 
-    /*
-        ~~~~~~~~~~ Carrier API services ~~~~~~~~~~
-    */
-    get_InitializeRows() {
-        this.carrierService.get_carriers()
-        .subscribe(
+    // ================================================================================
+    // Carrier API Service
+    // ================================================================================
+    get_carrierRowData() {
+        this.carrierService.get_carriers().subscribe(
             data =>  this.rowData = data,
             error =>  console.log(error)
         );
@@ -77,9 +73,9 @@ export class CarrierTableComponent implements OnInit {
             );
     }
 
-    /*
-        ~~~~~~~~~~ AG Grid Initialization ~~~~~~~~~~
-    */
+    // ================================================================================
+    // AG Grid Init
+    // ================================================================================
     on_GridReady(params): void {
         this.gridApi = params.api;
         params.api.sizeColumnsToFit();
@@ -137,10 +133,9 @@ export class CarrierTableComponent implements OnInit {
         this.rowObj = selectedRows;
     }
 
-    /*
-        ~~~~~~~~~~ Grid Toolbar ~~~~~~~~~~
-    */
-    // For button Toggle
+    // ================================================================================
+    // AG Grid Events
+    // ================================================================================
     rowSelected(): void { // Toggle button boolean if rowSelected > 0
         this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
     }
@@ -153,29 +148,22 @@ export class CarrierTableComponent implements OnInit {
         this.gridApi.setQuickFilter(this.quickSearchValue);
     }
 
-    /*
-        ~~~~~~~~~~ Grid CRUD ~~~~~~~~~~
-    */
-    aggrid_addRow(obj): void {
-        this.gridApi.updateRowData({ add: [obj] });
-    }
-
-    aggrid_delRow(boolean): void {
-        if (boolean === true) {
-            this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
-        } else {
-            return;
-        }
+    // ================================================================================
+    // API Interactions
+    // ================================================================================
+    onRefreshRowData(): void {
+        this.carrierService.get_carriers().subscribe(
+            (data) => {
+                this.gridApi.setRowData(data);
+            }
+        );
     }
 
     onCellValueChanged(params: any): void {
         const id = params.data.id;
         let taxable = params.data.taxable;
-            if (taxable === 'false') {
-                taxable = false;
-            } else {
-                taxable = true;
-            }
+            if (taxable === 'false') { taxable = false;
+            } else { taxable = true; }
         const carrierObj = {
             code: params.data.code,
             name: params.data.name,
@@ -188,21 +176,16 @@ export class CarrierTableComponent implements OnInit {
         this.put_editCarrier(carrierObj, id);
     }
 
-    /*
-        ~~~~~~~~~~ Dialog ~~~~~~~~~
-    */
+    // ================================================================================
+    // Carrier Dialog
+    // ================================================================================
     openDialogAdd() {
         const dialogRef = this.dialog.open(AddCarrierDialogComponent, {
             width: '40%',
         });
 
-        const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
-            this.aggrid_addRow(data);
-        });
-
         dialogRef.afterClosed().subscribe(() => {
-            sub.unsubscribe();
-            console.log('The dialog was closed');
+            this.onRefreshRowData();
         });
     }
 
@@ -211,13 +194,8 @@ export class CarrierTableComponent implements OnInit {
 
         const dialogRef = this.dialog.open(DelCarrierDialogComponent, {});
 
-        const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
-            this.aggrid_delRow(data);
-        });
-
         dialogRef.afterClosed().subscribe(() => {
-            sub.unsubscribe();
-            console.log('The dialog was closed');
+            this.onRefreshRowData();
         });
     }
 

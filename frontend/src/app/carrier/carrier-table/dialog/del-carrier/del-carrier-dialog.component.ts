@@ -16,9 +16,6 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
   })
   export class DelCarrierDialogComponent implements OnInit {
 
-    // event
-    event_onDel = new EventEmitter;
-
     // Internal Service props
     private rowObj;
 
@@ -43,12 +40,12 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
                 (resp: Response) => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Carrier successfully deleted.', 5000);
+                        this.snackbarSharedService.snackbar_success('Carrier successfully deleted.', 2000);
                     }
                 },
                 error => {
                     console.log(error);
-                        this.snackbarSharedService.snackbar_error('Carrier failed to delete.', 5000);
+                        this.snackbarSharedService.snackbar_error('Carrier failed to delete.', 2000);
                 }
             );
     }
@@ -58,7 +55,6 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
     */
     click_delCarrier() {
         this.del_multipleCarriers();
-        this.aggrid_delRateCard();
         this.closeDialog();
     }
 
@@ -68,10 +64,6 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
             rowId = this.rowObj[i].id;
             this.del_carrier(rowId);
         }
-    }
-
-    aggrid_delRateCard() {
-        this.event_onDel.emit(true);
     }
 
     closeDialog(): void {

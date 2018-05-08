@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { ApiSettingsSharedService } from './../../global-service/api-settings.shared.service';
+import { Http, Response, Headers, RequestOptions} from '@angular/http';
+import { Observable } from 'rxjs';
+import { map, catchError} from 'rxjs/operators';
 
-// Observable operators
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
+import { ApiSettingsSharedService } from './../../global-service/api-settings.shared.service';
 
 @Injectable()
 export class TrunksService {
@@ -15,51 +12,55 @@ export class TrunksService {
     private options: RequestOptions;
 
     constructor(
-        private http: Http,
-        private apiSettingsSharedService: ApiSettingsSharedService
+        private _http: Http,
+        private _apiSettings: ApiSettingsSharedService
     ) {
-        this.url = this.apiSettingsSharedService.getUrl();
+        this.url = this._apiSettings.getUrl();
     }
 
     get_allTrunks(): Observable<any> {
-        return this.http.get(this.url + 'trunks')
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(data => console.log('server data:', data));
+        return this._http
+            .get(this.url + 'trunks')
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
     }
 
     get_specificTrunk(trunkId: number): Observable<any> {
-        return this.http.get(this.url + 'trunks/' + trunkId)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(data => console.log('server data:', data));
+        return this._http
+            .get(this.url + 'trunks/' + trunkId)
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
     }
 
     post_addTrunk(body: any): Observable<any> {
-        return this.http.post(this.url + 'trunks', body)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(data => console.log('server data:', data));
+        return this._http
+            .post(this.url + 'trunks', body)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     del_deleteTrunk(trunkId: number): Observable<any> {
-        return this.http.delete(this.url + 'trunks/' + trunkId)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(data => console.log('server data:', data)); 
+        return this._http
+            .delete(this.url + 'trunks/' + trunkId)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     put_editTrunk(trunkId: number, body): Observable<any> {
-        return this.http.put(this.url + 'trunks/' + trunkId, body)
-            .map(res => res.json())
-            .catch(this.handleError)
-            .do(data => console.log('server data:', data));
+        return this._http
+            .put(this.url + 'trunks/' + trunkId, body)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     handleError(error: any): any {
-        const errMsg = (error.message) ? error.message :
-            error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-            console.error(errMsg); // log to console instead
-            return Observable.throw(errMsg);
+        console.error(error);
     }
 }

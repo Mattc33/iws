@@ -11,13 +11,9 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
 @Component({
     selector: 'app-add-carrier-dialog-inner',
     templateUrl: './add-carrier-dialog.component.html',
-    styleUrls: ['./add-carrier-dialog.component.scss'],
-    providers: [ CarrierService ],
+    styleUrls: ['./add-carrier-dialog.component.scss']
   })
 export class AddCarrierDialogComponent implements OnInit {
-
-    // Events
-    event_onAdd = new EventEmitter;
 
     // Form Group
     private addCarrierFormGroup: FormGroup;
@@ -96,13 +92,8 @@ export class AddCarrierDialogComponent implements OnInit {
         ~~~~~~~~~~ Dialog ~~~~~~~~~~
     */
     click_addCarrier(post) {
-        this.aggrid_addCarrier(this.finalCarrierObj);
         this.post_addCarrier(this.finalCarrierObj);
         this.closeDialog();
-    }
-
-    aggrid_addCarrier(body) {
-        this.event_onAdd.emit(body);
     }
 
     closeDialog(): void {
