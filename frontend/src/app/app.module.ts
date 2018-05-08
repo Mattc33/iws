@@ -41,8 +41,8 @@ import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.com
     import { AddCarrierDialogComponent } from './carrier/carrier-table/dialog/add-carrier/add-carrier-dialog.component';
     import { DelCarrierDialogComponent } from './carrier/carrier-table/dialog/del-carrier/del-carrier-dialog.component';
 import { CarrierProfileComponent } from './carrier/carrier-profile/carrier-profile.component';
-import { CarrierService } from './carrier/services/carrier.api.service';
-import { CarrierSharedService } from './carrier/services/carrier.shared.service';
+import { CarrierService } from './shared/api-services/carrier/carrier.api.service';
+import { CarrierSharedService } from './shared/services/carrier/carrier.shared.service';
 
 // Ratecard
 import { RateCardsTableComponent } from './ratecard/rate-cards-table/rate-cards-table.component';

@@ -60,7 +60,7 @@ export class LcrCarrierTableComponent implements OnInit {
             },
             {
                 headerName: 'Rates Email', field: 'alerts_email',
-                cellStyle: { 'border-right': '1px solid #E0E0E0' }, 
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Active?', field: 'active',

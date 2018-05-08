@@ -5,8 +5,8 @@ import { GridApi } from 'ag-grid';
 import { DelCarrierDialogComponent } from '../carrier-table/dialog/del-carrier/del-carrier-dialog.component';
 import { AddCarrierDialogComponent } from '../carrier-table/dialog/add-carrier/add-carrier-dialog.component';
 
-import { CarrierService } from './../services/carrier.api.service';
-import { CarrierSharedService } from './../services/carrier.shared.service';
+import { CarrierService } from './../../shared/api-services/carrier/carrier.api.service';
+import { CarrierSharedService } from './../../shared/services/carrier/carrier.shared.service';
 import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
 import { ToggleButtonStateService } from './../../shared/services/global/buttonStates.shared.service';
 

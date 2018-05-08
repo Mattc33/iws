@@ -6,7 +6,7 @@ import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-tab
 
 import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
-import { CarrierService } from './../../../../carrier/services/carrier.api.service';
+import { CarrierService } from './../../../../shared/api-services/carrier/carrier.api.service';
 import { CodesSharedService } from './../../../../global-service/codes.shared.service';
 
 @Component({

@@ -4,8 +4,8 @@ import { FormGroup, FormBuilder, Validators, FormControl, NgForm, FormGroupDirec
 
 import { CarrierTableComponent } from './../../carrier-table.component';
 
-import { CarrierService } from '../../../services/carrier.api.service';
-import { CarrierSharedService } from './../../../services/carrier.shared.service';
+import { CarrierService } from './../../../../shared/api-services/carrier/carrier.api.service';
+import { CarrierSharedService } from './../../../../shared/services/carrier/carrier.shared.service';
 import { SnackbarSharedService } from './../../../../shared/services/global/snackbar.shared.service';
 
 @Component({

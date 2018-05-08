@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map, catchError} from 'rxjs/operators';
-import { ApiSettingsSharedService } from './../../global-service/api-settings.shared.service';
+import { ApiSettingsSharedService } from './../../../global-service/api-settings.shared.service';
 
 @Injectable()
 export class CarrierService {
