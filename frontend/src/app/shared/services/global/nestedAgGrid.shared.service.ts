@@ -59,7 +59,6 @@ export class NestedAgGridService {
                             priority: 1
                         }
                     );
-                } else {
                 }
             }
 
@@ -82,7 +81,6 @@ export class NestedAgGridService {
             for (const item in data) {
                 if ( item ) {
                     dataArr.push(data[item]);
-                } else {
                 }
             }
             return dataArr;

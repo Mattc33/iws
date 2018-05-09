@@ -6,20 +6,20 @@ import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.compone
 import { DeleteRateCardsDialogComponent } from './dialog/delete-rate-cards/delete-rate-cards-dialog.component';
 import { DetachTrunksComponent } from './dialog/detach-trunks/detach-trunks.component';
 
-import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
-import { RateCardsService } from '../services/rate-cards.api.service';
-import { RateCardsSharedService } from '../services/rate-cards.shared.service';
+import { NestedAgGridService } from './../../shared/services/global/nestedAgGrid.shared.service';
+import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
+import { RateCardsService } from './../../shared/api-services/ratecard/rate-cards.api.service';
+import { RateCardsSharedService } from './../../shared/services/ratecard/rate-cards.shared.service';
 
 @Component({
     selector: 'app-rate-cards-table',
     templateUrl: './rate-cards-table.component.html',
-    styleUrls: ['./rate-cards-table.component.scss'],
-    providers: [ RateCardsService ],
+    styleUrls: ['./rate-cards-table.component.scss']
 })
 export class RateCardsTableComponent implements OnInit {
 
     // Define row and column data
-    private rowData; // All
+    private rowData;
     private columnDefs;
     private getNodeChildDetails;
     private columnDefsRates;
@@ -54,7 +54,8 @@ export class RateCardsTableComponent implements OnInit {
         private rateCardsService: RateCardsService,
         private rateCardsSharedService: RateCardsSharedService,
         private nestedAgGridService: NestedAgGridService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private _snackbar: SnackbarSharedService
     ) {
         this.columnDefs = this.createColumnDefs();
         this.columnDefsRates = this.createColumnDefsRates();
@@ -64,18 +65,27 @@ export class RateCardsTableComponent implements OnInit {
 
     ngOnInit() {
         this.getNodeChildDetails = this.setGroups();
-        this.on_InitializeRows();
+        this.get_allRatecards();
     }
 
     /*
         ~~~~~~~~~~ Ratecard API services ~~~~~~~~~~
     */
-    on_InitializeRows(): void {
+    get_allRatecards(): void {
         this.rateCardsService.get_ratecard()
             .subscribe(
                 data => {
-                    // pass json to internal service to return formatted obj
                     this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
+                },
+                error => console.log(error)
+            );
+    }
+
+    set_allRatecards(): void {
+        this.rateCardsService.get_ratecard()
+            .subscribe(
+                data => {
+                    this.gridApi.setRowData(this.nestedAgGridService.formatDataToNestedArr(data));
                 },
                 error => console.log(error)
             );
@@ -83,12 +93,34 @@ export class RateCardsTableComponent implements OnInit {
 
     put_editRateCard(rateCardObj: object, id: number) {
         this.rateCardsService.put_editRatecard(rateCardObj, id)
-            .subscribe(resp => console.log(resp));
+            .subscribe(
+                resp => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this._snackbar.snackbar_success('Edit Successful', 2000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this._snackbar.snackbar_error('Edit Failed', 2000);
+                }
+            );
     }
 
     put_editRates(id: number, rateCardObj: object) {
         this.rateCardsService.put_EditRates(id, rateCardObj)
-            .subscribe(resp => console.log(resp));
+            .subscribe(
+                resp => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this._snackbar.snackbar_success('Edit Successful', 2000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this._snackbar.snackbar_error('Edit Failed', 2000);
+                }
+            );
     }
 
     /*
@@ -124,18 +156,19 @@ export class RateCardsTableComponent implements OnInit {
             {
                 headerName: 'Approve?', editable: true, field: 'confirmed', width: 100,
                 valueFormatter: function(params) {
-                    if (params.value === 1) {
-                        return true;
-                    }
-                    if (params.value === 0) {
-                        return false;
-                    }
+                    if (params.value === 1) { return true; }
+                    if (params.value === 0) { return false; }
                 },
                 cellEditor: 'select', cellEditorParams: {values: [true, false]},
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Enabled?', field: 'active', filter: 'agNumberColumnFilter', hide: true, width: 100,
+                headerName: 'Enabled?', field: 'active', filter: 'agNumberColumnFilter', width: 100, editable: true,
+                valueFormatter: function(params) {
+                    if (params.value === 1) { return true; }
+                    if (params.value === 0) { return false; }
+                },
+                cellEditor: 'select', cellEditorParams: {values: [true, false]},
             }
         ];
     }
@@ -148,7 +181,7 @@ export class RateCardsTableComponent implements OnInit {
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Destination', field: 'destination', width: 400,
+                headerName: 'Destination', field: 'destination', width: 300,
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
@@ -173,7 +206,7 @@ export class RateCardsTableComponent implements OnInit {
                 }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Approved?', field: 'confirmed', editable: true,
+                headerName: 'Approved?', field: 'confirmed', editable: true, width: 100,
                 cellEditor: 'select', cellEditorParams: {values: [ true, false]},
                 valueFormatter: function(params) {
                     if (params.value === 1) {
@@ -185,8 +218,15 @@ export class RateCardsTableComponent implements OnInit {
                 }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Enabled?', field: 'active', editable: true, width: 100,
-                cellEditor: 'select', cellEditorParams: {values: [ true, false]}, hide: true,
+                headerName: 'Enabled?', field: 'active', width: 100,
+                valueFormatter: function(params) {
+                    if (params.value === 1) {
+                        return true;
+                    }
+                    if (params.value === 0) {
+                        return false;
+                    }
+                }
             }
         ];
     }
@@ -267,8 +307,6 @@ export class RateCardsTableComponent implements OnInit {
             this.rowRatecardObj = this.gridApi.getSelectedRows();
             this.selectedRatecardId = this.rowRatecardObj[0].id;
 
-            // UPDATE THIS SECTION
-            // These need to be in their own function
             this.rateCardsService.get_ratesInRatecard(this.selectedRatecardId)
                 .subscribe(
                     data => {
@@ -324,23 +362,6 @@ export class RateCardsTableComponent implements OnInit {
         }
 
         /*
-            ~~~~~ Deletion ~~~~~
-        */
-        aggrid_delRow(string): void {
-            if (string === 'delete-ratecards') {
-                this.gridApi.updateRowData({ remove: this.gridApi.getSelectedRows() });
-            }
-            if (string === 'delete-rates') {
-                this.gridApiRates.updateRowData({ remove: this.gridApiRates.getSelectedRows() });
-            }
-            if (string === 'delete-trunks') {
-                this.gridApiTrunks.updateRowData({ remove: this.gridApiTrunks.getSelectedRows() });
-            } else {
-                return;
-            }
-        }
-
-        /*
             ~~~~~ Addition ~~~~~
         */
         aggrid_addRow(obj): void {
@@ -370,17 +391,11 @@ export class RateCardsTableComponent implements OnInit {
             let active: boolean;
             let confirmed: boolean;
 
-            if ( params.data.active === 1 ) {
-                active = true;
-            } else {
-                active = false;
-            }
+            if ( params.data.active === 1 ) { active = true; }
+            if ( params.data.active === 0 ) { active = false; }
 
-            if ( params.data.confirmed === 1 ) {
-                confirmed = true;
-            } else {
-                confirmed = false;
-            }
+            if ( params.data.confirmed === 'true' ) { confirmed = true; }
+            if ( params.data.confirmed === 'false' ) { confirmed = false; }
 
             const ratesObj =  {
                 ratecard_id: this.selectedRatecardId,
@@ -395,41 +410,28 @@ export class RateCardsTableComponent implements OnInit {
                 buy_rate_increment: params.data.buy_rate_increment,
                 confirmed: confirmed
             };
-            console.log(ratesObj);
             this.put_editRates(id, ratesObj);
         }
 
     /*
         ~~~~~~~~~~ Dialog ~~~~~~~~~~
     */
-        /*
-            ~~~~~ Rate cards ~~~~~
-        */
-        openDialogDel(): void {
+        openDialogDelRatecard(): void {
             this.rateCardsSharedService.changeRowAllObj(this.rowRatecardObj);
 
             const dialogRef = this.dialog.open(DeleteRateCardsDialogComponent, {});
 
-            const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
-                this.aggrid_delRow(data);
-            });
-
             dialogRef.afterClosed().subscribe(() => {
-                sub.unsubscribe();
-                console.log('The dialog was closed');
+                this.set_allRatecards();
             });
         }
 
-        /*
-            ~~~~~ Rates ~~~~~
-        */
         openDialogDelRates(): void {
             this.rateCardsSharedService.changeRowRatesObj(this.rowSelectionRates);
 
             const dialogRef = this.dialog.open(DeleteRatesComponent, {});
 
             const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
-                this.aggrid_delRow(data);
             });
 
             dialogRef.afterClosed().subscribe(() => {
@@ -447,7 +449,6 @@ export class RateCardsTableComponent implements OnInit {
             const dialogRef = this.dialog.open(DetachTrunksComponent, {});
 
             const sub = dialogRef.componentInstance.event_onDel.subscribe((data) => {
-                this.aggrid_delRow(data);
             });
 
             dialogRef.afterClosed().subscribe(() => {

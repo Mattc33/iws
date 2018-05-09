@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { GridApi } from 'ag-grid';
 
-import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
+import { NestedAgGridService } from './../../shared/services/global/nestedAgGrid.shared.service';
 import { CallPlanService } from './../services/call-plan.api.service';
 import { CallPlanSharedService } from './../services/call-plan.shared.service';
 import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
@@ -11,6 +11,7 @@ import { SnackbarSharedService } from './../../shared/services/global/snackbar.s
 import { DelCallPlanComponent } from './dialog/del-callplan/del-callplan.component';
 import { AddCallPlanComponent } from './dialog/add-callplan/add-callplan.component';
 import { AddCodeComponent } from './dialog/add-code/add-code.component';
+import { AddRateCardComponent } from './dialog/add-rate-card/add-rate-card.component';
 import { DettachRatecardsComponent } from './dialog/dettach-ratecards/dettach-ratecards.component';
 import { DettachCodesComponent } from './dialog/dettach-codes/dettach-codes.component';
 
@@ -22,14 +23,8 @@ import { DettachCodesComponent } from './dialog/dettach-codes/dettach-codes.comp
 export class CallPlanTableComponent implements OnInit {
 
     // AG grid row/col
-    private rowData;
-    private rowDataRatecards;
-    private columnDefs;
-    private columnDefsDetail;
-    private columnDefsDetail2;
-    private columnDefsRatecards;
-    private getNodeChildDetails;
-    private columnDefsCodes;
+    private rowData; private columnDefs; private columnDefsDetail; private columnDefsDetail2;
+    private columnDefsRatecards; private getNodeChildDetails; private columnDefsCodes;
 
     // AG grid controllers
     private gridApi: GridApi; // All
@@ -67,7 +62,7 @@ export class CallPlanTableComponent implements OnInit {
         private nestedAgGridService: NestedAgGridService,
         private dialog: MatDialog,
         private formBuilder: FormBuilder,
-        private snackbarSharedService: SnackbarSharedService
+        private _snackbar: SnackbarSharedService
     ) {
         this.columnDefs = this.createColumnDefs();
         this.columnDefsDetail = this.createColumnDefsDetail();
@@ -100,7 +95,6 @@ export class CallPlanTableComponent implements OnInit {
                         this.gridApiDetail.updateRowData({ add: [data] });
                         this.gridApiDetail2.updateRowData({ add: [data] });
 
-                        // Convert data for ratecard table
                         const ratecardData = this.nestedAgGridService.formatDataToNestedArr(data.ratecards);
                         this.gridApiRatecards.setRowData( ratecardData );
 
@@ -111,12 +105,36 @@ export class CallPlanTableComponent implements OnInit {
 
         put_editCallPlan(callPlanObj, callplan_id): void {
             this.callPlanService.put_editCallPlan(callPlanObj, callplan_id)
-                .subscribe(resp => console.log(resp));
+                .subscribe(
+                    resp => {
+                        console.log(resp);
+                        if ( resp.status === 200 ) {
+                            this._snackbar.snackbar_success('Edit Successful', 2000);
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                        this._snackbar.snackbar_error(
+                            `Edit Failed`, 2000);
+                    }
+                );
         }
 
         put_editCodes(callplanId: number, codesId: number, body): void {
             this.callPlanService.put_editPlanCode(callplanId, codesId, body)
-                .subscribe(resp => console.log(resp));
+                .subscribe(
+                    resp => {
+                        console.log(resp);
+                        if ( resp.status === 200 ) {
+                            this._snackbar.snackbar_success('Edit Successful', 2000);
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                        this._snackbar.snackbar_error(
+                            `Edit Failed`, 2000);
+                    }
+                );
         }
 
         post_callplanToLCR(callplan_id: number, body: any): void {
@@ -125,14 +143,13 @@ export class CallPlanTableComponent implements OnInit {
                     resp => {
                         console.log(resp);
                         if ( resp.status === 200 ) {
-                            this.snackbarSharedService.snackbar_success('Callplan successfully inserted into LCR.', 2000);
-                        } else {
+                            this._snackbar.snackbar_success('Callplan successfully inserted into LCR.', 3000);
                         }
                     },
                     error => {
                         console.log(error);
-                        this.snackbarSharedService.snackbar_error(
-                            `Error: Something is wrong. Check if Callplan has codes, ratecards, and trunks.`, 2000);
+                        this._snackbar.snackbar_error(
+                            `Error: Something is wrong. Check if Callplan has codes, ratecards, and trunks.`, 3000);
                     }
                 );
         }
@@ -225,12 +242,8 @@ export class CallPlanTableComponent implements OnInit {
                 {
                     headerName: 'Promotion?', editable: true, field: 'isPurchasable',
                     valueFormatter: params => {
-                        if (params.value === 1) {
-                            return true;
-                        }
-                        if (params.value === 0) {
-                            return false;
-                        }
+                        if (params.value === 1) { return true; }
+                        if (params.value === 0) { return false; }
                     },
                     cellEditor: 'select', cellEditorParams: {values: ['true', 'false']},
                     cellStyle: { 'border-right': '1px solid #E0E0E0' },
@@ -241,17 +254,12 @@ export class CallPlanTableComponent implements OnInit {
                     cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 },
                 {
-                    headerName: 'For Unlimited Call Plans',
-                    children: [
-                        {
-                            headerName: 'Max Destination #', field: 'maxDestNumbers',
-                            editable: true,
-                        },
-                        {
-                            headerName: 'Max Minutes', field: 'maxMinutes',
-                            editable: true,
-                        },
-                    ]
+                    headerName: 'Max Destination #', field: 'maxDestNumbers',
+                    editable: true,
+                },
+                {
+                    headerName: 'Max Minutes', field: 'maxMinutes',
+                    editable: true,
                 }
             ];
         }
@@ -328,7 +336,7 @@ export class CallPlanTableComponent implements OnInit {
     /*
         ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
     */
-    aggrid_gridSizeChanged(params): void {
+    onGridSizeChanged(params): void {
         params.api.sizeColumnsToFit();
     }
 
@@ -413,8 +421,6 @@ export class CallPlanTableComponent implements OnInit {
             }
             if (string === 'detach-codes') {
                 this.gridApiCodes.updateRowData({ remove: this.rowSelectionCodes });
-            } else {
-                return;
             }
         }
 
@@ -437,12 +443,8 @@ export class CallPlanTableComponent implements OnInit {
             const id = params.data.id;
             const date = Date.parse(params.data.valid_through).toString();
             let forPromotion: boolean;
-            if ( params.data.isPurchasable === 1 || params.data.isPurchasable === 'true' ) {
-                forPromotion = true;
-            }
-            if ( params.data.isPurchasable === 0 || params.data.isPurchasable === 'false') {
-                forPromotion = false;
-            }
+            if ( params.data.isPurchasable === 1 || params.data.isPurchasable === 'true' ) { forPromotion = true; }
+            if ( params.data.isPurchasable === 0 || params.data.isPurchasable === 'false') { forPromotion = false; }
 
             const detailObj = {
                 carrier_id: params.data.carrier_id,
@@ -495,9 +497,9 @@ export class CallPlanTableComponent implements OnInit {
             this.post_callplanToLCR(callplan_id, body);
         }
 
-    /*
-        ~~~~~~~~~~ Dialog CallPlans ~~~~~~~~~~
-    */
+    // ================================================================================
+    // Dialog Callplan
+    // ================================================================================
     openDialogDel(): void {
         this.callPlanSharedService.changeRowAll(this.rowIdAll);
 
@@ -530,9 +532,25 @@ export class CallPlanTableComponent implements OnInit {
         });
     }
 
-    /*
-        ~~~~~~~~~~ Dialog Rate Card ~~~~~~~~~~
-    */
+    // ================================================================================
+    // Dialog Ratecard
+    // ================================================================================
+    openDialogAttachRateCard() {
+        this.callPlanSharedService.changeRowAll(this.rowIdAll);
+
+        const dialogRef = this.dialog.open(AddRateCardComponent, {
+            panelClass: 'ratecard-callplan-screen-dialog',
+            maxWidth: '90vw',
+            autoFocus: false,
+            data: this.gridApi.getSelectedRows()[0].title
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            this.gridApi.deselectAll();
+            this.gridApi.selectIndex(this.selectedCallplanIndex, false, false);
+        });
+    }
+
     openDialogDetachRatecards(): void { // Dettach Rate Cards
         this.callPlanSharedService.changeRowAll(this.rowIdAll);
         this.callPlanSharedService.changeRowRatecards(this.rowSelectionRatecards);
@@ -550,9 +568,9 @@ export class CallPlanTableComponent implements OnInit {
         });
     }
 
-    /*
-        ~~~~~~~~~~ Dialog Codes ~~~~~~~~~~
-    */
+    // ================================================================================
+    // Dialog Codes
+    // ================================================================================
     openDialogAttachCode() { // Add a Code to Call Plan
         this.callPlanSharedService.changeRowAll(this.rowIdAll);
 

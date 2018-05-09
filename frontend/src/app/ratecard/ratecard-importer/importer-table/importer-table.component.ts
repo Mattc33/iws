@@ -4,7 +4,7 @@ import { GridApi, ColumnApi } from 'ag-grid';
 
 import { ImporterService } from './../services/importer.api.service';
 import { ImporterSharedService } from './../services/importer.shared.service';
-import { RateCardsService } from './../../services/rate-cards.api.service';
+import { RateCardsService } from './../../../shared/api-services/ratecard/rate-cards.api.service';
 import { SnackbarSharedService } from './../../../shared/services/global/snackbar.shared.service';
 
 import { UploadRatesDialogComponent } from './dialog/upload-rates/upload-rates-dialog.component';
@@ -61,12 +61,12 @@ export class ImporterTableComponent implements OnInit {
                 (resp: Response) => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Edit Successful.', 5000);
+                        this.snackbarSharedService.snackbar_success('Edit Successful.', 2000);
                     }
                 },
                 error => {
                     console.log(error);
-                    this.snackbarSharedService.snackbar_error('Edit failed.', 5000);
+                    this.snackbarSharedService.snackbar_error('Edit failed.', 2000);
                 }
             );
     }
@@ -77,12 +77,12 @@ export class ImporterTableComponent implements OnInit {
                 (resp: Response) => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Trunk successfully attached.', 5000);
+                        this.snackbarSharedService.snackbar_success('Trunk successfully attached.', 2000);
                     }
                 },
                 error => {
                     console.log(error);
-                    this.snackbarSharedService.snackbar_error('Trunk failed to attach.', 5000);
+                    this.snackbarSharedService.snackbar_error('Trunk failed to attach.', 2000);
                 }
             );
     }
@@ -93,12 +93,12 @@ export class ImporterTableComponent implements OnInit {
                 (resp: Response) => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Edit Successful.', 5000);
+                        this.snackbarSharedService.snackbar_success('Edit Successful.', 2000);
                     }
                 },
                 error => {
                     console.log(error);
-                    this.snackbarSharedService.snackbar_error('Edit failed.', 5000);
+                    this.snackbarSharedService.snackbar_error('Edit failed.', 2000);
                 }
             );
     }
@@ -336,7 +336,6 @@ export class ImporterTableComponent implements OnInit {
                 }
                 if ( rowNode.data['ratecard_id (TeleU)'] ) {
                     ratecardIdArr.push(rowNode.data['ratecard_id (TeleU)'], );
-                } else {
                 }
             });
 

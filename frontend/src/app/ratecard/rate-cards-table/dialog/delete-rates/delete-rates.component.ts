@@ -3,8 +3,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { RateCardsTableComponent } from './../../rate-cards-table.component';
 
-import { RateCardsService } from './../../../services/rate-cards.api.service';
-import { RateCardsSharedService } from './../../../services/rate-cards.shared.service';
+import { RateCardsService } from './../../../../shared/api-services/ratecard/rate-cards.api.service';
+import { RateCardsSharedService } from './../../../../shared/services/ratecard/rate-cards.shared.service';
 
 
 @Component({
@@ -51,6 +51,6 @@ export class DeleteRatesComponent implements OnInit {
 
     closeDialog(): void {
         this.dialogRef.close();
-    };
+    }
 
 }

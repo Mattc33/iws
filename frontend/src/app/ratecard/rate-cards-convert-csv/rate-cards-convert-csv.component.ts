@@ -4,8 +4,8 @@ import { GridApi } from 'ag-grid';
 import { PapaParseService } from 'ngx-papaparse';
 import { saveAs } from 'file-saver/FileSaver';
 
-import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
-import { RateCardsService } from './../services/rate-cards.api.service';
+import { NestedAgGridService } from './../../shared/services/global/nestedAgGrid.shared.service';
+import { RateCardsService } from './../../shared/api-services/ratecard/rate-cards.api.service';
 import { RateCardsTableComponent } from './../rate-cards-table/rate-cards-table.component';
 
 @Component({

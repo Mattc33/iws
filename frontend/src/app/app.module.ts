@@ -21,9 +21,10 @@ import { SideNavComponent } from './side-nav/side-nav.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
 
 // Global Services
-import { NestedAgGridService } from './global-service/nestedAgGrid.shared.service';
+import { NestedAgGridService } from './shared/services/global/nestedAgGrid.shared.service';
 import { ToggleButtonStateService } from './shared/services/global/buttonStates.shared.service';
-import { ApiSettingsSharedService } from './global-service/api-settings.shared.service';
+import { ApiSettingsSharedService } from './shared/services/global/api-settings.shared.service';
+import { CodesSharedService } from './shared/services/global/codes.shared.service';
 
 import { SnackbarSharedService } from './shared/services/global/snackbar.shared.service';
 import { SuccessSnackbarComponent } from './shared/components/snackbars/success/success.snackbar.component';
@@ -50,8 +51,8 @@ import { DeleteRateCardsDialogComponent } from './ratecard/rate-cards-table/dial
 import { RateCardsAddTrunksComponent } from './ratecard/rate-cards-add-trunks/rate-cards-add-trunks.component';
 import { RateCardsConvertCsvComponent } from './ratecard/rate-cards-convert-csv/rate-cards-convert-csv.component';
 
-import { RateCardsService } from './ratecard/services/rate-cards.api.service';
-import { RateCardsSharedService } from './ratecard/services/rate-cards.shared.service';
+import { RateCardsService } from './shared/api-services/ratecard/rate-cards.api.service';
+import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.shared.service';
 
 // Ratecard Importer
 import { ImporterTableComponent } from './ratecard/ratecard-importer/importer-table/importer-table.component';
@@ -75,15 +76,17 @@ import { TrunksSharedService } from './trunks/services/trunks.shared.service';
 import { CallPlanTableComponent } from './callplan/call-plan-table/call-plan-table.component';
     import { AddCallPlanComponent } from './callplan/call-plan-table/dialog/add-callplan/add-callplan.component';
     import { DelCallPlanComponent } from './callplan/call-plan-table/dialog/del-callplan/del-callplan.component';
+    import { AddRateCardComponent } from './callplan/call-plan-table/dialog/add-rate-card/add-rate-card.component';
     import { DettachRatecardsComponent } from './callplan/call-plan-table/dialog/dettach-ratecards/dettach-ratecards.component';
-    import { DettachCodesComponent } from './callplan/call-plan-table/dialog/dettach-codes/dettach-codes.component';
     import { AddCodeComponent } from './callplan/call-plan-table/dialog/add-code/add-code.component';
+    import { DettachCodesComponent } from './callplan/call-plan-table/dialog/dettach-codes/dettach-codes.component';
+
 import { CallPlanAddRatecardComponent } from './callplan/call-plan-add-ratecard/call-plan-add-ratecard.component';
 import { CallPlanAddCodeComponent } from './callplan/call-plan-add-code/call-plan-add-code.component';
 
 import { CallPlanService } from './callplan/services/call-plan.api.service';
 import { CallPlanSharedService } from './callplan/services/call-plan.shared.service';
-import { CodesSharedService } from './global-service/codes.shared.service';
+
 
 // LCR
 import { LcrCallPlanTableComponent } from './lcr/lcr-callplan-table/lcr-callplan-table.component';
@@ -101,23 +104,32 @@ import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 
 @NgModule({
-  declarations:
-  [
-    AppComponent, SideNavComponent, TopNavComponent, LoginComponent, RegistrationComponent, // Main
-    DashboardComponent, // Dashboard
-    CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
-    ImporterTableComponent, // Importer
-    RateCardsTableComponent, DeleteRateCardsDialogComponent, // RateCards
-    UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent,
-    TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DeleteRatesComponent, // Trunks
-    DetachTrunksComponent,
-    CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, // Call Plan
-    CallPlanAddRatecardComponent, CallPlanAddCodeComponent,
-    AddCodeComponent, DettachRatecardsComponent, DettachCodesComponent,
-    LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent, // LCR
-    AccountsComponent,
-    SuccessSnackbarComponent, ErrorSnackbarComponent, CarrierProfileComponent,
-  ],
+    declarations:
+    [
+        // Main Layout Components
+        AppComponent, SideNavComponent, TopNavComponent,
+        // User
+        LoginComponent, RegistrationComponent,
+        // Dashboard
+        DashboardComponent,
+        // Carrier
+        CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, CarrierProfileComponent,
+        // Ratecard
+        RateCardsTableComponent, DeleteRateCardsDialogComponent, ImporterTableComponent,
+        UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent, DeleteRatesComponent,
+        // Trunk
+        TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DetachTrunksComponent,
+        // Call Plan
+        CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, CallPlanAddRatecardComponent,
+        CallPlanAddCodeComponent, AddCodeComponent, AddRateCardComponent, DettachRatecardsComponent, 
+        DettachCodesComponent,
+        // LCR
+        LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent,
+        // Account
+        AccountsComponent,
+        // Global
+        SuccessSnackbarComponent, ErrorSnackbarComponent,
+    ],
   imports:
   [
     // Core Angular Modules
@@ -170,12 +182,13 @@ import { RegistrationComponent } from './registration/registration.component';
     ], // Applications services
     bootstrap: [ AppComponent ],
     entryComponents: [
+        // Carrier
+        AddCarrierDialogComponent, DelCarrierDialogComponent,
+        // Ratecard
+        DeleteRateCardsDialogComponent, UploadRatesDialogComponent,
         SuccessSnackbarComponent, ErrorSnackbarComponent,
-        AddCarrierDialogComponent, DelCarrierDialogComponent, // Carrier
-        UploadRatesDialogComponent, // Importer
-        DeleteRateCardsDialogComponent,  // Ratecards
         DeleteTrunksComponent, AddTrunksComponent, DeleteRatesComponent, DetachTrunksComponent, // Trunks
-        AddCallPlanComponent, DelCallPlanComponent, AddCodeComponent, // Callplans
+        AddCallPlanComponent, DelCallPlanComponent, AddCodeComponent, AddRateCardComponent, // Callplans
         DettachRatecardsComponent, DettachCodesComponent
     ] , // Add in dialog
 })

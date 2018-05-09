@@ -125,12 +125,12 @@ export class UploadRatesDialogComponent implements OnInit {
                 (resp) => {
                     for ( let i = 0; i < resp.length; i++ ) { this.totalRatesProcessed += resp[i].rates.length; }
                     if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Ratecards successful imported.', 3000);
+                        this.snackbarSharedService.snackbar_success('Ratecards successful imported.', 2000);
                     }
                 },
                 error => {
                     console.log(error);
-                    this.snackbarSharedService.snackbar_error('Ratecards failed to import.', 3000);
+                    this.snackbarSharedService.snackbar_error('Ratecards failed to import.', 2000);
                 }
             );
     }
@@ -147,13 +147,16 @@ export class UploadRatesDialogComponent implements OnInit {
         return [
             {
                 headerName: 'Trunk Name', field: 'trunk_name',
-                checkboxSelection: true, width: 350
+                checkboxSelection: true, width: 350,
+                cellStyle: { 'border-right': '2px solid #E0E0E0' },
             },
             {
                 headerName: 'Carrier', field: 'carrier_name',
+                cellStyle: { 'border-right': '2px solid #E0E0E0' },
             },
             {
                 headerName: 'Trunk IP', field: 'trunk_ip',
+                cellStyle: { 'border-right': '2px solid #E0E0E0' },
             },
             {
                 headerName: 'Trunk Port', field: 'trunk_port',

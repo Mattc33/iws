@@ -3,9 +3,9 @@
         <ag-grid-angular class="ag-theme-balham" id="all-callplans" [animateRows]="true"
             [columnDefs]="columnDefs" [rowData]="rowData"
             [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="onSelectionChangedCallPlanTable()($event)" (rowSelected)="aggrid_rowSelected($event)" [suppressRowClickSelection]="true"
-            [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="onCellValueChanged($event)"
+            [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="onCellValueChanged($event)" [singleClickEdit]="true"
             [enableFilter]="true" [floatingFilter]="true" [enableSorting]="true"
-            [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+            [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"
             [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
             [headerHeight]="40" [floatingFiltersHeight]="30"
@@ -28,7 +28,7 @@
                 <ag-grid-angular class="ag-theme-balham" id="call-plans-detail" [animateRows]="true"
                     [columnDefs]="columnDefsDetail" [rowData]=""
                     [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"
-                    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                    [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
                     [enableCellChangeFlash]="true"
                     [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
                     [headerHeight]="40" [floatingFiltersHeight]="30"
@@ -39,7 +39,7 @@
                 <ag-grid-angular class="ag-theme-balham" id="call-plans-detail2" [animateRows]="true"
                     [columnDefs]="columnDefsDetail2" [rowData]=""
                     [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"
-                    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                    [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
                     [suppressNoRowsOverlay]="true" [suppressLoadingOverlay]="true"
                     [enableCellChangeFlash]="true"
                     [headerHeight]="40" [floatingFiltersHeight]="30"
@@ -56,7 +56,7 @@
                         [stopEditingWhenGridLosesFocus]="true" 
                         [enableFilter]="true" [floatingFilter]="true"
                         [enableSorting]="true"
-                        [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                        [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
                         [pagination]="true" [paginationAutoPageSize]="true"
                         [suppressLoadingOverlay]="true" [enableCellChangeFlash]="true"
                         [headerHeight]="40" [floatingFiltersHeight]="30"
@@ -67,6 +67,7 @@
 
                     <mat-toolbar-row class="toolbar-details">
                         <button (click)="openDialogDetachRatecards()" [disabled]="toggleButtonStatus_ratecards()" class="del"> <i class="fas fa-trash-alt"></i> </button>
+                        <button (click)="openDialogAttachRateCard()" [disabled]="toggleButtonStatus()"> <i class="fas fa-plus-circle"></i> Ratecard</button>
                         <mat-form-field class="search-bar">
                             <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                             <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
@@ -80,7 +81,7 @@
                     [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged_codes($event)"
                     [enableFilter]="true" [floatingFilter]="true"
                     [enableSorting]="true"
-                    [enableColResize]="true" (gridSizeChanged)="aggrid_gridSizeChanged($event)"
+                    [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
                     [pagination]="true" [paginationAutoPageSize]="true"
                     [suppressLoadingOverlay]="true"
                     [enableCellChangeFlash]="true"

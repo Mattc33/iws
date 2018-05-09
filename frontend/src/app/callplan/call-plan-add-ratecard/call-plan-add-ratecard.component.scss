@@ -1,4 +1,4 @@
-    section {
+section {
     margin-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
@@ -10,6 +10,10 @@
         #callplan-table {
             width: 100%; height: 82.5vh;
             float: left;
+        }
+
+        .deselect-button {
+            margin-top: 30px;
         }
     }
 

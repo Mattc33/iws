@@ -6,6 +6,7 @@ import { CallPlanTableComponent } from './../../call-plan-table.component';
 
 import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from '../../../services/call-plan.shared.service';
+import { SnackbarSharedService } from './../../../../shared/services/global/snackbar.shared.service';
 
 @Component({
   selector: 'app-dettach-ratecards',
@@ -15,6 +16,7 @@ import { CallPlanSharedService } from '../../../services/call-plan.shared.servic
 export class DettachRatecardsComponent implements OnInit {
 
     event_onDettach = new EventEmitter;
+
     private rowIdAll;
     private rowObjRatecards;
 
@@ -22,20 +24,18 @@ export class DettachRatecardsComponent implements OnInit {
         public dialogRef: MatDialogRef <CallPlanTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private callPlanService: CallPlanService,
-        private callPlanSharedServce: CallPlanSharedService
+        private callPlanSharedServce: CallPlanSharedService,
+        private _snackbar: SnackbarSharedService
     ) { }
 
     ngOnInit() {
-        this.callPlanSharedServce.currentRowAll
-            .subscribe(receivedRowId => this.rowIdAll = receivedRowId);
-        this.callPlanSharedServce.currentRatecardsObj
-            .subscribe(receivedRowObj => this.rowObjRatecards = receivedRowObj);
+        this.callPlanSharedServce.currentRowAll.subscribe(receivedRowId => this.rowIdAll = receivedRowId);
+        this.callPlanSharedServce.currentRatecardsObj.subscribe(receivedRowObj => this.rowObjRatecards = receivedRowObj);
     }
 
     click_dettachRatecards() {
         this.del_detachRatecards();
         this.aggrid_dettachratecards();
-
         this.closeDialog();
     }
 
@@ -45,10 +45,21 @@ export class DettachRatecardsComponent implements OnInit {
 
     del_detachRatecards() {
         let rowRatecardsId: number;
-        for (let i = 0; i<this.rowObjRatecards.length; i++) {
+        for (let i = 0; i < this.rowObjRatecards.length; i++) {
             rowRatecardsId = this.rowObjRatecards[i].id;
             this.callPlanService.del_detachRateCard(this.rowIdAll, rowRatecardsId)
-                .subscribe(resp => console.log(resp));
+                .subscribe(
+                    (resp: Response) => {
+                        console.log(resp);
+                        if ( resp.status === 200 ) {
+                            this._snackbar.snackbar_success('Ratecard Delete Successful.', 2000);
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                        this._snackbar.snackbar_error('Ratecard Delete Failed.', 2000);
+                    }
+                );
         }
     }
 

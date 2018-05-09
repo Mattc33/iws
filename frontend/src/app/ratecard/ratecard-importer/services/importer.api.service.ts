@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 
 import { ImporterSharedService } from './importer.shared.service';
-import { ApiSettingsSharedService } from './../../../global-service/api-settings.shared.service';
+import { ApiSettingsSharedService } from './../../../shared/services/global/api-settings.shared.service';
 
 @Injectable()
 export class ImporterService {

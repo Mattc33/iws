@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { GridApi } from 'ag-grid';
 
-import { RateCardsService } from './../services/rate-cards.api.service';
-import { RateCardsSharedService } from './../services/rate-cards.shared.service';
+import { RateCardsService } from './../../shared/api-services/ratecard/rate-cards.api.service';
+import { RateCardsSharedService } from './../../shared/services/ratecard/rate-cards.shared.service';
 import { TrunksService } from './../../trunks/services/trunks.api.service';
-import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
+import { NestedAgGridService } from './../../shared/services/global/nestedAgGrid.shared.service';
 import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
 
 @Component({
@@ -157,7 +157,7 @@ export class RateCardsAddTrunksComponent implements OnInit {
     private createColumnDefsReview() {
         return [
             {
-                headerName: 'Ratecard Name', field: 'name', checkboxSelection: true,
+                headerName: 'Ratecard Name', field: 'name',
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
@@ -170,7 +170,6 @@ export class RateCardsAddTrunksComponent implements OnInit {
             },
             {
                 headerName: 'Trunk Name', field: 'trunk_name',
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
         ];
     }

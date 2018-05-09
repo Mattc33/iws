@@ -11,6 +11,7 @@
             (gridReady)="on_GridReady_CallPlan($event)"
         >
         </ag-grid-angular>
+        <button mat-button (click)="resetAttachRatecardForm()" [disabled]="toggleButtonStates()" class="deselect-button"> Deselect All </button>
     </div>
 
     <div class="ratecard-container">
@@ -27,7 +28,6 @@
             (gridReady)="on_GridReady_Ratecard($event)"
         >
         </ag-grid-angular>
-            <button mat-button (click)="deselectAll()" [disabled]="toggleButtonStates()"> Deselect All </button>
     </div>
 
     <div class="ratecard-importer">

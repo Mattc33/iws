@@ -3,12 +3,11 @@ import { GridApi } from 'ag-grid';
 
 import { CallPlanService } from './../services/call-plan.api.service';
 import { CallPlanSharedService } from './../services/call-plan.shared.service';
-import { RateCardsService } from './../../ratecard/services/rate-cards.api.service';
+import { RateCardsService } from './../../shared/api-services/ratecard/rate-cards.api.service';
 
-import { NestedAgGridService } from './../../global-service/nestedAgGrid.shared.service';
+import { NestedAgGridService } from './../../shared/services/global/nestedAgGrid.shared.service';
 import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
 import { ToggleButtonStateService } from './../../shared/services/global/buttonStates.shared.service';
-
 
 @Component({
   selector: 'app-call-plan-add-ratecard',
