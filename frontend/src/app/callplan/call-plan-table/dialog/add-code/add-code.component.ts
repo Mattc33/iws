@@ -1,3 +1,4 @@
+
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
@@ -8,6 +9,8 @@ import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
 import { CarrierService } from './../../../../shared/api-services/carrier/carrier.api.service';
 import { CodesSharedService } from './../../../../shared/services/global/codes.shared.service';
+import { CodesFormSharedService } from './../../../../shared/services/callplan/attach-callplan-codes.shared.service';
+import { SnackbarSharedService } from './../../../../shared/services/global/snackbar.shared.service';
 
 @Component({
   selector: 'app-add-code',
@@ -16,28 +19,19 @@ import { CodesSharedService } from './../../../../shared/services/global/codes.s
 })
 export class AddCodeComponent implements OnInit {
 
-    // event_onAdd = new EventEmitter();
-
     // Form Group
     private addCallPlanFormGroup: FormGroup;
     private attachCodesFormGroup: FormGroup;
     private attachCountryCodesFormGroup: FormGroup;
 
-    // var
+    // Form Data
     callPlanObj = [];
-    planTypes = [
-        {code: 0, name: 'Pay as you go'},
-        {code: 1, name: 'Unlimited plan'},
-        {code: 2, name: 'Minute plan'},
-        {code: 3, name: 'Money plan'}
-    ];
-    planPriorityList = [
-        {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}
-    ];
+    codePlanTypes;
+    planPriorityList;
     carrierCodesObj = [];
+    countryCodeList;
 
     // Service props
-    private countryCodeList;
     private finalCodesObj = [];
     private currentRowId: number;
 
@@ -48,33 +42,23 @@ export class AddCodeComponent implements OnInit {
         private callPlanService: CallPlanService,
         private callPlanSharedService: CallPlanSharedService,
         private carrierService: CarrierService,
-        private codesSharedService: CodesSharedService
+        private codesSharedService: CodesSharedService,
+        private codesFormSharedService: CodesFormSharedService,
+        private _snackbar: SnackbarSharedService
     ) { }
 
     ngOnInit() {
-        this.countryCodeList = this.codesSharedService.getCountryCodes();
-
-        this.attachCodesFormGroup = this.formBuilder.group({
-            carrierCtrl: ['', Validators.required],
-            plantypeCtrl: ['', Validators.required],
-            planpriorityCtrl: ['', Validators.required],
-            dayperiodCtrl: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-            plannumberCtrl: ['', [Validators.required, Validators.pattern('^[0-9]*$')]]
-        });
-        this.attachCountryCodesFormGroup = this.formBuilder.group({
-            codes: this.formBuilder.array([
-                this.initCountryCodeFormGroup()
-            ])
-        });
-
         this.get_CarrierCodes();
+        this.initCodesFormData();
+        this.initCodesFormGroup();
 
-        this.callPlanSharedService.currentRowAll.subscribe( data => this.currentRowId = data  );
+        // Assigning current callplan row from parent callplan table component
+        this.callPlanSharedService.currentRowAll.subscribe( data => this.currentRowId = data );
     }
 
-    /*
-        ~~~~~~~~~~ Call API services ~~~~~~~~~~
-    */
+    // ================================================================================
+    // API services
+    // ================================================================================
         get_CarrierCodes() {
             this.carrierService.get_carriers().subscribe(
                 data => {
@@ -87,9 +71,46 @@ export class AddCodeComponent implements OnInit {
 
         post_attachCallPlanCodes(callplanId: number, body: object) {
             this.callPlanService.post_newPlanCode(callplanId, body).subscribe(
-                resp => { console.log(resp); }
+                (resp: Response) => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this._snackbar.snackbar_success('Codes Attached Successful.', 2000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this._snackbar.snackbar_error('Codes Attached failed.', 2000);
+                }
             );
         }
+
+    // ================================================================================
+    // Init Forms & Form Data
+    // ================================================================================
+    initCodesFormData() {
+        this.countryCodeList = this.codesSharedService.getCountryCodes();
+        this.codePlanTypes = this.codesFormSharedService.provideCodePlanTypes();
+        this.planPriorityList = this.codesFormSharedService.providePriorityList();
+    }
+
+    initCodesFormGroup() {
+        this.attachCodesFormGroup = this.formBuilder.group(this.buildAttachCodesFormGroup());
+        this.attachCountryCodesFormGroup = this.formBuilder.group({
+            codes: this.formBuilder.array([
+                this.initCountryCodeFormGroup()
+            ])
+        });
+    }
+
+    buildAttachCodesFormGroup() {
+        return {
+            carrierCtrl: ['', Validators.required],
+            plantypeCtrl: ['', Validators.required],
+            planpriorityCtrl: ['', Validators.required],
+            dayperiodCtrl: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+            plannumberCtrl: ['', [Validators.required, Validators.pattern('^[0-9]*$')]]
+        };
+    }
 
     /*
         ~~~~~~~~~~ Extract Data from JSON into input Format ~~~~~~~~~~
@@ -101,7 +122,6 @@ export class AddCodeComponent implements OnInit {
         }
 
         insertDummyDataCodes() {
-            this.attachCodesFormGroup.get('carrierCtrl').setValue(`OBT`);
             this.attachCodesFormGroup.get('plantypeCtrl').setValue(0);
             this.attachCodesFormGroup.get('planpriorityCtrl').setValue(1);
             this.attachCodesFormGroup.get('dayperiodCtrl').setValue(27);
@@ -126,7 +146,6 @@ export class AddCodeComponent implements OnInit {
                     const destinationSetValue = this.attachCountryCodesFormGroup.get('codes')['controls'][i].get('destinationCtrl');
                     if (destinationCtrl[0] === '0') {
                         destinationSetValue.setValue(['0']);
-                    } else {
                     }
                 }
             }
@@ -143,7 +162,6 @@ export class AddCodeComponent implements OnInit {
         }
 
         codesObjBuilder() {
-            console.log(this.attachCountryCodesFormGroup.get('codes').value);
             const countryCodeArr = this.attachCountryCodesFormGroup.get('codes').value;
 
             for ( let i = 0; i < countryCodeArr.length; i++ ) {
@@ -170,13 +188,8 @@ export class AddCodeComponent implements OnInit {
     */
         click_attachCodes(): void {
             this.post_attachCodes();
-            // this.aggrid_attachCodes();
             this.closeDialog();
         }
-
-        // aggrid_attachCodes(): void {
-        //     this.event_onAdd.emit(this.finalCodesObj);
-        // }
 
         post_attachCodes() {
             for ( let i = 0; i < this.finalCodesObj.length; i++) {

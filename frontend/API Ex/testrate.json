@@ -1,0 +1,40 @@
+{
+  "name": "voxbeam test 1",
+  "carrier_id": 33,
+  "addToTeleU": true,
+  "teleUMarkup": 1.05,
+  "asAPrivate": true,
+  "privateMarkup": 1.05,
+  "rates": [
+    {
+      "destination": "Abkhazia Fixed",
+      "prefix": "7840",
+      "buy_rate": 0.1837,
+      "buy_rate_minimum": 1,
+      "buy_rate_increment": 1,
+      "sell_rate": 0.1837,
+      "sell_rate_minimum": 60,
+      "sell_rate_increment": 60
+    },
+    {
+      "destination": "Abkhazia Mobile",
+      "prefix": "7940",
+      "buy_rate": 0.2052,
+      "buy_rate_minimum": 1,
+      "buy_rate_increment": 1,
+      "sell_rate": 0.2052,
+      "sell_rate_minimum": 60,
+      "sell_rate_increment": 60
+    },
+    {
+      "destination": "Abkhazia Mobile - A-Mobile",
+      "prefix": "79407",
+      "buy_rate": 0.2117,
+      "buy_rate_minimum": 1,
+      "buy_rate_increment": 1,
+      "sell_rate": 0.2117,
+      "sell_rate_minimum": 60,
+      "sell_rate_increment": 60
+    }
+  ]
+}

@@ -45,7 +45,8 @@ export class ImporterTableComponent implements OnInit {
     ngOnInit() {
         this.getNodeChildDetails = this.setGroups();
         this.importerSharedService.currentPostTableObj.subscribe(
-            data => { 
+            data => {
+                this.totalRatesProcessed = 0;
                 this.rowData = data;
                 for ( let i = 0; i < this.rowData.length; i++ ) { this.totalRatesProcessed += this.rowData[i].rates.length; }
             }
@@ -346,7 +347,6 @@ export class ImporterTableComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(() => {
             sub.unsubscribe();
-            console.log('The dialog was closed');
         });
     }
 

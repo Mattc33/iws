@@ -2,15 +2,13 @@ import { Component, OnInit, Inject, EventEmitter, Injectable } from '@angular/co
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, ErrorStateMatcher } from '@angular/material';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 
-import { Observable } from 'rxjs';
-import { startWith ,  map } from 'rxjs/operators';
-
 import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-table.component';
 
 import { CallPlanService } from '../../../services/call-plan.api.service';
 import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
 import { CarrierService } from './../../../../shared/api-services/carrier/carrier.api.service';
 import { CodesSharedService } from './../../../../shared/services/global/codes.shared.service';
+import { CodesFormSharedService } from './../../../../shared/services/callplan/attach-callplan-codes.shared.service';
 
 @Component({
   selector: 'app-add-callplan',
@@ -30,26 +28,15 @@ export class AddCallPlanComponent implements OnInit {
 
     // callplan
     private carrierObj = [];
-    private status = [
-        {value: 'available'},
-        {value: 'unavailable'},
-        {value: 'deleted'},
-        {value: 'staged'},
-        {value: 'pending'},
-    ];
-    private planType = [
-        {name: 'Unlimited', value: 'UNLIMITED_CALL_PLAN'},
-        {name: 'Pay As You Go', value: 'PAY_AS_YOU_GO_CALL_PLAN'},
-        {name: 'Minutes', value: 'MINUTES_CALL_PLAN'},
-    ];
-    private activeWhen = [
-        {name: 'Activated Immediately', value: 'IMMEDIATELY'},
-        {name: 'Activated on a successful call', value: 'SUCCESS_CALL'}
-    ];
+    private status;
+    private callplanPlanType;
+    private activeWhen;
     private promotion = [
         {name: 'Yes', value: true},
         {name: 'No', value: false},
     ];
+
+
     private unlimitedPlanToggle = false;
     private callPlanObj = [];
 
@@ -60,7 +47,7 @@ export class AddCallPlanComponent implements OnInit {
     // codes
     private countryCodeList;
 
-    private planTypes = [
+    private codesPlanType = [
         {code: 0, name: 'Pay as you go'},
         {code: 1, name: 'Unlimited plan'},
         {code: 2, name: 'Minute plan'},
@@ -69,7 +56,6 @@ export class AddCallPlanComponent implements OnInit {
     private planPriorityList = [
         {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}
     ];
-    filteredOptions: Observable<any>;
     private finalCallPlanObj;
 
     // Internal Service
@@ -82,43 +68,15 @@ export class AddCallPlanComponent implements OnInit {
         private callPlanService: CallPlanService,
         private callPlanSharedService: CallPlanSharedService,
         private carrierService: CarrierService,
-        private codesSharedService: CodesSharedService
+        private codesSharedService: CodesSharedService,
+        private codesFormSharedService: CodesFormSharedService
     ) { }
 
     ngOnInit() {
         this.countryCodeList = this.codesSharedService.getCountryCodes();
 
-        this.addCarrierFormGroup = this.formBuilder.group({
-            carrierCtrl: ['', Validators.required]
-        });
-        this.attachCallPlanFormGroup = this.formBuilder.group({
-            titleCtrl: ['', Validators.required],
-            subtitleCtrl: [''],
-            availableCtrl: ['', Validators.required],
-            validthroughCtrl: ['', Validators.required],
-            buypriceCtrl: ['', [Validators.required, Validators.pattern(this.currencyPattern)]],
-            sellpriceCtrl: ['', [Validators.required, Validators.pattern(this.currencyPattern)]],
-            dayperiodCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
-            rankingCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
-            plantypeCtrl: ['', Validators.required],
-            maxdestinationCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
-            maxminutesCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
-            activewhenCtrl: ['', Validators.required],
-            promoCtrl: ['', Validators.required],
-            descriptionCtrl: ['', Validators.required]
-        });
-        this.attachCodesFormGroup = this.formBuilder.group({
-            carrierCtrl: ['', Validators.required],
-            plantypeCtrl: ['', Validators.required],
-            planpriorityCtrl: ['', Validators.required],
-            dayperiodCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
-            plannumberCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]]
-        });
-        this.attachCountryCodesFormGroup = this.formBuilder.group({
-            codes: this.formBuilder.array([
-                this.initCountryCodeFormGroup()
-            ])
-        });
+        this.initFormGroups();
+        this.initFormData();
 
         this.get_CarrierCodes();
         this.attachCallPlanFormGroup.get('validthroughCtrl').disable();
@@ -135,10 +93,61 @@ export class AddCallPlanComponent implements OnInit {
     }
 
     post_callPlan() {
-        console.log(this.finalCallPlanObj);
         this.callPlanService.post_newCallPlan(this.finalCallPlanObj)
             .subscribe(resp => console.log(resp));
     }
+
+    // ================================================================================
+    // Data Init
+    // ================================================================================
+    initFormData() {
+        this.status = this.codesFormSharedService.provideStatus();
+        this.callplanPlanType = this.codesFormSharedService.provideCallplanPlanType();
+        this.activeWhen = this.codesFormSharedService.provideActiveWhen();
+    }
+
+    initFormGroups() {
+        this.addCarrierFormGroup = this.formBuilder.group({
+            carrierCtrl: ['', Validators.required]
+        });
+        this.attachCallPlanFormGroup = this.formBuilder.group(this.initAttachCallplanForms());
+        this.attachCodesFormGroup = this.formBuilder.group(this.initAttachCodesForms());
+        this.attachCountryCodesFormGroup = this.formBuilder.group({
+            codes: this.formBuilder.array([
+                this.initCountryCodeFormGroup()
+            ])
+        });
+    }
+
+    initAttachCallplanForms(): Object {
+        return {
+            titleCtrl: ['', Validators.required],
+            subtitleCtrl: [''],
+            availableCtrl: ['', Validators.required],
+            validthroughCtrl: ['', Validators.required],
+            buypriceCtrl: ['', [Validators.required, Validators.pattern(this.currencyPattern)]],
+            sellpriceCtrl: ['', [Validators.required, Validators.pattern(this.currencyPattern)]],
+            dayperiodCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
+            rankingCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
+            plantypeCtrl: ['', Validators.required],
+            maxdestinationCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
+            maxminutesCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
+            activewhenCtrl: ['', Validators.required],
+            promoCtrl: ['', Validators.required],
+            descriptionCtrl: ['', Validators.required]
+        };
+    }
+
+    initAttachCodesForms(): Object {
+        return {
+            carrierCtrl: ['', Validators.required],
+            plantypeCtrl: ['', Validators.required],
+            planpriorityCtrl: ['', Validators.required],
+            dayperiodCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]],
+            plannumberCtrl: ['', [Validators.required, Validators.pattern(this.numPattern)]]
+        };
+    }
+
 
     /*
         ~~~~~~~~~~ Extract Data from JSON into input format ~~~~~~~~~~
@@ -194,12 +203,12 @@ export class AddCallPlanComponent implements OnInit {
             if (this.attachCallPlanFormGroup.get('maxdestinationCtrl').value === '') {
                 maxDestNumber = 0;
             } else {
-                maxDestNumber = parseInt(this.attachCallPlanFormGroup.get('maxdestinationCtrl').value);
+                maxDestNumber = parseInt(this.attachCallPlanFormGroup.get('maxdestinationCtrl').value, 0);
             }
             if (this.attachCallPlanFormGroup.get('maxminutesCtrl').value === '') {
                 maxMinutes = 0;
             } else {
-                maxMinutes = parseInt(this.attachCallPlanFormGroup.get('maxminutesCtrl').value);
+                maxMinutes = parseInt(this.attachCallPlanFormGroup.get('maxminutesCtrl').value, 0);
             }
         this.finalCallPlanObj = {
             carrier_id: this.addCarrierFormGroup.get('carrierCtrl').value,
@@ -209,8 +218,8 @@ export class AddCallPlanComponent implements OnInit {
             valid_through: Date.parse(this.attachCallPlanFormGroup.get('validthroughCtrl').value).toString,
             buy_price: parseFloat(this.attachCallPlanFormGroup.get('buypriceCtrl').value),
             sell_price: parseFloat(this.attachCallPlanFormGroup.get('sellpriceCtrl').value),
-            day_period: parseInt(this.attachCallPlanFormGroup.get('dayperiodCtrl').value),
-            ranking: parseInt(this.attachCallPlanFormGroup.get('rankingCtrl').value),
+            day_period: parseInt(this.attachCallPlanFormGroup.get('dayperiodCtrl').value, 0),
+            ranking: parseInt(this.attachCallPlanFormGroup.get('rankingCtrl').value, 0),
             planTypeName: this.attachCallPlanFormGroup.get('plantypeCtrl').value,
             maxDestNumbers: maxDestNumber,
             maxMinutes: maxMinutes,
@@ -230,8 +239,8 @@ export class AddCallPlanComponent implements OnInit {
             for ( let x = 0; x < destinationLen; x++ ) {
                 this.finalCallPlanObj.codes.push(
                     {
-                        ori_cc: parseInt(ori_cc),
-                        dest_cc: parseInt(countryCodeArr[i].destinationCtrl[x]),
+                        ori_cc: parseInt(ori_cc, 0),
+                        dest_cc: parseInt(countryCodeArr[i].destinationCtrl[x], 0),
                         carrier_code: this.attachCodesFormGroup.get('carrierCtrl').value,
                         planType: this.attachCodesFormGroup.get('plantypeCtrl').value,
                         priority: this.attachCodesFormGroup.get('planpriorityCtrl').value,

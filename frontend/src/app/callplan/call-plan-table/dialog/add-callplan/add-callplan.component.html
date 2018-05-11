@@ -94,7 +94,7 @@
 
             <mat-form-field> 
                 <mat-select placeholder="Call Plan Type" formControlName="plantypeCtrl" (change)="onChangePlanType()">
-                    <mat-option *ngFor="let plan of planType" [value]="plan.value">
+                    <mat-option *ngFor="let plan of callplanPlanType" [value]="plan.value">
                         {{ plan.name }}
                     </mat-option>
                 </mat-select>

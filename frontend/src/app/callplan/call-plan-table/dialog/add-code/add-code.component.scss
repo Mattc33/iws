@@ -1,25 +1,42 @@
-mat-form-field {
-    width: 96%;
-    margin-bottom: 2%;
+mat-horizontal-stepper {
+
+    mat-form-field {
+        width: 96%;
+        margin-bottom: 2%;
+    }
+
+    button {
+        border: 1px solid black;
+        margin-right: 5px;
+    }
+
+    .finalCodesObj-preview {
+        height: 40vh;
+        overflow: scroll;
+    }
+
+    .addcodes-container {
+        display: flex;
+
+        .origination-section {
+            flex: 1;
+
+        }
+        
+        .destination-section {
+            flex: 2;
+        }
+    }
+
 }
 
-.origination-section {
-    width: 20%;
-    float: left;
-}
 
-.destination-section {
-    width: 79%;
-    float: left;
-}
 
 .half-width {
     width: 49%;
 }
 
-button {
-    border: 1px solid black;
-}
+
 
 .country-code-trash {
     border: none;

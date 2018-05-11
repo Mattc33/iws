@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
-import { map, catchError} from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { ApiSettingsSharedService } from './../../shared/services/global/api-settings.shared.service';
 
 @Injectable()
@@ -25,7 +25,8 @@ export class CallPlanService {
             .get(this.url + 'callplans/')
             .pipe(
                 map(res => res.json()),
-                catchError(this.handleError)
+                catchError(this.handleError),
+                tap(res => console.log(res))
             );
     }
 

@@ -512,14 +512,13 @@ export class CallPlanTableComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(() => {
             sub.unsubscribe();
-            console.log('The dialog was closed');
         });
     }
 
     openDialogAddCallPlan(): void { // Add a Call Plan
         const dialogRef = this.dialog.open(AddCallPlanComponent, {
             height: 'auto',
-            width: '50%'
+            width: '70vw'
         });
 
         const sub = dialogRef.componentInstance.event_onAdd.subscribe((data) => {
@@ -528,7 +527,6 @@ export class CallPlanTableComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(() => {
             sub.unsubscribe();
-            console.log('The dialog was closed');
         });
     }
 
@@ -564,7 +562,6 @@ export class CallPlanTableComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(() => {
             sub.unsubscribe();
-            console.log('The dialog was closed');
         });
     }
 
@@ -576,7 +573,7 @@ export class CallPlanTableComponent implements OnInit {
 
         const dialogRef = this.dialog.open(AddCodeComponent, {
             height: 'auto',
-            width: '40%',
+            width: '70%',
         });
 
         dialogRef.afterClosed().subscribe(() => {

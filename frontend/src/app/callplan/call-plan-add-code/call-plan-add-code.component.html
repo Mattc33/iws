@@ -1,3 +1,86 @@
-<p>
-  call-plan-add-code works!
-</p>
+<section>
+    <div class="callplan-container">
+        <ag-grid-angular id="callplan-table" class="ag-theme-balham" 
+            [columnDefs]="columnDefsCallplan" [rowData]="rowDataCallplan"
+            [enableFilter]="true" [floatingFilter]="true"
+            [rowSelection]="rowSelectionS" [suppressRowClickSelection]="true" (selectionChanged)="onSelectionChanged($event)"
+            [enableSorting]="true" [suppressMovableColumns]="true"
+            [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
+        
+            (gridReady)="onGridReadyCallplan($event)"
+        >
+        </ag-grid-angular>
+    </div>
+
+    <div class="stepper-container">
+        <mat-horizontal-stepper [linear]="isLinear" #stepper>
+
+            <mat-step [stepControl]="addCodeInfoFormGroup">
+                <ng-template matStepLabel>Enter Code Info</ng-template>
+                <form [formGroup]="addCodeInfoFormGroup">
+
+                    <mat-form-field> 
+                        <mat-select placeholder="Carrier Code" formControlName="carrierCtrl">
+                            <mat-option *ngFor="let code of carrierInfo" [value]="code.code">
+                                {{code.code}} - {{code.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+            
+                    <mat-form-field> 
+                        <mat-select placeholder="Plan Type" formControlName="plantypeCtrl">
+                            <mat-option *ngFor="let planType of codePlanTypes" [value]="planType.code">
+                                {{planType.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field> 
+                        <mat-select placeholder="Plan Priority" formControlName="planpriorityCtrl">
+                            <mat-option *ngFor="let planPriority of planPriorityList" [value]="planPriority.num">
+                                {{planPriority.num}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field >
+                        <input matInput placeholder="Length of plan in days" formControlName="dayperiodCtrl" matTooltip="Type 0 for unlimited days" >
+                        <mat-hint align="end">Type 0 for unlimited days</mat-hint>
+                        <mat-error *ngIf="addCodeInfoFormGroup.get('dayperiodCtrl').hasError('required')">
+                            Plan in days is <strong>required</strong>
+                        </mat-error>
+                        <mat-error *ngIf="addCodeInfoFormGroup.get('dayperiodCtrl').hasError('pattern') && !addCodeInfoFormGroup.get('dayperiodCtrl').hasError('required')">
+                            Please enter numbers only
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field> 
+                        <input matInput #input maxlength="2" placeholder="Enter Plan Number" formControlName="plannumberCtrl" >
+                        <mat-hint align="end">Plan number 00 -> 20 - {{input.value?.length || 0}} / 2</mat-hint>
+                        <mat-error *ngIf="addCodeInfoFormGroup.get('plannumberCtrl').hasError('required')">
+                            Plan number days is <strong>required</strong>
+                        </mat-error>
+                        <mat-error *ngIf="addCodeInfoFormGroup.get('plannumberCtrl').hasError('pattern') && !addCodeInfoFormGroup.get('plannumberCtrl').hasError('required')">
+                            Please enter numbers only
+                        </mat-error>
+                    </mat-form-field>    
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="addCodeFormGroup">
+                <ng-template matStepLabel>Attach Codes</ng-template>
+                <form [formGroup]="addCodeFormGroup">
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="reviewCodeFormGroup">
+                <ng-template matStepLabel>Review, Submit</ng-template>
+                <form [formGroup]="reviewCodeFormGroup">
+                </form>
+            </mat-step>
+
+        </mat-horizontal-stepper>
+    </div>
+
+</section>

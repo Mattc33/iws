@@ -86,7 +86,7 @@ import { CallPlanAddCodeComponent } from './callplan/call-plan-add-code/call-pla
 
 import { CallPlanService } from './callplan/services/call-plan.api.service';
 import { CallPlanSharedService } from './callplan/services/call-plan.shared.service';
-
+import { CodesFormSharedService } from './shared/services/callplan/attach-callplan-codes.shared.service';
 
 // LCR
 import { LcrCallPlanTableComponent } from './lcr/lcr-callplan-table/lcr-callplan-table.component';
@@ -158,6 +158,7 @@ import { RegistrationComponent } from './registration/registration.component';
 
         {path: 'call-plan-view', component: CallPlanTableComponent},
         {path: 'call-plan-add-ratecard', component: CallPlanAddRatecardComponent},
+        {path: 'call-plan-add-code', component: CallPlanAddCodeComponent},
 
         {path: 'lcr-carrier', component: LcrCarrierTableComponent},
         {path: 'lcr-ratecard', component: LcrRatecardTableComponent},
@@ -166,18 +167,19 @@ import { RegistrationComponent } from './registration/registration.component';
 
         {path: 'accounts', component: AccountsComponent},
         {path: 'login', component: LoginComponent},
-        {path: 'registration', component: RegistrationComponent},
-
+        {path: 'registration', component: RegistrationComponent}
     ])
   ],
     providers: [
-        NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, CodesSharedService,   // Global services
-        ApiSettingsSharedService, // Global services
+        // Global services
+        NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, CodesSharedService,
+        ApiSettingsSharedService,
+        // Carrier
         CarrierService, CarrierSharedService,
-        ImporterService, ImporterSharedService,
-        RateCardsService, RateCardsSharedService,
+        // Ratecard
+        ImporterService, ImporterSharedService, RateCardsService, RateCardsSharedService,
         TrunksService, TrunksSharedService,
-        CallPlanService, CallPlanSharedService,
+        CallPlanService, CallPlanSharedService, CodesFormSharedService,
         LCRService, LCRSharedService,
     ], // Applications services
     bootstrap: [ AppComponent ],
