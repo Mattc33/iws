@@ -31,6 +31,7 @@ export class ImporterTableComponent implements OnInit {
     private postTableArr;
     private ratesInsertedIntoDB;
     private totalRatesProcessed = 0;
+    private totalRatesFromCSV = 0;
 
     constructor(
         private importerService: ImporterService,
@@ -49,6 +50,13 @@ export class ImporterTableComponent implements OnInit {
                 this.totalRatesProcessed = 0;
                 this.rowData = data;
                 for ( let i = 0; i < this.rowData.length; i++ ) { this.totalRatesProcessed += this.rowData[i].rates.length; }
+            }
+        );
+
+        this.importerSharedService.currentRatesCSVAmount.subscribe(
+            data => {
+                this.totalRatesFromCSV = 0;
+                this.totalRatesFromCSV = data;
             }
         );
     }

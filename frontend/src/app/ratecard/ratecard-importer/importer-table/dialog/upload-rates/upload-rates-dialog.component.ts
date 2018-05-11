@@ -345,6 +345,8 @@ export class UploadRatesDialogComponent implements OnInit {
             console.log('using Default Profile');
             this.defaultProfile(data);
         }
+
+        this.importerSharedService.changeRatesCSVAmount(this.ratesPreviewObj.length);
     }
 
     generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview

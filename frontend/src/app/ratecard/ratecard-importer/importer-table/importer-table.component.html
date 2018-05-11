@@ -23,7 +23,7 @@
 
         <mat-toolbar-row>
             <button (click)="openDialogUpload()"> <i class="fas fa-upload"></i> Rate Card</button>
-            <span> Total Rates processed: <b>{{totalRatesProcessed}}</b> </span>
+            <span> (Rates from CSV/Total Rates processed)  <b>{{totalRatesFromCSV}}/{{totalRatesProcessed}}</b></span>
             <mat-form-field class="search-bar">
                     <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                     <input matInput placeholder="Search Table..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
