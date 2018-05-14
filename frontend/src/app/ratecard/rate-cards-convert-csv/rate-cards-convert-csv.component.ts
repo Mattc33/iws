@@ -38,7 +38,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
         private nestedAgGridService: NestedAgGridService,
         private papa: PapaParseService
     ) {
-        this.getNodeChildDetails = this.setGroups();
+        this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups();
         this.columnDefs = this.createColumnDefs();
     }
 
@@ -83,20 +83,6 @@ export class RateCardsConvertCsvComponent implements OnInit {
     on_GridReady(params): void {
         this.gridApi = params.api;
         params.api.sizeColumnsToFit();
-    }
-
-    private setGroups() {
-        return function getNodeChildDetails(rowItem) {
-            if (rowItem.children) {
-                return {
-                    group: true,
-                    children: rowItem.children,
-                    key: rowItem.ratecard_bundle
-                };
-            } else {
-                return null;
-            }
-        };
     }
 
     private createColumnDefs() {

@@ -42,7 +42,7 @@ constructor(
     private snackbarSharedService: SnackbarSharedService,
     private toggleButtonStateService: ToggleButtonStateService
 ) {
-    this.getNodeChildDetails = this.setGroups();
+    this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups();
     this.columnDefsCallplan = this.createColumnDefsCallPlan();
     this.columnDefsRatecard = this.createColumnDefsRatecard();
     this.columnDefsReview = this.createColumnDefsReview();
@@ -100,20 +100,6 @@ on_GridReady_Ratecard(params): void {
 on_GridReady_Review(params): void {
     this.gridApiDetails = params.api;
     params.api.sizeColumnsToFit();
-}
-
-private setGroups() {
-    return function getNodeChildDetails(rowItem) {
-        if (rowItem.children) {
-            return {
-                group: true,
-                children: rowItem.children,
-                key: rowItem.ratecard_bundle
-            };
-        } else {
-            return null;
-        }
-    };
 }
 
 private createColumnDefsCallPlan() {

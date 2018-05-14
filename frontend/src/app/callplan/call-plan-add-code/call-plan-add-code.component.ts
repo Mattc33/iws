@@ -35,6 +35,7 @@ export class CallPlanAddCodeComponent implements OnInit {
     planPriorityList;
     countryCodeList;
     carrierInfo;
+    finalCodesObj = [];
 
     // Class data
     private callplanId;
@@ -106,7 +107,7 @@ export class CallPlanAddCodeComponent implements OnInit {
 
     initCodesformGroup() {
         this.addCodeInfoFormGroup = this._formBuilder.group(this.buildAddCodeInfoFormGroup());
-        this.attachCountryCodesFormGroup = this._formBuilder.group({
+        this.attachCodesFormGroup = this._formBuilder.group({
             codes: this._formBuilder.array([
                 this.buildCountryCodeFormGroup()
             ])
@@ -164,10 +165,76 @@ export class CallPlanAddCodeComponent implements OnInit {
 
     onSelectionChanged(params) {
         this.callplanId = this.gridApiCallplan.getSelectedRows()[0].id;
-        console.log(this.callplanId);
     }
 
+    onSelectChangeDest(params) {
+        const formArrLen = this.attachCountryCodesFormGroup.get('codes').value.length;
+        for ( let i = 0; i < formArrLen; i++) {
+            const destinationCtrl = this.attachCountryCodesFormGroup.get('codes')['controls'][i].get('destinationCtrl').value;
+            for (let x = 0; x < destinationCtrl.length; x++) {
+                const destinationSetValue = this.attachCountryCodesFormGroup.get('codes')['controls'][i].get('destinationCtrl');
+                if (destinationCtrl[0] === '0') {
+                    destinationSetValue.setValue(['0']);
+                }
+            }
+        }
+    }
 
+    // ================================================================================
+    // Form Controls
+    // ================================================================================
+    addCodes(): void {
+        const control = <FormArray>this.attachCodesFormGroup.controls['codes'];
+            control.push(this.buildCountryCodeFormGroup ());
+    }
+
+    removeAddress(index: number) {
+        const control = <FormArray>this.attachCodesFormGroup.controls['codes'];
+            control.removeAt(index);
+    }
+
+    codesObjBuilder() {
+        const countryCodeArr = this.attachCodesFormGroup.get('codes').value;
+
+        for ( let i = 0; i < countryCodeArr.length; i++ ) {
+            const ori_cc = countryCodeArr[i].originationCtrl;
+            const destinationLen = countryCodeArr[i].destinationCtrl.length;
+            for ( let x = 0; x < destinationLen; x++ ) {
+                this.finalCodesObj.push(
+                    {
+                        ori_cc: parseInt(ori_cc, 0),
+                        des_cc: parseInt(countryCodeArr[i].destinationCtrl[x], 0),
+                        carrier_code: this.addCodeInfoFormGroup.get('carrierCtrl').value,
+                        planType: this.addCodeInfoFormGroup.get('plantypeCtrl').value,
+                        priority: this.addCodeInfoFormGroup.get('planpriorityCtrl').value,
+                        day_period: parseInt(this.addCodeInfoFormGroup.get('dayperiodCtrl').value, 0),
+                        planNumber: parseInt(this.addCodeInfoFormGroup.get('plannumberCtrl').value, 0)
+                    },
+                );
+            }
+        }
+    }
+
+    click_attachCodes() {
+        for ( let i = 0; i < this.finalCodesObj.length; i++) {
+            this.post_attachNewCode(this.callplanId, this.finalCodesObj[i]);
+        }
+
+        this.resetForms();
+    }
+
+    resetForms() {
+        this.addCodeInfoFormGroup.reset();
+        this.attachCodesFormGroup.reset();
+        this.finalCodesObj = [];
+    }
+
+    insertDummyDataCodes() {
+        this.addCodeInfoFormGroup.get('plantypeCtrl').setValue(0);
+        this.addCodeInfoFormGroup.get('planpriorityCtrl').setValue(1);
+        this.addCodeInfoFormGroup.get('dayperiodCtrl').setValue(27);
+        this.addCodeInfoFormGroup.get('plannumberCtrl').setValue(1);
+    }
 
 
 }

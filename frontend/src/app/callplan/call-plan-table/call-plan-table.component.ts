@@ -7,6 +7,7 @@ import { NestedAgGridService } from './../../shared/services/global/nestedAgGrid
 import { CallPlanService } from './../services/call-plan.api.service';
 import { CallPlanSharedService } from './../services/call-plan.shared.service';
 import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
+import { ToggleButtonStateService } from './../../shared/services/global/buttonStates.shared.service';
 
 import { DelCallPlanComponent } from './dialog/del-callplan/del-callplan.component';
 import { AddCallPlanComponent } from './dialog/add-callplan/add-callplan.component';
@@ -23,11 +24,13 @@ import { DettachCodesComponent } from './dialog/dettach-codes/dettach-codes.comp
 export class CallPlanTableComponent implements OnInit {
 
     // AG grid row/col
-    private rowData; private columnDefs; private columnDefsDetail; private columnDefsDetail2;
-    private columnDefsRatecards; private getNodeChildDetails; private columnDefsCodes;
+    rowData; columnDefs;
+    columnDefsDetail; columnDefsDetail2;
+    columnDefsRatecards; getNodeChildDetails;
+    columnDefsCodes;
 
     // AG grid controllers
-    private gridApi: GridApi; // All
+    private gridApiCallplan: GridApi; // All
     private gridApiDetail: GridApi;
     private gridApiDetail2: GridApi;
     private gridApiRatecards: GridApi;
@@ -42,12 +45,9 @@ export class CallPlanTableComponent implements OnInit {
     private rowSelectionCodes;
 
     // Props for button Toggle
-    private buttonToggleBoolean = true;
-    private gridSelectionStatus: number;
-    private buttonToggleBoolean_ratecards = true;
-    private gridSelectionStatus_ratecards: number;
-    private buttonToggleBoolean_codes = true;
-    private gridSelectionStatus_codes: number;
+    private gridSelectionStatusCallplan: number;
+    private gridSelectionStatusRatecard: number;
+    private gridSelectionStatusCode: number;
 
     // Props for internal service
     private callPlanRowObj;
@@ -62,7 +62,8 @@ export class CallPlanTableComponent implements OnInit {
         private nestedAgGridService: NestedAgGridService,
         private dialog: MatDialog,
         private formBuilder: FormBuilder,
-        private _snackbar: SnackbarSharedService
+        private _snackbar: SnackbarSharedService,
+        private _buttonToggle: ToggleButtonStateService
     ) {
         this.columnDefs = this.createColumnDefs();
         this.columnDefsDetail = this.createColumnDefsDetail();
@@ -72,430 +73,393 @@ export class CallPlanTableComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getNodeChildDetails = this.setGroups();
+        this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups();
         this.get_allCallPlansData();
     }
 
-    /*
-        ~~~~~~~~~~ Call Plan API services ~~~~~~~~~~
-    */
-        private get_allCallPlansData(): void {
-            this.callPlanService.get_allCallplan()
-                .subscribe(
-                    data => { this.rowData = data; },
-                    error => { console.log(error); }
-                );
-        }
-
-        private get_specificCallPlanData(callPlanId: number) {
-            this.callPlanService.get_specificCallplan(callPlanId)
-                .subscribe(
-                    data => {
-                        this.callPlanSharedService.changeCallPlanObj(data);
-                        this.gridApiDetail.updateRowData({ add: [data] });
-                        this.gridApiDetail2.updateRowData({ add: [data] });
-
-                        const ratecardData = this.nestedAgGridService.formatDataToNestedArr(data.ratecards);
-                        this.gridApiRatecards.setRowData( ratecardData );
-
-                        this.gridApiCodes.setRowData( data.codes );
-                    },
-                );
-        }
-
-        put_editCallPlan(callPlanObj, callplan_id): void {
-            this.callPlanService.put_editCallPlan(callPlanObj, callplan_id)
-                .subscribe(
-                    resp => {
-                        console.log(resp);
-                        if ( resp.status === 200 ) {
-                            this._snackbar.snackbar_success('Edit Successful', 2000);
-                        }
-                    },
-                    error => {
-                        console.log(error);
-                        this._snackbar.snackbar_error(
-                            `Edit Failed`, 2000);
-                    }
-                );
-        }
-
-        put_editCodes(callplanId: number, codesId: number, body): void {
-            this.callPlanService.put_editPlanCode(callplanId, codesId, body)
-                .subscribe(
-                    resp => {
-                        console.log(resp);
-                        if ( resp.status === 200 ) {
-                            this._snackbar.snackbar_success('Edit Successful', 2000);
-                        }
-                    },
-                    error => {
-                        console.log(error);
-                        this._snackbar.snackbar_error(
-                            `Edit Failed`, 2000);
-                    }
-                );
-        }
-
-        post_callplanToLCR(callplan_id: number, body: any): void {
-            this.callPlanService.post_callplanToLCR(callplan_id, body)
-                .subscribe(
-                    resp => {
-                        console.log(resp);
-                        if ( resp.status === 200 ) {
-                            this._snackbar.snackbar_success('Callplan successfully inserted into LCR.', 3000);
-                        }
-                    },
-                    error => {
-                        console.log(error);
-                        this._snackbar.snackbar_error(
-                            `Error: Something is wrong. Check if Callplan has codes, ratecards, and trunks.`, 3000);
-                    }
-                );
-        }
-
-    /*
-        ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
-    */
-        private on_GridReady_Callplan(params): void { // init grid for all call plans table
-            this.gridApi = params.api;
-            params.api.sizeColumnsToFit();
-        }
-
-        private on_GridReady_Details(params): void { // init grid for details table
-            this.gridApiDetail = params.api;
-            params.api.sizeColumnsToFit();
-        }
-
-        private on_GridReady_Details2(params): void { // init grid for details table2
-            this.gridApiDetail2 = params.api;
-            params.api.sizeColumnsToFit();
-        }
-
-        private on_GridReady_Ratecards(params): void { // init grid for ratecards table
-            this.gridApiRatecards = params.api;
-            params.api.sizeColumnsToFit();
-        }
-
-        private on_GridReady_Codes(params): void { // init grid for codes table
-            this.gridApiCodes = params.api;
-            this.columnApiCodes = params.ColumnApi;
-            params.api.sizeColumnsToFit();
-        }
-
-        private createColumnDefs(): object { // All Call plans columns
-            return [
-                {
-                    headerName: 'Call Plans', field: 'title',
-                    checkboxSelection: true, editable: true,
-                    width: 250, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Carrier Name', field: 'carrier_name',
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Available', field: 'available', editable: true,
-                    cellEditor: 'select', cellEditorParams: {values: ['available', 'unavailable', 'deleted', 'staged', 'deleted']},
-                },
-            ];
-        }
-
-        private createColumnDefsDetail(): object { // Detailed Call plan table
-            return [
-                {
-                    headerName: 'Sub Title', field: 'subtitle', editable: true,
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Valid Through', field: 'valid_through', editable: true,
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Days in Plan', field: 'day_period', editable: true,
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Buy Price', field: 'buy_price',
-                    editable: true, filter: 'agNumberColumnFilter',
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Sell Price', field: 'sell_price',
-                    editable: true, filter: 'agNumberColumnFilter',
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-            ];
-        }
-
-        private createColumnDefsDetail2(): object {
-            return [
-                {
-                    headerName: 'Plan Rank', field: 'ranking',
-                    editable: true, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Activated on?', field: 'activeWhen', editable: true,
-                    cellEditor: 'select', cellEditorParams: {values: ['IMMEDIATELY', 'SUCCESS_CALL']},
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Promotion?', editable: true, field: 'isPurchasable',
-                    valueFormatter: params => {
-                        if (params.value === 1) { return true; }
-                        if (params.value === 0) { return false; }
-                    },
-                    cellEditor: 'select', cellEditorParams: {values: ['true', 'false']},
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Plan Type', field: 'planTypeName', editable: true, cellEditor: 'select',
-                    cellEditorParams: {values: ['UNLIMITED_CALL_PLAN', 'PAY_AS_YOU_GO_CALL_PLAN', 'MINUTES_CALL_PLAN']},
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Max Destination #', field: 'maxDestNumbers',
-                    editable: true,
-                },
-                {
-                    headerName: 'Max Minutes', field: 'maxMinutes',
-                    editable: true,
-                }
-            ];
-        }
-
-        private createColumnDefsRatecards(): object {
-            return [
-                {
-                    headerName: 'Ratecard Name', field: 'ratecard_bundle', checkboxSelection: true,
-                    headerCheckboxSelection: true, cellRenderer: 'agGroupCellRenderer', width: 400,
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Country', field: 'country',
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Offer', field: 'offer',
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Carrier Name', field: 'carrier_name',
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                }
-            ];
-        }
-
-        private createColumnDefsCodes(): object {
-            return [
-                {
-                    headerName: 'Codes', field: 'code', checkboxSelection: true,
-                    headerCheckboxSelection: true, width: 300,
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Origination Country', field: 'ori_cc', editable: true,
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Destination Country', field: 'des_cc', editable: true,
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Carrier Code', field: 'carrier_code',
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Plan Type', field: 'planType', editable: true,
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Days in Code', field: 'day_period', editable: true,
-                    cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                },
-                {
-                    headerName: 'Plan Number', field: 'planNumber', editable: true,
-                }
-            ];
-        }
-
-    setGroups() {
-        return function getNodeChildDetails(rowItem) {
-            if (rowItem.children) {
-                return {
-                    group: true,
-                    children: rowItem.children,
-                    key: rowItem.ratecard_bundle
-                };
-            } else {
-                return null;
-            }
-        };
+    // ================================================================================
+    // API
+    // ================================================================================
+    get_allCallPlansData(): void {
+        this.callPlanService.get_allCallplan()
+            .subscribe(
+                data => { this.rowData = data; },
+                error => { console.log(error); }
+            );
     }
 
-    /*
-        ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
-    */
+    get_specificCallPlanData(callPlanId: number) {
+        this.callPlanService.get_specificCallplan(callPlanId)
+            .subscribe(
+                data => {
+                    this.callPlanSharedService.changeCallPlanObj(data);
+                    this.gridApiDetail.updateRowData({ add: [data] });
+                    this.gridApiDetail2.updateRowData({ add: [data] });
+
+                    const ratecardData = this.nestedAgGridService.formatDataToNestedArr(data.ratecards);
+                    this.gridApiRatecards.setRowData( ratecardData );
+
+                    this.gridApiCodes.setRowData( data.codes );
+                },
+            );
+    }
+
+    put_editCallPlan(callPlanObj, callplan_id): void {
+        this.callPlanService.put_editCallPlan(callPlanObj, callplan_id)
+            .subscribe(
+                resp => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this._snackbar.snackbar_success('Edit Successful', 2000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this._snackbar.snackbar_error(
+                        `Edit Failed`, 2000);
+                }
+            );
+    }
+
+    put_editCodes(callplanId: number, codesId: number, body): void {
+        this.callPlanService.put_editPlanCode(callplanId, codesId, body)
+            .subscribe(
+                resp => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this._snackbar.snackbar_success('Edit Successful', 2000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this._snackbar.snackbar_error(
+                        `Edit Failed`, 2000);
+                }
+            );
+    }
+
+    post_callplanToLCR(callplan_id: number, body: any): void {
+        this.callPlanService.post_callplanToLCR(callplan_id, body)
+            .subscribe(
+                resp => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this._snackbar.snackbar_success('Callplan successfully inserted into LCR.', 3000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                    this._snackbar.snackbar_error(
+                        `Error: Something is wrong. Check if Callplan has codes, ratecards, and trunks.`, 3000);
+                }
+            );
+    }
+
+    // ================================================================================
+    // AG Grid Initialiation
+    // ================================================================================
+    private on_GridReady_Callplan(params): void { // init grid for all call plans table
+        this.gridApiCallplan = params.api;
+        params.api.sizeColumnsToFit();
+    }
+
+    private on_GridReady_Details(params): void { // init grid for details table
+        this.gridApiDetail = params.api;
+        params.api.sizeColumnsToFit();
+    }
+
+    private on_GridReady_Details2(params): void { // init grid for details table2
+        this.gridApiDetail2 = params.api;
+        params.api.sizeColumnsToFit();
+    }
+
+    private on_GridReady_Ratecards(params): void { // init grid for ratecards table
+        this.gridApiRatecards = params.api;
+        params.api.sizeColumnsToFit();
+    }
+
+    private on_GridReady_Codes(params): void { // init grid for codes table
+        this.gridApiCodes = params.api;
+        this.columnApiCodes = params.ColumnApi;
+        params.api.sizeColumnsToFit();
+    }
+
+    private createColumnDefs(): object { // All Call plans columns
+        return [
+            {
+                headerName: 'Call Plans', field: 'title',
+                checkboxSelection: true, editable: true,
+                width: 250, cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Carrier Name', field: 'carrier_name',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Available', field: 'available', editable: true,
+                cellEditor: 'select', cellEditorParams: {values: ['available', 'unavailable', 'deleted', 'staged', 'deleted']},
+            },
+        ];
+    }
+
+    private createColumnDefsDetail(): object { // Detailed Call plan table
+        return [
+            {
+                headerName: 'Sub Title', field: 'subtitle', editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Valid Through', field: 'valid_through', editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Days in Plan', field: 'day_period', editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Buy Price', field: 'buy_price',
+                editable: true, filter: 'agNumberColumnFilter',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Sell Price', field: 'sell_price',
+                editable: true, filter: 'agNumberColumnFilter',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+        ];
+    }
+
+    private createColumnDefsDetail2(): object {
+        return [
+            {
+                headerName: 'Plan Rank', field: 'ranking',
+                editable: true, cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Activated on?', field: 'activeWhen', editable: true,
+                cellEditor: 'select', cellEditorParams: {values: ['IMMEDIATELY', 'SUCCESS_CALL']},
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Promotion?', editable: true, field: 'isPurchasable',
+                valueFormatter: params => {
+                    if (params.value === 1) { return true; }
+                    if (params.value === 0) { return false; }
+                },
+                cellEditor: 'select', cellEditorParams: {values: ['true', 'false']},
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Plan Type', field: 'planTypeName', editable: true, cellEditor: 'select',
+                cellEditorParams: {values: ['UNLIMITED_CALL_PLAN', 'PAY_AS_YOU_GO_CALL_PLAN', 'MINUTES_CALL_PLAN']},
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Max Destination #', field: 'maxDestNumbers',
+                editable: true,
+            },
+            {
+                headerName: 'Max Minutes', field: 'maxMinutes',
+                editable: true,
+            }
+        ];
+    }
+
+    private createColumnDefsRatecards(): object {
+        return [
+            {
+                headerName: 'Ratecard Name', field: 'ratecard_bundle', checkboxSelection: true,
+                headerCheckboxSelection: true, cellRenderer: 'agGroupCellRenderer', width: 400,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Country', field: 'country',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Offer', field: 'offer',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Carrier Name', field: 'carrier_name',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            }
+        ];
+    }
+
+    private createColumnDefsCodes(): object {
+        return [
+            {
+                headerName: 'Codes', field: 'code', checkboxSelection: true,
+                headerCheckboxSelection: true, width: 300,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Origination Country', field: 'ori_cc', editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Destination Country', field: 'des_cc', editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Carrier Code', field: 'carrier_code',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Plan Type', field: 'planType', editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Days in Code', field: 'day_period', editable: true,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            },
+            {
+                headerName: 'Plan Number', field: 'planNumber', editable: true,
+            }
+        ];
+    }
+
+    // ================================================================================
+    // AG Grid UI
+    // ================================================================================
     onGridSizeChanged(params): void {
         params.api.sizeColumnsToFit();
     }
 
-        /*
-            ~~~~~ Selection ~~~~~
-        */
-        onSelectionChangedCallPlanTable(): void {
-            this.gridApiDetail.setRowData([]); // Reset All table data
-            this.gridApiDetail2.setRowData([]);
-            this.gridApiRatecards.setRowData([]);
-            this.gridApiCodes.setRowData([]);
+    onSelectionChangedCallPlan(): void {
+        this.clearTableRowData();
 
-            this.rowSelectionCallplan = this.gridApi.getSelectedRows(); // pass global row obj to row selection global var
-            this.rowIdAll = this.rowSelectionCallplan[0].id; // pass callplan row id to global var
-            this.callplanTitle = this.rowSelectionCallplan[0].title; // pass call plan title to ratecard dialog
+        this.rowSelectionCallplan = this.gridApiCallplan.getSelectedRows(); // pass global row obj to row selection global var
+        this.rowIdAll = this.rowSelectionCallplan[0].id; // pass callplan row id to global var
+        this.callplanTitle = this.rowSelectionCallplan[0].title; // pass call plan title to ratecard dialog
 
-            this.get_specificCallPlanData(this.rowIdAll);
+        this.get_specificCallPlanData(this.rowIdAll);
+    }
+
+    clearTableRowData(): void {
+        this.gridApiDetail.setRowData([]);
+        this.gridApiDetail2.setRowData([]);
+        this.gridApiRatecards.setRowData([]);
+        this.gridApiCodes.setRowData([]);
+    }
+
+    aggrid_rateCards_selectionChanged(): void { // Selection event for ratecards table
+        this.rowSelectionRatecards = this.gridApiRatecards.getSelectedRows();
+    }
+
+    aggrid_codes_selectionChanged(): void {
+        this.rowSelectionCodes = this.gridApiCodes.getSelectedRows();
+    }
+
+    // ================================================================================
+    // Button Toggle
+    // ================================================================================
+    toggleButtonStateCallplan(): boolean {
+        return this._buttonToggle.toggleButtonStates(this.gridSelectionStatusCallplan);
+    }
+
+    toggleButtonStateRatecard(): boolean {
+        return this._buttonToggle.toggleButtonStates(this.gridSelectionStatusRatecard);
+    }
+
+    toggleButtonStateCode(): boolean {
+        return this._buttonToggle.toggleButtonStates(this.gridSelectionStatusCode);
+    }
+
+    onRowSelectedCallplan(): void {
+        this.selectedCallplanIndex = this.gridApiCallplan.getSelectedNodes()[0].rowIndex; // Get rowindex of callplan;
+        this.gridSelectionStatusCallplan = this.gridApiCallplan.getSelectedNodes().length;
+    }
+
+    onRowSelectedRatecard(): void {
+        this.gridSelectionStatusRatecard = this.gridApiRatecards.getSelectedNodes().length;
+    }
+
+    onRowSelectedCode(): void {
+        this.gridSelectionStatusCode = this.gridApiCodes.getSelectedNodes().length;
+    }
+
+    // ================================================================================
+    // Delete and Add Row Data AG Grid
+    // @Todo
+    // ================================================================================
+    aggrid_delRow(string): void {
+        if (string === 'del-callplan') {
+            this.gridApiCallplan.updateRowData({ remove: this.rowSelectionCallplan });
         }
-
-        aggrid_rateCards_selectionChanged(): void { // Selection event for ratecards table
-            this.rowSelectionRatecards = this.gridApiRatecards.getSelectedRows();
+        if (string === 'detach-ratecards') {
+            this.gridApiCallplan.deselectAll();
+            this.gridApiCallplan.selectIndex(this.selectedCallplanIndex, false, false);
         }
-
-        aggrid_codes_selectionChanged(): void {
-            this.rowSelectionCodes = this.gridApiCodes.getSelectedRows();
+        if (string === 'detach-codes') {
+            this.gridApiCodes.updateRowData({ remove: this.rowSelectionCodes });
         }
+    }
 
-        /*
-            ~~~~~~~~~~ Button Toggle ~~~~~~~~~~
-        */
-        aggrid_rowSelected() {
-            this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
-            this.selectedCallplanIndex = this.gridApi.getSelectedNodes()[0].rowIndex; // Get rowindex of callplan;
-        }
+    aggrid_addRow_codes(obj): void {
+        this.gridApiCallplan.deselectAll();
+        this.gridApiCallplan.selectNode(this.nodeSelection);
+    }
 
-        toggleButtonStatus() {
-            if ( this.gridSelectionStatus > 0 ) {
-                this.buttonToggleBoolean = false;
-            } else {
-                this.buttonToggleBoolean = true;
-            }
-            return this.buttonToggleBoolean;
-        }
+    aggrid_addRow_callplans(obj): void {
+        this.gridApiCallplan.updateRowData({ add: [obj] });
+    }
 
-        aggrid_rowSelected_ratecards() {
-            this.gridSelectionStatus_ratecards = this.gridApiRatecards.getSelectedNodes().length;
-        }
+    onCellValueChanged(params: any): void {
+        const id = params.data.id;
+        const date = Date.parse(params.data.valid_through).toString();
+        let forPromotion: boolean;
+        if ( params.data.isPurchasable === 1 || params.data.isPurchasable === 'true' ) { forPromotion = true; }
+        if ( params.data.isPurchasable === 0 || params.data.isPurchasable === 'false') { forPromotion = false; }
 
-        toggleButtonStatus_ratecards() {
-            if ( this.gridSelectionStatus_ratecards > 0 ) {
-                this.buttonToggleBoolean_ratecards = false;
-            } else {
-                this.buttonToggleBoolean_ratecards = true;
-            }
-            return this.buttonToggleBoolean_ratecards;
-        }
+        const detailObj = {
+            carrier_id: params.data.carrier_id,
+            title: params.data.title,
+            subtitle: params.data.subtitle,
+            available: params.data.available,
+            valid_through: date,
+            buy_price: parseFloat(params.data.buy_price),
+            sell_price: parseFloat(params.data.sell_price),
+            day_period: parseInt(params.data.day_period, 0),
+            planTypeName: params.data.planTypeName,
+            activeWhen: params.data.activeWhen,
+            ranking: parseInt(params.data.ranking, 0),
+            isPurchasable: forPromotion,
+            maxDestNumbers: parseInt(params.data.maxDestNumbers, 0),
+            maxMinutes: parseInt(params.data.maxMinutes, 0)
+        };
 
-        aggrid_rowSelected_codes() {
-            this.gridSelectionStatus_codes = this.gridApiCodes.getSelectedNodes().length;
-        }
+        this.put_editCallPlan(detailObj, id);
+    }
 
-        toggleButtonStatus_codes() {
-            if ( this.gridSelectionStatus_codes > 0 ) {
-                this.buttonToggleBoolean_codes = false;
-            } else {
-                this.buttonToggleBoolean_codes = true;
-            }
-            return this.buttonToggleBoolean_codes;
-        }
+    onCellValueChanged_codes(params) {
+        const callplanId = this.gridApiCallplan.getSelectedRows()[0].id;
+        const codesId = params.data.id;
 
-        /*
-            ~~~~~~ Deletion ~~~~~~
-        */
-        aggrid_delRow(string): void {
-            if (string === 'del-callplan') {
-                this.gridApi.updateRowData({ remove: this.rowSelectionCallplan });
-            }
-            if (string === 'detach-ratecards') {
-                console.log('del this -->');
-                this.gridApi.deselectAll();
-                this.gridApi.selectIndex(this.selectedCallplanIndex, false, false);
-            }
-            if (string === 'detach-codes') {
-                this.gridApiCodes.updateRowData({ remove: this.rowSelectionCodes });
-            }
-        }
+        const codesObj = {
+            ori_cc: parseInt(params.data.ori_cc, 0),
+            des_cc: parseInt(params.data.des_cc, 0),
+            carrier_code: params.data.carrier_code,
+            planType: parseInt(params.data.planType, 0),
+            priority: parseInt(params.data.priority, 0),
+            day_period: parseInt(params.data.day_period, 0),
+            planNumber: parseInt(params.data.planNumber, 0)
+        };
 
-        /*
-            ~~~~~~ Addition ~~~~
-        */
-        aggrid_addRow_codes(obj): void {
-            this.gridApi.deselectAll();
-            this.gridApi.selectNode(this.nodeSelection);
-        }
+        this.put_editCodes(callplanId, codesId, codesObj);
+    }
 
-        aggrid_addRow_callplans(obj): void {
-            this.gridApi.updateRowData({ add: [obj] });
-        }
+    click_sendToLCR() {
+        this.sendCallplanToLCR();
+    }
 
-        /*
-            ~~~~~~ Edits ~~~~
-        */
-        onCellValueChanged(params: any): void {
-            const id = params.data.id;
-            const date = Date.parse(params.data.valid_through).toString();
-            let forPromotion: boolean;
-            if ( params.data.isPurchasable === 1 || params.data.isPurchasable === 'true' ) { forPromotion = true; }
-            if ( params.data.isPurchasable === 0 || params.data.isPurchasable === 'false') { forPromotion = false; }
+    sendCallplanToLCR() {
+        const callplan_id = this.gridApiCallplan.getSelectedNodes()[0].data.id;
+        const body = {};
 
-            const detailObj = {
-                carrier_id: params.data.carrier_id,
-                title: params.data.title,
-                subtitle: params.data.subtitle,
-                available: params.data.available,
-                valid_through: date,
-                buy_price: parseFloat(params.data.buy_price),
-                sell_price: parseFloat(params.data.sell_price),
-                day_period: parseInt(params.data.day_period, 0),
-                planTypeName: params.data.planTypeName,
-                activeWhen: params.data.activeWhen,
-                ranking: parseInt(params.data.ranking, 0),
-                isPurchasable: forPromotion,
-                maxDestNumbers: parseInt(params.data.maxDestNumbers, 0),
-                maxMinutes: parseInt(params.data.maxMinutes, 0)
-            };
-
-            this.put_editCallPlan(detailObj, id);
-        }
-
-        onCellValueChanged_codes(params) {
-            const callplanId = this.gridApi.getSelectedRows()[0].id;
-            const codesId = params.data.id;
-
-            const codesObj = {
-                ori_cc: parseInt(params.data.ori_cc, 0),
-                des_cc: parseInt(params.data.des_cc, 0),
-                carrier_code: params.data.carrier_code,
-                planType: parseInt(params.data.planType, 0),
-                priority: parseInt(params.data.priority, 0),
-                day_period: parseInt(params.data.day_period, 0),
-                planNumber: parseInt(params.data.planNumber, 0)
-            };
-
-            this.put_editCodes(callplanId, codesId, codesObj);
-        }
-
-    /*
-        ~~~~~~~~~~ Toolbar ~~~~~~~~~~
-    */
-        click_sendToLCR() {
-            this.sendCallplanToLCR();
-        }
-
-        sendCallplanToLCR() {
-            const callplan_id = this.gridApi.getSelectedNodes()[0].data.id;
-            const body = {};
-
-            this.post_callplanToLCR(callplan_id, body);
-        }
+        this.post_callplanToLCR(callplan_id, body);
+    }
 
     // ================================================================================
     // Dialog Callplan
@@ -540,12 +504,12 @@ export class CallPlanTableComponent implements OnInit {
             panelClass: 'ratecard-callplan-screen-dialog',
             maxWidth: '90vw',
             autoFocus: false,
-            data: this.gridApi.getSelectedRows()[0].title
+            data: this.gridApiCallplan.getSelectedRows()[0].title
         });
 
         dialogRef.afterClosed().subscribe(() => {
-            this.gridApi.deselectAll();
-            this.gridApi.selectIndex(this.selectedCallplanIndex, false, false);
+            this.gridApiCallplan.deselectAll();
+            this.gridApiCallplan.selectIndex(this.selectedCallplanIndex, false, false);
         });
     }
 
@@ -577,8 +541,8 @@ export class CallPlanTableComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(() => {
-            this.gridApi.deselectAll();
-            this.gridApi.selectIndex(this.selectedCallplanIndex, false, false);
+            this.gridApiCallplan.deselectAll();
+            this.gridApiCallplan.selectIndex(this.selectedCallplanIndex, false, false);
         });
     }
 

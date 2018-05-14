@@ -113,5 +113,19 @@ export class NestedAgGridService {
         return finalData;
     }
 
+    returnSetGroups() {
+        return function getNodeChildDetails(rowItem) {
+            if (rowItem.children) {
+                return {
+                    group: true,
+                    children: rowItem.children,
+                    key: rowItem.ratecard_bundle
+                };
+            } else {
+                return null;
+            }
+        };
+    }
+
 }
 

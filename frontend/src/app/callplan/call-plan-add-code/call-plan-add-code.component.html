@@ -66,18 +66,53 @@
                         </mat-error>
                     </mat-form-field>    
                 </form>
+
+                <div class="stepper-controls">
+                    <button mat-button matStepperNext [disabled]="!addCodeInfoFormGroup.valid">Next</button>
+                    <button mat-button (click)="insertDummyDataCodes()">TEST DATA</button>
+                </div>
             </mat-step>
 
-            <mat-step [stepControl]="addCodeFormGroup">
+            <mat-step [stepControl]="attachCodesFormGroup" class="attachcodes-mat-step">
                 <ng-template matStepLabel>Attach Codes</ng-template>
-                <form [formGroup]="addCodeFormGroup">
+                <form [formGroup]="attachCodesFormGroup" class="attachcodes-form">
+                    <div formArrayName="codes" *ngFor="let codeFG of attachCodesFormGroup.get('codes').controls; let i = index">
+                        <button *ngIf="attachCodesFormGroup.get('codes').controls.length > 1" (click)="removeAddress(i)" class="country-code-trash">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <div [formGroupName]="i" class="addcodes-container">
+                            <div class="origination-section">
+                                <mat-form-field class="select-width">
+                                    <mat-select placeholder="Origination Code" formControlName="originationCtrl">
+                                    <mat-option *ngFor="let code of countryCodeList" [value]="code.code">{{code.country}} - {{code.code}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="destination-section">
+                                <mat-form-field class="select-width">
+                                    <mat-select placeholder="Destination Code" formControlName="destinationCtrl" (change)="onSelectChangeDest($event)" multiple>
+                                    <mat-option *ngFor="let code of countryCodeList" [value]="code.code">{{code.country}} - {{code.code}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div> <!-- end nested array FormGroup -->
+
+                    <div class="stepper-controls">
+                        <button mat-button (click)="addCodes()"> Add New Country Code</button>
+                        <button mat-button matStepperPrevious >Back</button>
+                        <button mat-button matStepperNext (click)="codesObjBuilder()" [disabled]="!attachCodesFormGroup.valid">Next</button>
+                    </div>
                 </form>
             </mat-step>
 
-            <mat-step [stepControl]="reviewCodeFormGroup">
+            <mat-step [stepControl]="">
                 <ng-template matStepLabel>Review, Submit</ng-template>
-                <form [formGroup]="reviewCodeFormGroup">
-                </form>
+                <pre class="finalCodesObj-preview">{{finalCodesObj | json}}</pre>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>  
+                    <button mat-button (click)="click_attachCodes()">Submit</button>
+                </div>
             </mat-step>
 
         </mat-horizontal-stepper>

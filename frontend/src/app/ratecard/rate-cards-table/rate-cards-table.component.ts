@@ -64,7 +64,7 @@ export class RateCardsTableComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getNodeChildDetails = this.setGroups();
+        this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups();
         this.get_allRatecards();
     }
 
@@ -253,20 +253,6 @@ export class RateCardsTableComponent implements OnInit {
                 headerName: 'Meta Data', field: 'metadata',
             }
         ];
-    }
-
-    setGroups() {
-        return function getNodeChildDetails(rowItem) {
-            if (rowItem.children) {
-                return {
-                    group: true,
-                    children: rowItem.children,
-                    key: rowItem.ratecard_bundle
-                };
-            } else {
-                return null;
-            }
-        };
     }
 
     /*

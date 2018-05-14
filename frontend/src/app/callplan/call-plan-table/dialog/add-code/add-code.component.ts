@@ -52,37 +52,36 @@ export class AddCodeComponent implements OnInit {
         this.initCodesFormData();
         this.initCodesFormGroup();
 
-        // Assigning current callplan row from parent callplan table component
         this.callPlanSharedService.currentRowAll.subscribe( data => this.currentRowId = data );
     }
 
     // ================================================================================
     // API services
     // ================================================================================
-        get_CarrierCodes() {
-            this.carrierService.get_carriers().subscribe(
-                data => {
-                    console.log(data);
-                    this.extractCarrierCodes(data);
-                },
-                error => { console.log(error); },
-            );
-        }
+    get_CarrierCodes() {
+        this.carrierService.get_carriers().subscribe(
+            data => {
+                console.log(data);
+                this.extractCarrierCodes(data);
+            },
+            error => { console.log(error); },
+        );
+    }
 
-        post_attachCallPlanCodes(callplanId: number, body: object) {
-            this.callPlanService.post_newPlanCode(callplanId, body).subscribe(
-                (resp: Response) => {
-                    console.log(resp);
-                    if ( resp.status === 200 ) {
-                        this._snackbar.snackbar_success('Codes Attached Successful.', 2000);
-                    }
-                },
-                error => {
-                    console.log(error);
-                    this._snackbar.snackbar_error('Codes Attached failed.', 2000);
+    post_attachCallPlanCodes(callplanId: number, body: object) {
+        this.callPlanService.post_newPlanCode(callplanId, body).subscribe(
+            (resp: Response) => {
+                console.log(resp);
+                if ( resp.status === 200 ) {
+                    this._snackbar.snackbar_success('Codes Attached Successful.', 2000);
                 }
-            );
-        }
+            },
+            error => {
+                console.log(error);
+                this._snackbar.snackbar_error('Codes Attached failed.', 2000);
+            }
+        );
+    }
 
     // ================================================================================
     // Init Forms & Form Data

@@ -46,7 +46,7 @@ export class AddRateCardComponent implements OnInit {
         private rateCardsService: RateCardsService,
         private nestedAgGridService: NestedAgGridService
     ) {
-        this.getNodeChildDetails = this.setGroups();
+        this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups();
         this.columnDefs = this.createColumnDefs();
         this.columnDefsReview = this.createColumnDefsReview();
     }
@@ -94,20 +94,6 @@ export class AddRateCardComponent implements OnInit {
     on_GridReady_Review(params): void {
         this.gridApiDetails = params.api;
         params.api.sizeColumnsToFit();
-    }
-
-    private setGroups() {
-        return function getNodeChildDetails(rowItem) {
-            if (rowItem.children) {
-                return {
-                    group: true,
-                    children: rowItem.children,
-                    key: rowItem.ratecard_bundle
-                };
-            } else {
-                return null;
-            }
-        };
     }
 
     private createColumnDefs() {

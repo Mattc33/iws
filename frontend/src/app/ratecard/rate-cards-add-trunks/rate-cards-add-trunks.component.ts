@@ -47,7 +47,7 @@ export class RateCardsAddTrunksComponent implements OnInit {
         private nestedAgGridService: NestedAgGridService,
         private snackbarSharedService: SnackbarSharedService
     ) {
-        this.getNodeChildDetails = this.setGroups();
+        this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups();
         this.columnDefs = this.createColumnDefs();
         this.columnDefsTrunk = this.createColumnsDefsTrunk();
         this.columnDefsReview = this.createColumnDefsReview();
@@ -109,20 +109,6 @@ export class RateCardsAddTrunksComponent implements OnInit {
     on_GridReady_review(params): void {
         this.gridApiReview = params.api;
         params.api.sizeColumnsToFit();
-    }
-
-    private setGroups() {
-        return function getNodeChildDetails(rowItem) {
-            if (rowItem.children) {
-                return {
-                    group: true,
-                    children: rowItem.children,
-                    key: rowItem.ratecard_bundle
-                };
-            } else {
-                return null;
-            }
-        };
     }
 
     private createColumnDefs() {
