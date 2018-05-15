@@ -40,8 +40,6 @@ export class CallPlanAddCodeComponent implements OnInit {
     // Class data
     private callplanId;
 
-    //
-
     constructor(
         private callplanService: CallPlanService,
         private carrierService: CarrierService,

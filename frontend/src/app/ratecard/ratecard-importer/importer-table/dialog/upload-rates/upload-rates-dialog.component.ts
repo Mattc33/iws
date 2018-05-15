@@ -341,6 +341,10 @@ export class UploadRatesDialogComponent implements OnInit {
             console.log('using KFTel Profile');
             this.kftelProfile(data);
         }
+        if (currentCarrierName.toLowerCase() === 'pst') {
+            console.log('using PST profile');
+            this.pstProfile(data);
+        }
         if (currentCarrierName.toLowerCase() === 'default') {
             console.log('using Default Profile');
             this.defaultProfile(data);
@@ -566,6 +570,18 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];
             const prefix: string = dataSliced[i][1];
+            const buyrate: number = dataSliced[i][2] * 1;
+            const sellrate: number = buyrate;
+            this.generateRateObj(destination, prefix, buyrate, sellrate);
+            console.log(this.finalRatecardObj);
+        }
+    }
+
+    pstProfile(data) {
+        const dataSliced = data.slice(5);
+        for (let i = 0; i < dataSliced.length; i++) {
+            const destination: string = dataSliced[i][1];
+            const prefix: string = dataSliced[i][0];
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);

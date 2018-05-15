@@ -470,7 +470,7 @@ export class CallPlanTableComponent implements OnInit {
         const dialogRef = this.dialog.open(DelCallPlanComponent, {});
 
         const sub = dialogRef.componentInstance.event_onDel
-        .subscribe((data) => { // do something with event data
+        .subscribe((data) => {
             this.aggrid_delRow(data);
         });
 
