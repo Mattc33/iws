@@ -47,6 +47,15 @@ export class RateCardsService {
             );
     }
 
+    get_ratesByCountry(isoCode: string) {
+        return this._http
+            .get(this.url + 'carriers/ratecards/rates/' + isoCode)
+            .pipe(
+                map(res => res.json()),
+                catchError(this.handleError)
+            );
+    }
+
     post_addRatecard(body: any): Observable<any> {
         return this._http
             .post(this.url + 'ratecards/', body)

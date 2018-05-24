@@ -1,3 +1,4 @@
+import { IsoCodesSharedService } from './shared/services/ratecard/iso-codes.shared.service';
 // Core Modules
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -14,6 +15,7 @@ import { MatFormFieldModule, MatButtonModule, MatInputModule, MatStepperModule, 
 import { MatIconModule, MatRadioModule, MatDialogModule, MatDatepickerModule } from '@angular/material';
 import { MatNativeDateModule, MatAutocompleteModule, MatSliderModule, MatSnackBarModule } from '@angular/material';
 import { MatToolbarModule, MatTabsModule, MatExpansionModule, MatCheckboxModule } from '@angular/material';
+import 'hammerjs';
 
 // Main components
 import { AppComponent } from './app.component';
@@ -33,6 +35,7 @@ import { ErrorSnackbarComponent } from './shared/components/snackbars/error/erro
 // Third Party Components
 import { AgGridModule } from 'ag-grid-angular';
 import { PapaParseModule } from 'ngx-papaparse';
+import { SidebarModule } from 'ng-sidebar';
 
 // DashBoard
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -50,9 +53,11 @@ import { RateCardsTableComponent } from './ratecard/rate-cards-table/rate-cards-
 import { DeleteRateCardsDialogComponent } from './ratecard/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component';
 import { RateCardsAddTrunksComponent } from './ratecard/rate-cards-add-trunks/rate-cards-add-trunks.component';
 import { RateCardsConvertCsvComponent } from './ratecard/rate-cards-convert-csv/rate-cards-convert-csv.component';
+import { RatecardViewCarrierComponent } from './ratecard/ratecard-view-carrier/ratecard-view-carrier.component';
 
 import { RateCardsService } from './shared/api-services/ratecard/rate-cards.api.service';
 import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.shared.service';
+import { MainTableSharedService } from './shared/services/ratecard/main-table.shared.service';
 
 // Ratecard Importer
 import { ImporterTableComponent } from './ratecard/ratecard-importer/importer-table/importer-table.component';
@@ -103,6 +108,8 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 
+
+
 @NgModule({
     declarations:
     [
@@ -117,11 +124,12 @@ import { RegistrationComponent } from './registration/registration.component';
         // Ratecard
         RateCardsTableComponent, DeleteRateCardsDialogComponent, ImporterTableComponent,
         UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent, DeleteRatesComponent,
+        RatecardViewCarrierComponent,
         // Trunk
         TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DetachTrunksComponent,
         // Call Plan
         CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, CallPlanAddRatecardComponent,
-        CallPlanAddCodeComponent, AddCodeComponent, AddRateCardComponent, DettachRatecardsComponent, 
+        CallPlanAddCodeComponent, AddCodeComponent, AddRateCardComponent, DettachRatecardsComponent,
         DettachCodesComponent,
         // LCR
         LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent,
@@ -136,7 +144,7 @@ import { RegistrationComponent } from './registration/registration.component';
     HttpModule, HttpClientModule, BrowserModule,
     FormsModule, CommonModule, ReactiveFormsModule,
     // Third Party Modules
-    PapaParseModule,
+    PapaParseModule, SidebarModule,
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatDatepickerModule, MatNativeDateModule,
@@ -153,6 +161,7 @@ import { RegistrationComponent } from './registration/registration.component';
         {path: 'rate-card-view', component: RateCardsTableComponent},
         {path: 'rate-card-add-trunks', component: RateCardsAddTrunksComponent},
         {path: 'rate-card-convert-csv', component: RateCardsConvertCsvComponent},
+        {path: 'rate-card-view-carrier', component: RatecardViewCarrierComponent},
 
         {path: 'trunks', component: TrunksTableComponent},
 
@@ -178,6 +187,9 @@ import { RegistrationComponent } from './registration/registration.component';
         CarrierService, CarrierSharedService,
         // Ratecard
         ImporterService, ImporterSharedService, RateCardsService, RateCardsSharedService,
+        // Ratecard Viewer
+        IsoCodesSharedService, MainTableSharedService,
+
         TrunksService, TrunksSharedService,
         CallPlanService, CallPlanSharedService, CodesFormSharedService,
         LCRService, LCRSharedService,

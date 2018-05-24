@@ -42,6 +42,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     // Input props
     private percents = [
+        {value: 1, viewValue: 'No Markup'},
         {value: 1.05, viewValue: '5%'}, {value: 1.1, viewValue: '10%'}, {value: 1.15, viewValue: '15%'}, {value: 1.2, viewValue: '20%'},
         {value: 1.25, viewValue: '25%'}, {value: 1.3, viewValue: '30%'}, {value: 1.35, viewValue: '35%'}, {value: 1.4, viewValue: '40%'},
         {value: 1.45, viewValue: '45%'}, {value: 1.5, viewValue: '50%'}, {value: 1.55, viewValue: '55%'}, {value: 1.6, viewValue: '60%'},
@@ -384,7 +385,7 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     defaultProfile(data): void {
-        const dataSliced = data.slice(1);
+        const dataSliced = data.slice(1, -1);
         for ( let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];
             const prefix: string = dataSliced[i][1];
@@ -566,14 +567,13 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     kftelProfile(data) {
-        const dataSliced = data.slice(1);
+        const dataSliced = data.slice(1, -9);
         for (let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];
             const prefix: string = dataSliced[i][1];
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
-            console.log(this.finalRatecardObj);
         }
     }
 
@@ -585,7 +585,6 @@ export class UploadRatesDialogComponent implements OnInit {
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
-            console.log(this.finalRatecardObj);
         }
     }
 

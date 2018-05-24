@@ -1,0 +1,120 @@
+ng-sidebar-container {
+    margin-left: 10px; width: auto; height: calc(100vh - 60px);
+    overflow-y: hidden;
+}
+
+.top-table-toolbar {
+    height: 30px;
+
+    .selected-country-name-header {
+        line-height: 35px;
+        float: left;
+        margin-left: 30%;
+        font-weight: bold;
+    }
+
+    button {
+        background-color: transparent;
+        border: none;
+        line-height: 35px;
+
+        .fa-bars {
+            font-size: 20px;
+        }
+
+        .filter-header {
+            padding-left: 5px;
+        }
+
+        .filter-header:active {
+            color: gray;
+        }
+
+        .country-carrier-header {
+            padding-right: 5px;
+        }
+
+        &:focus {
+            outline: 0;
+        }
+
+        &:hover {
+            color: gray;
+        }
+    }
+
+    .toggle-filter-menu {
+        float: left;
+    }
+
+    .toggle-country-carrier-menu {
+        float: right;
+    }
+}
+
+/deep/ .ng-sidebar {
+    margin-top: 40px;
+
+    .country-carrier-picker-container {
+        width: 31vw; height: auto;
+    
+        #country-picker-table {
+            width: 48%; height: calc(100vh - 160px);
+            float: left;
+        }
+
+        #carrier-picker-table {
+            width: 48%; height: calc(100vh - 160px);
+            float: left;
+        }
+    }
+
+}
+
+/deep/ .main-container {
+    width: 100%; height: 100%; 
+    float: left;
+
+    #main-table {
+        width: 99.5%; height: calc(100vh - 160px);
+        border-top: 1px solid #E0E0E0;
+        border-right: 1px solid #E0E0E0;
+
+        .highlight-column {
+            // border: .5px solid gold;
+            background-color: rgba(255, 215, 0, .2);
+        }
+    }
+
+    .button {
+        margin-top: 1%;
+        margin-left: 5px;
+        border: 1px solid black;
+    }
+
+    .exceptions-container {
+        display: inline-block;
+
+        span {
+            height: 15px;
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    .ag-header-cell-text {
+        color: black;
+    }
+
+    .fa-minus {
+        float: right;
+        margin-top: 5px;
+        font-size: 15px;
+
+        &:hover {
+            color: red;
+        }
+    }
+
+}
+
