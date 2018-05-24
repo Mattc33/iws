@@ -1,6 +1,12 @@
 ng-sidebar-container {
     margin-left: 10px; width: auto; height: calc(100vh - 60px);
     overflow-y: hidden;
+
+    .export {
+        border: 1px solid black;
+        margin-top: 5px;
+        margin-right: 5px;
+    }
 }
 
 .top-table-toolbar {

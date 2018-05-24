@@ -212,4 +212,11 @@ export class RatecardViewCarrierComponent implements OnInit {
         this.columnApiMain.setColumnVisible(colId, true);
     }
 
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // AG Grid Main Table - Export
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    exportAsCsv() {
+        this.gridApiMain.exportDataAsCsv();
+    }
+
 }
