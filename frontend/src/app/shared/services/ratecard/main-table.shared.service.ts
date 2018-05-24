@@ -46,19 +46,70 @@ export class MainTableSharedService {
 
     createCarrierColumnDefs(carrierGroupHeadersArr, filteredData) {
         const carrierColumnDefs = [];
+
+        // const destinationArr = [];
+        // console.log(filteredData[0].rates[0].destination);
+
+        // for ( let i = 0; i < filteredData.length; i++) {
+
+        //     for ( let x = 0; x < filteredData[i].rates.length; x++) {
+        //         console.log(filteredData[i].rates[x]);
+        //     }
+        // }
+
+        console.log(filteredData);
+
+        for ( let i = 0; i < filteredData.length; i++) {
+            const ratesLen = filteredData[i].rates.length;
+            console.log(ratesLen);
+
+        }
+
+        const mainDestinationFieldString = 'destination_' + filteredData[0].ratecard_id;
+
+
         carrierColumnDefs.push(
             {
-                headerName: 'Prefix', field: 'prefix',
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                lockPosition: true,
-                unSortIcon: true,
+                headerName: 'Ratecard',
+                children: [
+                    {
+                        headerName: 'Prefix', field: 'prefix',
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                        lockPosition: true,
+                        unSortIcon: true,
+                    },
+                    {
+                        headerName: 'Destination', field: mainDestinationFieldString,
+                        width: 300,
+                        cellStyle: function(params) {
+                            return {'border-right': '1px solid #E0E0E0'};
+                        },
+                    },
+                    {
+                        headerName: 'Lowest Rate', field: 'lowest_price',
+                        filter: 'agNumberColumnFilter',
+                        valueGetter(params) {
+                            const numberArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) {
+                                    numberArr.push(arr[i]);
+                                }
+                            }
+                            numberArr.shift();
+                            const min = Math.min(...numberArr);
+                            return min;
+                        },
+                        lockPosition: true,
+                        cellStyle: { 'border-right': '1px solid black' },
+                    }
+                ]
             }
         );
 
         for ( let i = 0; i < carrierGroupHeadersArr.length; i++ ) { // pushing ea carrier as a col
             const sellrateFieldString = 'sellrate_' + filteredData[i].ratecard_id;
             const destinationFieldString = 'destination_' + filteredData[i].ratecard_id;
-
             const prefixGroupHeaderTemplate =
                 `
                 <div class="top-buttons">
@@ -113,9 +164,6 @@ export class MainTableSharedService {
             const carrierRowDataArr = [];
 
             for ( let i = 0; i < filteredData.length; i++ ) {
-                const ratecardModified = filteredData[i].ratecard_name.split('#');
-                const ratecardDestination = ratecardModified[3];
-
                 const prefixFieldKey = 'prefix';
                 const destinationField = `destination_${filteredData[i].ratecard_id}`;
                 const sellrateField = 'sellrate_' + filteredData[i].ratecard_id;
@@ -125,7 +173,6 @@ export class MainTableSharedService {
                     carrierRowDataArr.push(
                             {
                                 [prefixFieldKey]: filteredData[i].rates[x].prefix,
-                                destination: 'destination',
                                 [destinationField]: filteredData[i].rates[x].destination,
                                 [sellrateField]: filteredData[i].rates[x].buy_rate,
                             }
