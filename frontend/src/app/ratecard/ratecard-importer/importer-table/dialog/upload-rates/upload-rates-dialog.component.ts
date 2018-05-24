@@ -578,7 +578,7 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     pstProfile(data) {
-        const dataSliced = data.slice(5);
+        const dataSliced = data.slice(5, -4);
         for (let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][1];
             const prefix: string = dataSliced[i][0];

@@ -62,12 +62,22 @@ export class RatecardViewCarrierComponent implements OnInit {
     }
 
     processData(rowData) {
-        const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(rowData);
+        const rowDataFiltered = [];
+        for (let i = 0; i < rowData.length; i++) {
+            console.log(rowData[i].rates);
+            if (rowData[i].rates.length > 0) {
+                rowDataFiltered.push(rowData[i]);
+            }
+        }
+
+        const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(rowDataFiltered);
         this.howManyCarriers = carrierGroupHeadersArr.length;
 
-        this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowData);
+        const columnDefsForMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
 
-        const finalRowData = this._mainTable.createRowData(rowData);
+        this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
+
+        const finalRowData = this._mainTable.createRowData(rowDataFiltered);
         this.gridApiMain.setRowData(finalRowData);
 
         this.setCarrierRowData(carrierGroupHeadersArr);
