@@ -543,7 +543,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    teliaCarrierProfile(data) { 
+    teliaCarrierProfile(data) {
         const dataSliced = data.slice(18);
         for (let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][1];
@@ -552,7 +552,6 @@ export class UploadRatesDialogComponent implements OnInit {
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
-        console.log(this.finalRatecardObj);
     }
 
     allWorldCommunications(data) {

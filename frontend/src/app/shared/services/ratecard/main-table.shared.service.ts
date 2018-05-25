@@ -57,16 +57,11 @@ export class MainTableSharedService {
         //     }
         // }
 
-        console.log(filteredData);
+        // for ( let i = 0; i < filteredData.length; i++) {
+        //     const ratesLen = filteredData[i].rates.length;
+        //     console.log(ratesLen);
 
-        for ( let i = 0; i < filteredData.length; i++) {
-            const ratesLen = filteredData[i].rates.length;
-            console.log(ratesLen);
-
-        }
-
-        const mainDestinationFieldString = 'destination_' + filteredData[0].ratecard_id;
-
+        // }
 
         carrierColumnDefs.push(
             {
@@ -79,7 +74,7 @@ export class MainTableSharedService {
                         unSortIcon: true,
                     },
                     {
-                        headerName: 'Destination', field: mainDestinationFieldString,
+                        headerName: 'Destination', field: 'destination',
                         width: 300,
                         cellStyle: function(params) {
                             return {'border-right': '1px solid #E0E0E0'};
@@ -168,13 +163,13 @@ export class MainTableSharedService {
                 const destinationField = `destination_${filteredData[i].ratecard_id}`;
                 const sellrateField = 'sellrate_' + filteredData[i].ratecard_id;
 
-
                 for ( let x = 0; x < filteredData[i].rates.length; x++ ) {
                     carrierRowDataArr.push(
                             {
                                 [prefixFieldKey]: filteredData[i].rates[x].prefix,
+                                destination: filteredData[i].rates[x].destination,
                                 [destinationField]: filteredData[i].rates[x].destination,
-                                [sellrateField]: filteredData[i].rates[x].buy_rate,
+                                [sellrateField]: filteredData[i].rates[x].buy_rate
                             }
                     );
                 }

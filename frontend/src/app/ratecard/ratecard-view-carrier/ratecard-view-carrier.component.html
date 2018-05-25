@@ -42,7 +42,7 @@
                 [suppressRowClickSelection]="true"
                 [floatingFilter]="true" [enableSorting]="true"
                 [enableColResize]="true"
-                [suppressDragLeaveHidesColumns]="true" [suppressColumnVirtualisation]="true"
+                [suppressDragLeaveHidesColumns]="true"
                 [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
                 [headerHeight]="40" [floatingFiltersHeight]="30"
 
@@ -52,11 +52,16 @@
 
         </div>
         <button mat-button class="export" (click)="exportAsCsv()">Export as CSV</button>
+        <!-- <button mat-button class="export" (click)="exportAsAZCsv()">Generate A-Z Ratecard</button>
+        <button mat-button class="export" (click)="test()">test</button>
+        <button mat-button class="export" (click)="test2()">test 2</button> -->
     </div>
     
 </ng-sidebar-container>
 
 <!-- 
+    [suppressColumnVirtualisation]="true"
+                    (columnEverythingChanged)="columnEverythingChanged($event)"
                 (columnVisible)="onColumnVisible($event)"
                 (newColumnsLoaded)="onNewColumnsLoaded($event)"
 

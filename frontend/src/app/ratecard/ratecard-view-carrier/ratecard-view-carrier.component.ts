@@ -28,9 +28,10 @@ export class RatecardViewCarrierComponent implements OnInit {
     // gridUi
     rowSelectionM = 'multiple';
     rowSelectionS = 'single';
-    private howManyCarriers: number;
 
     booleanCountryCarrierSidebar = true;
+
+    q = '';
 
     constructor(
         private _isoCodes: IsoCodesSharedService,
@@ -54,10 +55,21 @@ export class RatecardViewCarrierComponent implements OnInit {
     get_specificCarrierRatesByCountry(isoCode: string) {
         this._rateCardsService.get_ratesByCountry(isoCode)
             .subscribe(
-                data => {
-                    console.log(data);
-                    this.processData(data);
-                }
+                data => { this.processData(data); }
+            );
+    }
+
+    get_specificCarrierRatesByCountryAZ(isoCode: string) {
+        this._rateCardsService.get_ratesByCountry(isoCode)
+            .subscribe(
+                (resp: Response) => {
+                    console.log(resp);
+                    // if ( data.status === 200 ) {
+                    //     this.processDataAZ(data);
+                    // } else {
+                    //     return;
+                    // }
+                },
             );
     }
 
@@ -70,7 +82,6 @@ export class RatecardViewCarrierComponent implements OnInit {
         }
 
         const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(rowDataFiltered);
-        this.howManyCarriers = carrierGroupHeadersArr.length;
 
         const columnDefsForMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
 
@@ -80,6 +91,27 @@ export class RatecardViewCarrierComponent implements OnInit {
         this.gridApiMain.setRowData(finalRowData);
 
         this.setCarrierRowData(carrierGroupHeadersArr);
+    }
+
+    processDataAZ(rowData) {
+        const rowDataFiltered = [];
+        for (let i = 0; i < rowData.length; i++) {
+            if (rowData[i].rates.length > 0) {
+                rowDataFiltered.push(rowData[i]);
+            }
+        }
+
+        const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(rowDataFiltered);
+
+        const columnDefsForMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
+
+        this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
+
+        const finalRowData = this._mainTable.createRowData(rowDataFiltered);
+        this.gridApiMain.setRowData(finalRowData);
+        this.setCarrierRowData(carrierGroupHeadersArr);
+        // this.gridApiCarrier.deselectAll();
+        this.q += this.gridApiMain.getDataAsCsv();
     }
 
     // ================================================================================
@@ -143,8 +175,6 @@ export class RatecardViewCarrierComponent implements OnInit {
         const selectedCode = this.gridApiCountry.getSelectedRows()[0].code;
         this.gridApiMain.setRowData([]);
         this.get_specificCarrierRatesByCountry(selectedCode);
-        // this.mockdata_get_specificCarrierRatesByCountry(selectedCode); // API Call
-        // this.selectedCountryName = this.gridApiCountry.getSelectedRows()[0].country; // Set country name to selected country
     }
 
     // ================================================================================
@@ -164,35 +194,7 @@ export class RatecardViewCarrierComponent implements OnInit {
     // ================================================================================
     // AG Grid Main Table - Header - Assigning Events
     // ================================================================================
-    // onColumnVisible(params) { // On column reappears after hiding
-    //     // this.assignEventHandler(this.getCurrentlyViewableColumns());
-    // }
 
-    // onNewColumnsLoaded(params) { // On any new columns loaded into grid
-    //     // this.assignEventHandler(this.getCurrentlyViewableColumns());
-    // }
-
-    // getCurrentlyViewableColumns(): Array<['']> {
-    //     const viewableColArr = [];
-    //     for ( let i = 0; i < this.howManyCarriers; i++ ) {
-    //         const getPrefixCol = this.columnApiMain.getColumn(`carrier_${i}`).isVisible();
-    //         if ( getPrefixCol === true ) {
-    //             viewableColArr.push(`${i}`);
-    //         }
-    //     }
-    //     console.log(viewableColArr);
-    //     return viewableColArr;
-    // }
-
-    // assignEventHandler(viewableColArr: Array<['']>) {
-    //     for ( let i = 0; i < viewableColArr.length; i++ ) {
-    //         const colId = viewableColArr[i];
-    //         const hideCol = this._elementRef.nativeElement.querySelector(`#hide_${colId}`);
-    //         const e_hideCol = this._renderer.listen(hideCol, 'click', (event) => {
-    //              this.deselectCarrierTableCheckbox(event, `${colId}`);
-    //         });
-    //     }
-    // }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // AG Grid Main Table - Header - Hide
@@ -226,6 +228,32 @@ export class RatecardViewCarrierComponent implements OnInit {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     exportAsCsv() {
         this.gridApiMain.exportDataAsCsv();
+    }
+
+    exportAsAZCsv() {
+        const gridApiCountry = this.gridApiCountry;
+        const gridApiCarrier = this.gridApiCarrier;
+        const gridApiMain = this.gridApiMain;
+
+
+        const countryLen = this.rowDataCountry.length;
+        // gridApiCountry.forEachNode( (node) => {
+        //     this.get_specificCarrierRatesByCountryAZ(node.data.code);
+        // });
+
+        for ( let i = 0; i < 1; i++ ) {
+            this.get_specificCarrierRatesByCountryAZ(this.rowDataCountry[i].code);
+        }
+    }
+
+    test() {
+        for ( let i = 170; i < 240; i++ ) {
+            this.get_specificCarrierRatesByCountryAZ(this.rowDataCountry[i].code);
+        }
+    }
+
+    test2() {
+        console.log(this.q);
     }
 
 }
