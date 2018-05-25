@@ -34,6 +34,7 @@ export class RatecardViewCarrierComponent implements OnInit {
     q = '';
 
     percentMarkup = [
+        {value: '1', viewValue: 'No Markup'},
         {value: '1.01', viewValue: '1%'},
         {value: '1.02', viewValue: '2%'},
         {value: '1.03', viewValue: '3%'},
@@ -43,7 +44,17 @@ export class RatecardViewCarrierComponent implements OnInit {
         {value: '1.07', viewValue: '7%'},
         {value: '1.08', viewValue: '8%'},
         {value: '1.09', viewValue: '9%'},
-        {value: '1.1', viewValue: '10%'}
+        {value: '1.1', viewValue: '10%'},
+        {value: '1.11', viewValue: '11%'},
+        {value: '1.12', viewValue: '12%'},
+        {value: '1.13', viewValue: '13%'},
+        {value: '1.14', viewValue: '14%'},
+        {value: '1.15', viewValue: '15%'},
+        {value: '1.16', viewValue: '16%'},
+        {value: '1.17', viewValue: '17%'},
+        {value: '1.18', viewValue: '18%'},
+        {value: '1.19', viewValue: '19%'},
+        {value: '1.20', viewValue: '20%'},
     ];
 
     constructor(
@@ -222,7 +233,6 @@ export class RatecardViewCarrierComponent implements OnInit {
         const gridApiCarrier = this.gridApiCarrier;
         const gridApiMain = this.gridApiMain;
 
-
         const countryLen = this.rowDataCountry.length;
         // gridApiCountry.forEachNode( (node) => {
         //     this.get_specificCarrierRatesByCountryAZ(node.data.code);
@@ -243,8 +253,24 @@ export class RatecardViewCarrierComponent implements OnInit {
         console.log(this.q);
     }
 
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // Top Toolbar - markup
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     onMarkupChange(params) {
-        console.log(params);
+        this.updateOurRateCol(params);
+    }
+
+    updateOurRateCol(currentSelectValue) {
+        this.gridApiMain.forEachNode( (rowNode) => {
+            const lowestRate = this.gridApiMain.getValue('lowest_rate', rowNode);
+            const ourRateAfterMarkup = lowestRate * currentSelectValue;
+            rowNode.setDataValue('our_rate', ourRateAfterMarkup.toFixed(4));
+        });
+    }
+
+    columnEverythingChanged() {
+        this.updateOurRateCol(1);
     }
 
 }

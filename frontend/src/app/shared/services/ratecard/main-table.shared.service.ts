@@ -62,37 +62,26 @@ export class MainTableSharedService {
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
                     },
                     {
-                        headerName: 'Our Rates', field: 'lowest_price', width: 120,
+                        headerName: 'Our Rates', field: 'our_rate', width: 120, colId: 'our_rate',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
-                        valueGetter(params) {
-                            const numberArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) { numberArr.push(arr[i]); }
-                            }
-                            numberArr.shift();
-                            const min = Math.min(...numberArr);
-                            return min;
-                        },
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                        cellStyle: { 'border-right': '1px solid #000000' }
                     },
-                    {
-                        headerName: 'Lowest Rate', field: 'lowest_price', width: 120,
-                        filter: 'agNumberColumnFilter',
-                        valueGetter(params) {
-                            const numberArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) { numberArr.push(arr[i]); }
-                            }
-                            numberArr.shift();
-                            const min = Math.min(...numberArr);
-                            return min;
-                        },
-                        lockPosition: true,
-                        cellStyle: { 'border-right': '1px solid black' },
-                    }
                 ]
+            },
+            {
+                headerName: 'Lowest Rate', field: 'lowest_rate', width: 120, colId: 'lowest_rate',
+                filter: 'agNumberColumnFilter', lockPosition: true,
+                valueGetter(params) {
+                    const numberArr = [];
+                    const arr = Object.values(params.data);
+                    for ( let i = 0; i < arr.length; i++) {
+                        if ( arr[i] > 0 ) { numberArr.push(arr[i]); }
+                    }
+                    numberArr.shift();
+                    const min = Math.min(...numberArr).toFixed(4);
+                    return min;
+                },
+                cellStyle: { 'border-right': '1px solid #E0E0E0' }
             }
         );
 
@@ -108,9 +97,7 @@ export class MainTableSharedService {
                             headerName: 'Destination', field: destinationFieldString,
                             width: 300,
                             colId: `carrier_dest_${i}`,
-                            cellStyle: function(params) {
-                                return {'border-right': '1px solid #E0E0E0'};
-                            },
+                            cellStyle: { 'border-right': '1px solid #E0E0E0' },
                             columnGroupShow: 'open',
                         },
                         {
@@ -118,9 +105,7 @@ export class MainTableSharedService {
                             headerHeight: 500,
                             filter: 'agNumberColumnFilter',
                             colId: `carrier_rate_${i}`, // This will be the columnID to use for functionaility
-                            cellStyle: function(params) {
-                                return {'border-right': '1px solid #E0E0E0'};
-                            },
+                            cellStyle: { 'border-right': '1px solid #E0E0E0' },
                             unSortIcon: true,
                         }
                     ]
@@ -149,8 +134,9 @@ export class MainTableSharedService {
                             {
                                 [prefixFieldKey]: filteredData[i].rates[x].prefix,
                                 destination: filteredData[i].rates[x].destination,
+                                our_rate: 0,
                                 [destinationField]: filteredData[i].rates[x].destination,
-                                [sellrateField]: filteredData[i].rates[x].buy_rate
+                                [sellrateField]: filteredData[i].rates[x].buy_rate.toFixed(4)
                             }
                     );
                 }

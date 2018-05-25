@@ -52,7 +52,8 @@
                 [suppressDragLeaveHidesColumns]="true"
                 [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
                 [headerHeight]="40" [floatingFiltersHeight]="30"
-
+                (columnEverythingChanged)="columnEverythingChanged($event)"
+                
                 (gridReady)="on_GridReady($event)"
             >
             </ag-grid-angular>
