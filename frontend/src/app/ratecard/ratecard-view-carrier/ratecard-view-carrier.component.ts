@@ -33,6 +33,19 @@ export class RatecardViewCarrierComponent implements OnInit {
 
     q = '';
 
+    percentMarkup = [
+        {value: '1.01', viewValue: '1%'},
+        {value: '1.02', viewValue: '2%'},
+        {value: '1.03', viewValue: '3%'},
+        {value: '1.04', viewValue: '4%'},
+        {value: '1.05', viewValue: '5%'},
+        {value: '1.06', viewValue: '6%'},
+        {value: '1.07', viewValue: '7%'},
+        {value: '1.08', viewValue: '8%'},
+        {value: '1.09', viewValue: '9%'},
+        {value: '1.1', viewValue: '10%'}
+    ];
+
     constructor(
         private _isoCodes: IsoCodesSharedService,
         private _rateCardsService: RateCardsService,
@@ -55,21 +68,17 @@ export class RatecardViewCarrierComponent implements OnInit {
     get_specificCarrierRatesByCountry(isoCode: string) {
         this._rateCardsService.get_ratesByCountry(isoCode)
             .subscribe(
-                data => { this.processData(data); }
+                data => { this.processData(data); console.log(data); }
             );
     }
 
     get_specificCarrierRatesByCountryAZ(isoCode: string) {
         this._rateCardsService.get_ratesByCountry(isoCode)
             .subscribe(
-                (resp: Response) => {
-                    console.log(resp);
-                    // if ( data.status === 200 ) {
-                    //     this.processDataAZ(data);
-                    // } else {
-                    //     return;
-                    // }
-                },
+                data => {
+                    this.processData(data);
+                    this.q += this.gridApiMain.getDataAsCsv();
+                }
             );
     }
 
@@ -82,7 +91,6 @@ export class RatecardViewCarrierComponent implements OnInit {
         }
 
         const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(rowDataFiltered);
-
         const columnDefsForMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
 
         this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
@@ -91,27 +99,6 @@ export class RatecardViewCarrierComponent implements OnInit {
         this.gridApiMain.setRowData(finalRowData);
 
         this.setCarrierRowData(carrierGroupHeadersArr);
-    }
-
-    processDataAZ(rowData) {
-        const rowDataFiltered = [];
-        for (let i = 0; i < rowData.length; i++) {
-            if (rowData[i].rates.length > 0) {
-                rowDataFiltered.push(rowData[i]);
-            }
-        }
-
-        const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(rowDataFiltered);
-
-        const columnDefsForMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
-
-        this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
-
-        const finalRowData = this._mainTable.createRowData(rowDataFiltered);
-        this.gridApiMain.setRowData(finalRowData);
-        this.setCarrierRowData(carrierGroupHeadersArr);
-        // this.gridApiCarrier.deselectAll();
-        this.q += this.gridApiMain.getDataAsCsv();
     }
 
     // ================================================================================
@@ -254,6 +241,10 @@ export class RatecardViewCarrierComponent implements OnInit {
 
     test2() {
         console.log(this.q);
+    }
+
+    onMarkupChange(params) {
+        console.log(params);
     }
 
 }

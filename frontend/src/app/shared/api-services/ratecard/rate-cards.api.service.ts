@@ -51,7 +51,7 @@ export class RateCardsService {
         return this._http
             .get(this.url + 'carriers/ratecards/rates/' + isoCode)
             .pipe(
-                map(res => res.json()), 
+                map(res => res.json()),
                 catchError(this.handleError)
             );
     }

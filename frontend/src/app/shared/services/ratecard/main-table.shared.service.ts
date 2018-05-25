@@ -47,49 +47,43 @@ export class MainTableSharedService {
     createCarrierColumnDefs(carrierGroupHeadersArr, filteredData) {
         const carrierColumnDefs = [];
 
-        // const destinationArr = [];
-        // console.log(filteredData[0].rates[0].destination);
-
-        // for ( let i = 0; i < filteredData.length; i++) {
-
-        //     for ( let x = 0; x < filteredData[i].rates.length; x++) {
-        //         console.log(filteredData[i].rates[x]);
-        //     }
-        // }
-
-        // for ( let i = 0; i < filteredData.length; i++) {
-        //     const ratesLen = filteredData[i].rates.length;
-        //     console.log(ratesLen);
-
-        // }
-
         carrierColumnDefs.push(
             {
                 headerName: 'Ratecard',
                 children: [
                     {
-                        headerName: 'Prefix', field: 'prefix',
+                        headerName: 'Prefix', field: 'prefix', width: 120,
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                        lockPosition: true,
-                        unSortIcon: true,
+                        lockPosition: true, unSortIcon: true,
                     },
                     {
                         headerName: 'Destination', field: 'destination',
-                        width: 300,
-                        cellStyle: function(params) {
-                            return {'border-right': '1px solid #E0E0E0'};
-                        },
+                        width: 300, lockPosition: true,
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
                     },
                     {
-                        headerName: 'Lowest Rate', field: 'lowest_price',
+                        headerName: 'Our Rates', field: 'lowest_price', width: 120,
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        valueGetter(params) {
+                            const numberArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) { numberArr.push(arr[i]); }
+                            }
+                            numberArr.shift();
+                            const min = Math.min(...numberArr);
+                            return min;
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                    },
+                    {
+                        headerName: 'Lowest Rate', field: 'lowest_price', width: 120,
                         filter: 'agNumberColumnFilter',
                         valueGetter(params) {
                             const numberArr = [];
                             const arr = Object.values(params.data);
                             for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) {
-                                    numberArr.push(arr[i]);
-                                }
+                                if ( arr[i] > 0 ) { numberArr.push(arr[i]); }
                             }
                             numberArr.shift();
                             const min = Math.min(...numberArr);
@@ -105,19 +99,6 @@ export class MainTableSharedService {
         for ( let i = 0; i < carrierGroupHeadersArr.length; i++ ) { // pushing ea carrier as a col
             const sellrateFieldString = 'sellrate_' + filteredData[i].ratecard_id;
             const destinationFieldString = 'destination_' + filteredData[i].ratecard_id;
-            const prefixGroupHeaderTemplate =
-                `
-                <div class="top-buttons">
-                    <div>
-                        <i class="fas fa-minus" id="hide_${i}"></i>
-                    </div>
-                </div>
-                `
-                +
-                `
-                <div class="exceptions-container">
-                </div>
-                `;
 
             carrierColumnDefs.push(
                 {
@@ -133,7 +114,7 @@ export class MainTableSharedService {
                             columnGroupShow: 'open',
                         },
                         {
-                            headerName: 'Rate', field: sellrateFieldString,
+                            headerName: 'Rate', field: sellrateFieldString, width: 120,
                             headerHeight: 500,
                             filter: 'agNumberColumnFilter',
                             colId: `carrier_rate_${i}`, // This will be the columnID to use for functionaility
