@@ -12,6 +12,12 @@ ng-sidebar-container {
         height: 30px;
         font-size: 11px;
     }
+
+    /deep/ .notable-variance {
+        background-color: red;
+        color: white;
+        font-weight: bold;
+    }
 }
 
 .top-table-toolbar {

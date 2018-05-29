@@ -140,7 +140,6 @@ export class MainTableSharedService {
                         headerName: 'Lowest Rate', field: 'lowest_rate', width: 120, colId: 'lowest_rate',
                         filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
-                            console.log(params.data);
                             const numberArr = [];
                             const arr = Object.values(params.data);
                             for ( let i = 0; i < arr.length; i++) {
@@ -185,7 +184,6 @@ export class MainTableSharedService {
                                 if ( arr[i] > 0 ) { dataArr.push(arr[i] as number * 1); }
                             }
                             const numberArr = dataArr.slice(1).sort();
-                            console.log(numberArr);
 
                             function returnVariance(array) {
                                 const mean = array.reduce((acc, value) => (acc + value) / array.length);
@@ -194,6 +192,24 @@ export class MainTableSharedService {
                                 return variance;
                             }
                             return returnVariance(numberArr).toFixed(5);
+                        },
+                        cellClassRules: {
+                            'notable-variance': function(params) {
+                                const dataArr = [];
+                                const arr = Object.values(params.data);
+                                for ( let i = 0; i < arr.length; i++) {
+                                    if ( arr[i] > 0 ) { dataArr.push(arr[i] as number * 1); }
+                                }
+                                const numberArr = dataArr.slice(1).sort();
+
+                                function returnVariance(array) {
+                                    const mean = array.reduce((acc, value) => (acc + value) / array.length);
+                                    const diff = array.map( (num) => Math.pow(num - mean, 2));
+                                    const variance = diff.reduce((acc, value) => (acc + value) / array.length);
+                                    return variance;
+                                }
+                                return returnVariance(numberArr) >= .008;
+                            }
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
                     },
