@@ -46,7 +46,6 @@ export class MainTableSharedService {
 
     createCarrierColumnDefs(carrierGroupHeadersArr, filteredData) {
         const carrierColumnDefs = [];
-
         carrierColumnDefs.push(
             {
                 headerName: 'Ratecard',
@@ -64,26 +63,166 @@ export class MainTableSharedService {
                     {
                         headerName: 'Our Rates', field: 'our_rate', width: 120, colId: 'our_rate',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        valueGetter(params) {
+                            const dataArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) {
+                                    dataArr.push( arr[i] * 1 );
+                                }
+                            }
+
+                            const numberArr = dataArr.slice(1);
+
+                            const mean = (array) => {
+                                const sum = numberArr.reduce( (acc, value) => acc + value );
+                                const avg = (sum / numberArr.length);
+                                return avg.toFixed(4);
+                            };
+                            return mean(numberArr);
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
+                    },
+                    {
+                        headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        valueGetter(params) {
+                            const dataArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) {
+                                    dataArr.push( arr[i] * 1 );
+                                }
+                            }
+
+                            const numberArr = dataArr.slice(1);
+
+                            const mean = (array) => {
+                                const sum = numberArr.reduce( (acc, value) => acc + value );
+                                const avg = (sum / numberArr.length);
+                                const avgMulti = avg * 1.02;
+                                return avgMulti.toFixed(4);
+                            };
+                            return mean(numberArr);
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
+                    },
+                    {
+                        headerName: '* 3%', field: 'our_rate_3p', width: 100, colId: 'our_rate_3p',
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        valueGetter(params) {
+                            const dataArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) {
+                                    dataArr.push( arr[i] * 1 );
+                                }
+                            }
+
+                            const numberArr = dataArr.slice(1);
+
+                            const mean = (array) => {
+                                const sum = numberArr.reduce( (acc, value) => acc + value );
+                                const avg = (sum / numberArr.length);
+                                const avgMulti = avg * 1.03;
+                                return avgMulti.toFixed(4);
+                            };
+                            return mean(numberArr);
+                        },
                         cellStyle: { 'border-right': '1px solid #000000' }
                     },
                 ]
             },
             {
-                headerName: 'Lowest Rate', field: 'lowest_rate', width: 120, colId: 'lowest_rate',
-                filter: 'agNumberColumnFilter', lockPosition: true,
-                valueGetter(params) {
-                    const numberArr = [];
-                    const arr = Object.values(params.data);
-                    for ( let i = 0; i < arr.length; i++) {
-                        if ( arr[i] > 0 ) { numberArr.push(arr[i]); }
+                headerName: 'Calculations',
+                children: [
+                    {
+                        headerName: 'Lowest Rate', field: 'lowest_rate', width: 120, colId: 'lowest_rate',
+                        filter: 'agNumberColumnFilter', lockPosition: true,
+                        valueGetter(params) {
+                            console.log(params.data);
+                            const numberArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) { numberArr.push(arr[i]); }
+                            }
+                            numberArr.slice(1);
+                            const min = Math.min(...numberArr).toFixed(4);
+                            return min;
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                    },
+                    {
+                        headerName: 'Average', field: 'average', width: 120, colId: 'average',
+                        filter: 'agNumberColumnFilter', lockPosition: true,
+                        valueGetter(params) {
+                            const dataArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) {
+                                    dataArr.push( arr[i] * 1 );
+                                }
+                            }
+
+                            const numberArr = dataArr.slice(1);
+
+                            const mean = (array) => {
+                                const sum = numberArr.reduce( (acc, value) => acc + value );
+                                const avg = (sum / numberArr.length);
+                                return avg.toFixed(4);
+                            };
+                            return mean(numberArr);
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                    },
+                    {
+                        headerName: 'Variance', field: 'variance', width: 120, colId: 'variance',
+                        filter: 'agNumberColumnFilter', lockPosition: true,
+                        valueGetter(params) {
+                            const dataArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) { dataArr.push(arr[i] * 1); }
+                            }
+                            const numberArr = dataArr.slice(1).sort();
+                            console.log(numberArr);
+
+                            function returnVariance(array) {
+                                const mean = array.reduce((acc, value) => (acc + value) / array.length);
+                                const diff = array.map( (num) => Math.pow(num - mean, 2));
+                                const variance = diff.reduce((acc, value) => (acc + value) / array.length);
+                                return variance;
+                            }
+                            return returnVariance(numberArr).toFixed(5);
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                    },
+                    {
+                        headerName: 'Low->High', field: 'lowhigh', width: 200, colId: 'lowhigh',
+                        filter: 'agNumberColumnFilter', lockPosition: true,
+                        valueGetter(params) {
+                            const dataArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) { dataArr.push(arr[i]); }
+                            }
+                            const numberArr = dataArr.slice(1).sort();
+
+                            if ( numberArr.length > 1 ) {
+                                const mean = (array) => {
+                                    const sum = array.reduce((acc, value) => acc + ' -> ' + value );
+                                    return sum;
+                                };
+                                return mean(numberArr);
+                            } else {
+                                return numberArr[0];
+                            }
+                        },
+                        cellStyle: { 'border-right': '1px solid #000000' }
                     }
-                    numberArr.shift();
-                    const min = Math.min(...numberArr).toFixed(4);
-                    return min;
-                },
-                cellStyle: { 'border-right': '1px solid #E0E0E0' }
-            }
-        );
+                ]
+            } // End of parent Object
+        ); // end push of calc cols
 
         for ( let i = 0; i < carrierGroupHeadersArr.length; i++ ) { // pushing ea carrier as a col
             const sellrateFieldString = 'sellrate_' + filteredData[i].ratecard_id;
@@ -102,7 +241,7 @@ export class MainTableSharedService {
                         },
                         {
                             headerName: 'Rate', field: sellrateFieldString, width: 120,
-                            headerHeight: 500,
+                            headerHeight: 500, editable: true,
                             filter: 'agNumberColumnFilter',
                             colId: `carrier_rate_${i}`, // This will be the columnID to use for functionaility
                             cellStyle: { 'border-right': '1px solid #E0E0E0' },
@@ -134,7 +273,6 @@ export class MainTableSharedService {
                             {
                                 [prefixFieldKey]: filteredData[i].rates[x].prefix,
                                 destination: filteredData[i].rates[x].destination,
-                                our_rate: 0,
                                 [destinationField]: filteredData[i].rates[x].destination,
                                 [sellrateField]: filteredData[i].rates[x].buy_rate.toFixed(4)
                             }

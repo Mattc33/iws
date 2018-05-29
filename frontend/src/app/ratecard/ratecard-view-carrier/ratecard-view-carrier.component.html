@@ -29,13 +29,13 @@
     <div ng-sidebar-content>
         <div class="top-table-toolbar">
             <div class="toggle-filter-menu">
-                <mat-form-field class="percent-markup">
+                <!-- <mat-form-field class="percent-markup">
                     <mat-select placeholder="Percent Markup" (valueChange)="onMarkupChange($event)">
                         <mat-option *ngFor="let markup of percentMarkup" [value]="markup.value">
                             {{ markup.viewValue }}
                         </mat-option>
                     </mat-select>
-                </mat-form-field>
+                </mat-form-field> -->
             </div>
             <div class="toggle-country-carrier-menu">
                 <button (click)="toggleCountryCarrierSidebar()"> <i class="fas fa-globe"></i> <span class="country-carrier-header">Country | Carrier</span></button>
@@ -52,8 +52,9 @@
                 [suppressDragLeaveHidesColumns]="true"
                 [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
                 [headerHeight]="40" [floatingFiltersHeight]="30"
+                [enableCellChangeFlash]="true"
                 (columnEverythingChanged)="columnEverythingChanged($event)"
-                
+
                 (gridReady)="on_GridReady($event)"
             >
             </ag-grid-angular>

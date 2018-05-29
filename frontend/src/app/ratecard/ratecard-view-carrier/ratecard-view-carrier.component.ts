@@ -169,7 +169,7 @@ export class RatecardViewCarrierComponent implements OnInit {
     // ================================================================================
     // AG Grid Country Table
     // ================================================================================
-    onSelectionChangedCountry(params) {
+    onSelectionChangedCountry(params, callback) {
         const selectedCode = this.gridApiCountry.getSelectedRows()[0].code;
         this.gridApiMain.setRowData([]);
         this.get_specificCarrierRatesByCountry(selectedCode);
@@ -225,6 +225,7 @@ export class RatecardViewCarrierComponent implements OnInit {
     // AG Grid Main Table - Export
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     exportAsCsv() {
+        this.gridApiCarrier.deselectAll();
         this.gridApiMain.exportDataAsCsv();
     }
 
@@ -234,23 +235,10 @@ export class RatecardViewCarrierComponent implements OnInit {
         const gridApiMain = this.gridApiMain;
 
         const countryLen = this.rowDataCountry.length;
-        // gridApiCountry.forEachNode( (node) => {
-        //     this.get_specificCarrierRatesByCountryAZ(node.data.code);
-        // });
 
         for ( let i = 0; i < 1; i++ ) {
             this.get_specificCarrierRatesByCountryAZ(this.rowDataCountry[i].code);
         }
-    }
-
-    test() {
-        for ( let i = 170; i < 240; i++ ) {
-            this.get_specificCarrierRatesByCountryAZ(this.rowDataCountry[i].code);
-        }
-    }
-
-    test2() {
-        console.log(this.q);
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -263,14 +251,14 @@ export class RatecardViewCarrierComponent implements OnInit {
 
     updateOurRateCol(currentSelectValue) {
         this.gridApiMain.forEachNode( (rowNode) => {
-            const lowestRate = this.gridApiMain.getValue('lowest_rate', rowNode);
-            const ourRateAfterMarkup = lowestRate * currentSelectValue;
+            const avgRate = this.gridApiMain.getValue('our_rate', rowNode);
+            const ourRateAfterMarkup = avgRate * currentSelectValue;
             rowNode.setDataValue('our_rate', ourRateAfterMarkup.toFixed(4));
         });
     }
 
-    columnEverythingChanged() {
-        this.updateOurRateCol(1);
-    }
+    // columnEverythingChanged() {
+    //     this.updateOurRateCol(1);
+    // }
 
 }
