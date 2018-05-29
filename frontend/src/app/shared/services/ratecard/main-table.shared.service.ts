@@ -68,7 +68,7 @@ export class MainTableSharedService {
                             const arr = Object.values(params.data);
                             for ( let i = 0; i < arr.length; i++) {
                                 if ( arr[i] > 0 ) {
-                                    dataArr.push( arr[i] * 1 );
+                                    dataArr.push( arr[i] as number * 1 );
                                 }
                             }
 
@@ -91,7 +91,7 @@ export class MainTableSharedService {
                             const arr = Object.values(params.data);
                             for ( let i = 0; i < arr.length; i++) {
                                 if ( arr[i] > 0 ) {
-                                    dataArr.push( arr[i] * 1 );
+                                    dataArr.push( arr[i] as number * 1 );
                                 }
                             }
 
@@ -115,7 +115,7 @@ export class MainTableSharedService {
                             const arr = Object.values(params.data);
                             for ( let i = 0; i < arr.length; i++) {
                                 if ( arr[i] > 0 ) {
-                                    dataArr.push( arr[i] * 1 );
+                                    dataArr.push( arr[i] as number * 1 );
                                 }
                             }
 
@@ -160,7 +160,7 @@ export class MainTableSharedService {
                             const arr = Object.values(params.data);
                             for ( let i = 0; i < arr.length; i++) {
                                 if ( arr[i] > 0 ) {
-                                    dataArr.push( arr[i] * 1 );
+                                    dataArr.push( arr[i] as number * 1 );
                                 }
                             }
 
@@ -182,7 +182,7 @@ export class MainTableSharedService {
                             const dataArr = [];
                             const arr = Object.values(params.data);
                             for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) { dataArr.push(arr[i] * 1); }
+                                if ( arr[i] > 0 ) { dataArr.push(arr[i] as number * 1); }
                             }
                             const numberArr = dataArr.slice(1).sort();
                             console.log(numberArr);
@@ -210,7 +210,7 @@ export class MainTableSharedService {
 
                             if ( numberArr.length > 1 ) {
                                 const mean = (array) => {
-                                    const sum = array.reduce((acc, value) => acc + ' -> ' + value );
+                                    const sum = array.reduce((acc, value) => acc + ' | ' + value );
                                     return sum;
                                 };
                                 return mean(numberArr);
