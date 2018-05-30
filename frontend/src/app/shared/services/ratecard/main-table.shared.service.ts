@@ -84,6 +84,30 @@ export class MainTableSharedService {
                         cellStyle: { 'border-right': '1px solid #000000' }
                     },
                     {
+                        headerName: '* 1%', field: 'our_rate_1p', width: 100, colId: 'our_rate_1p',
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        valueGetter(params) {
+                            const dataArr = [];
+                            const arr = Object.values(params.data);
+                            for ( let i = 0; i < arr.length; i++) {
+                                if ( arr[i] > 0 ) {
+                                    dataArr.push( arr[i] as number * 1 );
+                                }
+                            }
+
+                            const numberArr = dataArr.slice(1);
+
+                            const mean = (array) => {
+                                const sum = numberArr.reduce( (acc, value) => acc + value );
+                                const avg = (sum / numberArr.length);
+                                const avgMulti = avg * 1.01;
+                                return avgMulti.toFixed(4);
+                            };
+                            return mean(numberArr);
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
+                    },
+                    {
                         headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
