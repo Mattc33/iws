@@ -85,7 +85,7 @@ export class MainTableSharedService {
                     },
                     {
                         headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true, columnGroupShow: 'open',
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
                             const dataArr = [];
                             const arr = Object.values(params.data);
@@ -109,7 +109,7 @@ export class MainTableSharedService {
                     },
                     {
                         headerName: '* 3%', field: 'our_rate_3p', width: 100, colId: 'our_rate_3p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true, columnGroupShow: 'open',
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
                             const dataArr = [];
                             const arr = Object.values(params.data);
