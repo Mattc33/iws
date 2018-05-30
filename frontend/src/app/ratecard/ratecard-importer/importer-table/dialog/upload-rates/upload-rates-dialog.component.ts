@@ -49,6 +49,13 @@ export class UploadRatesDialogComponent implements OnInit {
         {value: 1.65, viewValue: '65%'}, {value: 1.7, viewValue: '70%'}, {value: 1.75, viewValue: '75%'}, {value: 1.8, viewValue: '80%'},
         {value: 1.85, viewValue: '85%'}, {value: 1.9, viewValue: '90%'}, {value: 1.95, viewValue: '95%'}, {value: 2, viewValue: '100%'}
     ];
+    private ratecardTier = [
+        {value: 'silver', viewValue: 'Silver'},
+        {value: 'standard', viewValue: 'Standard'},
+        {value: 'gold', viewValue: 'Gold'},
+        {value: 'premium', viewValue: 'Premium'},
+        {value: 'platinum', viewValue: 'Platinum'},
+    ];
 
     // Insert Rates Props
     private rateCardID: number;
@@ -86,6 +93,7 @@ export class UploadRatesDialogComponent implements OnInit {
         });
         this.ratecardFormGroup = this.formBuilder.group({
             ratecardCtrl: ['', Validators.required],
+            ratecardTierCtrl: ['', Validators.required]
         });
         this.percentFormGroup = this.formBuilder.group({
             teleUCheckboxCtrl: [false],
@@ -246,17 +254,19 @@ export class UploadRatesDialogComponent implements OnInit {
             teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
             asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
             privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
+            tier: this.percentFormGroup.get('ratecardTierCtrl').value,
             rates: []
         };
 
-        this.finalRatecardPreviewObj.push( {
-            name: this.ratecardFormGroup.get('ratecardCtrl').value,
-            carrier_id: this.input_getCarrierId(),
-            addToTeleU: this.percentFormGroup.get('teleUCheckboxCtrl').value,
-            teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
-            asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
-            privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
-        },
+        this.finalRatecardPreviewObj.push(
+            {
+                name: this.ratecardFormGroup.get('ratecardCtrl').value,
+                carrier_id: this.input_getCarrierId(),
+                addToTeleU: this.percentFormGroup.get('teleUCheckboxCtrl').value,
+                teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
+                asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
+                privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value
+            },
         );
         console.log(this.finalRatecardObj);
     }
@@ -356,9 +366,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview
         let destinationRemoveBadChar = destination.replace(/\\|'|\\'/ , '');
-        if  (destinationRemoveBadChar.length > 64) {
-            destinationRemoveBadChar =  destinationRemoveBadChar.substring(0, 64);
-        }
+        if  (destinationRemoveBadChar.length > 64) {destinationRemoveBadChar = destinationRemoveBadChar.substring(0, 64);}
 
         this.finalRatecardObj.rates.push(
             {   destination: destinationRemoveBadChar,
@@ -423,9 +431,9 @@ export class UploadRatesDialogComponent implements OnInit {
         for (let i = 0; i < dataSliced.length; i++) {
             let destination: string = dataSliced[i][0];
             let prefix: string = dataSliced[i][1];
-                if(destination.charAt(0) === '"' || destination.charAt(0) === "'") {
+                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
-                }if(prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
+                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][2] * 1;
@@ -441,7 +449,7 @@ export class UploadRatesDialogComponent implements OnInit {
             let prefix: string = dataSliced[i][1];
                 if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
                     destination = destination.slice(1, -1);
-                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
+                } if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
@@ -457,7 +465,7 @@ export class UploadRatesDialogComponent implements OnInit {
             let prefix: string = dataSliced[i][1];
                 if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') { 
                     destination = destination.slice(1, -1);
-                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
+                } if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][4] * 1;
@@ -473,7 +481,7 @@ export class UploadRatesDialogComponent implements OnInit {
             let prefix: string = dataSliced[i][2];
                 if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
                     destination = destination.slice(1, -1);
-                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
+                } if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;
@@ -489,7 +497,7 @@ export class UploadRatesDialogComponent implements OnInit {
             let prefix: string = dataSliced[i][2];
                 if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
                     destination = destination.slice(1, -1);
-                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
+                } if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
                     prefix = prefix.slice(1, -1);
                 }
             const buyrate: number = dataSliced[i][3] * 1;

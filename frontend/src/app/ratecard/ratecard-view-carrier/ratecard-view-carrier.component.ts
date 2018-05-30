@@ -88,7 +88,7 @@ export class RatecardViewCarrierComponent implements OnInit {
             .subscribe(
                 data => {
                     this.processData(data);
-                    this.q += this.gridApiMain.getDataAsCsv();
+                    this.q += this.getDataAsCSV() + ', \n';
                 }
             );
     }
@@ -225,20 +225,33 @@ export class RatecardViewCarrierComponent implements OnInit {
     // AG Grid Main Table - Export
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     exportAsCsv() {
-        this.gridApiCarrier.deselectAll();
-        this.gridApiMain.exportDataAsCsv();
+        const exporterParams = {
+            columnKeys: ['prefix', 'destination', 'our_rate', 'our_rate_2p', 'our_rate_3p', 'lowest_rate',
+                'average', 'variance', 'lowhigh'],
+            skipHeader: true
+        };
+        this.gridApiMain.exportDataAsCsv(exporterParams);
     }
 
     exportAsAZCsv() {
-        const gridApiCountry = this.gridApiCountry;
-        const gridApiCarrier = this.gridApiCarrier;
-        const gridApiMain = this.gridApiMain;
-
         const countryLen = this.rowDataCountry.length;
 
-        for ( let i = 0; i < 1; i++ ) {
+        for ( let i = 230; i < 240; i++ ) {
             this.get_specificCarrierRatesByCountryAZ(this.rowDataCountry[i].code);
         }
+    }
+
+    getDataAsCSV() {
+        const exporterParams = {
+            columnKeys: ['prefix', 'destination', 'our_rate', 'our_rate_2p', 'our_rate_3p', 'lowest_rate',
+            'average', 'variance', 'lowhigh'],
+            skipHeader: true
+        };
+        return this.gridApiMain.getDataAsCsv(exporterParams);
+    }
+
+    test() {
+        console.log(this.q);
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

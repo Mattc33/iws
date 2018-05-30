@@ -26,9 +26,16 @@
     <mat-step [stepControl]="ratecardFormGroup" [completed]="false">
         <form [formGroup]="ratecardFormGroup">
             <ng-template matStepLabel>Enter Rate Card Name</ng-template>
-            <mat-form-field>
-                <input matInput placeholder="Enter Ratecard Name" formControlName="ratecardCtrl">
-            </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Enter Ratecard Name" formControlName="ratecardCtrl">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-select placeholder="Choose Ratecard Tier" formControlName="ratecardTierCtrl">
+                        <mat-option *ngFor="let tier of ratecardTier" [value]="tier.value" >
+                            {{tier.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             <div>
                 <button mat-button matStepperPrevious >Back</button>
                 <button mat-button matStepperNext [disabled]="!ratecardFormGroup.valid"> Next </button>

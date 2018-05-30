@@ -51,12 +51,12 @@ export class MainTableSharedService {
                 headerName: 'Ratecard',
                 children: [
                     {
-                        headerName: 'Prefix', field: 'prefix', width: 120,
+                        headerName: 'Prefix', field: 'prefix', width: 120, colId: 'prefix',
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
                         lockPosition: true, unSortIcon: true,
                     },
                     {
-                        headerName: 'Destination', field: 'destination',
+                        headerName: 'Destination', field: 'destination', colId: 'destination',
                         width: 300, lockPosition: true,
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
                     },
@@ -81,11 +81,11 @@ export class MainTableSharedService {
                             };
                             return mean(numberArr);
                         },
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
+                        cellStyle: { 'border-right': '1px solid #000000' }
                     },
                     {
                         headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true, columnGroupShow: 'open',
                         valueGetter(params) {
                             const dataArr = [];
                             const arr = Object.values(params.data);
@@ -109,7 +109,7 @@ export class MainTableSharedService {
                     },
                     {
                         headerName: '* 3%', field: 'our_rate_3p', width: 100, colId: 'our_rate_3p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true, columnGroupShow: 'open',
                         valueGetter(params) {
                             const dataArr = [];
                             const arr = Object.values(params.data);
@@ -118,9 +118,7 @@ export class MainTableSharedService {
                                     dataArr.push( arr[i] as number * 1 );
                                 }
                             }
-
                             const numberArr = dataArr.slice(1);
-
                             const mean = (array) => {
                                 const sum = numberArr.reduce( (acc, value) => acc + value );
                                 const avg = (sum / numberArr.length);
@@ -208,7 +206,7 @@ export class MainTableSharedService {
                                     const variance = diff.reduce((acc, value) => (acc + value) / array.length);
                                     return variance;
                                 }
-                                return returnVariance(numberArr) >= .008;
+                                return returnVariance(numberArr) >= .0009;
                             }
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
@@ -314,7 +312,6 @@ export class MainTableSharedService {
             for (const item in data) {
                 if ( item ) {
                     dataArr.push(data[item]);
-                } else {
                 }
             }
             return dataArr;
