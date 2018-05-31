@@ -13,6 +13,7 @@ import { RateCardsTableComponent } from './../rate-cards-table/rate-cards-table.
   templateUrl: './rate-cards-convert-csv.component.html',
   styleUrls: ['./rate-cards-convert-csv.component.scss']
 })
+
 export class RateCardsConvertCsvComponent implements OnInit {
 
     private rowData;
@@ -99,12 +100,8 @@ export class RateCardsConvertCsvComponent implements OnInit {
             {
                 headerName: 'Approve?', editable: true, field: 'confirmed', width: 100,
                 valueFormatter: function(params) {
-                    if (params.value === 1) {
-                        return true;
-                    }
-                    if (params.value === 0) {
-                        return false;
-                    }
+                    if (params.value === 1) { return true; }
+                    if (params.value === 0) { return false; }
                 },
                 cellEditor: 'select', cellEditorParams: {values: [true, false]},
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
@@ -171,9 +168,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
             const fileName = this.getSelectedFileNames(0);
             this.get_specificRatecardOneFile(eachRatecard, fileName);
         }
-        // setTimeout(30000);
         this.flipButtonDisable();
-
     }
 
     flipButtonDisable() {

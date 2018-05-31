@@ -74,15 +74,17 @@ ng-sidebar-container {
 
     .country-carrier-picker-container {
         width: 31vw; height: auto;
+        margin-right: 10px;
+        display: flex;
     
         #country-picker-table {
             width: 48%; height: calc(100vh - 160px);
-            float: left;
+            flex: 1;
         }
 
         #carrier-picker-table {
             width: 48%; height: calc(100vh - 160px);
-            float: left;
+            flex: 1;
         }
     }
 

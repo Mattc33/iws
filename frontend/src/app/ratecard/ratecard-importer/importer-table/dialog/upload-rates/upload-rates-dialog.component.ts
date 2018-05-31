@@ -50,11 +50,11 @@ export class UploadRatesDialogComponent implements OnInit {
         {value: 1.85, viewValue: '85%'}, {value: 1.9, viewValue: '90%'}, {value: 1.95, viewValue: '95%'}, {value: 2, viewValue: '100%'}
     ];
     private ratecardTier = [
-        {value: 'silver', viewValue: 'Silver'},
+        {value: 'standard', viewValue: 'Silver'},
         {value: 'standard', viewValue: 'Standard'},
-        {value: 'gold', viewValue: 'Gold'},
+        {value: 'premium', viewValue: 'Gold'},
         {value: 'premium', viewValue: 'Premium'},
-        {value: 'platinum', viewValue: 'Platinum'},
+        {value: 'premium', viewValue: 'Platinum'},
     ];
 
     // Insert Rates Props
@@ -254,7 +254,8 @@ export class UploadRatesDialogComponent implements OnInit {
             teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
             asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
             privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
-            tier: this.percentFormGroup.get('ratecardTierCtrl').value,
+            // ! temporary tier value
+            description: this.ratecardFormGroup.get('ratecardTierCtrl').value,
             rates: []
         };
 
@@ -265,7 +266,8 @@ export class UploadRatesDialogComponent implements OnInit {
                 addToTeleU: this.percentFormGroup.get('teleUCheckboxCtrl').value,
                 teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
                 asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
-                privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value
+                privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
+                description: this.ratecardFormGroup.get('ratecardTierCtrl').value
             },
         );
         console.log(this.finalRatecardObj);
@@ -393,7 +395,8 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     defaultProfile(data): void {
-        const dataSliced = data.slice(1, -1);
+        console.log('test');
+        const dataSliced = data.slice(1);
         for ( let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];
             const prefix: string = dataSliced[i][1];
@@ -540,7 +543,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    megatelProfile(data) { 
+    megatelProfile(data) {
         const dataSliced = data.slice(2);
         for (let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];

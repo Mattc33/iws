@@ -1,4 +1,4 @@
-    <nav [class.active]="isSideBarMini">
+<nav [class.active]="isSideBarMini">
 
     <!-- Dashboard -->
     <div class="main-menu-item" routerLink="dashboard" routerLinkActive="active-link-parent">
@@ -36,7 +36,10 @@
                 <i class="far fa-circle"></i><span class="link-name">Convert To CSV</span>
             </div>
             <div class="nested-menu-item" routerLink="rate-card-view-carrier" routerLinkActive="active-link-child">
-                <i class="far fa-circle"></i><span class="link-name">View By Carrier</span>
+                <i class="far fa-circle"></i><span class="link-name link-name-long">View By Carrier STD</span>
+            </div>
+            <div class="nested-menu-item" routerLink="rate-card-view-carrier-p" routerLinkActive="active-link-child">
+                <i class="far fa-circle"></i><span class="link-name link-name-long">View By Carrier PREM</span>
             </div>
         </div>
 

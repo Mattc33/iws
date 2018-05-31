@@ -9,7 +9,7 @@ export class RateCardsSharedService {
 
     rowRatesObjSource = new BehaviorSubject<object>({}); // Passing rates rowObj from rate table => delete dialog
     currentRowRatesObj = this.rowRatesObjSource.asObservable();
-    
+
     rowTrunksObjSource = new BehaviorSubject<object>({}); // Passing trunks rowObj from trunks table => delete dialog
     currentRowTrunksObj = this.rowTrunksObjSource.asObservable();
 
@@ -20,7 +20,7 @@ export class RateCardsSharedService {
 
     changeRowRatesObj(rowObj: object) {
         this.rowRatesObjSource.next(rowObj);
-        console.table(rowObj);    
+        console.table(rowObj);
     }
 
     changeRowTrunksObj(rowObj: object) {

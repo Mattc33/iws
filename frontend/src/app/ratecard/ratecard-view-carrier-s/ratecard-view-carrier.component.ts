@@ -4,12 +4,14 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 
 import { IsoCodesSharedService } from './../../shared/services/ratecard/iso-codes.shared.service';
 import { RateCardsService } from './../../shared/api-services/ratecard/rate-cards.api.service';
-import { MainTableSharedService } from './../../shared/services/ratecard/main-table.shared.service';
+import { MainTableStdSharedService } from './../../shared/services/ratecard/main-table-std.shared.service';
+
+import { saveAs } from 'file-saver/FileSaver';
 
 @Component({
-  selector: 'app-ratecard-view-carrier',
-  templateUrl: './ratecard-view-carrier.component.html',
-  styleUrls: ['./ratecard-view-carrier.component.scss']
+    selector: 'app-ratecard-view-carrier',
+    templateUrl: './ratecard-view-carrier.component.html',
+    styleUrls: ['./ratecard-view-carrier.component.scss']
 })
 export class RatecardViewCarrierComponent implements OnInit {
 
@@ -31,36 +33,12 @@ export class RatecardViewCarrierComponent implements OnInit {
 
     booleanCountryCarrierSidebar = true;
 
-    q = '';
-
-    percentMarkup = [
-        {value: '1', viewValue: 'No Markup'},
-        {value: '1.01', viewValue: '1%'},
-        {value: '1.02', viewValue: '2%'},
-        {value: '1.03', viewValue: '3%'},
-        {value: '1.04', viewValue: '4%'},
-        {value: '1.05', viewValue: '5%'},
-        {value: '1.06', viewValue: '6%'},
-        {value: '1.07', viewValue: '7%'},
-        {value: '1.08', viewValue: '8%'},
-        {value: '1.09', viewValue: '9%'},
-        {value: '1.1', viewValue: '10%'},
-        {value: '1.11', viewValue: '11%'},
-        {value: '1.12', viewValue: '12%'},
-        {value: '1.13', viewValue: '13%'},
-        {value: '1.14', viewValue: '14%'},
-        {value: '1.15', viewValue: '15%'},
-        {value: '1.16', viewValue: '16%'},
-        {value: '1.17', viewValue: '17%'},
-        {value: '1.18', viewValue: '18%'},
-        {value: '1.19', viewValue: '19%'},
-        {value: '1.20', viewValue: '20%'},
-    ];
+    q = `Variance Flag, Destination, Prefix, Rate, *1, *2, *3, status, lowest, average, variance, low->high,  \n`;
 
     constructor(
         private _isoCodes: IsoCodesSharedService,
         private _rateCardsService: RateCardsService,
-        private _mainTable: MainTableSharedService,
+        private _mainTableStd: MainTableStdSharedService,
         @Inject(ElementRef) _elementRef: ElementRef,
         private _renderer: Renderer,
         public _dialog: MatDialog
@@ -88,7 +66,7 @@ export class RatecardViewCarrierComponent implements OnInit {
             .subscribe(
                 data => {
                     this.processData(data);
-                    this.q += this.getDataAsCSV() + ', \n';
+                    this.addCsvToVariable();
                 }
             );
     }
@@ -101,15 +79,19 @@ export class RatecardViewCarrierComponent implements OnInit {
             }
         }
 
-        const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(rowDataFiltered);
-        const columnDefsForMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
+        const carrierGroupHeadersArr = this._mainTableStd.createColumnGroupHeaders(rowDataFiltered);
+        const columnDefsForMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
 
-        this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
+        this.columnDefsMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
 
-        const finalRowData = this._mainTable.createRowData(rowDataFiltered);
+        const finalRowData = this._mainTableStd.createRowData(rowDataFiltered);
         this.gridApiMain.setRowData(finalRowData);
 
         this.setCarrierRowData(carrierGroupHeadersArr);
+    }
+
+    addCsvToVariable() {
+        this.q += this.getDataAsCSV() + ', \n';
     }
 
     // ================================================================================
@@ -189,11 +171,6 @@ export class RatecardViewCarrierComponent implements OnInit {
         this.booleanCountryCarrierSidebar = !this.booleanCountryCarrierSidebar;
     }
 
-    // ================================================================================
-    // AG Grid Main Table - Header - Assigning Events
-    // ================================================================================
-
-
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // AG Grid Main Table - Header - Hide
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -226,38 +203,67 @@ export class RatecardViewCarrierComponent implements OnInit {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     exportAsCsv() {
         const exporterParams = {
-            columnKeys: ['prefix', 'destination', 'our_rate', 'our_rate_2p', 'our_rate_3p', 'lowest_rate',
+            columnKeys: ['destination', 'prefix', 'our_rate', 'our_rate_1p', 'our_rate_2p', 'our_rate_3p', 'lowest_rate',
                 'average', 'variance', 'lowhigh'],
             skipHeader: true
         };
         this.gridApiMain.exportDataAsCsv(exporterParams);
     }
 
+    click_exportAsAZCsv(getDataCallback, saveFileCallback) {
+        this.exportAsAZCsv();
+    }
+
     exportAsAZCsv() {
         const countryLen = this.rowDataCountry.length;
 
-        for ( let i = 230; i < 240; i++ ) {
+        for ( let i = 0; i < 241; i++ ) {
             this.get_specificCarrierRatesByCountryAZ(this.rowDataCountry[i].code);
         }
     }
 
     getDataAsCSV() {
         const exporterParams = {
-            columnKeys: ['prefix', 'destination', 'our_rate', 'our_rate_2p', 'our_rate_3p', 'lowest_rate',
-            'average', 'variance', 'lowhigh'],
+            columnKeys: ['high_variance', 'destination', 'prefix', 'our_rate', 'our_rate_1p', 'our_rate_2p', 'our_rate_3p', 'status',
+            'lowest_rate', 'average', 'variance', 'lowhigh'],
             skipHeader: true
         };
         return this.gridApiMain.getDataAsCsv(exporterParams);
     }
 
+    /**
+     * ? Test Function? How to trigger a callback when this.q variable contains the entire csv file
+     */
     test() {
-        console.log(this.q);
+        this.saveToFileSystem(this.q, 'ObieTel_AZ_STD');
     }
+
+    saveToFileSystem(csv, filenameinput) {
+        const filename = filenameinput;
+        const blob = new Blob([csv], { type: 'text/csv' });
+        saveAs(blob, filename);
+    }
+
+    /**
+    * * important
+    * ! depreciated
+    * ? question
+    * TODO: todo
+    * @param params
+    */
+
+    //         function1(someVariable, function() {
+    //           function2(someOtherVariable);
+    //         };
+    
+    // function function1(param, callback) {
+    //   ...do stuff
+    //   callback();
+    // }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Top Toolbar - markup
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     onMarkupChange(params) {
         this.updateOurRateCol(params);
     }
@@ -269,9 +275,4 @@ export class RatecardViewCarrierComponent implements OnInit {
             rowNode.setDataValue('our_rate', ourRateAfterMarkup.toFixed(4));
         });
     }
-
-    // columnEverythingChanged() {
-    //     this.updateOurRateCol(1);
-    // }
-
 }

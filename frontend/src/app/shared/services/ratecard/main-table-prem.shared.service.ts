@@ -7,10 +7,14 @@ declare global { // declare global interface, set custom fn groupBy with type an
 }
 
 @Injectable()
-export class MainTableSharedService {
+export class MainTablePremSharedService {
 
     filterForPrivateRateCardsOnly(input) {
         return input.filter(data => data.ratecard_name.includes('private'));
+    }
+
+    filterForPremRatecardsOnly(input) {
+        return input.filter(data => data.tier.includes());
     }
 
     createColumnGroupHeaders(input) { // groupHeader: `Carrier ${privateData.carrier_id}`,
@@ -48,8 +52,34 @@ export class MainTableSharedService {
         const carrierColumnDefs = [];
         carrierColumnDefs.push(
             {
-                headerName: 'Ratecard',
+                headerName: 'Standard Ratecard',
                 children: [
+                    {
+                            headerName: 'Variance Flag', field: 'variance', width: 120, colId: 'high_variance',
+                            filter: 'agNumberColumnFilter', lockPosition: true,
+                            valueGetter(params) {
+                                const dataArr = [];
+                                const arr = Object.values(params.data);
+                                for ( let i = 0; i < arr.length; i++) {
+                                    if ( arr[i] > 0 ) { dataArr.push(arr[i] as number * 1); }
+                                }
+                                const numberArr = dataArr.slice(1).sort();
+
+                                function returnVariance(array) {
+                                    const mean = array.reduce((acc, value) => (acc + value) / array.length);
+                                    const diff = array.map( (num) => Math.pow(num - mean, 2));
+                                    const variance = diff.reduce((acc, value) => (acc + value) / array.length);
+                                    return variance;
+                                }
+
+                                if ( returnVariance(numberArr) >= .0009  ) {
+                                    return 'High Variance';
+                                } else {
+                                    return '';
+                                }
+                            },
+                            cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                    },
                     {
                         headerName: 'Prefix', field: 'prefix', width: 120, colId: 'prefix',
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
@@ -64,6 +94,7 @@ export class MainTableSharedService {
                         headerName: 'Our Rates', field: 'our_rate', width: 120, colId: 'our_rate',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
+                            // Filtering out numbers out of the arr of objs and converting remaining valid strings to floats
                             const dataArr = [];
                             const arr = Object.values(params.data);
                             for ( let i = 0; i < arr.length; i++) {
@@ -72,14 +103,9 @@ export class MainTableSharedService {
                                 }
                             }
 
-                            const numberArr = dataArr.slice(1);
-
-                            const mean = (array) => {
-                                const sum = numberArr.reduce( (acc, value) => acc + value );
-                                const avg = (sum / numberArr.length);
-                                return avg.toFixed(4);
-                            };
-                            return mean(numberArr);
+                            const numberArr = dataArr.slice(1); // Get rid of prefix field
+                            const min = Math.min(...numberArr).toFixed(4);
+                            return min;
                         },
                         cellStyle: { 'border-right': '1px solid #000000' }
                     },
@@ -96,14 +122,9 @@ export class MainTableSharedService {
                             }
 
                             const numberArr = dataArr.slice(1);
-
-                            const mean = (array) => {
-                                const sum = numberArr.reduce( (acc, value) => acc + value );
-                                const avg = (sum / numberArr.length);
-                                const avgMulti = avg * 1.01;
-                                return avgMulti.toFixed(4);
-                            };
-                            return mean(numberArr);
+                            const min = Math.min(...numberArr).toFixed(4);
+                            const minToNum = parseFloat(min) * 1.01;
+                            return minToNum;
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' }
                     },
@@ -120,14 +141,9 @@ export class MainTableSharedService {
                             }
 
                             const numberArr = dataArr.slice(1);
-
-                            const mean = (array) => {
-                                const sum = numberArr.reduce( (acc, value) => acc + value );
-                                const avg = (sum / numberArr.length);
-                                const avgMulti = avg * 1.02;
-                                return avgMulti.toFixed(4);
-                            };
-                            return mean(numberArr);
+                            const min = Math.min(...numberArr).toFixed(4);
+                            const minToNum = parseFloat(min) * 1.02;
+                            return minToNum;
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' }
                     },
@@ -143,15 +159,18 @@ export class MainTableSharedService {
                                 }
                             }
                             const numberArr = dataArr.slice(1);
-                            const mean = (array) => {
-                                const sum = numberArr.reduce( (acc, value) => acc + value );
-                                const avg = (sum / numberArr.length);
-                                const avgMulti = avg * 1.03;
-                                return avgMulti.toFixed(4);
-                            };
-                            return mean(numberArr);
+                            const min = Math.min(...numberArr).toFixed(4);
+                            const minToNum = parseFloat(min) * 1.03;
+                            return minToNum;
                         },
                         cellStyle: { 'border-right': '1px solid #000000' }
+                    },
+                    {
+                        headerName: 'Status', field: 'status', width: 100, colId: 'status',
+                        editable: true, lockPosition: true,
+                        valueGetter() {
+                            return 'current';
+                        }
                     },
                 ]
             },

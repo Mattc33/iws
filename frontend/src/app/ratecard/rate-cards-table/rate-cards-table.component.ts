@@ -76,16 +76,7 @@ export class RateCardsTableComponent implements OnInit {
             .subscribe(
                 data => {
                     this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
-                },
-                error => console.log(error)
-            );
-    }
-
-    set_allRatecards(): void {
-        this.rateCardsService.get_ratecard()
-            .subscribe(
-                data => {
-                    this.gridApi.setRowData(this.nestedAgGridService.formatDataToNestedArr(data));
+                    console.log(data);
                 },
                 error => console.log(error)
             );
@@ -408,7 +399,7 @@ export class RateCardsTableComponent implements OnInit {
             const dialogRef = this.dialog.open(DeleteRateCardsDialogComponent, {});
 
             dialogRef.afterClosed().subscribe(() => {
-                this.set_allRatecards();
+                this.get_allRatecards();
             });
         }
 
