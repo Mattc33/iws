@@ -45,28 +45,34 @@
     
     <!-- Choose Sell Rate Mark up Step -->
     <mat-step [stepControl]="percentFormGroup" [completed]="false">
-        <form [formGroup]="percentFormGroup">
-            <ng-template matStepLabel>Choose Upload Conditions</ng-template>
+        <form [formGroup]="percentFormGroup" class="rate-modifier-step">
+            <ng-template matStepLabel>Choose Upload Parameters</ng-template>
 
-            <mat-checkbox disableRipple formControlName="teleUCheckboxCtrl" >Add to Tele-U</mat-checkbox>  
-            <mat-form-field class="percent-dropdown">              
-                <mat-select placeholder="Percent" formControlName="teleUPercentCtrl" [disabled]="checkBoxValueTeleU()">
-                    <mat-option *ngFor="let option of percents" [value]="option.value" >
-                        {{option.viewValue}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="rate-modifier-form-group">
+                <div class="toggle-checkbox">
+                    <mat-checkbox disableRipple formControlName="teleUCheckboxCtrl">Add to Wholesale</mat-checkbox>
+                </div>
+                <mat-form-field class="percent-input">
+                    <input matInput placeholder="Enter Markup" formControlName="teleUPercentCtrl" (change)="getMarkupTeleuAsPercent()">
+                </mat-form-field>
+                <div class="percent-display">
+                    {{ getMarkupTeleuAsPercent() }}%
+                </div>
+            </div>
 
             <hr>
 
-            <mat-checkbox disableRipple formControlName="privateCheckboxCtrl" [disabled]="true">Add to Private</mat-checkbox>  
-            <mat-form-field class="percent-dropdown" >              
-                <mat-select placeholder="Percent" formControlName="privatePercentCtrl">
-                    <mat-option *ngFor="let option of percents" [value]="option.value">
-                        {{option.viewValue}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="rate-modifier-form-group">
+                <div class="toggle-checkbox">
+                    <mat-checkbox disableRipple formControlName="privateCheckboxCtrl" [disabled]="true">As Private Offer</mat-checkbox> 
+                </div>
+                <mat-form-field class="percent-input">
+                    <input matInput placeholder="Enter Markup" formControlName="privatePercentCtrl" (change)="getMarkupPrivateAsPercent()">
+                </mat-form-field>
+                <div class="percent-display">
+                    {{ getMarkupPrivateAsPercent() }}%
+                </div>
+            </div>
 
             <div>
                 <button mat-button matStepperPrevious >Back</button>

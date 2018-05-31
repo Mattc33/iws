@@ -20,9 +20,22 @@ button {
     margin-right: 5px;
 }
 
-.percent-dropdown {
-    width: 65%;
-    margin-left: 10%;
+.rate-modifier-form-group {
+    display: flex;
+
+    .toggle-checkbox {
+        flex: 1;
+        margin-top: 15px;
+    }
+
+    .percent-input {
+        flex: 4;
+    }
+
+    .percent-display {
+        flex: 1;
+        margin-top: 15px;
+    }
 }
 
 mat-checkbox {

@@ -41,14 +41,14 @@ export class UploadRatesDialogComponent implements OnInit {
     private currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
 
     // Input props
-    private percents = [
-        {value: 1, viewValue: 'No Markup'},
-        {value: 1.05, viewValue: '5%'}, {value: 1.1, viewValue: '10%'}, {value: 1.15, viewValue: '15%'}, {value: 1.2, viewValue: '20%'},
-        {value: 1.25, viewValue: '25%'}, {value: 1.3, viewValue: '30%'}, {value: 1.35, viewValue: '35%'}, {value: 1.4, viewValue: '40%'},
-        {value: 1.45, viewValue: '45%'}, {value: 1.5, viewValue: '50%'}, {value: 1.55, viewValue: '55%'}, {value: 1.6, viewValue: '60%'},
-        {value: 1.65, viewValue: '65%'}, {value: 1.7, viewValue: '70%'}, {value: 1.75, viewValue: '75%'}, {value: 1.8, viewValue: '80%'},
-        {value: 1.85, viewValue: '85%'}, {value: 1.9, viewValue: '90%'}, {value: 1.95, viewValue: '95%'}, {value: 2, viewValue: '100%'}
-    ];
+    // private percents = [
+    //     {value: 1, viewValue: 'No Markup'},
+    //     {value: 1.05, viewValue: '5%'}, {value: 1.1, viewValue: '10%'}, {value: 1.15, viewValue: '15%'}, {value: 1.2, viewValue: '20%'},
+    //     {value: 1.25, viewValue: '25%'}, {value: 1.3, viewValue: '30%'}, {value: 1.35, viewValue: '35%'}, {value: 1.4, viewValue: '40%'},
+    //     {value: 1.45, viewValue: '45%'}, {value: 1.5, viewValue: '50%'}, {value: 1.55, viewValue: '55%'}, {value: 1.6, viewValue: '60%'},
+    //     {value: 1.65, viewValue: '65%'}, {value: 1.7, viewValue: '70%'}, {value: 1.75, viewValue: '75%'}, {value: 1.8, viewValue: '80%'},
+    //     {value: 1.85, viewValue: '85%'}, {value: 1.9, viewValue: '90%'}, {value: 1.95, viewValue: '95%'}, {value: 2, viewValue: '100%'}
+    // ];
     private ratecardTier = [
         {value: 'standard', viewValue: 'Silver'},
         {value: 'standard', viewValue: 'Standard'},
@@ -56,6 +56,8 @@ export class UploadRatesDialogComponent implements OnInit {
         {value: 'premium', viewValue: 'Premium'},
         {value: 'premium', viewValue: 'Platinum'},
     ];
+
+    private teleuPercent = 0;
 
     // Insert Rates Props
     private rateCardID: number;
@@ -97,12 +99,12 @@ export class UploadRatesDialogComponent implements OnInit {
         });
         this.percentFormGroup = this.formBuilder.group({
             teleUCheckboxCtrl: [false],
-            teleUPercentCtrl: [0],
+            teleUPercentCtrl: [0, Validators.pattern('^[0-9]')],
             privateCheckboxCtrl: [true],
-            privatePercentCtrl: [1.05]
+            privatePercentCtrl: [1.02, Validators.pattern('^[0-9]')]
         });
         this.uploadRatesFormGroup = this.formBuilder.group({
-            uploadRatesCtrl: ['', Validators.required]
+            uploadRatesCtrl: ['']
         });
 
         this.percentFormGroup.controls.teleUCheckboxCtrl.setValue(false);
@@ -145,7 +147,7 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     /*
-        ~~~~~~~~~~ Grid Initiation ~~~~~~~~~~
+        ~~~~~~~~~~ Grid Init ~~~~~~~~~~
     */
     on_GridReady(params): void {
         this.gridApi = params.api;
@@ -193,6 +195,32 @@ export class UploadRatesDialogComponent implements OnInit {
 
     input_getRateCardName(): number {
         return this.ratecardFormGroup.get('ratecardCtrl').value;
+    }
+
+    input_getMarkupPrivate(): number {
+        return this.percentFormGroup.get('privatePercentCtrl').value;
+    }
+
+    input_getMarkupTeleu(): number {
+        return this.percentFormGroup.get('teleUPercentCtrl').value;
+    }
+
+    getMarkupTeleuAsPercent(): any {
+        if ( this.input_getMarkupTeleu() > 0 ) {
+            const value = ((this.input_getMarkupTeleu() * 100) - 100).toFixed(4);
+            return value;
+        } else {
+            return 0;
+        }
+    }
+
+    getMarkupPrivateAsPercent(): any {
+        if ( this.input_getMarkupTeleu() > 0 ) {
+            const value = ((this.input_getMarkupPrivate() * 100) - 100).toFixed(4);
+            return value;
+        } else {
+            return 0;
+        }
     }
 
     /*
@@ -270,7 +298,6 @@ export class UploadRatesDialogComponent implements OnInit {
                 description: this.ratecardFormGroup.get('ratecardTierCtrl').value
             },
         );
-        console.log(this.finalRatecardObj);
     }
 
     /*
