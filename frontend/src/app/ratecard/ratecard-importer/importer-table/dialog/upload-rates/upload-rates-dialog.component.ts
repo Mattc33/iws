@@ -99,7 +99,7 @@ export class UploadRatesDialogComponent implements OnInit {
         });
         this.percentFormGroup = this.formBuilder.group({
             teleUCheckboxCtrl: [false],
-            teleUPercentCtrl: [0, Validators.pattern('^[0-9]')],
+            teleUPercentCtrl: [1, Validators.pattern('^[0-9]')],
             privateCheckboxCtrl: [true],
             privatePercentCtrl: [1.02, Validators.pattern('^[0-9]')]
         });
