@@ -1,4 +1,3 @@
-import { IsoCodesSharedService } from './shared/services/ratecard/iso-codes.shared.service';
 // Core Modules
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -54,6 +53,7 @@ import { DeleteRateCardsDialogComponent } from './ratecard/rate-cards-table/dial
 import { RateCardsAddTrunksComponent } from './ratecard/rate-cards-add-trunks/rate-cards-add-trunks.component';
 import { RateCardsConvertCsvComponent } from './ratecard/rate-cards-convert-csv/rate-cards-convert-csv.component';
 
+import { IsoCodesSharedService } from './shared/services/ratecard/iso-codes.shared.service';
 import { RateCardsService } from './shared/api-services/ratecard/rate-cards.api.service';
 import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.shared.service';
 
@@ -71,6 +71,7 @@ import { RatecardViewCarrierPComponent } from './ratecard/ratecard-view-carrier-
 
 import { MainTableStdSharedService } from './shared/services/ratecard/main-table-std.shared.service';
 import { MainTablePremSharedService } from './shared/services/ratecard/main-table-prem.shared.service';
+import { MainTableCommonSharedService } from './shared/services/ratecard/main-table-common.shared.service';
 
 // Trunks
 import { TrunksTableComponent } from './trunks/trunks-table/trunks-table.component';
@@ -195,6 +196,7 @@ import { RegistrationComponent } from './registration/registration.component';
 
         // Ratecard Viewer
         IsoCodesSharedService, MainTableStdSharedService, MainTablePremSharedService,
+        MainTableCommonSharedService,
 
         TrunksService, TrunksSharedService,
         CallPlanService, CallPlanSharedService, CodesFormSharedService,

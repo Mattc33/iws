@@ -61,6 +61,7 @@ export class RatecardViewCarrierComponent implements OnInit {
             );
     }
 
+    // * service call to generate AZ ratecards
     get_specificCarrierRatesByCountryAZ(isoCode: string) {
         this._rateCardsService.get_ratesByCountry(isoCode)
             .subscribe(
@@ -72,23 +73,32 @@ export class RatecardViewCarrierComponent implements OnInit {
     }
 
     processData(rowData) {
-        const rowDataFiltered = [];
-        for (let i = 0; i < rowData.length; i++) {
-            if (rowData[i].rates.length > 0) {
-                rowDataFiltered.push(rowData[i]);
-            }
-        }
+        const rowDataFilteredByTeleU = this.filterByTeleU(rowData);
+        const rowDataFilteredForStandard = this.filterByStandard(rowDataFilteredByTeleU);
 
-        const carrierGroupHeadersArr = this._mainTableStd.createColumnGroupHeaders(rowDataFiltered);
-        const columnDefsForMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
+        const carrierGroupHeadersArr = this._mainTableStd.createColumnGroupHeaders(rowDataFilteredForStandard);
+        const columnDefsForMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredForStandard);
 
-        this.columnDefsMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
+        this.columnDefsMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredForStandard);
 
-        const finalRowData = this._mainTableStd.createRowData(rowDataFiltered);
+        const finalRowData = this._mainTableStd.createRowData(rowDataFilteredForStandard);
         this.gridApiMain.setRowData(finalRowData);
 
         this.setCarrierRowData(carrierGroupHeadersArr);
     }
+
+    filterByTeleU = (array) => array.filter( (arrItem) => {
+        const type = arrItem.ratecard_name.split('#')[2];
+        if (type === 'teleU') {
+            return type;
+        }
+    })
+
+    filterByStandard = (array) => array.filter( (arrItem) => {
+        if ( arrItem.ratecard_tier === 'standard') {
+            return arrItem.ratecard_tier;
+        }
+    })
 
     addCsvToVariable() {
         this.q += this.getDataAsCSV() + ', \n';
@@ -243,23 +253,6 @@ export class RatecardViewCarrierComponent implements OnInit {
         const blob = new Blob([csv], { type: 'text/csv' });
         saveAs(blob, filename);
     }
-
-    /**
-    * * important
-    * ! depreciated
-    * ? question
-    * TODO: todo
-    * @param params
-    */
-
-    //         function1(someVariable, function() {
-    //           function2(someOtherVariable);
-    //         };
-    
-    // function function1(param, callback) {
-    //   ...do stuff
-    //   callback();
-    // }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Top Toolbar - markup

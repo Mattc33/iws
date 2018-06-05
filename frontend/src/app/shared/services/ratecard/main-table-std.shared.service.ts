@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MainTableCommonSharedService } from './main-table-common.shared.service';
 
 declare global { // declare global interface, set custom fn groupBy with type any
     interface Array<T> {
@@ -8,6 +9,10 @@ declare global { // declare global interface, set custom fn groupBy with type an
 
 @Injectable()
 export class MainTableStdSharedService {
+
+    constructor(
+        private _mainTableCommon: MainTableCommonSharedService
+    ) {}
 
     filterForPrivateRateCardsOnly(input) {
         return input.filter(data => data.ratecard_name.includes('private'));
@@ -49,7 +54,11 @@ export class MainTableStdSharedService {
     }
 
     createCarrierColumnDefs(carrierGroupHeadersArr, filteredData) {
-        const carrierColumnDefs = [];
+        const carrierColumnDefs = []; // * Arr that will contain the columnDefs
+
+        // * Imported helper fns
+        const _mainTableCommon = this._mainTableCommon;
+
         carrierColumnDefs.push(
             {
                 headerName: 'Standard Ratecard',
@@ -58,21 +67,9 @@ export class MainTableStdSharedService {
                         headerName: 'Variance Flag', field: 'variance', width: 120, colId: 'high_variance',
                         filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
-                            const dataArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) { dataArr.push(arr[i] as number * 1); }
-                            }
-                            const numberArr = dataArr.slice(1).sort();
-
-                            function returnVariance(array) {
-                                const mean = array.reduce((acc, value) => (acc + value) / array.length);
-                                const diff = array.map( (num) => Math.pow(num - mean, 2));
-                                const variance = diff.reduce((acc, value) => (acc + value) / array.length);
-                                return variance;
-                            }
-
-                            if ( returnVariance(numberArr) >= .0009  ) {
+                            const ratesArr = _mainTableCommon.extractRates(params).sort();
+                            const returnVariance = _mainTableCommon.returnVariance(ratesArr);
+                            if ( returnVariance >= .0009  ) {
                                 return 'High Variance';
                             } else {
                                 return '';
@@ -95,17 +92,8 @@ export class MainTableStdSharedService {
                         headerName: 'Our Rates', field: 'our_rate', width: 120, colId: 'our_rate',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
-                            // Filtering out numbers out of the arr of objs and converting remaining valid strings to floats
-                            const dataArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) {
-                                    dataArr.push( arr[i] as number * 1 );
-                                }
-                            }
-
-                            const numberArr = dataArr.slice(1); // Get rid of prefix field
-                            const min = Math.min(...numberArr).toFixed(4);
+                            const ratesArr = _mainTableCommon.extractRates(params);
+                            const min = Math.min(...ratesArr).toFixed(4);
                             return min;
                         },
                         cellStyle: { 'border-right': '1px solid #000000' }
@@ -114,16 +102,8 @@ export class MainTableStdSharedService {
                         headerName: '* 1%', field: 'our_rate_1p', width: 100, colId: 'our_rate_1p',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
-                            const dataArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) {
-                                    dataArr.push( arr[i] as number * 1 );
-                                }
-                            }
-
-                            const numberArr = dataArr.slice(1);
-                            const min = Math.min(...numberArr).toFixed(4);
+                            const ratesArr = _mainTableCommon.extractRates(params);
+                            const min = Math.min(...ratesArr).toFixed(4);
                             const minToNum = parseFloat(min) * 1.01;
                             return minToNum.toFixed(4);
                         },
@@ -133,16 +113,8 @@ export class MainTableStdSharedService {
                         headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
-                            const dataArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) {
-                                    dataArr.push( arr[i] as number * 1 );
-                                }
-                            }
-
-                            const numberArr = dataArr.slice(1);
-                            const min = Math.min(...numberArr).toFixed(4);
+                            const ratesArr = _mainTableCommon.extractRates(params).sort();
+                            const min = Math.min(...ratesArr).toFixed(4);
                             const minToNum = parseFloat(min) * 1.02;
                             return minToNum.toFixed(4);
                         },
@@ -152,15 +124,8 @@ export class MainTableStdSharedService {
                         headerName: '* 3%', field: 'our_rate_3p', width: 100, colId: 'our_rate_3p',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
-                            const dataArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) {
-                                    dataArr.push( arr[i] as number * 1 );
-                                }
-                            }
-                            const numberArr = dataArr.slice(1);
-                            const min = Math.min(...numberArr).toFixed(4);
+                            const ratesArr = _mainTableCommon.extractRates(params);
+                            const min = Math.min(...ratesArr).toFixed(4);
                             const minToNum = parseFloat(min) * 1.03;
                             return minToNum.toFixed(4);
                         },
@@ -183,13 +148,8 @@ export class MainTableStdSharedService {
                         headerName: 'Lowest Rate', field: 'lowest_rate', width: 120, colId: 'lowest_rate',
                         filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
-                            const numberArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) { numberArr.push(arr[i]); }
-                            }
-                            numberArr.slice(1);
-                            const min = Math.min(...numberArr).toFixed(4);
+                            const ratesArr = _mainTableCommon.extractRates(params);
+                            const min = Math.min(...ratesArr).toFixed(4);
                             return min;
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
@@ -198,22 +158,9 @@ export class MainTableStdSharedService {
                         headerName: 'Average', field: 'average', width: 120, colId: 'average',
                         filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
-                            const dataArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) {
-                                    dataArr.push( arr[i] as number * 1 );
-                                }
-                            }
-
-                            const numberArr = dataArr.slice(1);
-
-                            const mean = (array) => {
-                                const sum = numberArr.reduce( (acc, value) => acc + value );
-                                const avg = (sum / numberArr.length);
-                                return avg.toFixed(4);
-                            };
-                            return mean(numberArr);
+                            const ratesArr = _mainTableCommon.extractRates(params);
+                            const mean = _mainTableCommon.returnMean(ratesArr).toFixed(4);
+                            return mean;
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
                     },
@@ -221,37 +168,15 @@ export class MainTableStdSharedService {
                         headerName: 'Variance', field: 'variance', width: 120, colId: 'variance',
                         filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
-                            const dataArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) { dataArr.push(arr[i] as number * 1); }
-                            }
-                            const numberArr = dataArr.slice(1).sort();
-
-                            function returnVariance(array) {
-                                const mean = array.reduce((acc, value) => (acc + value) / array.length);
-                                const diff = array.map( (num) => Math.pow(num - mean, 2));
-                                const variance = diff.reduce((acc, value) => (acc + value) / array.length);
-                                return variance;
-                            }
-                            return returnVariance(numberArr).toFixed(5);
+                            const ratesArr = _mainTableCommon.extractRates(params).sort();
+                            const returnVariance = _mainTableCommon.returnVariance(ratesArr).toFixed(5);
+                            return returnVariance;
                         },
                         cellClassRules: {
                             'notable-variance': function(params) {
-                                const dataArr = [];
-                                const arr = Object.values(params.data);
-                                for ( let i = 0; i < arr.length; i++) {
-                                    if ( arr[i] > 0 ) { dataArr.push(arr[i] as number * 1); }
-                                }
-                                const numberArr = dataArr.slice(1).sort();
-
-                                function returnVariance(array) {
-                                    const mean = array.reduce((acc, value) => (acc + value) / array.length);
-                                    const diff = array.map( (num) => Math.pow(num - mean, 2));
-                                    const variance = diff.reduce((acc, value) => (acc + value) / array.length);
-                                    return variance;
-                                }
-                                return returnVariance(numberArr) >= .0009;
+                                const ratesArr = _mainTableCommon.extractRates(params).sort();
+                                const returnVariance = _mainTableCommon.returnVariance(ratesArr);
+                                return returnVariance >= .0009;
                             }
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
@@ -260,21 +185,11 @@ export class MainTableStdSharedService {
                         headerName: 'Low->High', field: 'lowhigh', width: 200, colId: 'lowhigh',
                         filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
-                            const dataArr = [];
-                            const arr = Object.values(params.data);
-                            for ( let i = 0; i < arr.length; i++) {
-                                if ( arr[i] > 0 ) { dataArr.push(arr[i]); }
-                            }
-                            const numberArr = dataArr.slice(1).sort();
-
-                            if ( numberArr.length > 1 ) {
-                                const mean = (array) => {
-                                    const sum = array.reduce((acc, value) => acc + ' | ' + value );
-                                    return sum;
-                                };
-                                return mean(numberArr);
+                            const ratesArr = _mainTableCommon.extractRates(params).sort();
+                            if ( ratesArr.length > 1 ) {
+                                return _mainTableCommon.joinStrings(ratesArr, '|');
                             } else {
-                                return numberArr[0];
+                                return ratesArr[0];
                             }
                         },
                         cellStyle: { 'border-right': '1px solid #000000' }

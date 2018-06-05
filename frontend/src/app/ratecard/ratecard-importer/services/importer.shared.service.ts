@@ -15,7 +15,7 @@ export class ImporterSharedService {
         console.log(rowArr);
     }
 
-    changeRatesCSVAmount(ratesAmount: number) {
+    changeRatesCSVAmount(ratesAmount: number) { // * before the api upload | parse csv phase
         this.postRatesCSVAmount.next(ratesAmount);
         console.log(ratesAmount);
     }

@@ -50,7 +50,7 @@ export class RatecardViewCarrierPComponent implements OnInit {
         this.rowDataCountry = this._isoCodes.getCountryCodes();
     }
 
-// ================================================================================
+    // ================================================================================
     // Carrier-View API Services
     // ================================================================================
     get_specificCarrierRatesByCountry(isoCode: string) {
@@ -71,23 +71,32 @@ export class RatecardViewCarrierPComponent implements OnInit {
     }
 
     processData(rowData) {
-        const rowDataFiltered = [];
-        for (let i = 0; i < rowData.length; i++) {
-            if (rowData[i].rates.length > 0) {
-                rowDataFiltered.push(rowData[i]);
-            }
-        }
+        const rowDataFilteredByTeleU = this.filterByTeleU(rowData);
+        const rowDataFilteredByPremium = this.filterByPremium(rowDataFilteredByTeleU);
 
-        const carrierGroupHeadersArr = this._mainTablePrem.createColumnGroupHeaders(rowDataFiltered);
-        const columnDefsForMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
+        const carrierGroupHeadersArr = this._mainTablePrem.createColumnGroupHeaders(rowDataFilteredByPremium);
+        const columnDefsForMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredByPremium);
 
-        this.columnDefsMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFiltered);
+        this.columnDefsMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredByPremium);
 
-        const finalRowData = this._mainTablePrem.createRowData(rowDataFiltered);
+        const finalRowData = this._mainTablePrem.createRowData(rowDataFilteredByPremium);
         this.gridApiMain.setRowData(finalRowData);
 
         this.setCarrierRowData(carrierGroupHeadersArr);
     }
+
+    filterByTeleU = (array) => array.filter( (arrItem) => {
+        const type = arrItem.ratecard_name.split('#')[2];
+        if (type === 'teleU') {
+            return type;
+        }
+    })
+
+    filterByPremium = (array) => array.filter( (arrItem) => {
+        if ( arrItem.ratecard_tier === 'premium') {
+            return arrItem.ratecard_tier;
+        }
+    })
 
     // ================================================================================
     // AG Grid Init
