@@ -206,7 +206,7 @@ export class MainTablePremSharedService {
                             columnGroupShow: 'open',
                         },
                         {
-                            headerName: 'Rate', field: sellrateFieldString, width: 120,
+                            headerName: 'Rate', field: sellrateFieldString, width: 160,
                             headerHeight: 500, editable: true,
                             filter: 'agNumberColumnFilter',
                             colId: `carrier_rate_${i}`, // This will be the columnID to use for functionaility
