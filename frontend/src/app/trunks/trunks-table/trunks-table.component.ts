@@ -6,8 +6,8 @@ import { GridApi } from 'ag-grid';
 import { DeleteTrunksComponent } from './dialog/delete-trunks/delete-trunks.component';
 import { AddTrunksComponent } from './dialog/add-trunks/add-trunks.component';
 
-import { TrunksService } from '../services/trunks.api.service';
-import { TrunksSharedService } from './../services/trunks.shared.service';
+import { TrunksService } from './../../shared/api-services/trunk/trunks.api.service';
+import { TrunksSharedService } from './../../shared/services/trunk/trunks.shared.service';
 import { ToggleButtonStateService } from './../../shared/services/global/buttonStates.shared.service';
 import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
 

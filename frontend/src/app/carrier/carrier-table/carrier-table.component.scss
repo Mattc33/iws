@@ -5,7 +5,6 @@ section {
 
     .table-container {
         width: 100%; height: 100%;
-        float: left;
 
         ag-grid-angular {
             width: 99.7%; height: 85vh;
@@ -20,21 +19,20 @@ section {
     
             button {
                 background-color: Transparent;
-                width: 90px;
                 height: 30px;
-                padding: 0;
+                padding-left: 1em; padding-right: 1em;
                 border: 1px solid #E0E0E0;
                 margin-right: 5px;
+
+                &:hover {
+                    background-color: #E0E0E0;
+                }
+
+                &:focus {
+                    outline: 0;
+                }
             }
-    
-            button:hover {
-                background-color: #E0E0E0;
-            }
-    
-            button:focus {
-                outline: 0;
-            }
-    
+
             mat-form-field {
                 font-size: 14px;
             }
@@ -46,48 +44,5 @@ section {
                 margin-top: -10px;
             }
         }
-
-
     }
-
-
-
-    .ag-header-row {
-        font-weight: bolder;
-        font-size: 1em;
-    }
-
-    .selectedRow {
-
-        div:nth-child(1) {
-            background-color: #ffffff;
-        }
-    }
-
-    .ag-header-container {
-        //background-color: rgba(243, 156, 18, .8);
-        border-color: #ffffff;
-    }
-
-    .ag-paging-panel {
-        //background-color: rgba(243, 156, 18, .8);
-    }
-
-    .ag-header-cell {
-        border-bottom: 1px solid #ffffff;
-    }
-
-    .ag-header-cell-resize {
-        width: 1.5px;
-        color: #ffffff;
-    }
-
-    .ag-theme-balham .ag-floating-filter-body input {
-        border-bottom: 1.5px solid #ffffff;
-    }
-
-    .add, .del {
-        border: 1px solid black;
-    }
-
 }

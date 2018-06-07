@@ -15,10 +15,10 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
   })
 export class AddCarrierDialogComponent implements OnInit {
 
-    // Form Group
+    // * Form Group
     private addCarrierFormGroup: FormGroup;
 
-    // Input Props
+    // * Input Props
     private taxableOptions = [
         {value: false, viewValue: 'No'},
         {value: true, viewValue: 'Yes'},
@@ -31,19 +31,42 @@ export class AddCarrierDialogComponent implements OnInit {
         {value: 5, viewValue: 'Tier 5'},
     ];
 
-    // Service Props
-    private finalCarrierObj;
-
     constructor(
-        public dialogRef: MatDialogRef <CarrierTableComponent>,
+        public _dialogRef: MatDialogRef <CarrierTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private formBuilder: FormBuilder,
-        private carrierService: CarrierService,
-        private snackbarSharedService: SnackbarSharedService
+        private _formBuilder: FormBuilder,
+        private _carrierService: CarrierService,
+        private _snackbarSharedService: SnackbarSharedService
     ) {}
 
     ngOnInit() {
-        this.addCarrierFormGroup = this.formBuilder.group({
+        this.addCarrierFormGroup = this.generateAddCarrierForm();
+    }
+
+    // ================================================================================
+    // * Carrier API Services
+    // ================================================================================
+    post_addCarrier(body) {
+        this._carrierService.post_AddRow(body)
+            .subscribe(
+                (resp: Response) => {
+                    console.log(resp);
+                    if ( resp.status === 200 ) {
+                        this._snackbarSharedService.snackbar_success('Carrier successfully inserted.', 2000);
+                    }
+                },
+                error => {
+                    console.log(error);
+                        this._snackbarSharedService.snackbar_error('Carrier failed to insert.', 2000);
+                }
+            );
+    }
+
+    // ================================================================================
+    // * Form Group & Data
+    // ================================================================================
+    generateAddCarrierForm() {
+        return this._formBuilder.group({
             nameCtrl: ['', Validators.required],
             emailCtrl: ['', [Validators.required, Validators.email]],
             addressCtrl: ['', Validators.required],
@@ -54,30 +77,8 @@ export class AddCarrierDialogComponent implements OnInit {
         });
     }
 
-    /*
-        ~~~~~~~~~~ Services ~~~~~~~~~~
-    */
-    post_addCarrier(body) {
-        this.carrierService.post_AddRow(body)
-            .subscribe(
-                (resp: Response) => {
-                    console.log(resp);
-                    if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Carrier successfully inserted.', 2000);
-                    }
-                },
-                error => {
-                    console.log(error);
-                        this.snackbarSharedService.snackbar_error('Carrier failed to insert.', 2000);
-                }
-            );
-    }
-
-    /*
-        ~~~~~~~~~~ Form Obj from Input ~~~~~~~~~~
-    */
     formCarrierObj() {
-        this.finalCarrierObj = {
+        return {
             code: this.addCarrierFormGroup.get('codeCtrl').value,
             name: this.addCarrierFormGroup.get('nameCtrl').value,
             email: this.addCarrierFormGroup.get('emailCtrl').value,
@@ -88,16 +89,16 @@ export class AddCarrierDialogComponent implements OnInit {
         };
     }
 
-    /*
-        ~~~~~~~~~~ Dialog ~~~~~~~~~~
-    */
+    // ================================================================================
+    // * Dialog
+    // ================================================================================
     click_addCarrier(post) {
-        this.post_addCarrier(this.finalCarrierObj);
+        this.post_addCarrier(this.formCarrierObj());
         this.closeDialog();
     }
 
     closeDialog(): void {
-      this.dialogRef.close();
+      this._dialogRef.close();
     }
 
 }

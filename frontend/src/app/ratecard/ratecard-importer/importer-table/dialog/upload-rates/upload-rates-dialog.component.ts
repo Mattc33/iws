@@ -1,14 +1,14 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatStepper } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { GridApi } from 'ag-grid';
 
 import { PapaParseService } from 'ngx-papaparse';
 
 import { ImporterTableComponent } from './../../importer-table.component';
-import { ImporterService } from './../../../services/importer.api.service';
-import { ImporterSharedService } from './../../../services/importer.shared.service';
-import { TrunksService } from './../../../../../trunks/services/trunks.api.service';
+import { ImporterService } from './../../../../../shared/api-services/ratecard/importer.api.service';
+import { ImporterSharedService } from './../../../../../shared/services/ratecard/importer.shared.service';
+import { TrunksService } from './../../../../../shared/api-services/trunk/trunks.api.service';
 import { SnackbarSharedService } from './../../../../../shared/services/global/snackbar.shared.service';
 import { ToggleButtonStateService } from './../../../../../shared/services/global/buttonStates.shared.service';
 
@@ -422,7 +422,6 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     defaultProfile(data): void {
-        console.log('test');
         const dataSliced = data.slice(1);
         for ( let i = 0; i < dataSliced.length; i++) {
             const destination: string = dataSliced[i][0];

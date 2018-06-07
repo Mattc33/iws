@@ -22,7 +22,7 @@ export class RateCardsService {
 
     get_ratecard(): Observable<any> {
         return this._http
-            .get(this.url + 'ratecards')
+            .get(this.url + 'ratecards/?active=1')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -49,7 +49,7 @@ export class RateCardsService {
 
     get_ratesByCountry(isoCode: string) {
         return this._http
-            .get(this.url + 'carriers/ratecards/rates/' + isoCode)
+            .get(this.url + 'carriers/ratecards/rates/' + isoCode + '?active=1')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)

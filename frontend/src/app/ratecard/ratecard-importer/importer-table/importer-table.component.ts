@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { GridApi, ColumnApi } from 'ag-grid';
 
-import { ImporterService } from './../services/importer.api.service';
-import { ImporterSharedService } from './../services/importer.shared.service';
+import { ImporterService } from './../../../shared/api-services/ratecard/importer.api.service';
+import { ImporterSharedService } from './../../../shared/services/ratecard/importer.shared.service';
 import { RateCardsService } from './../../../shared/api-services/ratecard/rate-cards.api.service';
 import { SnackbarSharedService } from './../../../shared/services/global/snackbar.shared.service';
 

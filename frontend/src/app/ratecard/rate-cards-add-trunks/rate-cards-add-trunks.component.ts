@@ -3,7 +3,7 @@ import { GridApi } from 'ag-grid';
 
 import { RateCardsService } from './../../shared/api-services/ratecard/rate-cards.api.service';
 import { RateCardsSharedService } from './../../shared/services/ratecard/rate-cards.shared.service';
-import { TrunksService } from './../../trunks/services/trunks.api.service';
+import { TrunksService } from './../../shared/api-services/trunk/trunks.api.service';
 import { NestedAgGridService } from './../../shared/services/global/nestedAgGrid.shared.service';
 import { SnackbarSharedService } from './../../shared/services/global/snackbar.shared.service';
 

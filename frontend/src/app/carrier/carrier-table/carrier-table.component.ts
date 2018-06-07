@@ -35,7 +35,7 @@ export class CarrierTableComponent implements OnInit {
     constructor( // inject your service
         private carrierService: CarrierService,
         private carrierSharedService: CarrierSharedService,
-        private dialog: MatDialog,
+        private _dialog: MatDialog,
         private snackbarSharedService: SnackbarSharedService,
         private toggleButtonStateService: ToggleButtonStateService
     ) {
@@ -121,9 +121,9 @@ export class CarrierTableComponent implements OnInit {
         ];
     }
 
-    /*
-        ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
-    */
+    // ================================================================================
+    // Grid UI Interactions
+    // ================================================================================
     gridSizeChanged(params) {
         params.api.sizeColumnsToFit();
     }
@@ -163,7 +163,9 @@ export class CarrierTableComponent implements OnInit {
         const id = params.data.id;
         let taxable = params.data.taxable;
             if (taxable === 'false') { taxable = false;
-            } else { taxable = true; }
+            } else {
+                taxable = true;
+            }
         const carrierObj = {
             code: params.data.code,
             name: params.data.name,
@@ -180,7 +182,7 @@ export class CarrierTableComponent implements OnInit {
     // Carrier Dialog
     // ================================================================================
     openDialogAdd() {
-        const dialogRef = this.dialog.open(AddCarrierDialogComponent, {
+        const dialogRef = this._dialog.open(AddCarrierDialogComponent, {
             width: '40%',
         });
 
@@ -192,7 +194,7 @@ export class CarrierTableComponent implements OnInit {
     openDialogDel() {
         this.carrierSharedService.changeRowObj(this.rowObj);
 
-        const dialogRef = this.dialog.open(DelCarrierDialogComponent, {});
+        const dialogRef = this._dialog.open(DelCarrierDialogComponent, {});
 
         dialogRef.afterClosed().subscribe(() => {
             this.onRefreshRowData();

@@ -1,4 +1,4 @@
-// Core Modules
+// * Core Modules
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -6,9 +6,8 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes, RouterLinkActive } from '@angular/router';
-import { FileSelectDirective } from 'ng2-file-upload';
 
-// UI Library: Angular Materials
+// * UI Library: Angular Materials
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MatButtonModule, MatInputModule, MatStepperModule, MatSelectModule } from '@angular/material';
 import { MatIconModule, MatRadioModule, MatDialogModule, MatDatepickerModule } from '@angular/material';
@@ -16,12 +15,12 @@ import { MatNativeDateModule, MatAutocompleteModule, MatSliderModule, MatSnackBa
 import { MatToolbarModule, MatTabsModule, MatExpansionModule, MatCheckboxModule } from '@angular/material';
 import 'hammerjs';
 
-// Main components
+// ? Main components
 import { AppComponent } from './app.component';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
 
-// Global Services
+// ? Global Services
 import { NestedAgGridService } from './shared/services/global/nestedAgGrid.shared.service';
 import { ToggleButtonStateService } from './shared/services/global/buttonStates.shared.service';
 import { ApiSettingsSharedService } from './shared/services/global/api-settings.shared.service';
@@ -31,23 +30,30 @@ import { SnackbarSharedService } from './shared/services/global/snackbar.shared.
 import { SuccessSnackbarComponent } from './shared/components/snackbars/success/success.snackbar.component';
 import { ErrorSnackbarComponent } from './shared/components/snackbars/error/error.snackbar.component';
 
-// Third Party Components
+// ! Third Party Components
 import { AgGridModule } from 'ag-grid-angular';
 import { PapaParseModule } from 'ngx-papaparse';
 import { SidebarModule } from 'ng-sidebar';
+// import { FileSelectDirective } from 'ng2-file-upload';
 
-// DashBoard
+// ? DashBoard
 import { DashboardComponent } from './dashboard/dashboard.component';
 
-// Carrier
+// ? Carrier
 import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.component';
     import { AddCarrierDialogComponent } from './carrier/carrier-table/dialog/add-carrier/add-carrier-dialog.component';
     import { DelCarrierDialogComponent } from './carrier/carrier-table/dialog/del-carrier/del-carrier-dialog.component';
-import { CarrierProfileComponent } from './carrier/carrier-profile/carrier-profile.component';
 import { CarrierService } from './shared/api-services/carrier/carrier.api.service';
 import { CarrierSharedService } from './shared/services/carrier/carrier.shared.service';
 
-// Ratecard
+import { CarrierProfileComponent } from './carrier/carrier-profile/carrier-profile.component';
+    // tslint:disable-next-line:max-line-length
+    import { DelCarrierProfileDialogComponent } from './carrier/carrier-profile/dialog/del-carrier-profile-dialog/del-carrier-profile-dialog.component';
+    import { AddCarrierProfileDialogComponent } from './carrier/carrier-profile/dialog/add-carrier-profile-dialog/add-carrier-profile-dialog.component';
+import { CarrierProfileService } from './shared/api-services/carrier/carrier-profile.api.service';
+
+
+// ? Ratecard
 import { RateCardsTableComponent } from './ratecard/rate-cards-table/rate-cards-table.component';
 import { DeleteRateCardsDialogComponent } from './ratecard/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component';
 import { RateCardsAddTrunksComponent } from './ratecard/rate-cards-add-trunks/rate-cards-add-trunks.component';
@@ -58,14 +64,14 @@ import { RateCardsService } from './shared/api-services/ratecard/rate-cards.api.
 import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.shared.service';
 
 
-// Ratecard Importer
+// ? Ratecard Importer
 import { ImporterTableComponent } from './ratecard/ratecard-importer/importer-table/importer-table.component';
 
-import { ImporterService } from './ratecard/ratecard-importer/services/importer.api.service';
-import { ImporterSharedService } from './ratecard/ratecard-importer/services/importer.shared.service';
+import { ImporterService } from './shared/api-services/ratecard/importer.api.service';
+import { ImporterSharedService } from './shared/services/ratecard/importer.shared.service';
 import { UploadRatesDialogComponent } from './ratecard/ratecard-importer/importer-table/dialog/upload-rates/upload-rates-dialog.component';
 
-// Ratecard View By Carrier
+// ? Ratecard View By Carrier
 import { RatecardViewCarrierComponent } from './ratecard/ratecard-view-carrier-s/ratecard-view-carrier.component';
 import { RatecardViewCarrierPComponent } from './ratecard/ratecard-view-carrier-p/ratecard-view-carrier-p.component';
 
@@ -73,7 +79,7 @@ import { MainTableStdSharedService } from './shared/services/ratecard/main-table
 import { MainTablePremSharedService } from './shared/services/ratecard/main-table-prem.shared.service';
 import { MainTableCommonSharedService } from './shared/services/ratecard/main-table-common.shared.service';
 
-// Trunks
+// ? Trunks
 import { TrunksTableComponent } from './trunks/trunks-table/trunks-table.component';
 
 import { AddTrunksComponent } from './trunks/trunks-table/dialog/add-trunks/add-trunks.component';
@@ -81,10 +87,10 @@ import { DeleteTrunksComponent } from './trunks/trunks-table/dialog/delete-trunk
 import { DeleteRatesComponent } from './ratecard/rate-cards-table/dialog/delete-rates/delete-rates.component';
 import { DetachTrunksComponent } from './ratecard/rate-cards-table/dialog/detach-trunks/detach-trunks.component';
 
-import { TrunksService } from './trunks/services/trunks.api.service';
-import { TrunksSharedService } from './trunks/services/trunks.shared.service';
+import { TrunksService } from './shared/api-services/trunk/trunks.api.service';
+import { TrunksSharedService } from './shared/services/trunk/trunks.shared.service';
 
-// Call Plan
+// ? Call Plan
 import { CallPlanTableComponent } from './callplan/call-plan-table/call-plan-table.component';
     import { AddCallPlanComponent } from './callplan/call-plan-table/dialog/add-callplan/add-callplan.component';
     import { DelCallPlanComponent } from './callplan/call-plan-table/dialog/del-callplan/del-callplan.component';
@@ -100,7 +106,7 @@ import { CallPlanService } from './callplan/services/call-plan.api.service';
 import { CallPlanSharedService } from './callplan/services/call-plan.shared.service';
 import { CodesFormSharedService } from './shared/services/callplan/attach-callplan-codes.shared.service';
 
-// LCR
+// ? LCR
 import { LcrCallPlanTableComponent } from './lcr/lcr-callplan-table/lcr-callplan-table.component';
 import { LcrCarrierTableComponent } from './lcr/lcr-carrier-table/lcr-carrier-table.component';
 import { LcrRatecardTableComponent } from './lcr/lcr-ratecard-table/lcr-ratecard-table.component';
@@ -109,11 +115,13 @@ import { LcrTrunkTableComponent } from './lcr/lcr-trunk-table/lcr-trunk-table.co
 import { LCRService } from './lcr/services/lcr.api.service';
 import { LCRSharedService } from './lcr/services/lcr.shared.service';
 
-// Accounts
+// ? Accounts
 import { AccountsComponent } from './accounts/accounts.component';
 
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
+
+
 
 @NgModule({
     declarations:
@@ -126,6 +134,7 @@ import { RegistrationComponent } from './registration/registration.component';
         DashboardComponent,
         // Carrier
         CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, CarrierProfileComponent,
+        DelCarrierProfileDialogComponent, AddCarrierProfileDialogComponent,
         // Ratecard
         RateCardsTableComponent, DeleteRateCardsDialogComponent, ImporterTableComponent,
         UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent, DeleteRatesComponent,
@@ -141,7 +150,7 @@ import { RegistrationComponent } from './registration/registration.component';
         // Account
         AccountsComponent,
         // Global
-        SuccessSnackbarComponent, ErrorSnackbarComponent
+        SuccessSnackbarComponent, ErrorSnackbarComponent,
     ],
   imports:
   [
@@ -161,6 +170,7 @@ import { RegistrationComponent } from './registration/registration.component';
         {path: 'dashboard', component: DashboardComponent},
 
         {path: 'carrier-view', component: CarrierTableComponent},
+        {path: 'carrier-profile', component: CarrierProfileComponent},
 
         {path: 'rate-card-importer', component: ImporterTableComponent},
         {path: 'rate-card-view', component: RateCardsTableComponent},
@@ -191,9 +201,9 @@ import { RegistrationComponent } from './registration/registration.component';
         ApiSettingsSharedService,
         // Carrier
         CarrierService, CarrierSharedService,
+        CarrierProfileService,
         // Ratecard
         ImporterService, ImporterSharedService, RateCardsService, RateCardsSharedService,
-
         // Ratecard Viewer
         IsoCodesSharedService, MainTableStdSharedService, MainTablePremSharedService,
         MainTableCommonSharedService,
@@ -206,6 +216,7 @@ import { RegistrationComponent } from './registration/registration.component';
     entryComponents: [
         // Carrier
         AddCarrierDialogComponent, DelCarrierDialogComponent,
+        AddCarrierProfileDialogComponent, DelCarrierProfileDialogComponent,
         // Ratecard
         DeleteRateCardsDialogComponent, UploadRatesDialogComponent,
         SuccessSnackbarComponent, ErrorSnackbarComponent,

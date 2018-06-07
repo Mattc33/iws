@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 
-import { ImporterSharedService } from './importer.shared.service';
+import { ImporterSharedService } from './../../services/ratecard/importer.shared.service';
 import { ApiSettingsSharedService } from './../../../shared/services/global/api-settings.shared.service';
 
 @Injectable()
