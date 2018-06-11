@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { GridApi } from 'ag-grid';
 
-import { CallPlanService } from './../services/call-plan.api.service';
-import { CallPlanSharedService } from './../services/call-plan.shared.service';
+import { CallPlanService } from './../../shared/api-services/callplan/call-plan.api.service';
+import { CallPlanSharedService } from '../../shared/services/callplan/call-plan.shared.service';
 import { CarrierService } from './../../shared/api-services/carrier/carrier.api.service';
 import { CodesSharedService } from './../../shared/services/global/codes.shared.service';
 import { ToggleButtonStateService } from './../../shared/services/global/buttonStates.shared.service';

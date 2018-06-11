@@ -34,7 +34,6 @@ import { ErrorSnackbarComponent } from './shared/components/snackbars/error/erro
 import { AgGridModule } from 'ag-grid-angular';
 import { PapaParseModule } from 'ngx-papaparse';
 import { SidebarModule } from 'ng-sidebar';
-// import { FileSelectDirective } from 'ng2-file-upload';
 
 // ? DashBoard
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -102,8 +101,8 @@ import { CallPlanTableComponent } from './callplan/call-plan-table/call-plan-tab
 import { CallPlanAddRatecardComponent } from './callplan/call-plan-add-ratecard/call-plan-add-ratecard.component';
 import { CallPlanAddCodeComponent } from './callplan/call-plan-add-code/call-plan-add-code.component';
 
-import { CallPlanService } from './callplan/services/call-plan.api.service';
-import { CallPlanSharedService } from './callplan/services/call-plan.shared.service';
+import { CallPlanService } from './shared/api-services/callplan/call-plan.api.service';
+import { CallPlanSharedService } from './shared/services/callplan/call-plan.shared.service';
 import { CodesFormSharedService } from './shared/services/callplan/attach-callplan-codes.shared.service';
 
 // ? LCR
@@ -112,16 +111,14 @@ import { LcrCarrierTableComponent } from './lcr/lcr-carrier-table/lcr-carrier-ta
 import { LcrRatecardTableComponent } from './lcr/lcr-ratecard-table/lcr-ratecard-table.component';
 import { LcrTrunkTableComponent } from './lcr/lcr-trunk-table/lcr-trunk-table.component';
 
-import { LCRService } from './lcr/services/lcr.api.service';
-import { LCRSharedService } from './lcr/services/lcr.shared.service';
+import { LCRService } from './shared/api-services/lcr/lcr.api.service';
+import { LCRSharedService } from './shared/services/lcr/lcr.shared.service';
 
 // ? Accounts
 import { AccountsComponent } from './accounts/accounts.component';
 
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
-
-
 
 @NgModule({
     declarations:

@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { GridApi } from 'ag-grid';
 
-import { CallPlanService } from './../services/call-plan.api.service';
-import { CallPlanSharedService } from './../services/call-plan.shared.service';
+import { CallPlanService } from './../../shared/api-services/callplan/call-plan.api.service';
+import { CallPlanSharedService } from '../../shared/services/callplan/call-plan.shared.service';
 import { RateCardsService } from './../../shared/api-services/ratecard/rate-cards.api.service';
 
 import { NestedAgGridService } from './../../shared/services/global/nestedAgGrid.shared.service';

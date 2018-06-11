@@ -1,11 +1,13 @@
+
 import { Component, Inject, OnInit, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 import { CallPlanTableComponent } from './../../call-plan-table.component';
 
-import { CallPlanService } from '../../../services/call-plan.api.service';
-import { CallPlanSharedService } from '../../../services/call-plan.shared.service';
+import { ApiSettingsSharedService } from './../../../../shared/services/global/api-settings.shared.service';
+import { CallPlanSharedService } from '../../../../shared/services/callplan/call-plan.shared.service';
+import { CallPlanService } from './../../../../shared/api-services/callplan/call-plan.api.service';
 
 @Component({
   selector: 'app-del-callplan',
@@ -18,9 +20,9 @@ export class DelCallPlanComponent implements OnInit {
     private rowIdAll;
 
     constructor(
-        public dialogRef: MatDialogRef <CallPlanTableComponent>,
+        public _dialogRef: MatDialogRef <CallPlanTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private callPlanService: CallPlanService,
+        private _callPlanService: CallPlanService,
         private callPlanSharedServce: CallPlanSharedService 
     ) { }
 
@@ -41,13 +43,13 @@ export class DelCallPlanComponent implements OnInit {
     }
 
     del_delCallPlan() {
-        this.callPlanService.del_callPlan(this.rowIdAll)
+        this._callPlanService.del_callPlan(this.rowIdAll)
             .subscribe(resp => console.log(resp));
     }
 
     // On method call close dialog
     closeDialog(): void {
-        this.dialogRef.close();
+        this._dialogRef.close();
     }
 
 }

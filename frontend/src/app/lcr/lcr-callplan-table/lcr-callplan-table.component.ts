@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GridApi } from 'ag-grid';
 
-import { LCRService } from './../services/lcr.api.service';
+import { LCRService } from '../../shared/api-services/lcr/lcr.api.service';
 
 @Component({
   selector: 'app-lcr-callplan-table',

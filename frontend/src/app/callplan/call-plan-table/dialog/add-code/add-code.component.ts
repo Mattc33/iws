@@ -4,8 +4,8 @@ import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@ang
 
 import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-table.component';
 
-import { CallPlanService } from '../../../services/call-plan.api.service';
-import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
+import { CallPlanService } from './../../../../shared/api-services/callplan/call-plan.api.service';
+import { CallPlanSharedService } from '../../../../shared/services/callplan/call-plan.shared.service';
 import { CarrierService } from './../../../../shared/api-services/carrier/carrier.api.service';
 import { CodesSharedService } from './../../../../shared/services/global/codes.shared.service';
 import { CodesFormSharedService } from './../../../../shared/services/callplan/attach-callplan-codes.shared.service';

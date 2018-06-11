@@ -4,8 +4,8 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 
 import { CallPlanTableComponent } from './../../call-plan-table.component';
 
-import { CallPlanService } from '../../../services/call-plan.api.service';
-import { CallPlanSharedService } from '../../../services/call-plan.shared.service';
+import { CallPlanService } from './../../../../shared/api-services/callplan/call-plan.api.service';
+import { CallPlanSharedService } from '../../../../shared/services/callplan/call-plan.shared.service';
 import { SnackbarSharedService } from './../../../../shared/services/global/snackbar.shared.service';
 
 @Component({

@@ -11,6 +11,7 @@ import { ImporterSharedService } from './../../../../../shared/services/ratecard
 import { TrunksService } from './../../../../../shared/api-services/trunk/trunks.api.service';
 import { SnackbarSharedService } from './../../../../../shared/services/global/snackbar.shared.service';
 import { ToggleButtonStateService } from './../../../../../shared/services/global/buttonStates.shared.service';
+import { CarrierProfileService } from './../../../../../shared/api-services/carrier/carrier-profile.api.service';
 
 @Component({
   selector: 'app-upload-rates',
@@ -66,13 +67,14 @@ export class UploadRatesDialogComponent implements OnInit {
     constructor(
         public dialogRef: MatDialogRef <ImporterTableComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private papa: PapaParseService,
-        private formBuilder: FormBuilder,
+        private _papa: PapaParseService,
+        private _formBuilder: FormBuilder,
         private importerService: ImporterService,
         private importerSharedService: ImporterSharedService,
         private trunksService: TrunksService,
         private snackbarSharedService: SnackbarSharedService,
-        private toggleButtonStateService: ToggleButtonStateService
+        private toggleButtonStateService: ToggleButtonStateService,
+        private _carrierSharedService: CarrierProfileService
     ) {}
 
     ngOnInit() {
@@ -81,20 +83,20 @@ export class UploadRatesDialogComponent implements OnInit {
 
         this.columnDefs = this.createColumnDefs();
 
-        this.carrierFormGroup = this.formBuilder.group({
+        this.carrierFormGroup = this._formBuilder.group({
             carrierCtrl: ['', Validators.required]
         });
-        this.ratecardFormGroup = this.formBuilder.group({
+        this.ratecardFormGroup = this._formBuilder.group({
             ratecardCtrl: ['', Validators.required],
             ratecardTierCtrl: ['', Validators.required]
         });
-        this.percentFormGroup = this.formBuilder.group({
+        this.percentFormGroup = this._formBuilder.group({
             teleUCheckboxCtrl: [false],
             teleUPercentCtrl: [1, Validators.pattern('^[0-9]')],
             privateCheckboxCtrl: [true],
             privatePercentCtrl: [1.02, Validators.pattern('^[0-9]')]
         });
-        this.uploadRatesFormGroup = this.formBuilder.group({
+        this.uploadRatesFormGroup = this._formBuilder.group({
             uploadRatesCtrl: ['']
         });
 
@@ -103,7 +105,7 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     // ================================================================================
-    // API Services
+    // * API Services
     // ================================================================================
     get_carrier(): void {
         this.importerService.get_CarrierNames()
@@ -137,9 +139,9 @@ export class UploadRatesDialogComponent implements OnInit {
             );
     }
 
-    /*
-        ~~~~~~~~~~ Grid Init ~~~~~~~~~~
-    */
+    // ================================================================================
+    // * AG Grid Init
+    // ================================================================================
     on_GridReady(params): void {
         this.gridApi = params.api;
         params.api.sizeColumnsToFit();
@@ -166,9 +168,9 @@ export class UploadRatesDialogComponent implements OnInit {
         ];
     }
 
-    /*
-        ~~~~~~~~~~ Extract data ~~~~~~~~~~
-    */
+    // ================================================================================
+    // * Extract Data
+    // ================================================================================
     extract_CarrierName(): string {
         for (let i = 0; i < this.carrierObj.length; i++) {
             if ( this.carrierObj[i].id === this.input_getCarrierId() ) {
@@ -319,7 +321,7 @@ export class UploadRatesDialogComponent implements OnInit {
         ~~~~~~~~~~ CSV Parser ~~~~~~~~~~
     */
     papaParse(csvFile): void { // Parse csv string into JSON
-        this.papa.parse(csvFile, {
+        this._papa.parse(csvFile, {
             complete: (results) => {
                 console.log('Parsed: ', results);
                 const data = results.data;

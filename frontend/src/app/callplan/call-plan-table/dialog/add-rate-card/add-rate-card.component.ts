@@ -5,8 +5,8 @@ import { GridApi } from 'ag-grid';
 import { CallPlanTableComponent } from './../../../call-plan-table/call-plan-table.component';
 
 import { NestedAgGridService } from './../../../../shared/services/global/nestedAgGrid.shared.service';
-import { CallPlanService } from '../../../services/call-plan.api.service';
-import { CallPlanSharedService } from './../../../services/call-plan.shared.service';
+import { CallPlanService } from './../../../../shared/api-services/callplan/call-plan.api.service';
+import { CallPlanSharedService } from '../../../../shared/services/callplan/call-plan.shared.service';
 import { RateCardsService } from './../../../../shared/api-services/ratecard/rate-cards.api.service';
 
 @Component({
