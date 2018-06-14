@@ -41,4 +41,15 @@ export class MainTableCommonSharedService {
         return ratesArr;
     };
 
+    // * Remove Ratecards that do not have any rates inside
+    filterOutNoRates(array: any) {
+        const dataArr = [];
+        for ( let i = 0; i < array.length; i++) {
+            if ( array[i].rates.length > 0 ) {
+                dataArr.push( array[i] );
+            }
+        }
+        return dataArr;
+    }
+
 }

@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, ErrorStateMatcher } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl, NgForm, FormGroupDirective } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { CarrierTableComponent } from './../../carrier-table.component';
 
@@ -46,7 +46,7 @@ export class AddCarrierDialogComponent implements OnInit {
     // ================================================================================
     // * Carrier API Services
     // ================================================================================
-    post_addCarrier(body) {
+    post_addCarrier = body => {
         this._carrierService.post_AddRow(body)
             .subscribe(
                 (resp: Response) => {
@@ -65,7 +65,7 @@ export class AddCarrierDialogComponent implements OnInit {
     // ================================================================================
     // * Form Group & Data
     // ================================================================================
-    generateAddCarrierForm() {
+    generateAddCarrierForm = () => {
         return this._formBuilder.group({
             nameCtrl: ['', Validators.required],
             emailCtrl: ['', [Validators.required, Validators.email]],
@@ -77,7 +77,7 @@ export class AddCarrierDialogComponent implements OnInit {
         });
     }
 
-    formCarrierObj() {
+    formCarrierObj = () => {
         return {
             code: this.addCarrierFormGroup.get('codeCtrl').value,
             name: this.addCarrierFormGroup.get('nameCtrl').value,
@@ -92,12 +92,12 @@ export class AddCarrierDialogComponent implements OnInit {
     // ================================================================================
     // * Dialog
     // ================================================================================
-    click_addCarrier(post) {
+    click_addCarrier = (): void => {
         this.post_addCarrier(this.formCarrierObj());
         this.closeDialog();
     }
 
-    closeDialog(): void {
+    closeDialog = (): void => {
       this._dialogRef.close();
     }
 

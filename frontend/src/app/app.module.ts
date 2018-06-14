@@ -155,13 +155,12 @@ import { RegistrationComponent } from './registration/registration.component';
     HttpModule, HttpClientModule, BrowserModule,
     FormsModule, CommonModule, ReactiveFormsModule,
     // Third Party Modules
-    PapaParseModule, SidebarModule,
+    PapaParseModule, SidebarModule, AgGridModule.withComponents([]),
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatDatepickerModule, MatNativeDateModule,
     MatTabsModule, MatAutocompleteModule, MatExpansionModule, MatSliderModule, MatSnackBarModule,
     // Ag Grid & Routing
-    AgGridModule.withComponents([ ]),
     RouterModule.forRoot([
         {path: '', component: DashboardComponent},
         {path: 'dashboard', component: DashboardComponent},

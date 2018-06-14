@@ -56,7 +56,7 @@ export class RatecardViewCarrierPComponent implements OnInit {
     get_specificCarrierRatesByCountry(isoCode: string) {
         this._rateCardsService.get_ratesByCountry(isoCode)
             .subscribe(
-                data => { this.processData(data); console.log(data); }
+                data => { this.processData(data); }
             );
     }
 
@@ -255,9 +255,5 @@ export class RatecardViewCarrierPComponent implements OnInit {
             rowNode.setDataValue('our_rate', ourRateAfterMarkup.toFixed(4));
         });
     }
-
-    // columnEverythingChanged() {
-    //     this.updateOurRateCol(1);
-    // }
 
 }
