@@ -77,7 +77,7 @@ export class RatecardViewCarrierComponent implements OnInit {
     processData(rowData) {
         const rowDataFilteredByTeleU = this.filterByTeleU(rowData);
         const rowDataFilteredForStandard = this.filterByStandard(rowDataFilteredByTeleU);
-        const rowDataFilteredForBlankRates = this._mainTableCommon.filterOutNoRates(rowDataFilteredForStandard);
+        const rowDataFilteredForBlankRates = this._mainTableCommon.filterOutBlankArrays(rowDataFilteredForStandard, 'rates');
 
         const carrierGroupHeadersArr = this._mainTableStd.createColumnGroupHeaders(rowDataFilteredForBlankRates);
         const columnDefsForMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredForBlankRates);

@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class MainTableCommonSharedService {
 
+    // ! Utility functions for formatting ratecard resp into AG Grid format
+
     // * Returns the variance of the given Arr, takes an arr of nums
     returnVariance(array): any {
         const mean = array.reduce((acc, value) => (acc + value) / array.length);
@@ -42,14 +44,7 @@ export class MainTableCommonSharedService {
     };
 
     // * Remove Ratecards that do not have any rates inside
-    filterOutNoRates(array: any) {
-        const dataArr = [];
-        for ( let i = 0; i < array.length; i++) {
-            if ( array[i].rates.length > 0 ) {
-                dataArr.push( array[i] );
-            }
-        }
-        return dataArr;
-    }
+    filterOutBlankArrays = (array, innerArr) => 
+        array.filter( arrItem => arrItem[innerArr].length > 0 );
 
 }

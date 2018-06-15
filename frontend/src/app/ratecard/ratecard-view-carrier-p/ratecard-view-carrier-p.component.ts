@@ -5,6 +5,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { IsoCodesSharedService } from './../../shared/services/ratecard/iso-codes.shared.service';
 import { RateCardsService } from './../../shared/api-services/ratecard/rate-cards.api.service';
 import { MainTablePremSharedService } from './../../shared/services/ratecard/main-table-prem.shared.service';
+import { MainTableCommonSharedService } from './../../shared/services/ratecard/main-table-common.shared.service';
 
 import { saveAs } from 'file-saver/FileSaver';
 
@@ -40,7 +41,8 @@ export class RatecardViewCarrierPComponent implements OnInit {
         private _mainTablePrem: MainTablePremSharedService,
         @Inject(ElementRef) _elementRef: ElementRef,
         private _renderer: Renderer,
-        public _dialog: MatDialog
+        public _dialog: MatDialog,
+        private _mainTableCommon: MainTableCommonSharedService
     ) {
         this.columnDefsCountry = this.createColumnDefsCountry();
         this.columnDefsCarrier = this.createColumnDefsCarrier();
@@ -73,13 +75,14 @@ export class RatecardViewCarrierPComponent implements OnInit {
     processData(rowData) {
         const rowDataFilteredByTeleU = this.filterByTeleU(rowData);
         const rowDataFilteredByPremium = this.filterByPremium(rowDataFilteredByTeleU);
+        const rowDataFilteredForBlankRates = this._mainTableCommon.filterOutBlankArrays(rowDataFilteredByPremium, 'rates');
 
-        const carrierGroupHeadersArr = this._mainTablePrem.createColumnGroupHeaders(rowDataFilteredByPremium);
-        const columnDefsForMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredByPremium);
+        const carrierGroupHeadersArr = this._mainTablePrem.createColumnGroupHeaders(rowDataFilteredForBlankRates);
+        const columnDefsForMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredForBlankRates);
 
-        this.columnDefsMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredByPremium);
+        this.columnDefsMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredForBlankRates);
 
-        const finalRowData = this._mainTablePrem.createRowData(rowDataFilteredByPremium);
+        const finalRowData = this._mainTablePrem.createRowData(rowDataFilteredForBlankRates);
         this.gridApiMain.setRowData(finalRowData);
 
         this.setCarrierRowData(carrierGroupHeadersArr);
