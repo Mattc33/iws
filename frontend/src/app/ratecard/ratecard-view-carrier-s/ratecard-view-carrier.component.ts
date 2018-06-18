@@ -7,8 +7,6 @@ import { RateCardsService } from './../../shared/api-services/ratecard/rate-card
 import { MainTableStdSharedService } from './../../shared/services/ratecard/main-table-std.shared.service';
 import { MainTableCommonSharedService } from './../../shared/services/ratecard/main-table-common.shared.service';
 
-import { saveAs } from 'file-saver/FileSaver';
-
 @Component({
     selector: 'app-ratecard-view-carrier',
     templateUrl: './ratecard-view-carrier.component.html',
@@ -33,8 +31,6 @@ export class RatecardViewCarrierComponent implements OnInit {
     rowSelectionS = 'single';
 
     booleanCountryCarrierSidebar = true;
-
-    q = `Variance Flag, Destination, Prefix, Rate, *1, *2, *3, status, lowest, average, variance, low->high,  \n`;
 
     constructor(
         private _isoCodes: IsoCodesSharedService,
@@ -63,15 +59,46 @@ export class RatecardViewCarrierComponent implements OnInit {
             );
     }
 
-    // * service call to generate AZ ratecards
-    get_specificCarrierRatesByCountryAZ(isoCode: string) {
-        this._rateCardsService.get_ratesByCountry(isoCode)
-            .subscribe(
-                data => {
-                    this.processData(data);
-                    this.addCsvToVariable();
-                }
-            );
+    get_everyCountryRates() {
+        const countryArr = [];
+        for ( let i = 0; i <= 240; i++ ) {
+            this._rateCardsService.get_ratesByCountry(this.rowDataCountry[i].code)
+                .subscribe(
+                    (resp: Response) => {
+
+                        // * doing some pre data filtering
+                        const rowDataFilteredByTeleU = this.filterByTeleU(resp);
+                        const rowDataFilteredByPremium = this.filterByStandard(rowDataFilteredByTeleU);
+                        const rowDataFilteredForBlankRates = this._mainTableCommon.filterOutBlankArrays(rowDataFilteredByPremium, 'rates');
+
+                        // * combine each result into a new array
+                        for ( let x = 0; x < rowDataFilteredForBlankRates.length; x++ ) {
+                            countryArr.push(rowDataFilteredForBlankRates[x]);
+                        }
+
+                        if (i >= 239 ) {
+                            const hash = Object.create(null);
+                            const result = countryArr.filter( (obj) => {
+                                if (!hash[obj.carrier_id]) {
+                                    hash[obj.carrier_id] = obj.rates;
+                                    return true;
+                                }
+                                Array.prototype.push.apply(hash[obj.carrier_id], obj.rates);
+                            });
+
+                            const carrierGroupHeadersArr = this._mainTableStd.createColumnGroupHeaders(result);
+                            const columnDefsForMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, result);
+                    
+                            this.columnDefsMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, result);
+                    
+                            const finalRowData = this._mainTableStd.createRowData(result);
+                            this.gridApiMain.setRowData(finalRowData);
+                    
+                            this.setCarrierRowData(carrierGroupHeadersArr);
+                        }
+                    }
+                )
+        }
     }
 
     processData(rowData) {
@@ -102,10 +129,6 @@ export class RatecardViewCarrierComponent implements OnInit {
             return arrItem.ratecard_tier;
         }
     })
-
-    addCsvToVariable() {
-        this.q += this.getDataAsCSV() + ', \n';
-    }
 
     // ================================================================================
     // AG Grid Init
@@ -167,7 +190,12 @@ export class RatecardViewCarrierComponent implements OnInit {
     onSelectionChangedCountry(params, callback) {
         const selectedCode = this.gridApiCountry.getSelectedRows()[0].code;
         this.gridApiMain.setRowData([]);
-        this.get_specificCarrierRatesByCountry(selectedCode);
+        
+        if ( selectedCode === 'world') {
+            this.get_everyCountryRates();
+        } else {
+            this.get_specificCarrierRatesByCountry(selectedCode);
+        }
     }
 
     // ================================================================================
@@ -216,45 +244,8 @@ export class RatecardViewCarrierComponent implements OnInit {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     exportAsCsv() {
         const exporterParams = {
-            columnKeys: ['destination', 'prefix', 'our_rate', 'our_rate_1p', 'our_rate_2p', 'our_rate_3p', 'lowest_rate',
-                'average', 'variance', 'lowhigh'],
-            skipHeader: true
         };
         this.gridApiMain.exportDataAsCsv(exporterParams);
-    }
-
-    click_exportAsAZCsv(getDataCallback, saveFileCallback) {
-        this.exportAsAZCsv();
-    }
-
-    exportAsAZCsv() {
-        const countryLen = this.rowDataCountry.length;
-
-        for ( let i = 0; i < 241; i++ ) {
-            this.get_specificCarrierRatesByCountryAZ(this.rowDataCountry[i].code);
-        }
-    }
-
-    getDataAsCSV() {
-        const exporterParams = {
-            columnKeys: ['high_variance', 'destination', 'prefix', 'our_rate', 'our_rate_1p', 'our_rate_2p', 'our_rate_3p', 'status',
-            'lowest_rate', 'average', 'variance', 'lowhigh'],
-            skipHeader: true
-        };
-        return this.gridApiMain.getDataAsCsv(exporterParams);
-    }
-
-    /**
-     * ? Test Function? How to trigger a callback when this.q variable contains the entire csv file
-     */
-    test() {
-        this.saveToFileSystem(this.q, 'ObieTel_AZ_STD');
-    }
-
-    saveToFileSystem(csv, filenameinput) {
-        const filename = filenameinput;
-        const blob = new Blob([csv], { type: 'text/csv' });
-        saveAs(blob, filename);
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

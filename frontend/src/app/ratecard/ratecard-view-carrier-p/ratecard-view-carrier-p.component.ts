@@ -7,8 +7,6 @@ import { RateCardsService } from './../../shared/api-services/ratecard/rate-card
 import { MainTablePremSharedService } from './../../shared/services/ratecard/main-table-prem.shared.service';
 import { MainTableCommonSharedService } from './../../shared/services/ratecard/main-table-common.shared.service';
 
-import { saveAs } from 'file-saver/FileSaver';
-
 @Component({
     selector: 'app-ratecard-view-carrier-p',
     templateUrl: './ratecard-view-carrier-p.component.html',
@@ -34,7 +32,6 @@ export class RatecardViewCarrierPComponent implements OnInit {
 
     booleanCountryCarrierSidebar = true;
 
-    q = '';
     constructor(
         private _isoCodes: IsoCodesSharedService,
         private _rateCardsService: RateCardsService,
@@ -62,14 +59,46 @@ export class RatecardViewCarrierPComponent implements OnInit {
             );
     }
 
-    get_specificCarrierRatesByCountryAZ(isoCode: string) {
-        this._rateCardsService.get_ratesByCountry(isoCode)
-            .subscribe(
-                data => {
-                    this.processData(data);
-                    this.q += this.getDataAsCSV() + ', \n';
-                }
-            );
+    get_everyCountryRates() {
+        const countryArr = [];
+        for ( let i = 0; i <= 240; i++ ) {
+            this._rateCardsService.get_ratesByCountry(this.rowDataCountry[i].code)
+                .subscribe(
+                    (resp: Response) => {
+
+                        // * doing some pre data filtering
+                        const rowDataFilteredByTeleU = this.filterByTeleU(resp);
+                        const rowDataFilteredByPremium = this.filterByPremium(rowDataFilteredByTeleU);
+                        const rowDataFilteredForBlankRates = this._mainTableCommon.filterOutBlankArrays(rowDataFilteredByPremium, 'rates');
+
+                        // * combine each result into a new array
+                        for ( let x = 0; x < rowDataFilteredForBlankRates.length; x++ ) {
+                            countryArr.push(rowDataFilteredForBlankRates[x]);
+                        }
+
+                        if (i >= 230 ) {
+                            const hash = Object.create(null);
+                            const result = countryArr.filter( (obj) => {
+                                if (!hash[obj.carrier_id]) {
+                                    hash[obj.carrier_id] = obj.rates;
+                                    return true;
+                                }
+                                Array.prototype.push.apply(hash[obj.carrier_id], obj.rates);
+                            });
+
+                            const carrierGroupHeadersArr = this._mainTablePrem.createColumnGroupHeaders(result);
+                            const columnDefsForMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, result);
+                    
+                            this.columnDefsMain = this._mainTablePrem.createCarrierColumnDefs(carrierGroupHeadersArr, result);
+                    
+                            const finalRowData = this._mainTablePrem.createRowData(result);
+                            this.gridApiMain.setRowData(finalRowData);
+                    
+                            this.setCarrierRowData(carrierGroupHeadersArr);
+                        }
+                    }
+                )
+        }
     }
 
     processData(rowData) {
@@ -161,7 +190,12 @@ export class RatecardViewCarrierPComponent implements OnInit {
     onSelectionChangedCountry(params, callback) {
         const selectedCode = this.gridApiCountry.getSelectedRows()[0].code;
         this.gridApiMain.setRowData([]);
-        this.get_specificCarrierRatesByCountry(selectedCode);
+
+        if ( selectedCode === 'world') {
+            this.get_everyCountryRates();
+        } else {
+            this.get_specificCarrierRatesByCountry(selectedCode);
+        }
     }
 
     // ================================================================================
@@ -210,38 +244,9 @@ export class RatecardViewCarrierPComponent implements OnInit {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     exportAsCsv() {
         const exporterParams = {
-            columnKeys: ['prefix', 'destination', 'our_rate', 'our_rate_2p', 'our_rate_3p', 'lowest_rate',
-                'average', 'variance', 'lowhigh'],
-            skipHeader: true
+
         };
         this.gridApiMain.exportDataAsCsv(exporterParams);
-    }
-
-    exportAsAZCsv() {
-        const countryLen = this.rowDataCountry.length;
-
-        for ( let i = 230; i < 240; i++ ) {
-            this.get_specificCarrierRatesByCountryAZ(this.rowDataCountry[i].code);
-        }
-    }
-
-    getDataAsCSV() {
-        const exporterParams = {
-            columnKeys: ['prefix', 'destination', 'our_rate', 'our_rate_2p', 'our_rate_3p', 'lowest_rate',
-            'average', 'variance', 'lowhigh'],
-            skipHeader: true
-        };
-        return this.gridApiMain.getDataAsCsv(exporterParams);
-    }
-
-    test() {
-        // this.saveToFileSystem(this.q, 'ObieTel_AZ_STD');
-    }
-
-    saveToFileSystem(csv, filenameinput) {
-        const filename = filenameinput;
-        const blob = new Blob([csv], { type: 'text/plain' });
-        saveAs(blob, filename);
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

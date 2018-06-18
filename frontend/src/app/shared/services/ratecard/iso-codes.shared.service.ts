@@ -5,6 +5,11 @@ export class IsoCodesSharedService {
     getCountryCodes() {
         return [
               {
+                'country': 'World',
+                'code': 'world',
+                'call_code': '000'
+              },
+              {
                 'country': 'Afghanistan',
                 'code': 'af',
                 'call_code': '93'
@@ -1206,5 +1211,7 @@ export class IsoCodesSharedService {
               }
         ];
     }
+
+    
 
 }
