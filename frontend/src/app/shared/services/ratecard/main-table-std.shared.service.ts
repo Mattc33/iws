@@ -89,12 +89,32 @@ export class MainTableStdSharedService {
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
                     },
                     {
-                        headerName: 'Our Rates', field: 'our_rate', width: 120, colId: 'our_rate',
+                        headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
-                            const ratesArr = _mainTableCommon.extractRates(params);
+                            const ratesArr = _mainTableCommon.extractRates(params).sort();
                             const min = Math.min(...ratesArr).toFixed(4);
-                            return min;
+                            const minToNum = parseFloat(min) * 1.02;
+                            return minToNum.toFixed(4);
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
+                    },
+                    {
+                        headerName: 'Effective from', field: '', width: 140, colId: 'eff_date',
+                        filter: 'agDateColumnFilter', lockPosition: true,
+                        valueGetter() {
+                            const d = new Date();
+                            const month = d.getMonth() + 1;
+                            const date = `${d.getFullYear()}.${month}.${d.getDate()}`;
+                            return date;
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
+                    },
+                    {
+                        headerName: 'Status', field: 'status', width: 100, colId: 'status',
+                        editable: true, lockPosition: true,
+                        valueGetter() {
+                            return 'current';
                         },
                         cellStyle: { 'border-right': '1px solid #000000' }
                     },
@@ -110,17 +130,6 @@ export class MainTableStdSharedService {
                         cellStyle: { 'border-right': '1px solid #E0E0E0' }
                     },
                     {
-                        headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
-                        valueGetter(params) {
-                            const ratesArr = _mainTableCommon.extractRates(params).sort();
-                            const min = Math.min(...ratesArr).toFixed(4);
-                            const minToNum = parseFloat(min) * 1.02;
-                            return minToNum.toFixed(4);
-                        },
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
-                    },
-                    {
                         headerName: '* 3%', field: 'our_rate_3p', width: 100, colId: 'our_rate_3p',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
@@ -130,15 +139,7 @@ export class MainTableStdSharedService {
                             return minToNum.toFixed(4);
                         },
                         cellStyle: { 'border-right': '1px solid #000000' }
-                    },
-                    {
-                        headerName: 'Status', field: 'status', width: 100, colId: 'status',
-                        editable: true, lockPosition: true,
-                        valueGetter() {
-                            return 'current';
-                        },
-                        cellStyle: { 'border-right': '1px solid #000000' }
-                    },
+                    }
                 ]
             },
             {
