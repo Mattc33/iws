@@ -8,10 +8,22 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> d0796d341278edde6651eb5f1e2a89b4a7f59311
             "program": "${workspaceFolder}/serve",
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/dist/out-tsc/**/*.js"
+<<<<<<< HEAD
+=======
+=======
+            "program": "${workspaceFolder}/frontend/src/app/carrier/carrier-table/carrier-table.component.ts",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+>>>>>>> 344a86617cf386f942de2d0f7f0482ad9a7a8102
+>>>>>>> d0796d341278edde6651eb5f1e2a89b4a7f59311
             ]
         }
     ]
