@@ -1,0 +1,12 @@
+form {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+}
+
+button {
+    border: 1px solid black;
+}
+
+.submit {
+    margin-left: 5px;
+}

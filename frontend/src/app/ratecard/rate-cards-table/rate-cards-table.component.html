@@ -1,0 +1,96 @@
+<section id="grid-wrapper">
+    <div class="all-ratecards-container">
+        <div class="top-toolbar">
+            <button (click)="expandAll(true)"> <i class="fas fa-expand"></i> </button>
+            <button (click)="expandAll(false)"> <i class="fas fa-compress"></i> </button>
+        </div>
+        <ag-grid-angular class="ag-theme-balham" id="all-ratecards-table"
+            [getNodeChildDetails]="getNodeChildDetails"
+            [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+            [rowSelection]="rowSelectionTypeS" (selectionChanged)="aggrid_selectionChanged($event)" (rowSelected)="rowSelected($event)"
+            [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [singleClickEdit]="true" [suppressRowClickSelection]="true"
+            [floatingFilter]="true" [enableSorting]="true"
+            [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
+            [pagination]="true" [paginationAutoPageSize]="true"
+            [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
+
+            [enableCellChangeFlash]="true"
+
+            (gridReady)="on_GridReady($event)"
+        >
+        </ag-grid-angular>
+
+        <mat-toolbar-row>
+            <button (click)="openDialogDelRatecard()" [disabled]="toggleButtonStates()"> <i class="fas fa-trash-alt"></i> </button>
+            
+            <mat-form-field class="search-bar">
+                    <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
+                    <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+            </mat-form-field>
+        </mat-toolbar-row>
+    </div>
+
+    <div class="details-container">
+        <mat-tab-group>
+           <mat-tab label="Rates">
+                <ag-grid-angular class="ag-theme-balham" id="rates-table" [animateRows]="true"
+                    [columnDefs]="columnDefsRates" [rowData]="" 
+                    [enableColResize]="true"
+                    [rowSelection]="rowSelectionTypeM" (selectionChanged)="aggrid_rates_selectionChanged($event)"  [suppressRowClickSelection]="true"
+                    (cellValueChanged)="aggrid_onCellValueChanged_rates($event)"
+                    [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true"
+                    [enableFilter]="true" [floatingFilter]="true" [enableSorting]="true"
+                    [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
+                    [pagination]="true" [paginationAutoPageSize]="true"
+                    [headerHeight]="40" [floatingFiltersHeight]="30"
+                
+                    [enableCellChangeFlash]="true"
+                
+                    (gridReady)="on_GridReady_Rates($event)"
+                >
+                </ag-grid-angular>
+                <mat-toolbar-row>
+                    <button (click)="openDialogDelRates()" class="del"> <i class="fas fa-trash-alt"></i> </button>
+                    <!-- <button (click)="openDialogUpload()" class="upload-ratecards"> <i class="fas fa-upload"></i> Rate Card</button> -->
+                    
+                    <mat-form-field class="search-bar">
+                            <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
+                            <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+                    </mat-form-field>
+                            
+                </mat-toolbar-row>
+            </mat-tab>
+            <mat-tab label="Trunks">
+                <ag-grid-angular class="ag-theme-balham" id="trunks-table"
+                    [columnDefs]="columnDefsTrunks" [rowData]="" [animateRows]="true"
+                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_trunks_selectionChanged($event)" (rowSelected)="rowSelected_trunks($event)"
+                    [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)" [suppressRowClickSelection]="true"
+                    [floatingFilter]="true"
+                    [enableSorting]="true"
+                    [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
+                    [pagination]="true" [paginationAutoPageSize]="true"
+                    [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+                    [headerHeight]="40" [floatingFiltersHeight]="30"
+        
+                    [enableCellChangeFlash]="true"
+        
+                    (gridReady)="on_GridReady_Trunks($event)"
+                >
+                </ag-grid-angular>
+                <mat-toolbar-row>
+                    <button (click)="openDialogDetachTrunks()" [disabled]="toggleButtonStates_trunks()" class="del"> <i class="fas fa-trash-alt"></i> </button>
+                    <mat-form-field class="search-bar">
+                            <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
+                            <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+                    </mat-form-field>
+                </mat-toolbar-row>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</section>
+
+
+
+
+

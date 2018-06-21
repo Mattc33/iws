@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # IWS
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.3.
@@ -25,3 +26,6 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+=======
+# IWS
+>>>>>>> 344a86617cf386f942de2d0f7f0482ad9a7a8102

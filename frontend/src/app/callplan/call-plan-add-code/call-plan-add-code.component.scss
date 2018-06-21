@@ -1,0 +1,86 @@
+section {
+    margin-top: 5px; margin-left: 5px; margin-right: 5px;
+    display: flex;
+
+    button {
+        border: 1px solid black;
+        margin-right: 5px;
+    }
+
+    .callplan-container {
+        flex: 1; height: auto;
+
+        #callplan-table {
+            width: 100%; height: 85vh;
+        }
+    }
+
+    .stepper-container {
+        flex: 2; height: 85vh;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+
+            mat-form-field {    
+                flex: 1;
+                padding-left: 5%;
+                padding-right: 5%;
+            }
+        }
+
+        .stepper-controls {
+            padding-left: 5%;
+            padding-right: 5%;
+            margin-top: 1%;
+        }
+
+        .attachcodes-form {
+            width: 100%; height: 85vh;
+            overflow-y: auto;
+
+            div {
+                display: flex;
+
+                .country-code-trash {
+                    border: none;
+        
+                    &:hover {
+                        color: red;
+                    }
+
+                    &:focus {
+                        outline: 0;
+                    }
+                }
+
+                .addcodes-container {       
+                    display: flex;
+                    flex: 9;
+
+                    .origination-section {
+                        flex: 1;
+                    }
+        
+                    .destination-section {
+                        flex: 2;
+                    }
+        
+                    mat-form-field {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+
+    .finalCodesObj-preview {
+        width: 100%;
+        height: 40vh;
+    }
+
+    // /deep/ .mat-horizontal-stepper-header{ // disable svg
+    //     pointer-events: none !important;
+    // }
+}

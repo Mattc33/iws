@@ -1,0 +1,40 @@
+{
+  "name": "PNG TEST teleu_DB",
+  "carrier_id": 34,
+  "addToTeleU": true,
+  "teleUMarkup": 1.1,
+  "asAPrivate": true,
+  "privateMarkup": 1.05,
+  "rates": [
+    {
+      "destination": "VIETNAM - MOBILE - VINAPHONE",
+      "prefix": "84127",
+      "buy_rate": 0.0498,
+      "buy_rate_minimum": 1,
+      "buy_rate_increment": 1,
+      "sell_rate": 0.0498,
+      "sell_rate_minimum": 60,
+      "sell_rate_increment": 60
+    },
+    {
+      "destination": "VIETNAM - MOBILE - VINAPHONE",
+      "prefix": "84129",
+      "buy_rate": 0.0498,
+      "buy_rate_minimum": 1,
+      "buy_rate_increment": 1,
+      "sell_rate": 0.0498,
+      "sell_rate_minimum": 60,
+      "sell_rate_increment": 60
+    },
+    {
+      "destination": "VIETNAM - PROPER",
+      "prefix": "84",
+      "buy_rate": 0.0504,
+      "buy_rate_minimum": 1,
+      "buy_rate_increment": 1,
+      "sell_rate": 0.0504,
+      "sell_rate_minimum": 60,
+      "sell_rate_increment": 60
+    }
+  ]
+}
