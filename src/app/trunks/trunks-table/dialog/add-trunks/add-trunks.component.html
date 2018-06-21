@@ -1,0 +1,102 @@
+<mat-horizontal-stepper linear> <!-- linear forces user to complete ea step -->
+
+    <!-- Choose Carrier Step -->
+    <mat-step [stepControl]="carrierFormGroup" [completed]="false">
+    <form [formGroup]="carrierFormGroup">
+        <ng-template matStepLabel>Choose Carrier</ng-template>
+        <mat-form-field>
+            <mat-select placeholder="Carrier" formControlName="carrierCtrl">
+            <mat-option *ngFor="let carrier of carrierNames" [value]="carrier.name">
+                {{carrier.name}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+            <button mat-button matStepperNext [disabled]="carrierFormGroup.invalid"> Next </button>
+        </div>
+    </form>
+    </mat-step>
+    
+    <!-- Enter Trunks Info Step -->
+    <mat-step [stepControl]="trunksFormGroup" [completed]="false">
+    <form [formGroup]="trunksFormGroup">
+        <ng-template matStepLabel>Enter Trunks Information</ng-template>
+
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Trunk Name" formControlName="nameCtrl" />
+            <mat-error *ngIf="trunksFormGroup.get('nameCtrl').hasError('required')">
+                Name is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-half-width">
+            <input matInput placeholder="Trunk IP" formControlName="ipCtrl" />
+            <mat-error *ngIf="trunksFormGroup.get('ipCtrl').hasError('required')">
+                Trunk Ip is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-half-width">
+            <input matInput placeholder="Trunk Port" formControlName="portCtrl" />
+            <mat-error *ngIf="trunksFormGroup.get('portCtrl').hasError('required')">
+                Trunk Port is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-half-width">
+            <mat-select placeholder="Trasport Method" formControlName="transportCtrl">
+                <mat-option *ngFor="let option of transportMethods" [value]="option.value">
+                    {{option.value}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="input-half-width">
+            <mat-select placeholder="Direction" formControlName="directionCtrl">
+                <mat-option *ngFor="let option of directionValues" [value]="option.value">
+                    {{option.value}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="input-half-width">
+            <input matInput placeholder="Trunk Prefix" formControlName="prefixCtrl" />
+        </mat-form-field>
+
+        <mat-form-field class="input-half-width">
+            <mat-select placeholder="Active?" formControlName="activeCtrl">
+                <mat-option *ngFor="let option of activeValues" [value]="option.value">
+                    {{option.value}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Meta Data" formControlName="metadataCtrl" />
+            <mat-error *ngIf="trunksFormGroup.get('metadataCtrl').hasError('required')">
+                Meta Data is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <div class="button-group">
+            <button mat-button matStepperPrevious >Back</button>
+            <button mat-button matStepperNext [disabled]="!trunksFormGroup.valid" (click)="createTrunkObj()">Next</button>
+            <button mat-button (click)="insertTrunkTestData()"> Insert Test Data </button>
+        </div>
+    </form>
+    </mat-step>
+    
+    <!-- Details & Finalize  -->
+    <mat-step [completed]="false">
+        <ng-template matStepLabel>Review, Submit</ng-template>
+            <div class="details">
+                <pre>{{finalTrunkObj | json}}</pre>
+                Press Submit to add new rate card. <br><br>
+            </div>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>  
+            <button mat-button (click)="click_addTrunks()">Submit</button>
+        </div>
+    </mat-step>
+    
+</mat-horizontal-stepper>

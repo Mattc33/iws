@@ -1,0 +1,139 @@
+<mat-horizontal-stepper> <!-- linear forces user to complete ea step -->
+    
+    <!-- Choose Carrier Step -->
+    <mat-step [stepControl]="carrierFormGroup" [completed]="false">
+        <form [formGroup]="carrierFormGroup">
+            <ng-template matStepLabel>Choose Carrier</ng-template>
+            <mat-form-field>
+                <mat-select placeholder="Carriers" formControlName="carrierCtrl">
+                    <mat-option *ngFor="let option of carrierObj" [value]="option.id" >
+                        {{option.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class='profiles'>
+                <b>Availiable Profiles</b> <br>
+                Profiles trigger on matching an exact Carrier Name string. <br><br>
+                PowerNet Global, VoxBeam, Alcazar, Bankai Group, PCCW Global, StarSSip, Teleinx, VoiPlatinum Portal, VOIP Routes
+            </div>
+            <div>
+                <button mat-button matStepperNext [disabled]="!carrierFormGroup.valid"> Next </button>
+            </div>
+        </form>
+    </mat-step>
+    
+    <!-- Choose Rate Card Step -->
+    <mat-step [stepControl]="ratecardFormGroup" [completed]="false">
+        <form [formGroup]="ratecardFormGroup">
+            <ng-template matStepLabel>Enter Rate Card Name</ng-template>
+                <mat-form-field>
+                    <input matInput placeholder="Enter Ratecard Name" formControlName="ratecardCtrl">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-select placeholder="Choose Ratecard Tier" formControlName="ratecardTierCtrl">
+                        <mat-option *ngFor="let tier of ratecardTier" [value]="tier.value" >
+                            {{tier.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            <div>
+                <button mat-button matStepperPrevious >Back</button>
+                <button mat-button matStepperNext [disabled]="!ratecardFormGroup.valid"> Next </button>
+            </div>
+        </form>
+    </mat-step>
+    
+    <!-- Choose Sell Rate Mark up Step -->
+    <mat-step [stepControl]="percentFormGroup" [completed]="false">
+        <form [formGroup]="percentFormGroup" class="rate-modifier-step">
+            <ng-template matStepLabel>Choose Upload Parameters</ng-template>
+
+            <div class="rate-modifier-form-group">
+                <div class="toggle-checkbox">
+                    <mat-checkbox disableRipple formControlName="teleUCheckboxCtrl">Add to Wholesale</mat-checkbox>
+                </div>
+                <mat-form-field class="percent-input">
+                    <input matInput placeholder="Enter Markup" formControlName="teleUPercentCtrl" (change)="getMarkupTeleuAsPercent()">
+                </mat-form-field>
+                <div class="percent-display">
+                    {{ getMarkupTeleuAsPercent() }}%
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="rate-modifier-form-group">
+                <div class="toggle-checkbox">
+                    <mat-checkbox disableRipple formControlName="privateCheckboxCtrl" [disabled]="true">As Private Offer</mat-checkbox> 
+                </div>
+                <mat-form-field class="percent-input">
+                    <input matInput placeholder="Enter Markup" formControlName="privatePercentCtrl" (change)="getMarkupPrivateAsPercent()">
+                </mat-form-field>
+                <div class="percent-display">
+                    {{ getMarkupPrivateAsPercent() }}%
+                </div>
+            </div>
+
+            <div>
+                <button mat-button matStepperPrevious >Back</button>
+                <button mat-button matStepperNext (click)="clickConstructJson()"> Next</button>
+            </div>
+        </form>
+    </mat-step>
+    
+    <!-- Upload Rates Step -->
+    <mat-step [stepControl]="uploadRatesFormGroup" [completed]="false">
+        <form [formGroup]="uploadRatesFormGroup">
+            <ng-template matStepLabel>Upload CSV</ng-template>
+            <button class="uploadBtn" mat-button (click)="fileInput.click()">
+                <span>Select CSV File</span>
+                <input #fileInput type="file" (change)="changeListenerUploadBtn($event)" accept=".csv" formControlName="uploadRatesCtrl" style="display:none;" />
+            </button>
+            <div>
+                <b>File Name:</b> {{fileName}} <br>
+                <b>Rates Inserted:</b> {{ratesPreviewObj.length}} <br>
+                <b>Preview First 3 rates:</b> <br>
+                <pre>{{ratesPreviewObj[0] | json }} {{ratesPreviewObj[1] | json }} {{ratesPreviewObj[2] | json }}</pre>
+            </div>
+            <div>
+                <button mat-button matStepperPrevious >Back</button>
+                <button mat-button matStepperNext [disabled]="uploadValidator()"> Next </button>
+            </div>
+        </form>
+    </mat-step>
+    
+    <!-- Details & Finalize  -->
+    <mat-step [completed]="false">
+        <ng-template matStepLabel>Review</ng-template>
+        <div class="details">
+            <pre>{{finalRatecardPreviewObj | json}}</pre>
+        </div>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext (click)="post_addRates()" >Next</button>
+        </div>
+    </mat-step>
+
+    <!-- Add Trunks -->
+    <mat-step [completed]="false">
+        <ng-template matStepLabel>Attach Trunk to Ratecards, Submit</ng-template>
+        <ag-grid-angular id="trunks-table" class="ag-theme-balham" [animateRows]="true"
+        [columnDefs]="columnDefs" [rowData]="rowData" [suppressRowClickSelection]="true" (rowSelected)="rowSelected($event)"
+        [rowSelection]="rowSelection"
+        [enableFilter]="true" [floatingFilter]="true"
+        [enableSorting]="true" [enableColResize]="true"
+        [pagination]="true" [paginationAutoPageSize]="true"
+        [suppressNoRowsOverlay]="true" [enableCellChangeFlash]="true"
+        [headerHeight]="40" [floatingFiltersHeight]="30"
+
+        (gridReady)="on_GridReady($event)"
+    >
+    </ag-grid-angular>
+    <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="click_addRates()" [disabled]="toggleButtonStates()">Submit</button>
+        Total Rates Processed: <b>{{totalRatesProcessed}}</b>
+    </div>
+    </mat-step>
+    
+</mat-horizontal-stepper>

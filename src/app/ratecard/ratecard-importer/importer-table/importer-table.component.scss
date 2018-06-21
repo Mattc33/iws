@@ -1,0 +1,106 @@
+section {
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+
+    .table-container {
+        width: 100%; height: 100%;
+        float: left;
+    
+        ag-grid-angular {
+            width: 99.7%; height: 85vh;
+
+            /deep/ .teleu-buyrate-highlight { color: #ffffff; font-weight: bold; background-color: #006400; }
+            /deep/ .teleu_db-buyrate-highlight { color: #ffffff; font-weight: bold; background-color: #8b0000 }
+        }
+
+        .top-toolbar {
+            height: 30px;
+
+            button {
+                width: 30px; height: 30px;
+                background-color: Transparent;
+                border: none;
+            }
+
+            button:hover {
+                background-color: #E0E0E0;
+            }
+
+            button:focus {
+                outline:0;
+            }
+        }
+
+        mat-toolbar-row {
+            height: auto;
+
+            button {
+                background-color: Transparent;
+                width: auto;
+                height: 30px;
+                padding: 5px;
+                border: 1px solid #E0E0E0;
+            }
+
+            button:hover {
+                background-color: #E0E0E0;
+            }
+
+            button:focus {
+                outline: 0;
+            }
+
+            mat-form-field {
+                font-size: 14px;
+            }
+
+            .search-bar {
+                float: right; position: relative;
+                width: 40%;
+                padding-right: 5px;
+                margin-top: -10px;
+            }
+
+        }
+    }
+
+    .ag-header-row {
+        font-weight: bolder;
+        font-size: 1em;
+    }
+
+    .selectedRow {
+
+        div:nth-child(1) {
+            background-color: #ffffff;
+        }
+    }
+
+    .ag-header-container {
+        //background-color: rgba(243, 156, 18, .8);
+        border-color: #ffffff;
+    }
+
+    .ag-paging-panel {
+        //background-color: rgba(243, 156, 18, .8);
+    }
+
+    .ag-header-cell {
+        border-bottom: 1px solid #ffffff;
+    }
+
+    .ag-header-cell-resize {
+        width: 1.5px;
+        color: #ffffff;
+    }
+
+    .ag-theme-balham .ag-floating-filter-body input {
+        border-bottom: 1.5px solid #ffffff;
+    }
+
+    .add, .del {
+        border: 1px solid black;
+    }
+
+}
