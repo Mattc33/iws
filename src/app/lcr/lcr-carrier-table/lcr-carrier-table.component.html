@@ -1,0 +1,16 @@
+<section>
+    <div class="lcr-carrier-all-container">
+        <ag-grid-angular id="carrier-table" class="ag-theme-balham" 
+            [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+            [enableFilter]="true" [floatingFilter]="true"
+            [rowSelection]="rowSelection" (selectionChanged)="selectionChanged($event)" [suppressRowClickSelection]="true"
+            [enableSorting]="true"
+            [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
+            [pagination]="true" [paginationAutoPageSize]="true"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
+        
+            (gridReady)="on_gridReady($event)"
+        >
+        </ag-grid-angular>
+    </div>
+</section>

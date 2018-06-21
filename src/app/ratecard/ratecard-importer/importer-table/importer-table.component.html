@@ -1,0 +1,34 @@
+<section id="grid-wrapper">
+    <div class="table-container">
+        <div class="top-toolbar">
+            <button (click)="expandAll(true)"> <i class="fas fa-expand"></i> </button>
+            <button (click)="expandAll(false)"> <i class="fas fa-compress"></i> </button>
+        </div>
+        
+        <ag-grid-angular class="ag-theme-balham" 
+        [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+        [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"
+        [floatingFilter]="true" [enableSorting]="true"
+        [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
+        [pagination]="true" [paginationAutoPageSize]="true"
+        [getNodeChildDetails]="getNodeChildDetails"
+        [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+        [headerHeight]="40" [floatingFiltersHeight]="30"
+
+        [enableCellChangeFlash]="true"
+
+        (gridReady)="on_GridReady($event)"
+        >
+        </ag-grid-angular>
+
+        <mat-toolbar-row>
+            <button (click)="openDialogUpload()"> <i class="fas fa-upload"></i> Rate Card</button>
+            <span> (Rates from CSV/Total Rates processed)  <b>{{totalRatesFromCSV}}/{{totalRatesProcessed}}</b></span>
+            <mat-form-field class="search-bar">
+                    <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
+                    <input matInput placeholder="Search Table..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+            </mat-form-field>
+        </mat-toolbar-row>
+    </div>
+
+</section>

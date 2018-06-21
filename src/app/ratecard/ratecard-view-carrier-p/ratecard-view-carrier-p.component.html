@@ -1,0 +1,59 @@
+<!-- Container for sidebar(s) + page content -->
+<ng-sidebar-container>
+
+    <!-- Carrier | Country sidebar -->
+    <ng-sidebar [(opened)]="booleanCountryCarrierSidebar" position="right" >
+        <div class="country-carrier-picker-container" [style.width]="countryCarrierPanelWidth">
+            <ag-grid-angular class="ag-theme-balham" id="country-picker-table"
+                [columnDefs]="columnDefsCountry" [rowData]="rowDataCountry"
+                [rowSelection]="rowSelectionS" (selectionChanged)="onSelectionChangedCountry($event)" [suppressRowClickSelection]="true"
+                [floatingFilter]="true" [enableSorting]="true" (gridSizeChanged)="gridSizeChanged($event)"
+                [headerHeight]="40" [floatingFiltersHeight]="30"
+
+                (gridReady)="on_GridReady_country($event)"
+            >
+            </ag-grid-angular>
+            <ag-grid-angular class="ag-theme-balham" id="carrier-picker-table"
+                [columnDefs]="columnDefsCarrier" [rowData]=""
+                [rowSelection]="rowSelectionM" (rowSelected)="rowSelectedCarrier($event)" [suppressRowClickSelection]="true"
+                [floatingFilter]="true" (gridSizeChanged)="gridSizeChanged($event)"
+                [headerHeight]="40" [floatingFiltersHeight]="30"
+
+                (gridReady)="on_GridReady_carrier($event)"
+            >
+            </ag-grid-angular>
+        </div>
+    </ng-sidebar>
+    
+    <!-- Page content -->
+    <div ng-sidebar-content>
+        <div class="top-table-toolbar">
+            <div class="toggle-filter-menu">
+            </div>
+            <div class="toggle-country-carrier-menu">
+                <button (click)="toggleCountryCarrierSidebar()"> <i class="fas fa-globe"></i> <span class="country-carrier-header">Country | Carrier</span></button>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <ag-grid-angular class="ag-theme-balham" id="main-table"
+                [columnDefs]="columnDefsMain" [rowData]="" [animateRows]="true"
+                [suppressRowClickSelection]="true"
+                [floatingFilter]="true" [enableSorting]="true"
+                [enableColResize]="true"
+                [suppressDragLeaveHidesColumns]="true"
+                [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+                [headerHeight]="40" [floatingFiltersHeight]="30"
+                [enableCellChangeFlash]="true"
+
+                (gridReady)="on_GridReady($event)"
+            >
+            </ag-grid-angular>
+
+        </div>
+        <button mat-button class="export" (click)="exportAsCsv()">Export as CSV</button>
+    </div>
+    
+</ng-sidebar-container>
+
+

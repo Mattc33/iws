@@ -1,0 +1,32 @@
+section {
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    overflow: hidden;
+
+    .lcr-callplan-all-container {
+        width: 40%; height: 100%;
+        float: left;
+
+        #callplan-table {
+            width: 99.7%; height: 84vh;
+            float: left;
+        }
+    }
+    
+    .lcr-callplan-detail-container {
+        width: 60%; height: 100%;
+        float: left;
+
+        #callplan-detail-table {
+            width: 99.7%; height: 100px;
+            float: left;
+        }
+
+        #callplan-detail-table2 {
+            width: 99.7%; height: 100px;
+            float: left;
+        }
+    }
+
+}

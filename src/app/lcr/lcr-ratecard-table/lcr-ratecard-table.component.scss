@@ -1,0 +1,27 @@
+section {
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    overflow: hidden;
+
+    .lcr-ratecard-all-container {
+        width: 40%; height: 100%;
+        float: left;
+
+        #ratecard-table {
+            width: 99.7%; height: 84vh;
+            float: left;
+        }
+    }
+    
+    .lcr-rates-container {
+        width: 60%; height: 100%;
+        float: left;
+
+        #rates-table {
+            width: 100%; height: 84vh;
+            float: left;
+        }
+    }
+
+}

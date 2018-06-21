@@ -1,0 +1,5 @@
+<main class="app-container">
+    <app-top-nav (sidenavToggleEvent)="eventReceiveSidenavToggle($event)"></app-top-nav>
+    <app-side-nav (toChildSidenavToggleEvent)="parentMessage"></app-side-nav>
+    <section [class.active]="isSideBarMini"><router-outlet></router-outlet></section>
+</main>
