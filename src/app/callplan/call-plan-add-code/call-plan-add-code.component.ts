@@ -20,15 +20,15 @@ export class CallPlanAddCodeComponent implements OnInit {
     // AG Grid
     rowDataCallplan; columnDefsCallplan;
 
-    private gridApiCallplan: GridApi;
-    private rowSelectionS = 'single';
+    gridApiCallplan: GridApi;
+    rowSelectionS = 'single';
 
-    private gridSelectionStatus: number;
+    gridSelectionStatus: number;
 
     // Form Group
-    private addCodeInfoFormGroup: FormGroup;
-    private attachCodesFormGroup: FormGroup;
-    private attachCountryCodesFormGroup: FormGroup;
+    addCodeInfoFormGroup: FormGroup;
+    attachCodesFormGroup: FormGroup;
+    attachCountryCodesFormGroup: FormGroup;
 
     // Form Data
     codePlanTypes;
@@ -38,7 +38,7 @@ export class CallPlanAddCodeComponent implements OnInit {
     finalCodesObj = [];
 
     // Class data
-    private callplanId;
+    callplanId;
 
     constructor(
         private callplanService: CallPlanService,

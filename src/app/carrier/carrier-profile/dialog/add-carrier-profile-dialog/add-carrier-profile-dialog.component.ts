@@ -14,11 +14,11 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
 export class AddCarrierProfileDialogComponent implements OnInit {
 
     // * Form Group
-    private addCarrierProfileFormGroup: FormGroup;
+    addCarrierProfileFormGroup: FormGroup;
 
     // * Props
-    private carrierObj;
-    private profilePreviewObj = {};
+    carrierObj;
+    profilePreviewObj = {};
 
     constructor(
         public _dialogRef: MatDialogRef <CarrierProfileComponent>,
@@ -111,7 +111,7 @@ export class AddCarrierProfileDialogComponent implements OnInit {
         this.formCarrierProfilePreview();
     }
 
-    click_sendProfileReq(post) {
+    click_sendProfileReq() {
         this.post_addCarrierProfile(this.formCarrierProfileObj());
         this.closeDialog();
     }

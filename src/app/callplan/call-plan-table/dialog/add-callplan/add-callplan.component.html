@@ -170,7 +170,7 @@
 
             <mat-form-field> 
                 <mat-select placeholder="Plan Type" formControlName="plantypeCtrl">
-                    <mat-option *ngFor="let planType of planTypes" [value]="planType.code">
+                    <mat-option *ngFor="let planType of codesPlanType" [value]="planType.code">
                         {{planType.name}}
                     </mat-option>
                 </mat-select>
@@ -219,7 +219,7 @@
         <form [formGroup]="attachCountryCodesFormGroup">
         <ng-template matStepLabel>Enter Code Info</ng-template>
             <div class="country-code-form">
-                <div formArrayName="codes" *ngFor="let codeFG of attachCountryCodesFormGroup.get('codes').controls; let counter=index">
+                <div formArrayName="codes" *ngFor="let codeFG of attachCountryCodesFormGroup.get['codes'].controls; let counter=index">
                 <span> <b>Code Group {{counter + 1}}:</b> </span>
                 <button *ngIf="attachCountryCodesFormGroup.get('codes').controls.length > 1" (click)="removeGroup(counter)" class="country-code-trash"> <i class="fas fa-trash"></i> </button>
                     <div [formGroupName]="counter">

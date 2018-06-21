@@ -3,7 +3,7 @@
         <ag-grid-angular id="callplan-table" class="ag-theme-balham" 
             [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
             [enableFilter]="true" [floatingFilter]="true"
-            [rowSelection]="rowSelection" (selectionChanged)="selectionChanged($event)" [suppressRowClickSelection]="true"
+            (selectionChanged)="selectionChanged($event)" [suppressRowClickSelection]="true"
             [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"

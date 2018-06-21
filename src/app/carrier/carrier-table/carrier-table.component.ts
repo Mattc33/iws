@@ -18,19 +18,19 @@ import { ToggleButtonStateService } from './../../shared/services/global/buttonS
 export class CarrierTableComponent implements OnInit {
 
     // row data and column definitions
-    private rowData;
-    private columnDefs;
+    rowData;
+    columnDefs;
 
     // gridApi & gridUI props
-    private gridApi: GridApi;
-    private quickSearchValue = '';
-    private rowSelection = 'single';
+    gridApi: GridApi;
+    quickSearchValue = '';
+    rowSelection = 'single';
 
     // Internal Service
-    private rowObj;
+    rowObj;
 
     // UI Props
-    private gridSelectionStatus: number;
+    gridSelectionStatus: number;
 
     constructor( // inject your service
         private carrierService: CarrierService,

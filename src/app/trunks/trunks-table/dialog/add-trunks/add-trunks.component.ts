@@ -21,19 +21,19 @@ export class AddTrunksComponent implements OnInit {
     event_onAdd = new EventEmitter;
 
     // Form Group var
-    private carrierFormGroup: FormGroup;
-    private trunksFormGroup: FormGroup;
+    carrierFormGroup: FormGroup;
+    trunksFormGroup: FormGroup;
 
     // Input variables
-    private carrierNames = [];
+    carrierNames = [];
 
     //
-    private currentCarrierId: number;
-    private transportMethods = [ {value: 'udp'}, {value: 'tcp'}, {value: 'both'} ];
-    private activeValues = [ {value: true}, {value: false} ];
-    private directionValues = [ {value: 'inbound'}, {value: 'outbound'} ];
-    private carrierName: string;
-    private finalTrunkObj;
+    currentCarrierId: number;
+    transportMethods = [ {value: 'udp'}, {value: 'tcp'}, {value: 'both'} ];
+    activeValues = [ {value: true}, {value: false} ];
+    directionValues = [ {value: 'inbound'}, {value: 'outbound'} ];
+    carrierName: string;
+    finalTrunkObj;
 
     constructor(
         public dialogRef: MatDialogRef <TrunksTableComponent>,

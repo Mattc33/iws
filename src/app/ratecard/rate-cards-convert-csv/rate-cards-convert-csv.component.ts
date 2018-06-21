@@ -16,23 +16,17 @@ import { RateCardsTableComponent } from './../rate-cards-table/rate-cards-table.
 
 export class RateCardsConvertCsvComponent implements OnInit {
 
-    private rowData;
-    private columnDefs;
+    rowData;
+    columnDefs;
+    gridApi: GridApi;
 
-    private gridApi: GridApi;
-
-    private rowSelectionTypeM = 'multiple';
-    private getNodeChildDetails;
-
-    private currentSelectedRows;
-
-    private download: string;
-
-    private oneCsv;
-
-    private arrOfRates = [];
-
-    private disableStep2 = true;
+    rowSelectionTypeM = 'multiple';
+    getNodeChildDetails;
+    currentSelectedRows;
+    download: string;
+    oneCsv;
+    arrOfRates = [];
+    disableStep2 = true;
 
     constructor(
         private rateCardsService: RateCardsService,

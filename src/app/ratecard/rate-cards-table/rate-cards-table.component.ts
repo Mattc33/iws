@@ -19,36 +19,36 @@ import { RateCardsSharedService } from './../../shared/services/ratecard/rate-ca
 export class RateCardsTableComponent implements OnInit {
 
     // Define row and column data
-    private rowData;
-    private columnDefs;
-    private getNodeChildDetails;
-    private columnDefsRates;
-    private columnDefsTrunks;
+    rowData;
+    columnDefs;
+    getNodeChildDetails;
+    columnDefsRates;
+    columnDefsTrunks;
 
     // AG grid props
-    private gridApi: GridApi;
-    private gridApiRates: GridApi;
-    private gridApiTrunks: GridApi;
+    gridApi: GridApi;
+    gridApiRates: GridApi;
+    gridApiTrunks: GridApi;
 
     // Props for AG Grid
-    private rowSelectionTypeM = 'multiple';
-    private rowSelectionTypeS = 'single';
-    private rowSelectionAll;
-    private rowSelectionRates;
-    private rowSelectionTrunks;
-    private isRowSelectable;
+    rowSelectionTypeM = 'multiple';
+    rowSelectionTypeS = 'single';
+    rowSelectionAll;
+    rowSelectionRates;
+    rowSelectionTrunks;
+    isRowSelectable;
 
     // Props for button toggle
-    private buttonToggleBoolean = true;
-    private gridSelectionStatus: number;
-    private buttonToggleBoolean_trunks = true;
-    private gridSelectionStatus_trunks: number;
+    buttonToggleBoolean = true;
+    gridSelectionStatus: number;
+    buttonToggleBoolean_trunks = true;
+    gridSelectionStatus_trunks: number;
 
     // Properties for internal service
-    private rowRatecardObj;
-    private quickSearchValue = '';
-    private rowIdAll;
-    private selectedRatecardId: number;
+    rowRatecardObj;
+    quickSearchValue = '';
+    rowIdAll;
+    selectedRatecardId: number;
 
     constructor(
         private rateCardsService: RateCardsService,
@@ -312,7 +312,7 @@ export class RateCardsTableComponent implements OnInit {
         /*
             ~~~~~~~~~~ Button Toggle ~~~~~~~~~~
         */
-        rowSelected(params) {
+        rowSelected() {
             this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
         }
 

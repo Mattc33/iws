@@ -11,14 +11,14 @@ import { LCRSharedService } from '../../shared/services/lcr/lcr.shared.service';
 })
 export class LcrRatecardTableComponent implements OnInit {
 
-    private rowData;
-    private columnDefs;
-    private columnDefsRates;
+    rowData;
+    columnDefs;
+    columnDefsRates;
 
-    private providerData;
+    providerData;
 
-    private gridApi: GridApi;
-    private gridApiRates: GridApi;
+    gridApi: GridApi;
+    gridApiRates: GridApi;
 
     constructor(
         private lcrService: LCRService,

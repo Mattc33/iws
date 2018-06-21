@@ -17,26 +17,26 @@ import { RateCardsService } from './../../../../shared/api-services/ratecard/rat
 export class AddRateCardComponent implements OnInit {
 
     // AG grid setup props
-    private rowData;
-    private columnDefs;
-    private getNodeChildDetails;
-    private rowDataReview;
-    private columnDefsReview;
+    rowData;
+    columnDefs;
+    getNodeChildDetails;
+    rowDataReview;
+    columnDefsReview;
 
     // AG grid API props
-    private gridApi: GridApi;
-    private gridApiDetails: GridApi;
+    gridApi: GridApi;
+    gridApiDetails: GridApi;
 
     // AG grid UI props
-    private rowSelection;
-    private currentSliderValue;
+    rowSelection;
+    currentSliderValue;
 
     // UI Props
-    private buttonToggleBoolean = true;
-    private gridSelectionStatus: number;
+    buttonToggleBoolean = true;
+    gridSelectionStatus: number;
 
     // Internal Service Props
-    private currentRowId;
+    currentRowId;
 
     constructor(
         public dialogRef: MatDialogRef<CallPlanTableComponent>,

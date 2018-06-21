@@ -14,7 +14,7 @@
     </div>
 
     <div class="stepper-container">
-        <mat-horizontal-stepper [linear]="isLinear" #stepper>
+        <mat-horizontal-stepper [linear]="true" #stepper>
 
             <mat-step [stepControl]="addCodeInfoFormGroup">
                 <ng-template matStepLabel>Enter Code Info</ng-template>
@@ -76,8 +76,8 @@
             <mat-step [stepControl]="attachCodesFormGroup" class="attachcodes-mat-step">
                 <ng-template matStepLabel>Attach Codes</ng-template>
                 <form [formGroup]="attachCodesFormGroup" class="attachcodes-form">
-                    <div formArrayName="codes" *ngFor="let codeFG of attachCodesFormGroup.get('codes').controls; let i = index">
-                        <button *ngIf="attachCodesFormGroup.get('codes').controls.length > 1" (click)="removeAddress(i)" class="country-code-trash">
+                    <div formArrayName="codes" *ngFor="let codeFG of attachCodesFormGroup.get['codes'].controls; let i = index">
+                        <button *ngIf="attachCodesFormGroup.get['codes'].controls.length > 1" (click)="removeAddress(i)" class="country-code-trash">
                             <i class="fas fa-trash"></i>
                         </button>
                         <div [formGroupName]="i" class="addcodes-container">

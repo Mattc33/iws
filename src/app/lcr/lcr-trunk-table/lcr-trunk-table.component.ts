@@ -12,12 +12,12 @@ import { LCRSharedService } from '../../shared/services/lcr/lcr.shared.service';
 })
 export class LcrTrunkTableComponent implements OnInit {
 
-    private trunkData;
-    private providerData;
-    private finalrowData;
-    private columnDefs;
+    trunkData;
+    providerData;
+    finalrowData;
+    columnDefs;
 
-    private gridApi: GridApi;
+    gridApi: GridApi;
 
     constructor(
         private lcrService: LCRService,

@@ -19,7 +19,7 @@
             [columnDefs]="columnDefsRatecard" [rowData]="rowDataRatecard"
             [enableFilter]="true" [floatingFilter]="true" [suppressMovableColumns]="true"
             [rowSelection]="rowSelectionM" [suppressRowClickSelection]="true" [groupSelectsChildren]="true"
-            (selectionChanged)="onSelectionChanged($event)" [enableSorting]="true"
+            (selectionChanged)="onSelectionChanged()" [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="onGridSizeChanged($event)"
             [getNodeChildDetails]="getNodeChildDetails"
             [pagination]="true" [paginationAutoPageSize]="true"

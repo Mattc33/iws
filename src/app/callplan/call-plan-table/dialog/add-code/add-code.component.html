@@ -66,9 +66,9 @@
             <ng-template matStepLabel>Attach Codes</ng-template>
                 
             <div class="country-code-form">
-                <div formArrayName="codes" *ngFor="let codeFG of attachCountryCodesFormGroup.get('codes').controls; let counter=index">
+                <div formArrayName="codes" *ngFor="let codeFG of attachCountryCodesFormGroup.get['codes'].controls; let counter=index">
                 <span> <b>Code Group {{counter + 1}}:</b> </span>
-                <button *ngIf="attachCountryCodesFormGroup.get('codes').controls.length > 1" (click)="removeAddress(counter)" class="country-code-trash"> <i class="fas fa-trash"></i> </button>
+                <button *ngIf="attachCountryCodesFormGroup.get['codes'].controls.length > 1" (click)="removeAddress(counter)" class="country-code-trash"> <i class="fas fa-trash"></i> </button>
                     <div [formGroupName]="counter" class="addcodes-container">
                     
                         <div class="origination-section">

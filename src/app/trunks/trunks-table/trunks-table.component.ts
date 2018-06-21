@@ -19,20 +19,20 @@ import { SnackbarSharedService } from './../../shared/services/global/snackbar.s
 export class TrunksTableComponent implements OnInit {
 
     // AG grid
-    private rowData;
-    private columnDefs;
-    private rowSelection = 'multiple';
-    private quickSearchValue = '';
+    rowData;
+    columnDefs;
+    rowSelection = 'multiple';
+    quickSearchValue = '';
 
     // AG grid controllers
-    private gridApi: GridApi;
+    gridApi: GridApi;
 
     // Props for button toggle
-    private buttonToggleBoolean = true;
-    private gridSelectionStatus: number;
+    buttonToggleBoolean = true;
+    gridSelectionStatus: number;
 
     // Properties for internal service
-    private rowObj: object;
+    rowObj: object;
 
     constructor(
         private dialog: MatDialog,

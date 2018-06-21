@@ -11,10 +11,10 @@ import { LCRSharedService } from '../../shared/services/lcr/lcr.shared.service';
 })
 export class LcrCarrierTableComponent implements OnInit {
 
-    private rowData;
-    private columnDefs;
+    rowData;
+    columnDefs;
 
-    private gridApi: GridApi;
+    gridApi: GridApi;
 
     constructor(
         private lcrService: LCRService,

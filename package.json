@@ -11,12 +11,12 @@
         "e2e": "protractor ./protractor.conf.js",
         "pree2e": "webdriver-manager update --standalone false --gecko false --quiet"
     },
-  "private": true,
+    "private": true,
     "dependencies": {
         "@angular/animations": "^6.0.0",
         "@angular/cdk": "6.0.0",
         "@angular/common": "6.0.0",
-        "@angular/compiler": "6.0.0", 
+        "@angular/compiler": "6.0.0",
         "@angular/core": "6.0.0",
         "@angular/forms": "6.0.0",
         "@angular/http": "6.0.0",
@@ -34,7 +34,7 @@
         "ngx-papaparse": "^2.0.4",
         "rxjs": "^6.1.0",
         "zone.js": "^0.8.26"
-  },
+    },
     "devDependencies": {
         "@angular-devkit/build-angular": "~0.6.0",
         "@angular-devkit/core": "0.6.0",
@@ -79,9 +79,9 @@
         "url-loader": "^0.6.2",
         "webpack": "^4.4.1",
         "webpack-dev-server": "~2.11.0"
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "setupTestFrameworkScriptFile": "./src/setupJest.ts"
-}
+    },
+    "jest": {
+        "preset": "jest-preset-angular",
+        "setupTestFrameworkScriptFile": "./src/setupJest.ts"
+    }
 }

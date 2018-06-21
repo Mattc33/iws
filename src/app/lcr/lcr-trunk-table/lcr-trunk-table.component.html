@@ -3,7 +3,7 @@
         <ag-grid-angular id="trunk-table" class="ag-theme-balham" 
             [columnDefs]="columnDefs" [rowData]="trunkData" [animateRows]="true"
             [enableFilter]="true" [floatingFilter]="true"
-            [rowSelection]="rowSelection" (selectionChanged)="selectionChanged($event)" [suppressRowClickSelection]="true"
+            [suppressRowClickSelection]="true"
             [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"

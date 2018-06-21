@@ -2,8 +2,8 @@
     <div class="table-container">
         <ag-grid-angular class="ag-theme-balham" 
             [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
-            [rowSelection]="rowSelection" (selectionChanged)="selectionChanged($event)" (rowSelected)="rowSelected($event)" [suppressRowClickSelection]="true"
-            [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"
+            [rowSelection]="rowSelection" (selectionChanged)="selectionChanged()" [suppressRowClickSelection]="true"
+            [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" 
             [floatingFilter]="true" [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
             [pagination]="true" [paginationAutoPageSize]="true"
@@ -19,7 +19,7 @@
             <button (click)="openDialogAdd()"> <i class="fas fa-plus"></i> Profile </button>
             <mat-form-field class="search-bar">
                 <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
-                <input matInput placeholder="Search Profile Table..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+                <input matInput placeholder="Search Profile Table..." >
             </mat-form-field>
         </mat-toolbar-row>
     </div>

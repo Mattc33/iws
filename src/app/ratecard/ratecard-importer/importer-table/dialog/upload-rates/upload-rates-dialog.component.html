@@ -118,8 +118,7 @@
     <mat-step [completed]="false">
         <ng-template matStepLabel>Attach Trunk to Ratecards, Submit</ng-template>
         <ag-grid-angular id="trunks-table" class="ag-theme-balham" [animateRows]="true"
-        [columnDefs]="columnDefs" [rowData]="rowData" [suppressRowClickSelection]="true" (rowSelected)="rowSelected($event)"
-        [rowSelection]="rowSelection"
+        [columnDefs]="columnDefs" [rowData]="rowData" [suppressRowClickSelection]="true" (rowSelected)="rowSelected()"
         [enableFilter]="true" [floatingFilter]="true"
         [enableSorting]="true" [enableColResize]="true"
         [pagination]="true" [paginationAutoPageSize]="true"

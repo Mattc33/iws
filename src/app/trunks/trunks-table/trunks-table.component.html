@@ -2,7 +2,7 @@
     <div class="table-container">
         <ag-grid-angular class="ag-theme-balham" [animateRows]="true"
             [columnDefs]="columnDefs" [rowData]="rowData" [suppressRowClickSelection]="true"
-            [rowSelection]="rowSelection" (selectionChanged)="onSelectionChanged($event)" (rowSelected)="rowSelected($event)"
+            [rowSelection]="rowSelection" (selectionChanged)="onSelectionChanged()" (rowSelected)="rowSelected($event)"
             [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="aggrid_onCellValueChanged($event)"
             [enableFilter]="true" [floatingFilter]="true"
             [enableSorting]="true"

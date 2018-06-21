@@ -10,14 +10,14 @@ import { LCRService } from '../../shared/api-services/lcr/lcr.api.service';
 })
 export class LcrCallPlanTableComponent implements OnInit {
 
-    private rowData;
-    private columnDefs;
-    private columnDefsDetails;
-    private columnDefsDetails2;
+    rowData;
+    columnDefs;
+    columnDefsDetails;
+    columnDefsDetails2;
 
-    private gridApi: GridApi;
-    private gridApiDetails: GridApi;
-    private gridApiDetails2: GridApi;
+    gridApi: GridApi;
+    gridApiDetails: GridApi;
+    gridApiDetails2: GridApi;
 
     constructor(
         private lcrService: LCRService,

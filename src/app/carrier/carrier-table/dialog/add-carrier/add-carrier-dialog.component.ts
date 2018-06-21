@@ -16,14 +16,14 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
 export class AddCarrierDialogComponent implements OnInit {
 
     // * Form Group
-    private addCarrierFormGroup: FormGroup;
+    addCarrierFormGroup: FormGroup;
 
     // * Input Props
-    private taxableOptions = [
+    taxableOptions = [
         {value: false, viewValue: 'No'},
         {value: true, viewValue: 'Yes'},
     ];
-    private tierOptions = [
+    tierOptions = [
         {value: 1, viewValue: 'Tier 1'},
         {value: 2, viewValue: 'Tier 2'},
         {value: 3, viewValue: 'Tier 3'},

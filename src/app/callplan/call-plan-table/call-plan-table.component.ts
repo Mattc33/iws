@@ -30,31 +30,31 @@ export class CallPlanTableComponent implements OnInit {
     columnDefsCodes;
 
     // AG grid controllers
-    private gridApiCallplan: GridApi; // All
-    private gridApiDetail: GridApi;
-    private gridApiDetail2: GridApi;
-    private gridApiRatecards: GridApi;
-    private gridApiCodes: GridApi;
-    private columnApiCodes: GridApi;
+    gridApiCallplan: GridApi; // All
+    gridApiDetail: GridApi;
+    gridApiDetail2: GridApi;
+    gridApiRatecards: GridApi;
+    gridApiCodes: GridApi;
+    columnApiCodes: GridApi;
 
     // Props for AG Grid
-    private defineRowSelectionType = 'multiple';
-    private defineRowSelectionTypeS = 'single';
-    private rowSelectionCallplan;
-    private rowSelectionRatecards;
-    private rowSelectionCodes;
+    defineRowSelectionType = 'multiple';
+    defineRowSelectionTypeS = 'single';
+    rowSelectionCallplan;
+    rowSelectionRatecards;
+    rowSelectionCodes;
 
     // Props for button Toggle
-    private gridSelectionStatusCallplan: number;
-    private gridSelectionStatusRatecard: number;
-    private gridSelectionStatusCode: number;
+    gridSelectionStatusCallplan: number;
+    gridSelectionStatusRatecard: number;
+    gridSelectionStatusCode: number;
 
     // Props for internal service
-    private callPlanRowObj;
-    private rowIdAll: number;
-    private callplanTitle: string;
-    private selectedCallplanIndex;
-    private nodeSelection;
+    callPlanRowObj;
+    rowIdAll: number;
+    callplanTitle: string;
+    selectedCallplanIndex;
+    nodeSelection;
 
     constructor(
         private callPlanService: CallPlanService,
@@ -158,27 +158,27 @@ export class CallPlanTableComponent implements OnInit {
     // ================================================================================
     // AG Grid Initialiation
     // ================================================================================
-    private on_GridReady_Callplan(params): void { // init grid for all call plans table
+    on_GridReady_Callplan(params): void { // init grid for all call plans table
         this.gridApiCallplan = params.api;
         params.api.sizeColumnsToFit();
     }
 
-    private on_GridReady_Details(params): void { // init grid for details table
+    on_GridReady_Details(params): void { // init grid for details table
         this.gridApiDetail = params.api;
         params.api.sizeColumnsToFit();
     }
 
-    private on_GridReady_Details2(params): void { // init grid for details table2
+    on_GridReady_Details2(params): void { // init grid for details table2
         this.gridApiDetail2 = params.api;
         params.api.sizeColumnsToFit();
     }
 
-    private on_GridReady_Ratecards(params): void { // init grid for ratecards table
+    on_GridReady_Ratecards(params): void { // init grid for ratecards table
         this.gridApiRatecards = params.api;
         params.api.sizeColumnsToFit();
     }
 
-    private on_GridReady_Codes(params): void { // init grid for codes table
+    on_GridReady_Codes(params): void { // init grid for codes table
         this.gridApiCodes = params.api;
         this.columnApiCodes = params.ColumnApi;
         params.api.sizeColumnsToFit();

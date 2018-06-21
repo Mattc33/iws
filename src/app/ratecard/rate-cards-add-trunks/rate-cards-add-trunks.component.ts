@@ -14,31 +14,31 @@ import { SnackbarSharedService } from './../../shared/services/global/snackbar.s
 })
 export class RateCardsAddTrunksComponent implements OnInit {
 
-    public event_onAdd = new EventEmitter;
+    event_onAdd = new EventEmitter;
 
     // AG grid setup props
-    private rowData;
-    private columnDefs;
-    private getNodeChildDetails;
-    private rowDataTrunk;
-    private columnDefsTrunk;
-    private rowDataReview;
-    private columnDefsReview;
+    rowData;
+    columnDefs;
+    getNodeChildDetails;
+    rowDataTrunk;
+    columnDefsTrunk;
+    rowDataReview;
+    columnDefsReview;
 
     // AG grid API props
-    private gridApi: GridApi;
-    private gridApiTrunk: GridApi;
-    private gridApiReview: GridApi;
+    gridApi: GridApi;
+    gridApiTrunk: GridApi;
+    gridApiReview: GridApi;
 
     // AG Gri UI props
-    private rowSelection;
+    rowSelection;
 
     // Shared service props
-    private ratecardsObj;
-    private trunksObj;
+    ratecardsObj;
+    trunksObj;
 
     // props
-    private finalRatecardToTrunkArr = [];
+    finalRatecardToTrunkArr = [];
 
     constructor(
         private rateCardsService: RateCardsService,

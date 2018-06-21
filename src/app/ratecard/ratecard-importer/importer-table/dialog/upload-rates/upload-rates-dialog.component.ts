@@ -24,24 +24,24 @@ export class UploadRatesDialogComponent implements OnInit {
     event_passTrunkId = new EventEmitter;
 
     // Form Group var
-    private carrierFormGroup: FormGroup;
-    private ratecardFormGroup: FormGroup;
-    private percentFormGroup: FormGroup;
-    private uploadRatesFormGroup: FormGroup;
+    carrierFormGroup: FormGroup;
+    ratecardFormGroup: FormGroup;
+    percentFormGroup: FormGroup;
+    uploadRatesFormGroup: FormGroup;
 
     // Ag Grid row & column defs
-    private rowData;
-    private columnDefs;
+    rowData;
+    columnDefs;
 
     // Ag grid api & ui
-    private gridApi: GridApi;
-    private gridSelectionStatus: number;
+    gridApi: GridApi;
+    gridSelectionStatus: number;
 
     // DB Objects
-    private carrierObj = [];
-    private currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
+    carrierObj = [];
+    currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
 
-    private ratecardTier = [
+    ratecardTier = [
         {value: 'standard', viewValue: 'Silver'},
         {value: 'standard', viewValue: 'Standard'},
         {value: 'premium', viewValue: 'Gold'},
@@ -49,20 +49,20 @@ export class UploadRatesDialogComponent implements OnInit {
         {value: 'premium', viewValue: 'Platinum'},
     ];
 
-    private teleuPercent = 0;
+    teleuPercent = 0;
 
     // Insert Rates Props
-    private rateCardID: number;
-    private fileName: string;
-    private disableUploadBoolean = true;
+    rateCardID: number;
+    fileName: string;
+    disableUploadBoolean = true;
 
-    private finalRatecardObj;
-    private finalRatecardPreviewObj = [];
-    private ratesPreviewObj = [];
+    finalRatecardObj;
+    finalRatecardPreviewObj = [];
+    ratesPreviewObj = [];
 
     // Internal Service
-    private postTableArr;
-    private totalRatesProcessed = 0;
+    postTableArr;
+    totalRatesProcessed = 0;
 
     constructor(
         public dialogRef: MatDialogRef <ImporterTableComponent>,
@@ -247,7 +247,7 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    uploadValidator(boolean): boolean { // pass into step 2's [disable] to control button disable
+    uploadValidator(): boolean { // pass into step 2's [disable] to control button disable
         if (this.disableUploadBoolean === true) {
             return true;
         }

@@ -21,45 +21,45 @@ export class AddCallPlanComponent implements OnInit {
     event_onAdd = new EventEmitter();
 
     // Form Group
-    private addCarrierFormGroup: FormGroup;
-    private attachCallPlanFormGroup: FormGroup;
-    private attachCodesFormGroup: FormGroup;
-    private attachCountryCodesFormGroup: FormGroup;
+    addCarrierFormGroup: FormGroup;
+    attachCallPlanFormGroup: FormGroup;
+    attachCodesFormGroup: FormGroup;
+    attachCountryCodesFormGroup: FormGroup;
 
     // callplan
-    private carrierObj = [];
-    private status;
-    private callplanPlanType;
-    private activeWhen;
-    private promotion = [
+    carrierObj = [];
+    status;
+    callplanPlanType;
+    activeWhen;
+    promotion = [
         {name: 'Yes', value: true},
         {name: 'No', value: false},
     ];
 
 
-    private unlimitedPlanToggle = false;
-    private callPlanObj = [];
+    unlimitedPlanToggle = false;
+    callPlanObj = [];
 
     // Patterns
-    private currencyPattern = /^\d+\.\d{2}$/;
-    private numPattern = '^[0-9]+$';
+    currencyPattern = /^\d+\.\d{2}$/;
+    numPattern = '^[0-9]+$';
 
     // codes
-    private countryCodeList;
+    countryCodeList;
 
-    private codesPlanType = [
+    codesPlanType = [
         {code: 0, name: 'Pay as you go'},
         {code: 1, name: 'Unlimited plan'},
         {code: 2, name: 'Minute plan'},
         {code: 3, name: 'Money plan'}
     ];
-    private planPriorityList = [
+    planPriorityList = [
         {num: 1}, {num: 2}, {num: 3}, {num: 4}, {num: 5}, {num: 6}, {num: 7}, {num: 8}, {num: 9}
     ];
-    private finalCallPlanObj;
+    finalCallPlanObj;
 
     // Internal Service
-    public callplan: string;
+    callplan: string;
 
     constructor(
         public dialogRef: MatDialogRef<CallPlanTableComponent>,

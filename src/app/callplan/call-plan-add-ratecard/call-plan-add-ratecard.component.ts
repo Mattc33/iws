@@ -17,22 +17,22 @@ import { ToggleButtonStateService } from './../../shared/services/global/buttonS
 export class CallPlanAddRatecardComponent implements OnInit {
 
 // AG grid setup props
-private rowDataCallplan; private columnDefsCallplan;
-private rowDataRatecard; private columnDefsRatecard; private getNodeChildDetails;
-private rowDataReview; private columnDefsReview;
+rowDataCallplan; columnDefsCallplan;
+rowDataRatecard; columnDefsRatecard; getNodeChildDetails;
+rowDataReview; columnDefsReview;
 
 // AG grid API props
-private gridApiCallPlan: GridApi;
-private gridApiRatecard: GridApi;
-private gridApiDetails: GridApi;
+gridApiCallPlan: GridApi;
+gridApiRatecard: GridApi;
+gridApiDetails: GridApi;
 
 // AG grid UI props
-private rowSelectionS = 'single';
-private rowSelectionM = 'multiple';
-private currentSliderValue;
+rowSelectionS = 'single';
+rowSelectionM = 'multiple';
+currentSliderValue;
 
 // UI Props
-private gridSelectionStatus;
+gridSelectionStatus;
 
 constructor(
     private callPlanService: CallPlanService,

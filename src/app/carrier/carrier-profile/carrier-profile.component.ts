@@ -16,16 +16,16 @@ import { CarrierService } from '../../shared/api-services/carrier/carrier.api.se
 export class CarrierProfileComponent implements OnInit {
 
     // * row and col definitions
-    private rowData;
-    private columnDefs;
+    rowData;
+    columnDefs;
 
     // * Grid API & Grid UI props
-    private gridApi: GridApi;
-    private quickSearchValue = '';
-    private rowSelection = 'single';
+    gridApi: GridApi;
+    quickSearchValue = '';
+    rowSelection = 'single';
 
     // Internal Service
-    private rowObj;
+    rowObj;
 
     // UI Props
     gridSelectionStatus: number;

@@ -187,7 +187,7 @@ export class RatecardViewCarrierPComponent implements OnInit {
     // ================================================================================
     // AG Grid Country Table
     // ================================================================================
-    onSelectionChangedCountry(params, callback) {
+    onSelectionChangedCountry() {
         const selectedCode = this.gridApiCountry.getSelectedRows()[0].code;
         this.gridApiMain.setRowData([]);
 

@@ -2,7 +2,7 @@
     <div class="all-callplans-container">
         <ag-grid-angular class="ag-theme-balham" id="all-callplans" [animateRows]="true"
             [columnDefs]="columnDefs" [rowData]="rowData"
-            [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="onSelectionChangedCallPlan($event)" (rowSelected)="onRowSelectedCallplan($event)" 
+            [rowSelection]="defineRowSelectionTypeS" (selectionChanged)="onSelectionChangedCallPlan()" (rowSelected)="onRowSelectedCallplan()" 
             [suppressRowClickSelection]="true"
             [stopEditingWhenGridLosesFocus]="true" (cellValueChanged)="onCellValueChanged($event)" [singleClickEdit]="true"
             [enableFilter]="true" [floatingFilter]="true" [enableSorting]="true"
@@ -52,8 +52,8 @@
             <mat-tab label="Rate Cards">
                     <ag-grid-angular class="ag-theme-balham" id="call-plans-ratecards" [animateRows]="true"
                         [getNodeChildDetails]="getNodeChildDetails"
-                        [columnDefs]="columnDefsRatecards" [rowData]=""  (rowSelected)="onRowSelectedRatecard($event)"
-                        [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_rateCards_selectionChanged($event)" [groupSelectsChildren]="true" 
+                        [columnDefs]="columnDefsRatecards" [rowData]=""  (rowSelected)="onRowSelectedRatecard()"
+                        [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_rateCards_selectionChanged()" [groupSelectsChildren]="true" 
                         [suppressRowClickSelection]="true"
                         [stopEditingWhenGridLosesFocus]="true" 
                         [enableFilter]="true" [floatingFilter]="true"
@@ -72,14 +72,14 @@
                         <button (click)="openDialogAttachRateCard()" [disabled]="toggleButtonStateCallplan()"> <i class="fas fa-plus-circle"></i> Ratecard</button>
                         <mat-form-field class="search-bar">
                             <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
-                            <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+                            <input matInput placeholder="Global Search..." >
                         </mat-form-field>
                     </mat-toolbar-row>
             </mat-tab>
             <mat-tab label="Codes">
                 <ag-grid-angular class="ag-theme-balham" id="call-plans-codes" [animateRows]="true"
-                    [columnDefs]="columnDefsCodes" [rowData]="" (rowSelected)="onRowSelectedCode($event)"
-                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_codes_selectionChanged($event)" [suppressRowClickSelection]="true"
+                    [columnDefs]="columnDefsCodes" [rowData]="" (rowSelected)="onRowSelectedCode()"
+                    [rowSelection]="defineRowSelectionType" (selectionChanged)="aggrid_codes_selectionChanged()" [suppressRowClickSelection]="true"
                     [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged_codes($event)"
                     [enableFilter]="true" [floatingFilter]="true"
                     [enableSorting]="true"
@@ -97,7 +97,7 @@
                     <button (click)="openDialogAttachCode()" [disabled]="toggleButtonStateCallplan()"> <i class="fas fa-plus-circle"></i> Code</button>
                     <mat-form-field class="search-bar">
                         <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
-                        <input matInput placeholder="Global Search..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
+                        <input matInput placeholder="Global Search..." >
                     </mat-form-field>
                 </mat-toolbar-row>
             </mat-tab>

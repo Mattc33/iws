@@ -19,9 +19,9 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
 export class AddCodeComponent implements OnInit {
 
     // Form Group
-    private addCallPlanFormGroup: FormGroup;
-    private attachCodesFormGroup: FormGroup;
-    private attachCountryCodesFormGroup: FormGroup;
+    addCallPlanFormGroup: FormGroup;
+    attachCodesFormGroup: FormGroup;
+    attachCountryCodesFormGroup: FormGroup;
 
     // Form Data
     callPlanObj = [];
@@ -31,8 +31,8 @@ export class AddCodeComponent implements OnInit {
     countryCodeList;
 
     // Service props
-    private finalCodesObj = [];
-    private currentRowId: number;
+    finalCodesObj = [];
+    currentRowId: number;
 
     constructor(
         public dialogRef: MatDialogRef<CallPlanTableComponent>,

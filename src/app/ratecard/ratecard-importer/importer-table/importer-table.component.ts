@@ -17,21 +17,21 @@ import { UploadRatesDialogComponent } from './dialog/upload-rates/upload-rates-d
 export class ImporterTableComponent implements OnInit {
 
     // row data and column defs
-    private rowData;
-    private columnDefs;
+    rowData;
+    columnDefs;
 
     // gridApi & gridUI
-    private gridApi: GridApi;
-    private getNodeChildDetails;
-    private rowSelection;
-    private quickSearchValue = '';
+    gridApi: GridApi;
+    getNodeChildDetails;
+    rowSelection;
+    quickSearchValue = '';
 
     // Internal Service props
-    private rowObj;
-    private postTableArr;
-    private ratesInsertedIntoDB;
-    private totalRatesProcessed = 0;
-    private totalRatesFromCSV = 0;
+    rowObj;
+    postTableArr;
+    ratesInsertedIntoDB;
+    totalRatesProcessed = 0;
+    totalRatesFromCSV = 0;
 
     constructor(
         private importerService: ImporterService,
