@@ -136,7 +136,7 @@ export class RatecardViewCarrierComponent implements OnInit {
     on_GridReady(params): void {
         this.gridApiMain = params.api;
         this.columnApiMain = params.columnApi;
-        this.gridApiMain.setGroupHeaderHeight(50);
+        this.gridApiMain.setGroupHeaderHeight(30);
     }
 
     on_GridReady_country(params): void {

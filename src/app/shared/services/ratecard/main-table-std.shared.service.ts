@@ -63,30 +63,30 @@ export class MainTableStdSharedService {
             {
                 headerName: 'Standard Ratecard',
                 children: [
+                    // {
+                    //     headerName: 'Variance Flag', field: 'variance', width: 120, colId: 'high_variance',
+                    //     lockPosition: true,
+                    //     valueGetter(params) {
+                    //         const ratesArr = _mainTableCommon.extractRates(params).sort();
+                    //         const returnVariance = _mainTableCommon.returnVariance(ratesArr);
+                    //         if ( returnVariance >= .0009  ) {
+                    //             return 'High Variance';
+                    //         } else {
+                    //             return '';
+                    //         }
+                    //     },
+                    //     cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                    //     hide: true
+                    // },
                     {
-                        headerName: 'Variance Flag', field: 'variance', width: 120, colId: 'high_variance',
-                        filter: 'agNumberColumnFilter', lockPosition: true,
-                        valueGetter(params) {
-                            const ratesArr = _mainTableCommon.extractRates(params).sort();
-                            const returnVariance = _mainTableCommon.returnVariance(ratesArr);
-                            if ( returnVariance >= .0009  ) {
-                                return 'High Variance';
-                            } else {
-                                return '';
-                            }
-                        },
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                        hide: true
-                    },
-                    {
-                        headerName: 'Prefix', field: 'prefix', width: 120, colId: 'prefix',
+                        headerName: 'Prefix', field: 'prefix', width: 100, colId: 'prefix',
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
                         lockPosition: true, unSortIcon: true,
                     },
                     {
                         headerName: 'Destination', field: 'destination', colId: 'destination',
                         width: 300, lockPosition: true,
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightblue'}
                     },
                     {
                         headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
@@ -97,10 +97,10 @@ export class MainTableStdSharedService {
                             const minToNum = parseFloat(min) * 1.02;
                             return minToNum.toFixed(4);
                         },
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
+                        cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightgreen' }
                     },
                     {
-                        headerName: 'Effective from', field: '', width: 140, colId: 'eff_date',
+                        headerName: 'Effective', field: '', width: 100, colId: 'eff_date',
                         filter: 'agDateColumnFilter', lockPosition: true,
                         valueGetter() {
                             const d = new Date();
@@ -117,34 +117,16 @@ export class MainTableStdSharedService {
                             return 'current';
                         },
                         cellStyle: { 'border-right': '1px solid #000000' }
-                    },
-                    {
-                        headerName: '* 1%', field: 'our_rate_1p', width: 100, colId: 'our_rate_1p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
-                        valueGetter(params) {
-                            const ratesArr = _mainTableCommon.extractRates(params);
-                            const min = Math.min(...ratesArr).toFixed(4);
-                            const minToNum = parseFloat(min) * 1.01;
-                            return minToNum.toFixed(4);
-                        },
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
-                    },
-                    {
-                        headerName: '* 3%', field: 'our_rate_3p', width: 100, colId: 'our_rate_3p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
-                        valueGetter(params) {
-                            const ratesArr = _mainTableCommon.extractRates(params);
-                            const min = Math.min(...ratesArr).toFixed(4);
-                            const minToNum = parseFloat(min) * 1.03;
-                            return minToNum.toFixed(4);
-                        },
-                        cellStyle: { 'border-right': '1px solid #000000' }
                     }
                 ]
             },
             {
-                headerName: 'Calculations',
+                headerName: 'Calc',
                 children: [
+                    {
+                        headerName: 'Calc', width: 70,
+                        columnGroupShow: 'closed'
+                    },
                     {
                         headerName: 'Lowest Rate', field: 'lowest_rate', width: 120, colId: 'lowest_rate',
                         filter: 'agNumberColumnFilter', lockPosition: true,
@@ -154,6 +136,7 @@ export class MainTableStdSharedService {
                             return min;
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                        columnGroupShow: 'open'
                     },
                     {
                         headerName: 'Average', field: 'average', width: 120, colId: 'average',
@@ -164,6 +147,7 @@ export class MainTableStdSharedService {
                             return mean;
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                        columnGroupShow: 'open'
                     },
                     {
                         headerName: 'Variance', field: 'variance', width: 120, colId: 'variance',
@@ -181,6 +165,31 @@ export class MainTableStdSharedService {
                             }
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                        columnGroupShow: 'open'
+                    },
+                    {
+                        headerName: '* 1%', field: 'our_rate_1p', width: 100, colId: 'our_rate_1p',
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        valueGetter(params) {
+                            const ratesArr = _mainTableCommon.extractRates(params);
+                            const min = Math.min(...ratesArr).toFixed(4);
+                            const minToNum = parseFloat(min) * 1.01;
+                            return minToNum.toFixed(4);
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                        columnGroupShow: 'open'
+                    },
+                    {
+                        headerName: '* 3%', field: 'our_rate_3p', width: 100, colId: 'our_rate_3p',
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        valueGetter(params) {
+                            const ratesArr = _mainTableCommon.extractRates(params);
+                            const min = Math.min(...ratesArr).toFixed(4);
+                            const minToNum = parseFloat(min) * 1.03;
+                            return minToNum.toFixed(4);
+                        },
+                        cellStyle: { 'border-right': '1px solid #000000' },
+                        columnGroupShow: 'open'
                     },
                     {
                         headerName: 'Low->High', field: 'lowhigh', width: 200, colId: 'lowhigh',
@@ -193,10 +202,16 @@ export class MainTableStdSharedService {
                                 return ratesArr[0];
                             }
                         },
-                        cellStyle: { 'border-right': '1px solid #000000' }
+                        columnGroupShow: 'open'
                     }
                 ]
-            } // End of parent Object
+            },
+            {
+                headerName: 'Destination', field: 'destination', colId: 'destination',
+                width: 300, lockPosition: true,
+                cellStyle: { 'border-left': '1px solid #000', 'border-right': '1px solid #000', 'background': 'lightblue' },
+                filter: 'agTextColumnFilter',
+            }, // End of parent Object
         ); // end push of calc cols
 
         for ( let i = 0; i < carrierGroupHeadersArr.length; i++ ) { // pushing ea carrier as a col
@@ -205,7 +220,7 @@ export class MainTableStdSharedService {
 
             carrierColumnDefs.push(
                 {
-                    headerName: carrierGroupHeadersArr[i].ratecard_name_modified,
+                    headerName: 'See Dest.',
                     children: [
                         {
                             headerName: 'Destination', field: destinationFieldString,
