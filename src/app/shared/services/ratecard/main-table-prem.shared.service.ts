@@ -224,7 +224,7 @@ export class MainTablePremSharedService {
                         },
                         {
                             headerName: carrierGroupHeadersArr[i].ratecard_name_modified, field: sellrateFieldString, width: 200,
-                            headerHeight: 500, editable: true,
+                            headerHeight: 400, editable: true,
                             filter: 'agNumberColumnFilter',
                             colId: `carrier_rate_${i}`, // This will be the columnID to use for functionaility
                             cellStyle: { 'border-right': '1px solid #E0E0E0' },
