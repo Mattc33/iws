@@ -8,7 +8,7 @@ declare global { // declare global interface, set custom fn groupBy with type an
 }
 
 @Injectable()
-export class MainTablePremSharedService {
+export class MainTableSharedService {
 
     constructor(
         private _mainTableCommon: MainTableCommonSharedService
@@ -53,33 +53,18 @@ export class MainTablePremSharedService {
 
         carrierColumnDefs.push(
             {
-                headerName: 'Standard Ratecard',
+                headerName: 'Prefix', field: 'prefix', width: 100, colId: 'prefix',
+                cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightgray' },
+                lockPosition: true, unSortIcon: true, pinned: 'left',
+            },
+            {
+                headerName: 'Destination', field: 'destination', colId: 'destination',
+                width: 260, lockPosition: true, pinned: 'left',
+                cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightblue'}
+            },
+            {
+                headerName: 'Rate',
                 children: [
-                    // {
-                    //         headerName: 'Variance Flag', field: 'variance', width: 120, colId: 'high_variance',
-                    //         filter: 'agNumberColumnFilter', lockPosition: true,
-                    //         valueGetter(params) {
-                    //             const ratesArr = _mainTableCommon.extractRates(params).sort();
-                    //             const returnVariance = _mainTableCommon.returnVariance(ratesArr);
-                    //             if ( returnVariance >= .0009  ) {
-                    //                 return 'High Variance';
-                    //             } else {
-                    //                 return '';
-                    //             }
-                    //         },
-                    //         hide: true,
-                    //         cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                    // },
-                    {
-                        headerName: 'Prefix', field: 'prefix', width: 100, colId: 'prefix',
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                        lockPosition: true, unSortIcon: true,
-                    },
-                    {
-                        headerName: 'Destination', field: 'destination', colId: 'destination',
-                        width: 300, lockPosition: true,
-                        cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightblue'}
-                    },
                     {
                         headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
@@ -89,35 +74,8 @@ export class MainTablePremSharedService {
                             const minToNum = parseFloat(min) * 1.02;
                             return minToNum.toFixed(4);
                         },
-                        cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightgreen' }
-                    },
-                    {
-                        headerName: 'Effective', field: '', width: 100, colId: 'eff_date',
-                        filter: 'agDateColumnFilter', lockPosition: true,
-                        valueGetter() {
-                            const d = new Date();
-                            const month = d.getMonth() + 1;
-                            const date = `${d.getFullYear()}.${month}.${d.getDate()}`;
-                            return date;
-                        },
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' }
-                    },
-                    {
-                        headerName: 'Status', field: 'status', width: 100, colId: 'status',
-                        editable: true, lockPosition: true,
-                        valueGetter() {
-                            return 'current';
-                        },
-                        cellStyle: { 'border-right': '1px solid #000000' }
-                    },
-                ]
-            },
-            {
-                headerName: 'Calc',
-                children: [
-                    {
-                        headerName: 'Calc', width: 70,
-                        columnGroupShow: 'closed'
+                        cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightgreen' },
+                        columnGroupShow: 'closed', pinned: 'left',
                     },
                     {
                         headerName: '* 1%', field: 'our_rate_1p', width: 100, colId: 'our_rate_1p',
@@ -128,7 +86,19 @@ export class MainTablePremSharedService {
                             const minToNum = parseFloat(min) * 1.01;
                             return minToNum.toFixed(4);
                         },
-                        cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0', 'border-left': '1px solid #000' },
+                        columnGroupShow: 'open'
+                    },
+                    {
+                        headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
+                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        valueGetter(params) {
+                            const ratesArr = _mainTableCommon.extractRates(params).sort();
+                            const min = Math.min(...ratesArr).toFixed(4);
+                            const minToNum = parseFloat(min) * 1.02;
+                            return minToNum.toFixed(4);
+                        },
+                        cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightgreen' },
                         columnGroupShow: 'open'
                     },
                     {
@@ -200,11 +170,24 @@ export class MainTablePremSharedService {
                 ]
             },
             {
-                headerName: 'Destination', field: 'destination', colId: 'destination',
-                width: 300, lockPosition: true,
-                cellStyle: { 'border-left': '1px solid #000', 'border-right': '1px solid #000', 'background': 'lightblue' },
-                filter: 'agTextColumnFilter',
-            }, // End of parent Object
+                headerName: 'Effective', field: '', width: 100, colId: 'eff_date',
+                filter: 'agDateColumnFilter', lockPosition: true,
+                valueGetter() {
+                    const d = new Date();
+                    const month = d.getMonth() + 1;
+                    const date = `${d.getFullYear()}.${month}.${d.getDate()}`;
+                    return date;
+                },
+                cellStyle: { 'border-right': '1px solid #E0E0E0' }
+            },
+            {
+                headerName: 'Status', field: 'status', width: 100, colId: 'status',
+                editable: true, lockPosition: true,
+                valueGetter() {
+                    return 'current';
+                },
+                cellStyle: { 'border-right': '1px solid #000' }
+            }
         ); // end push of calc cols
 
         for ( let i = 0; i < carrierGroupHeadersArr.length; i++ ) { // pushing ea carrier as a col
@@ -213,7 +196,7 @@ export class MainTablePremSharedService {
 
             carrierColumnDefs.push(
                 {
-                    headerName: 'see dest.',
+                    headerName: 'See Dest.',
                     children: [
                         {
                             headerName: 'Destination', field: destinationFieldString,
@@ -223,7 +206,7 @@ export class MainTablePremSharedService {
                             columnGroupShow: 'open',
                         },
                         {
-                            headerName: carrierGroupHeadersArr[i].ratecard_name_modified, field: sellrateFieldString, width: 200,
+                            headerName: carrierGroupHeadersArr[i].ratecard_name_modified, field: sellrateFieldString, width: 160,
                             headerHeight: 400, editable: true,
                             filter: 'agNumberColumnFilter',
                             colId: `carrier_rate_${i}`, // This will be the columnID to use for functionaility
@@ -263,7 +246,6 @@ export class MainTablePremSharedService {
                 }
 
             }
-
             return carrierRowDataArr;
         }
 

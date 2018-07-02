@@ -51,7 +51,6 @@ import { CarrierProfileComponent } from './carrier/carrier-profile/carrier-profi
     import { AddCarrierProfileDialogComponent } from './carrier/carrier-profile/dialog/add-carrier-profile-dialog/add-carrier-profile-dialog.component';
 import { CarrierProfileService } from './shared/api-services/carrier/carrier-profile.api.service';
 
-
 // ? Ratecard
 import { RateCardsTableComponent } from './ratecard/rate-cards-table/rate-cards-table.component';
 import { DeleteRateCardsDialogComponent } from './ratecard/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component';
@@ -61,7 +60,6 @@ import { RateCardsConvertCsvComponent } from './ratecard/rate-cards-convert-csv/
 import { IsoCodesSharedService } from './shared/services/ratecard/iso-codes.shared.service';
 import { RateCardsService } from './shared/api-services/ratecard/rate-cards.api.service';
 import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.shared.service';
-
 
 // ? Ratecard Importer
 import { ImporterTableComponent } from './ratecard/ratecard-importer/importer-table/importer-table.component';
@@ -74,8 +72,7 @@ import { UploadRatesDialogComponent } from './ratecard/ratecard-importer/importe
 import { RatecardViewCarrierComponent } from './ratecard/ratecard-view-carrier-s/ratecard-view-carrier.component';
 import { RatecardViewCarrierPComponent } from './ratecard/ratecard-view-carrier-p/ratecard-view-carrier-p.component';
 
-import { MainTableStdSharedService } from './shared/services/ratecard/main-table-std.shared.service';
-import { MainTablePremSharedService } from './shared/services/ratecard/main-table-prem.shared.service';
+import { MainTableSharedService } from './shared/services/ratecard/main-table.shared.service';
 import { MainTableCommonSharedService } from './shared/services/ratecard/main-table-common.shared.service';
 
 // ? Trunks
@@ -192,16 +189,19 @@ import { RegistrationComponent } from './registration/registration.component';
     ])
   ],
     providers: [
-        // Global services
+        // ? Global services
         NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, CodesSharedService,
         ApiSettingsSharedService,
-        // Carrier
+
+        // ? Carrier
         CarrierService, CarrierSharedService,
         CarrierProfileService,
-        // Ratecard
+
+        // ? Ratecard
         ImporterService, ImporterSharedService, RateCardsService, RateCardsSharedService,
-        // Ratecard Viewer
-        IsoCodesSharedService, MainTableStdSharedService, MainTablePremSharedService,
+
+        // ? Ratecard Viewer
+        IsoCodesSharedService, MainTableSharedService,
         MainTableCommonSharedService,
 
         TrunksService, TrunksSharedService,

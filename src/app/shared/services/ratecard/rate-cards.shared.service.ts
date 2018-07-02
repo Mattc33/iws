@@ -13,6 +13,9 @@ export class RateCardsSharedService {
     rowTrunksObjSource = new BehaviorSubject<object>({}); // Passing trunks rowObj from trunks table => delete dialog
     currentRowTrunksObj = this.rowTrunksObjSource.asObservable();
 
+    countryObjSource = new BehaviorSubject<string>('0');
+    countryObjCurrent = this.countryObjSource.asObservable();
+
     changeRowAllObj(rowObj: object) {
         this.rowObjAllSource.next(rowObj);
         console.table(rowObj);
@@ -26,6 +29,11 @@ export class RateCardsSharedService {
     changeRowTrunksObj(rowObj: object) {
         this.rowTrunksObjSource.next(rowObj);
         console.table(rowObj);
+    }
+
+    countryObjChange(countryRowId: string) {
+        this.countryObjSource.next(countryRowId);
+        console.log(countryRowId);
     }
 }
 

@@ -4,8 +4,9 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 
 import { IsoCodesSharedService } from './../../shared/services/ratecard/iso-codes.shared.service';
 import { RateCardsService } from './../../shared/api-services/ratecard/rate-cards.api.service';
-import { MainTableStdSharedService } from './../../shared/services/ratecard/main-table-std.shared.service';
+import { MainTableSharedService } from './../../shared/services/ratecard/main-table.shared.service';
 import { MainTableCommonSharedService } from './../../shared/services/ratecard/main-table-common.shared.service';
+import { RateCardsSharedService } from './../../shared/services/ratecard/rate-cards.shared.service';
 
 @Component({
     selector: 'app-ratecard-view-carrier',
@@ -35,11 +36,11 @@ export class RatecardViewCarrierComponent implements OnInit {
     constructor(
         private _isoCodes: IsoCodesSharedService,
         private _rateCardsService: RateCardsService,
-        private _mainTableStd: MainTableStdSharedService,
+        private _mainTable: MainTableSharedService,
         @Inject(ElementRef) _elementRef: ElementRef,
-        private _renderer: Renderer,
         public _dialog: MatDialog,
-        private _mainTableCommon: MainTableCommonSharedService
+        private _mainTableCommon: MainTableCommonSharedService,
+        private _rateCardsShared: RateCardsSharedService
     ) {
         this.columnDefsCountry = this.createColumnDefsCountry();
         this.columnDefsCarrier = this.createColumnDefsCarrier();
@@ -86,18 +87,18 @@ export class RatecardViewCarrierComponent implements OnInit {
                                 Array.prototype.push.apply(hash[obj.carrier_id], obj.rates);
                             });
 
-                            const carrierGroupHeadersArr = this._mainTableStd.createColumnGroupHeaders(result);
-                            const columnDefsForMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, result);
-                    
-                            this.columnDefsMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, result);
-                    
-                            const finalRowData = this._mainTableStd.createRowData(result);
+                            const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(result);
+                            const columnDefsForMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, result);
+
+                            this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, result);
+
+                            const finalRowData = this._mainTable.createRowData(result);
                             this.gridApiMain.setRowData(finalRowData);
-                    
+
                             this.setCarrierRowData(carrierGroupHeadersArr);
                         }
                     }
-                )
+                );
         }
     }
 
@@ -106,12 +107,12 @@ export class RatecardViewCarrierComponent implements OnInit {
         const rowDataFilteredForStandard = this.filterByStandard(rowDataFilteredByTeleU);
         const rowDataFilteredForBlankRates = this._mainTableCommon.filterOutBlankArrays(rowDataFilteredForStandard, 'rates');
 
-        const carrierGroupHeadersArr = this._mainTableStd.createColumnGroupHeaders(rowDataFilteredForBlankRates);
-        const columnDefsForMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredForBlankRates);
+        const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(rowDataFilteredForBlankRates);
+        const columnDefsForMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredForBlankRates);
 
-        this.columnDefsMain = this._mainTableStd.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredForBlankRates);
+        this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, rowDataFilteredForBlankRates);
 
-        const finalRowData = this._mainTableStd.createRowData(rowDataFilteredForBlankRates);
+        const finalRowData = this._mainTable.createRowData(rowDataFilteredForBlankRates);
         this.gridApiMain.setRowData(finalRowData);
 
         this.setCarrierRowData(carrierGroupHeadersArr);
@@ -143,6 +144,7 @@ export class RatecardViewCarrierComponent implements OnInit {
         this.gridApiCountry = params.api;
         params.api.sizeColumnsToFit();
         this.gridApiCountry.selectIndex(0, true, null);
+        this.initCountrySelection();
     }
 
     on_GridReady_carrier(params): void {
@@ -188,14 +190,25 @@ export class RatecardViewCarrierComponent implements OnInit {
     // AG Grid Country Table
     // ================================================================================
     onSelectionChangedCountry() {
-        const selectedCode = this.gridApiCountry.getSelectedRows()[0].code;
-        this.gridApiMain.setRowData([]);
-        
-        if ( selectedCode === 'world') {
+        const selectedNode = this.gridApiCountry.getSelectedNodes();
+
+        this._rateCardsShared.countryObjChange(selectedNode[0].id); // * set shared observable as country selection id
+
+        this.gridApiMain.setRowData([]); // * set main grid empty
+
+        console.log(selectedNode[0].data.country);
+
+        if ( selectedNode[0].data.code === 'world') { // * condition to check for world if not call country api as normal
             this.get_everyCountryRates();
         } else {
-            this.get_specificCarrierRatesByCountry(selectedCode);
+            this.get_specificCarrierRatesByCountry(selectedNode[0].data.code);
         }
+    }
+
+    initCountrySelection(): void {
+        this._rateCardsShared.countryObjCurrent.subscribe(
+            rowNode => this.gridApiCountry.getRowNode(`${rowNode}`).setSelected(true)
+        );
     }
 
     // ================================================================================
