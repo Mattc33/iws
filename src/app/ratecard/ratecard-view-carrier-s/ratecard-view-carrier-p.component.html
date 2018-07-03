@@ -30,6 +30,7 @@
     <div ng-sidebar-content>
         <div class="top-table-toolbar">
             <div class="toggle-filter-menu">
+                <button (click)="autoSortCountriesAZ()" >test</button>
             </div>
             <div class="toggle-country-carrier-menu">
                 <button (click)="toggleCountryCarrierSidebar()"> <i class="fas fa-globe"></i> <span class="country-carrier-header">Country | Carrier</span></button>
@@ -44,7 +45,7 @@
                 [enableColResize]="true"
                 [suppressDragLeaveHidesColumns]="true"
                 [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
-                [headerHeight]="40" [floatingFiltersHeight]="30"
+                [headerHeight]="30" [floatingFiltersHeight]="30"
                 [enableCellChangeFlash]="true"
 
                 (gridReady)="on_GridReady($event)"

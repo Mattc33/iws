@@ -69,7 +69,7 @@ import { ImporterSharedService } from './shared/services/ratecard/importer.share
 import { UploadRatesDialogComponent } from './ratecard/ratecard-importer/importer-table/dialog/upload-rates/upload-rates-dialog.component';
 
 // ? Ratecard View By Carrier
-import { RatecardViewCarrierComponent } from './ratecard/ratecard-view-carrier-s/ratecard-view-carrier.component';
+import { RatecardViewCarrierSComponent } from './ratecard/ratecard-view-carrier-s/ratecard-view-carrier-p.component';
 import { RatecardViewCarrierPComponent } from './ratecard/ratecard-view-carrier-p/ratecard-view-carrier-p.component';
 
 import { MainTableSharedService } from './shared/services/ratecard/main-table.shared.service';
@@ -132,7 +132,7 @@ import { RegistrationComponent } from './registration/registration.component';
         // Ratecard
         RateCardsTableComponent, DeleteRateCardsDialogComponent, ImporterTableComponent,
         UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent, DeleteRatesComponent,
-        RatecardViewCarrierComponent, RatecardViewCarrierPComponent,
+        RatecardViewCarrierSComponent, RatecardViewCarrierPComponent,
         // Trunk
         TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DetachTrunksComponent,
         // Call Plan
@@ -169,7 +169,7 @@ import { RegistrationComponent } from './registration/registration.component';
         {path: 'rate-card-view', component: RateCardsTableComponent},
         {path: 'rate-card-add-trunks', component: RateCardsAddTrunksComponent},
         {path: 'rate-card-convert-csv', component: RateCardsConvertCsvComponent},
-        {path: 'rate-card-view-carrier', component: RatecardViewCarrierComponent},
+        {path: 'rate-card-view-carrier', component: RatecardViewCarrierSComponent},
         {path: 'rate-card-view-carrier-p', component: RatecardViewCarrierPComponent},
 
         {path: 'trunks', component: TrunksTableComponent},

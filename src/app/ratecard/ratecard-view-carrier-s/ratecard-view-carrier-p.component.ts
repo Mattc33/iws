@@ -10,10 +10,10 @@ import { RateCardsSharedService } from './../../shared/services/ratecard/rate-ca
 
 @Component({
     selector: 'app-ratecard-view-carrier',
-    templateUrl: './ratecard-view-carrier.component.html',
-    styleUrls: ['./ratecard-view-carrier.component.scss']
+    templateUrl: './ratecard-view-carrier-p.component.html',
+    styleUrls: ['./ratecard-view-carrier-p.component.scss']
 })
-export class RatecardViewCarrierComponent implements OnInit {
+export class RatecardViewCarrierSComponent implements OnInit {
 
     public _elementRef: ElementRef;
 
@@ -65,7 +65,7 @@ export class RatecardViewCarrierComponent implements OnInit {
         for ( let i = 0; i <= 240; i++ ) {
             this._rateCardsService.get_ratesByCountry(this.rowDataCountry[i].code)
                 .subscribe(
-                    (resp: Response) => {
+                    resp => {
 
                         // * doing some pre data filtering
                         const rowDataFilteredByTeleU = this.filterByTeleU(resp);
@@ -98,8 +98,15 @@ export class RatecardViewCarrierComponent implements OnInit {
                             this.setCarrierRowData(carrierGroupHeadersArr);
                         }
                     }
+                    // error => {
+                    //     console.log('error');
+                    // },
+                    // () => {
+                    //     console.log('complete');
+                    // }
                 );
         }
+
     }
 
     processData(rowData) {
@@ -232,11 +239,19 @@ export class RatecardViewCarrierComponent implements OnInit {
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // AG Grid Main Table - Header - Hide
+    // AG Grid Main Table
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     deselectCarrierTableCheckbox(event, id) {
         const rowNode = this.gridApiCarrier.getRowNode(id);
         rowNode.setSelected(false);
+    }
+
+    autoSortCountriesAZ() {
+        const sort = [{
+            colId: 'destination',
+            sort: 'asc'
+        }];
+        this.gridApiMain.setSortModel(sort);
     }
 
     detectColVisibility(condition: boolean, colId: string) {
