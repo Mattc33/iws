@@ -7,6 +7,7 @@
             <ag-grid-angular class="ag-theme-balham" id="country-picker-table"
                 [columnDefs]="columnDefsCountry" [rowData]="rowDataCountry"
                 [rowSelection]="rowSelectionS" (selectionChanged)="onSelectionChangedCountry()" [suppressRowClickSelection]="true"
+                (filterChanged)="filterChanged()"
                 [floatingFilter]="true" [enableSorting]="true" (gridSizeChanged)="gridSizeChanged($event)"
                 [headerHeight]="40" [floatingFiltersHeight]="30"
 

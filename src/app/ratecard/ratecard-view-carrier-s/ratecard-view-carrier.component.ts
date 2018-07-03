@@ -196,8 +196,6 @@ export class RatecardViewCarrierComponent implements OnInit {
 
         this.gridApiMain.setRowData([]); // * set main grid empty
 
-        console.log(selectedNode[0].data.country);
-
         if ( selectedNode[0].data.code === 'world') { // * condition to check for world if not call country api as normal
             this.get_everyCountryRates();
         } else {
@@ -209,6 +207,14 @@ export class RatecardViewCarrierComponent implements OnInit {
         this._rateCardsShared.countryObjCurrent.subscribe(
             rowNode => this.gridApiCountry.getRowNode(`${rowNode}`).setSelected(true)
         );
+    }
+
+    filterChanged(): void {
+        const rowCount = this.gridApiCountry.getDisplayedRowCount();
+        if ( rowCount === 1 ) {
+            const firstRowId = this.gridApiCountry.getDisplayedRowAtIndex(0).id;
+            this.gridApiCountry.getRowNode(`${firstRowId}`).setSelected(true);
+        }
     }
 
     // ================================================================================
