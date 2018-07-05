@@ -44,11 +44,11 @@ export class RateCardsTableComponent implements OnInit {
     buttonToggleBoolean_trunks = true;
     gridSelectionStatus_trunks: number;
 
-    // Properties for internal service
-    rowRatecardObj;
+    // ? Properties for internal service
+    rowRatecardObj; // ? Obj containing all selected Rows
+    rowRatecardId; // ? Selected Row's ratecard Id
     quickSearchValue = '';
     rowIdAll;
-    selectedRatecardId: number;
 
     constructor(
         private rateCardsService: RateCardsService,
@@ -68,9 +68,9 @@ export class RateCardsTableComponent implements OnInit {
         this.get_allRatecards();
     }
 
-    /*
-        ~~~~~~~~~~ Ratecard API services ~~~~~~~~~~
-    */
+    // ================================================================================
+    // * Ratecard API Service
+    // ================================================================================
     get_allRatecards(): void {
         this.rateCardsService.get_ratecard()
             .subscribe(
@@ -79,6 +79,24 @@ export class RateCardsTableComponent implements OnInit {
                     console.log(data);
                 },
                 error => console.log(error)
+            );
+    }
+
+    get_specificRatecard(ratecardId: number): void {
+        this.rateCardsService.get_ratesInRatecard(ratecardId)
+            .subscribe(
+                data => {
+                    this.gridApiRates.updateRowData({ add: data });
+                }
+            );
+    }
+
+    get_specificTrunk(ratecardId: number): void {
+        this.rateCardsService.get_specificRatecard(ratecardId)
+            .subscribe (
+                data => {
+                    this.gridApiTrunks.updateRowData({ add: data.trunks });
+                }
             );
     }
 
@@ -114,9 +132,9 @@ export class RateCardsTableComponent implements OnInit {
             );
     }
 
-    /*
-        ~~~~~~~~~~ AG Grid Initiation ~~~~~~~~~~
-    */
+    // ================================================================================
+    // * AG Grid Init
+    // ================================================================================
     on_GridReady(params): void {
         this.gridApi = params.api;
         params.api.sizeColumnsToFit();
@@ -130,13 +148,12 @@ export class RateCardsTableComponent implements OnInit {
     on_GridReady_Trunks(params): void {
         this.gridApiTrunks = params.api;
         params.api.sizeColumnsToFit();
-
     }
 
     private createColumnDefs() {
         return [
             {
-                headerName: 'RateCard Group', field: 'ratecard_bundle',
+                headerName: 'Ratecard Group', field: 'ratecard_bundle',
                 cellRenderer: 'agGroupCellRenderer', checkboxSelection: true,
                 width: 300, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
@@ -145,21 +162,16 @@ export class RateCardsTableComponent implements OnInit {
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Approve?', editable: true, field: 'confirmed', width: 100,
-                valueFormatter: function(params) {
-                    if (params.value === 1) { return true; }
-                    if (params.value === 0) { return false; }
-                },
-                cellEditor: 'select', cellEditorParams: {values: [true, false]},
+                headerName: 'Date Added', editable: true, field: 'dateAdded', width: 100,
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Enabled?', field: 'active', filter: 'agNumberColumnFilter', width: 100, editable: true,
+                headerName: 'Enabled?', field: 'active', filter: 'agNumberColumnFilter', width: 60, editable: true,
                 valueFormatter: function(params) {
                     if (params.value === 1) { return true; }
                     if (params.value === 0) { return false; }
                 },
-                cellEditor: 'select', cellEditorParams: {values: [true, false]},
+                cellEditor: 'select', cellEditorParams: {values: [true, false]}
             }
         ];
     }
@@ -196,18 +208,18 @@ export class RateCardsTableComponent implements OnInit {
                     return `${diffFixed}(${percentFixed}%)`;
                 }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
-            {
-                headerName: 'Approved?', field: 'confirmed', editable: true, width: 100,
-                cellEditor: 'select', cellEditorParams: {values: [ true, false]},
-                valueFormatter: function(params) {
-                    if (params.value === 1) {
-                        return true;
-                    }
-                    if (params.value === 0) {
-                        return false;
-                    }
-                }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
+            // {
+            //     headerName: 'Approved?', field: 'confirmed', editable: true, width: 100,
+            //     cellEditor: 'select', cellEditorParams: {values: [ true, false]},
+            //     valueFormatter: function(params) {
+            //         if (params.value === 1) {
+            //             return true;
+            //         }
+            //         if (params.value === 0) {
+            //             return false;
+            //         }
+            //     }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            // },
             {
                 headerName: 'Enabled?', field: 'active', width: 100,
                 valueFormatter: function(params) {
@@ -280,33 +292,21 @@ export class RateCardsTableComponent implements OnInit {
         aggrid_selectionChanged(): void {
             this.gridApiRates.setRowData([]);
             this.gridApiTrunks.setRowData([]);
-
             this.rowRatecardObj = this.gridApi.getSelectedRows();
-            this.selectedRatecardId = this.rowRatecardObj[0].id;
+            this.rowRatecardId = this.rowRatecardObj[0].id;
 
-            this.rateCardsService.get_ratesInRatecard(this.selectedRatecardId)
-                .subscribe(
-                    data => {
-                        this.gridApiRates.updateRowData({ add: data });
-                    }
-                );
-
-            this.rateCardsService.get_specificRatecard(this.selectedRatecardId)
-                .subscribe (
-                    data => {
-                        this.gridApiTrunks.updateRowData({ add: data.trunks });
-                    }
-                );
+            if ( this.rowRatecardObj.length === 1 ) {
+                this.get_specificRatecard(this.rowRatecardId);
+                this.get_specificTrunk(this.rowRatecardId);
+            }
         }
 
         aggrid_rates_selectionChanged(): void {
             this.rowSelectionRates = this.gridApiRates.getSelectedRows();
-            console.log(this.rowSelectionRates);
         }
 
         aggrid_trunks_selectionChanged(): void {
             this.rowSelectionTrunks = this.gridApiTrunks.getSelectedRows();
-            console.log(this.rowSelectionTrunks);
         }
 
         /*
@@ -375,7 +375,7 @@ export class RateCardsTableComponent implements OnInit {
             if ( params.data.confirmed === 'false' ) { confirmed = false; }
 
             const ratesObj =  {
-                ratecard_id: this.selectedRatecardId,
+                ratecard_id: this.rowRatecardId,
                 prefix: params.data.prefix,
                 destination: params.data.destination,
                 active: active,

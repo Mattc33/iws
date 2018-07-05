@@ -48,7 +48,7 @@ export class CarrierTableComponent implements OnInit {
     }
 
     // ================================================================================
-    // Carrier API Service
+    // * Carrier API Service
     // ================================================================================
     get_carrierRowData() {
         this.carrierService.get_carriers().subscribe(
@@ -162,7 +162,8 @@ export class CarrierTableComponent implements OnInit {
     onCellValueChanged(params: any): void {
         const id = params.data.id;
         let taxable = params.data.taxable;
-            if (taxable === 'false') { taxable = false;
+            if (taxable === 'false') {
+                taxable = false;
             } else {
                 taxable = true;
             }

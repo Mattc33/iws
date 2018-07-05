@@ -1,31 +1,16 @@
 <mat-horizontal-stepper> <!-- linear forces user to complete ea step -->
     
-    <!-- Choose Carrier Step -->
-    <mat-step [stepControl]="carrierFormGroup" [completed]="false">
-        <form [formGroup]="carrierFormGroup">
-            <ng-template matStepLabel>Choose Carrier</ng-template>
-            <mat-form-field>
-                <mat-select placeholder="Carriers" formControlName="carrierCtrl">
-                    <mat-option *ngFor="let option of carrierObj" [value]="option.id" >
-                        {{option.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <div class='profiles'>
-                <b>Availiable Profiles</b> <br>
-                Profiles trigger on matching an exact Carrier Name string. <br><br>
-                PowerNet Global, VoxBeam, Alcazar, Bankai Group, PCCW Global, StarSSip, Teleinx, VoiPlatinum Portal, VOIP Routes
-            </div>
-            <div>
-                <button mat-button matStepperNext [disabled]="!carrierFormGroup.valid"> Next </button>
-            </div>
-        </form>
-    </mat-step>
-    
     <!-- Choose Rate Card Step -->
     <mat-step [stepControl]="ratecardFormGroup" [completed]="false">
         <form [formGroup]="ratecardFormGroup">
             <ng-template matStepLabel>Enter Rate Card Name</ng-template>
+                <mat-form-field>
+                    <mat-select placeholder="Choose Carrier" formControlName="carrierCtrl">
+                        <mat-option *ngFor="let carrier of carrierObj" [value]="carrier.id" >
+                            {{carrier.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
                 <mat-form-field>
                     <input matInput placeholder="Enter Ratecard Name" formControlName="ratecardCtrl">
                 </mat-form-field>

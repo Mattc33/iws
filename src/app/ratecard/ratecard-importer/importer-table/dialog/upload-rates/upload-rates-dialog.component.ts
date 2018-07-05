@@ -1,3 +1,4 @@
+
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -7,11 +8,11 @@ import { PapaParseService } from 'ngx-papaparse';
 
 import { ImporterTableComponent } from './../../importer-table.component';
 import { ImporterService } from './../../../../../shared/api-services/ratecard/importer.api.service';
+import { CarrierService } from './../../../../../shared/api-services/carrier/carrier.api.service';
 import { ImporterSharedService } from './../../../../../shared/services/ratecard/importer.shared.service';
 import { TrunksService } from './../../../../../shared/api-services/trunk/trunks.api.service';
 import { SnackbarSharedService } from './../../../../../shared/services/global/snackbar.shared.service';
 import { ToggleButtonStateService } from './../../../../../shared/services/global/buttonStates.shared.service';
-import { CarrierProfileService } from './../../../../../shared/api-services/carrier/carrier-profile.api.service';
 
 @Component({
   selector: 'app-upload-rates',
@@ -29,18 +30,16 @@ export class UploadRatesDialogComponent implements OnInit {
     percentFormGroup: FormGroup;
     uploadRatesFormGroup: FormGroup;
 
-    // Ag Grid row & column defs
-    rowData;
-    columnDefs;
+    // * Ag Grid row & column defs for trunks
+    rowData; columnDefs;
 
     // Ag grid api & ui
     gridApi: GridApi;
     gridSelectionStatus: number;
 
-    // DB Objects
+    // * DB Objects
     carrierObj = [];
     currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
-
     ratecardTier = [
         {value: 'standard', viewValue: 'Silver'},
         {value: 'standard', viewValue: 'Standard'},
@@ -48,8 +47,6 @@ export class UploadRatesDialogComponent implements OnInit {
         {value: 'premium', viewValue: 'Premium'},
         {value: 'premium', viewValue: 'Platinum'},
     ];
-
-    teleuPercent = 0;
 
     // Insert Rates Props
     rateCardID: number;
@@ -66,39 +63,22 @@ export class UploadRatesDialogComponent implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef <ImporterTableComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
         private _papa: PapaParseService,
         private _formBuilder: FormBuilder,
-        private importerService: ImporterService,
-        private importerSharedService: ImporterSharedService,
-        private trunksService: TrunksService,
-        private snackbarSharedService: SnackbarSharedService,
-        private toggleButtonStateService: ToggleButtonStateService,
-        private _carrierSharedService: CarrierProfileService
-    ) {}
+        private _importerService: ImporterService,
+        private _carrierService: CarrierService,
+        private _importerSharedService: ImporterSharedService,
+        private _trunksService: TrunksService,
+        private _snackbarSharedService: SnackbarSharedService,
+        private _toggleButtonStateService: ToggleButtonStateService
+    ) {
+        this.columnDefs = this.createColumnDefs();
+    }
 
     ngOnInit() {
-        this.get_carrier();
         this.get_trunks();
-
-        this.columnDefs = this.createColumnDefs();
-
-        this.carrierFormGroup = this._formBuilder.group({
-            carrierCtrl: ['', Validators.required]
-        });
-        this.ratecardFormGroup = this._formBuilder.group({
-            ratecardCtrl: ['', Validators.required],
-            ratecardTierCtrl: ['', Validators.required]
-        });
-        this.percentFormGroup = this._formBuilder.group({
-            teleUCheckboxCtrl: [false],
-            teleUPercentCtrl: [1, Validators.pattern('^[0-9]')],
-            privateCheckboxCtrl: [true],
-            privatePercentCtrl: [1.02, Validators.pattern('^[0-9]')]
-        });
-        this.uploadRatesFormGroup = this._formBuilder.group({
-            uploadRatesCtrl: ['']
-        });
+        this.get_carriers();
+        this.uploadRatecardFormBuilder();
 
         this.percentFormGroup.controls.teleUCheckboxCtrl.setValue(false);
         this.percentFormGroup.controls.privateCheckboxCtrl.setValue(true);
@@ -107,16 +87,16 @@ export class UploadRatesDialogComponent implements OnInit {
     // ================================================================================
     // * API Services
     // ================================================================================
-    get_carrier(): void {
-        this.importerService.get_CarrierNames()
+    get_carriers(): void {
+        this._carrierService.get_carriers()
             .subscribe(
-                data => { this.carrierObj = data; },
+                data => { this.carrierObj = data; console.log(data); },
                 error => { console.log(error); }
             );
     }
 
     get_trunks(): void {
-        this.trunksService.get_allTrunks()
+        this._trunksService.get_allTrunks()
         .subscribe(
             data => { this.rowData = data; },
             error => { console.log(error); }
@@ -124,17 +104,17 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     post_addRates(): void {
-        this.importerService.post_AddRateCard(this.finalRatecardObj)
+        this._importerService.post_AddRateCard(this.finalRatecardObj)
             .subscribe(
                 (resp) => {
                     for ( let i = 0; i < resp.length; i++ ) { this.totalRatesProcessed += resp[i].rates.length; }
                     if ( resp.status === 200 ) {
-                        this.snackbarSharedService.snackbar_success('Ratecards successful imported.', 2000);
+                        this._snackbarSharedService.snackbar_success('Ratecards successful imported.', 2000);
                     }
                 },
                 error => {
                     console.log(error);
-                    this.snackbarSharedService.snackbar_error('Ratecards failed to import.', 2000);
+                    this._snackbarSharedService.snackbar_error('Ratecards failed to import.', 2000);
                 }
             );
     }
@@ -169,21 +149,42 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     // ================================================================================
-    // * Extract Data
+    // * Forms Builder
     // ================================================================================
-    extract_CarrierName(): string {
-        for (let i = 0; i < this.carrierObj.length; i++) {
-            if ( this.carrierObj[i].id === this.input_getCarrierId() ) {
-                return this.carrierObj[i].name;
-            }
-        }
+    uploadRatecardFormBuilder() {
+        this.buildRatecardFormGroup();
+        this.buildPercentFormGroup();
+        this.buildUploadRatesFormGroup();
     }
 
-    /*
-        ~~~~~~~~~~ Get data from input ~~~~~~~~~~
-    */
+    buildRatecardFormGroup() {
+        return this.ratecardFormGroup = this._formBuilder.group({
+            carrierCtrl: ['', Validators.required],
+            ratecardCtrl: ['', Validators.required],
+            ratecardTierCtrl: ['', Validators.required]
+        });
+    }
+
+    buildPercentFormGroup() {
+        return this.percentFormGroup = this._formBuilder.group({
+            teleUCheckboxCtrl: [false],
+            teleUPercentCtrl: [1, Validators.pattern('^[0-9]')],
+            privateCheckboxCtrl: [true],
+            privatePercentCtrl: [1.02, Validators.pattern('^[0-9]')]
+        });
+    }
+
+    buildUploadRatesFormGroup() {
+        return this.uploadRatesFormGroup = this._formBuilder.group({
+            uploadRatesCtrl: ['']
+        });
+    }
+
+    // ================================================================================
+    // * Input data
+    // ================================================================================
     input_getCarrierId(): number {
-        return this.carrierFormGroup.get('carrierCtrl').value;
+        return this.ratecardFormGroup.get('carrierCtrl').value;
     }
 
     input_getRateCardName(): number {
@@ -225,7 +226,7 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     toggleButtonStates(): boolean {
-        return this.toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus);
+        return this._toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus);
     }
 
     checkBoxValueTeleU(): boolean {
@@ -260,7 +261,7 @@ export class UploadRatesDialogComponent implements OnInit {
         ~~~~~~~~~~ AG Grid Methods ~~~~~~~~~~
     */
     aggrid_addRatecard() {
-        this.importerSharedService.currentPostTableObj.subscribe( data => { this.postTableArr = data; });
+        this._importerSharedService.currentPostTableObj.subscribe( data => { this.postTableArr = data; });
         this.event_passTrunkId.emit(this.gridApi.getSelectedRows[0]);
     }
 
@@ -331,77 +332,13 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
-        const currentCarrierName = this.extract_CarrierName();
-        if (currentCarrierName.toLowerCase() === 'powernet global') {
-            console.log('using Power Net Global Profile');
-            this.powerNetGlobalProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'voxbeam') {
-            console.log('using VoxBeam Profile');
-            this.voxBeamProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'alcazar') {
-            console.log('using Alcazar Networks Inc Profile');
-            this.alcazarNetworksProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'bankai group') {
-            this.bankaiGroupProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'pccw global' ) {
-            console.log('using PCCW Global Profile');
-            this.pccwGlobalProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'starssip') {
-            console.log('using Starsipp Profile');
-            this.starsippProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'teleinx') {
-            console.log('using Teleinx Profile');
-            this.teleinxProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'voiplatinum portal') {
-            console.log('using VoiPlatinum Profile');
-            this.voiPlatinumProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'voip routes') {
-            console.log('using VOIP Routes Profile');
-            this.voipRoutesProfile(data);
-        } 
-        if (currentCarrierName.toLowerCase() === 'megatel') {
-            console.log('uing Megatel Profile');
-            this.megatelProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'telia carrier') {
-            console.log('using Telia Carrier Profile');
-            this.teliaCarrierProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'all world communications') {
-            console.log('using All World Communications Profile');
-            this.allWorldCommunications(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'kftel') {
-            console.log('using KFTel Profile');
-            this.kftelProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'pst') {
-            console.log('using PST profile');
-            this.pstProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'default') {
-            console.log('using Default Profile');
-            this.defaultProfile(data);
-        }
-        if (currentCarrierName.toLowerCase() === 'macarena') {
-            console.log('using Macerena Profile');
-            this.macarenaProfile(data);
-        }
-
-        this.importerSharedService.changeRatesCSVAmount(this.ratesPreviewObj.length);
+        this.defaultProfile(data);
+        this._importerSharedService.changeRatesCSVAmount(this.ratesPreviewObj.length);
     }
 
     generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview
         let destinationRemoveBadChar = destination.replace(/\\|'|\\'/ , '');
-        if  (destinationRemoveBadChar.length > 64) {destinationRemoveBadChar = destinationRemoveBadChar.substring(0, 64);}
+        if  (destinationRemoveBadChar.length > 64) {destinationRemoveBadChar = destinationRemoveBadChar.substring(0, 64); }
 
         this.finalRatecardObj.rates.push(
             {   destination: destinationRemoveBadChar,
@@ -437,208 +374,4 @@ export class UploadRatesDialogComponent implements OnInit {
             this.generateRateObj(destination, prefix, buyrate, sellrate);
         }
     }
-
-    powerNetGlobalProfile(data): void {
-        const dataSliced = data.slice(3);
-        for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][0];
-            const prefix: string = dataSliced[i][1];
-            const buyrate: number = dataSliced[i][2].slice(1) * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    voxBeamProfile(data) {
-        const dataSliced = data.slice(1);
-        for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][2];
-            const prefix: string = dataSliced[i][0];
-            const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    alcazarNetworksProfile(data) {
-        const dataSliced = data.slice(7);
-
-        for (let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][0];
-            let prefix: string = dataSliced[i][1];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
-                    destination = destination.slice(1, -1);
-                }if (prefix.charAt(0) === '"' || prefix.charAt(0) === "'" ) {
-                    prefix = prefix.slice(1, -1);
-                }
-            const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    bankaiGroupProfile(data) {
-        const dataSliced = data.slice(1);
-        for (let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][0];
-            let prefix: string = dataSliced[i][1];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === "'") {
-                    destination = destination.slice(1, -1);
-                } if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
-                    prefix = prefix.slice(1, -1);
-                }
-            const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    pccwGlobalProfile(data) {
-        const dataSliced = data.slice(13);
-        for (let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][0];
-            let prefix: string = dataSliced[i][1];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') { 
-                    destination = destination.slice(1, -1);
-                } if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
-                    prefix = prefix.slice(1, -1);
-                }
-            const buyrate: number = dataSliced[i][4] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    starsippProfile(data) {
-        const dataSliced = data.slice(1);
-        for (let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][1];
-            let prefix: string = dataSliced[i][2];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
-                    destination = destination.slice(1, -1);
-                } if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
-                    prefix = prefix.slice(1, -1);
-                }
-            const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    teleinxProfile(data) {
-        const dataSliced = data.slice(1);
-        for (let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][1];
-            let prefix: string = dataSliced[i][2];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
-                    destination = destination.slice(1, -1);
-                } if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
-                    prefix = prefix.slice(1, -1);
-                }
-            const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    voiPlatinumProfile(data) {
-        const dataSliced = data.slice(1, -1);
-        for (let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][0];
-            let prefix: string = dataSliced[i][1];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
-                    destination = destination.slice(1, -1);
-                }
-                if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
-                    prefix = prefix.slice(1, -1);
-                }
-            const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    voipRoutesProfile(data) {
-        const dataSliced = data.slice(9);
-        for (let i = 0; i < dataSliced.length; i++) {
-            let destination: string = dataSliced[i][1];
-            let prefix: string = dataSliced[i][0];
-                if (destination.charAt(0) === '"' || destination.charAt(0) === '\'') {
-                    destination = destination.slice(1, -1);
-                }
-                if (prefix.charAt(0) === '"' || prefix.charAt(0) === '\'' ) {
-                    prefix = prefix.slice(1, -1);
-                }
-            const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    megatelProfile(data) {
-        const dataSliced = data.slice(2);
-        for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][0];
-            const prefix: string = dataSliced[i][2];
-            const buyrate: number = dataSliced[i][4] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    teliaCarrierProfile(data) {
-        const dataSliced = data.slice(18);
-        for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][1];
-            const prefix: string = dataSliced[i][2];
-            const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    allWorldCommunications(data) {
-        const dataSliced = data.slice(8, -1);
-        for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][2];
-            const prefix: string = dataSliced[i][1];
-            const buyrate: number = dataSliced[i][3] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    kftelProfile(data) {
-        const dataSliced = data.slice(1, -9);
-        for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][0];
-            const prefix: string = dataSliced[i][1];
-            const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    pstProfile(data) {
-        const dataSliced = data.slice(5, -4);
-        for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][1];
-            const prefix: string = dataSliced[i][0];
-            const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
-    macarenaProfile(data) {
-        const dataSliced = data.slice(8);
-        for (let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][1];
-            const prefix: string = dataSliced[i][0];
-            const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
-        }
-    }
-
 }

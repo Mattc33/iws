@@ -62,11 +62,10 @@ export class RatecardViewCarrierPComponent implements OnInit {
 
     get_everyCountryRates() {
         const countryArr = [];
-        for ( let i = 0; i <= 240; i++ ) {
+        for ( let i = 1; i <= 240; i++ ) {
             this._rateCardsService.get_ratesByCountry(this.rowDataCountry[i].code)
                 .subscribe(
                     (resp: Response) => {
-
                         // * doing some pre data filtering
                         const rowDataFilteredByTeleU = this.filterByTeleU(resp);
                         const rowDataFilteredByPremium = this.filterByPremium(rowDataFilteredByTeleU);
@@ -77,7 +76,7 @@ export class RatecardViewCarrierPComponent implements OnInit {
                             countryArr.push(rowDataFilteredForBlankRates[x]);
                         }
 
-                        if (i >= 230 ) {
+                        if (i >= 239 ) {
                             const hash = Object.create(null);
                             const result = countryArr.filter( (obj) => {
                                 if (!hash[obj.carrier_id]) {
@@ -89,16 +88,18 @@ export class RatecardViewCarrierPComponent implements OnInit {
 
                             const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(result);
                             const columnDefsForMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, result);
-                    
+
                             this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, result);
-                    
+
                             const finalRowData = this._mainTable.createRowData(result);
+
+                            console.log(finalRowData);
                             this.gridApiMain.setRowData(finalRowData);
-                    
+
                             this.setCarrierRowData(carrierGroupHeadersArr);
                         }
                     }
-                )
+                );
         }
     }
 

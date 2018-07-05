@@ -50,15 +50,6 @@ export class ImporterService {
             );
     }
 
-    get_CarrierNames(): Observable<any> {
-        return this._http
-            .get(this.url + 'carriers/')
-            .pipe(
-                map(res => res.json()),
-                catchError(this.handleError)
-            );
-        }
-
     handleError(error: any): any {
         console.error(error);
     }

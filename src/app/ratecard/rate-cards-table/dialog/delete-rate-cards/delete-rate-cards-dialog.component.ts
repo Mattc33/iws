@@ -31,8 +31,8 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
     }
 
     del_disableRatecard() {
-        const rowId = this.rowObj[0].id;
-            this.rateCardsService.del_deleteRatecard(rowId)
+        for (let i = 0; i < this.rowObj.length; i++) {
+            this.rateCardsService.del_deleteRatecard(this.rowObj[i].id)
                 .subscribe(
                     (resp) => {
                         console.log(resp);
@@ -45,6 +45,7 @@ import { SnackbarSharedService } from './../../../../shared/services/global/snac
                         this._snackbar.snackbar_error('Ratecard Failed to Disable', 2000);
                     }
                 );
+        }
     }
 
     click_delRateCard() {

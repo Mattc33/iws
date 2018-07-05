@@ -20,18 +20,26 @@ export class NestedAgGridService {
             return json.map(data => data.name.split('#'));
         }
 
+        function formatDate(date: string): string {
+            const year = date.substring(0, 4);
+            const month = date.substring(4, 6);
+            const day = date.substring(6, 8);
+            return `${month}-${day}-${year}`;
+        }
+
         function formJSONWithNewFields(json) {
             const splitNameFields = splitNameStringByPound(input);
             const insertNewFieldsArrPrivate = [];
             const insertNewFieldsArrTeleU = [];
 
             for (let i = 0; i < json.length; i++) {
+
                 if ( splitNameFields[i][2] === 'private' ) {
                     insertNewFieldsArrPrivate.push(
                         {
                             ratecard_bundle: splitNameFields[i][0] + ': [Private]',
                             name: splitNameFields[i][0],
-                            dateAdded: splitNameFields[i][1],
+                            dateAdded: formatDate(splitNameFields[i][1]),
                             offer: splitNameFields[i][2],
                             country: splitNameFields[i][3],
                             id: json[i].id,
@@ -48,7 +56,7 @@ export class NestedAgGridService {
                         {
                             ratecard_bundle: splitNameFields[i][0] + ': [TeleU]',
                             name: splitNameFields[i][0],
-                            dateAdded: splitNameFields[i][1],
+                            dateAdded: formatDate(splitNameFields[i][1]),
                             offer: splitNameFields[i][2],
                             country: splitNameFields[i][3],
                             id: json[i].id,

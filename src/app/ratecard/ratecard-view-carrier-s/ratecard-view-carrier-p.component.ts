@@ -98,12 +98,6 @@ export class RatecardViewCarrierSComponent implements OnInit {
                             this.setCarrierRowData(carrierGroupHeadersArr);
                         }
                     }
-                    // error => {
-                    //     console.log('error');
-                    // },
-                    // () => {
-                    //     console.log('complete');
-                    // }
                 );
         }
 
@@ -277,7 +271,10 @@ export class RatecardViewCarrierSComponent implements OnInit {
     // AG Grid Main Table - Export
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     exportAsCsv() {
+        const fileName = 'ObieTel_AZ_Standard_Ratecard';
+
         const exporterParams = {
+            fileName: fileName
         };
         this.gridApiMain.exportDataAsCsv(exporterParams);
     }

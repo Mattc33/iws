@@ -45,12 +45,6 @@ import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.com
 import { CarrierService } from './shared/api-services/carrier/carrier.api.service';
 import { CarrierSharedService } from './shared/services/carrier/carrier.shared.service';
 
-import { CarrierProfileComponent } from './carrier/carrier-profile/carrier-profile.component';
-    // tslint:disable-next-line:max-line-length
-    import { DelCarrierProfileDialogComponent } from './carrier/carrier-profile/dialog/del-carrier-profile-dialog/del-carrier-profile-dialog.component';
-    import { AddCarrierProfileDialogComponent } from './carrier/carrier-profile/dialog/add-carrier-profile-dialog/add-carrier-profile-dialog.component';
-import { CarrierProfileService } from './shared/api-services/carrier/carrier-profile.api.service';
-
 // ? Ratecard
 import { RateCardsTableComponent } from './ratecard/rate-cards-table/rate-cards-table.component';
 import { DeleteRateCardsDialogComponent } from './ratecard/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component';
@@ -127,8 +121,7 @@ import { RegistrationComponent } from './registration/registration.component';
         // Dashboard
         DashboardComponent,
         // Carrier
-        CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent, CarrierProfileComponent,
-        DelCarrierProfileDialogComponent, AddCarrierProfileDialogComponent,
+        CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent,
         // Ratecard
         RateCardsTableComponent, DeleteRateCardsDialogComponent, ImporterTableComponent,
         UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent, DeleteRatesComponent,
@@ -163,7 +156,6 @@ import { RegistrationComponent } from './registration/registration.component';
         {path: 'dashboard', component: DashboardComponent},
 
         {path: 'carrier-view', component: CarrierTableComponent},
-        {path: 'carrier-profile', component: CarrierProfileComponent},
 
         {path: 'rate-card-importer', component: ImporterTableComponent},
         {path: 'rate-card-view', component: RateCardsTableComponent},
@@ -195,7 +187,6 @@ import { RegistrationComponent } from './registration/registration.component';
 
         // ? Carrier
         CarrierService, CarrierSharedService,
-        CarrierProfileService,
 
         // ? Ratecard
         ImporterService, ImporterSharedService, RateCardsService, RateCardsSharedService,
@@ -212,7 +203,6 @@ import { RegistrationComponent } from './registration/registration.component';
     entryComponents: [
         // Carrier
         AddCarrierDialogComponent, DelCarrierDialogComponent,
-        AddCarrierProfileDialogComponent, DelCarrierProfileDialogComponent,
         // Ratecard
         DeleteRateCardsDialogComponent, UploadRatesDialogComponent,
         SuccessSnackbarComponent, ErrorSnackbarComponent,
