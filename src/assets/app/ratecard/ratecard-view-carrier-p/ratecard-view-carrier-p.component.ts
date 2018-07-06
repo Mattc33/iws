@@ -264,7 +264,7 @@ export class RatecardViewCarrierPComponent implements OnInit {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     exportAsCsv() {
         const exporterParams = {
-
+            fileName: 'ObieTel_AZ_Premium_Ratecard'
         };
         this.gridApiMain.exportDataAsCsv(exporterParams);
     }
