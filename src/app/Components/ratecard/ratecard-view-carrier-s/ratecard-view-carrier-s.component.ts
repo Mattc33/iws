@@ -1,6 +1,6 @@
-import { Component, OnInit, ElementRef, Inject, Renderer, ViewChild } from '@angular/core';
-import { GridApi, ColumnApi, ColumnGroup } from 'ag-grid';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit, ElementRef, Inject } from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid';
+import { MatDialog } from '@angular/material/dialog';
 
 import { IsoCodesSharedService } from '../../../shared/services/ratecard/iso-codes.shared.service';
 import { RateCardsService } from '../../../shared/api-services/ratecard/rate-cards.api.service';
@@ -213,14 +213,6 @@ export class RatecardViewCarrierSComponent implements OnInit {
     deselectCarrierTableCheckbox(event, id) {
         const rowNode = this.gridApiCarrier.getRowNode(id);
         rowNode.setSelected(false);
-    }
-
-    autoSortCountriesAZ() {
-        const sort = [{
-            colId: 'destination',
-            sort: 'asc'
-        }];
-        this.gridApiMain.setSortModel(sort);
     }
 
     detectColVisibility(condition: boolean, colId: string) {
