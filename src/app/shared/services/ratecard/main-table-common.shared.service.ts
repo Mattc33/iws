@@ -66,6 +66,48 @@ export class MainTableCommonSharedService {
         return this.filterOutBlankArrays(filterByTier);
     }
 
+    // ! Smarter obie-tel price filter
+    smartRateFilter = (arr) => {
+        let rate = 0;
+            if (arr.length === 1) {
+                rate = parseFloat(arr[0]) * 1.02;
+                return rate.toFixed(4);
+            }
+            if (arr.length === 2) {
+                const sort = arr.sort();
+                const percentDiff = this.percentDiffFn(sort[0], sort[1]);
+                if (percentDiff >= 30) {
+                    rate = parseFloat(sort[0]) * 1.02;
+                    return rate.toFixed(4);
+                }
+                if (percentDiff < 30) {
+                    const mean = this.returnMean(arr) * 1.02;
+                    return mean.toFixed(4);
+                }
+            }
+            // if (arr.length >= 3 ) {
+            //     const removeOutliers = this.removeOutliersFn(arr);
+            //     const finalRate = this.returnMean(removeOutliers);
+            // }
+        return rate;
+    }
+
+    percentDiffFn = (val1, val2) => {
+        return (val1 - val2) / (val1) * 100;
+    }
+
+    removeOutliersFn = (array) => {
+        const mean = this.returnMean(array);
+        const filteredArray = [];
+        for ( let i = 0; i < array.length; i++) {
+            const percentDiff = Math.abs(this.percentDiffFn(array[i], mean));
+            if ( percentDiff <= 30 ) {
+                filteredArray.push(array[i]);
+            }
+        }
+        return filteredArray;
+    }
+
 
 
 }

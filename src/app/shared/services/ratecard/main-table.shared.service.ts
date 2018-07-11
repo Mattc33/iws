@@ -70,12 +70,9 @@ export class MainTableSharedService {
                         headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
-                            console.log(params);
                             const ratesArr = _mainTableCommon.extractRates(params).sort();
-                            console.log(ratesArr);
-                            const min = Math.min(...ratesArr).toFixed(4);
-                            const minToNum = parseFloat(min) * 1.02;
-                            return minToNum.toFixed(4);
+                            const smartRate = _mainTableCommon.smartRateFilter(ratesArr);
+                            return smartRate;
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightgreen' },
                         columnGroupShow: 'closed', pinned: 'left'
