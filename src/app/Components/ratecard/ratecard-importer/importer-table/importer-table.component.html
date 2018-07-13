@@ -1,23 +1,22 @@
 <section id="grid-wrapper">
     <div class="table-container">
         <div class="top-toolbar">
-            <button (click)="expandAll(true)"> <i class="fas fa-expand"></i> </button>
-            <button (click)="expandAll(false)"> <i class="fas fa-compress"></i> </button>
+            <app-expand-collaspe  (collaspeExpandEvent)='expandCollaspeHandler($event)'></app-expand-collaspe>
         </div>
         
         <ag-grid-angular class="ag-theme-balham" 
-        [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
-        [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"
-        [floatingFilter]="true" [enableSorting]="true"
-        [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
-        [pagination]="true" [paginationAutoPageSize]="true"
-        [getNodeChildDetails]="getNodeChildDetails"
-        [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
-        [headerHeight]="40" [floatingFiltersHeight]="30"
+            [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
+            [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"
+            [floatingFilter]="true" [enableSorting]="true"
+            [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
+            [pagination]="true" [paginationAutoPageSize]="true"
+            [getNodeChildDetails]="getNodeChildDetails"
+            [suppressLoadingOverlay]="true" [suppressNoRowsOverlay]="true"
+            [headerHeight]="40" [floatingFiltersHeight]="30"
 
-        [enableCellChangeFlash]="true"
+            [enableCellChangeFlash]="true"
 
-        (gridReady)="on_GridReady($event)"
+            (gridReady)="on_GridReady($event)"
         >
         </ag-grid-angular>
 

@@ -1,8 +1,7 @@
 <section id="grid-wrapper">
     <div class="all-ratecards-container">
         <div class="top-toolbar">
-            <button (click)="expandAll(true)"> <i class="fas fa-expand"></i> </button>
-            <button (click)="expandAll(false)"> <i class="fas fa-compress"></i> </button>
+            <app-expand-collaspe  (collaspeExpandEvent)='expandCollaspeHandler($event)'></app-expand-collaspe>
         </div>
         <ag-grid-angular class="ag-theme-balham" id="all-ratecards-table"
             [getNodeChildDetails]="getNodeChildDetails"

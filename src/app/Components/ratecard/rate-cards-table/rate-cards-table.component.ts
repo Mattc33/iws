@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { GridApi } from 'ag-grid';
 
 import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.component';
@@ -208,18 +208,6 @@ export class RateCardsTableComponent implements OnInit {
                     return `${diffFixed}(${percentFixed}%)`;
                 }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
-            // {
-            //     headerName: 'Approved?', field: 'confirmed', editable: true, width: 100,
-            //     cellEditor: 'select', cellEditorParams: {values: [ true, false]},
-            //     valueFormatter: function(params) {
-            //         if (params.value === 1) {
-            //             return true;
-            //         }
-            //         if (params.value === 0) {
-            //             return false;
-            //         }
-            //     }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            // },
             {
                 headerName: 'Enabled?', field: 'active', width: 100,
                 valueFormatter: function(params) {
@@ -278,10 +266,11 @@ export class RateCardsTableComponent implements OnInit {
             this.gridApi.onFilterChanged();
         }
 
-        expandAll(expand: boolean) {
+        expandCollaspeHandler(e: boolean) {
+            console.log(e);
             this.gridApi.forEachNode((node) => {
                 if ( node.group) {
-                    node.setExpanded(expand);
+                    node.setExpanded(e);
                 }
             });
         }

@@ -47,9 +47,7 @@ export class MainTableSharedService {
 
     createCarrierColumnDefs(carrierGroupHeadersArr, filteredData) {
         const carrierColumnDefs = []; // * Arr that will contain the columnDefs
-
-        // * Imported helper fns
-        const _mainTableCommon = this._mainTableCommon;
+        const _mainTableCommon = this._mainTableCommon;  // * Imported helper fns
 
         carrierColumnDefs.push(
             {
@@ -68,7 +66,7 @@ export class MainTableSharedService {
                 children: [
                     {
                         headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
                             const ratesArr = _mainTableCommon.extractRates(params).sort();
                             const smartRate = _mainTableCommon.smartRateFilter(ratesArr);
@@ -79,36 +77,33 @@ export class MainTableSharedService {
                     },
                     {
                         headerName: '* 1%', field: 'our_rate_1p', width: 100, colId: 'our_rate_1p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
                             const ratesArr = _mainTableCommon.extractRates(params);
-                            const min = Math.min(...ratesArr).toFixed(4);
-                            const minToNum = parseFloat(min) * 1.01;
-                            return minToNum.toFixed(4);
+                            const smartRate = _mainTableCommon.smartRateFilter(ratesArr);
+                            return smartRate;
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0', 'border-left': '1px solid #000' },
                         columnGroupShow: 'open'
                     },
                     {
                         headerName: '* 2%', field: 'our_rate_2p', width: 100, colId: 'our_rate_2p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
                             const ratesArr = _mainTableCommon.extractRates(params).sort();
-                            const min = Math.min(...ratesArr).toFixed(4);
-                            const minToNum = parseFloat(min) * 1.02;
-                            return minToNum.toFixed(4);
+                            const smartRate = _mainTableCommon.smartRateFilter(ratesArr);
+                            return smartRate;
                         },
                         cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightgreen' },
                         columnGroupShow: 'open'
                     },
                     {
                         headerName: '* 3%', field: 'our_rate_3p', width: 100, colId: 'our_rate_3p',
-                        filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
+                        filter: 'agNumberColumnFilter', lockPosition: true,
                         valueGetter(params) {
                             const ratesArr = _mainTableCommon.extractRates(params);
-                            const min = Math.min(...ratesArr).toFixed(4);
-                            const minToNum = parseFloat(min) * 1.03;
-                            return minToNum.toFixed(4);
+                            const smartRate = _mainTableCommon.smartRateFilter(ratesArr);
+                            return smartRate;
                         },
                         cellStyle: { 'border-right': '1px solid #000000' },
                         columnGroupShow: 'open'

@@ -285,10 +285,10 @@ export class ImporterTableComponent implements OnInit {
         params.api.sizeColumnsToFit();
     }
 
-    expandAll(expand: boolean) {
+    expandCollaspeHandler(e: boolean) {
         this.gridApi.forEachNode((node) => {
             if ( node.group) {
-                node.setExpanded(expand);
+                node.setExpanded(e);
             }
         });
     }

@@ -109,6 +109,7 @@ import { LCRSharedService } from './shared/services/lcr/lcr.shared.service';
 
 // ? Accounts
 import { AccountsComponent } from './Components/accounts/accounts.component';
+import { ExpandCollaspeComponent } from './shared/components/buttons/expand-collaspe/expand-collaspe.component';
 
 @NgModule({
     declarations:
@@ -136,7 +137,7 @@ import { AccountsComponent } from './Components/accounts/accounts.component';
         // Account
         AccountsComponent,
         // Global
-        SuccessSnackbarComponent, ErrorSnackbarComponent,
+        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent,
     ],
   imports:
   [
