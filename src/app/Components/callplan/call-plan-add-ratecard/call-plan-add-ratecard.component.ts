@@ -17,7 +17,7 @@ import { ToggleButtonStateService } from '../../../shared/services/global/button
 export class CallPlanAddRatecardComponent implements OnInit {
 
 // AG grid setup props
-rowDataCallplan; columnDefsCallplan;
+rowDataCallplan: Array<{}>; columnDefsCallplan: Array<{}>;
 rowDataRatecard; columnDefsRatecard; getNodeChildDetails;
 rowDataReview; columnDefsReview;
 

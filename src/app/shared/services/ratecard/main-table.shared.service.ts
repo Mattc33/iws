@@ -14,7 +14,7 @@ export class MainTableSharedService {
         private _mainTableCommon: MainTableCommonSharedService
     ) {}
 
-    createColumnGroupHeaders(input) { // groupHeader: `Carrier ${privateData.carrier_id}`,
+    createColumnGroupHeaders(input) {
         const colGroupArr = [];
         for ( let i = 0; i < input.length; i++ ) {
             const ratecardModified = input[i].ratecard_name.split('#');
@@ -223,12 +223,10 @@ export class MainTableSharedService {
         // Set row data
         function carrierRowDataFn(filteredData) {
             const carrierRowDataArr = [];
-
             for ( let i = 0; i < filteredData.length; i++ ) {
                 const prefixFieldKey = 'prefix';
                 const destinationField = `destination_${filteredData[i].ratecard_id}`;
-                const sellrateField = 'sellrate_' + filteredData[i].ratecard_id;
-
+                const sellrateField = `sellrate_'${filteredData[i].ratecard_id}`;
                 for ( let x = 0; x < filteredData[i].rates.length; x++ ) {
                     carrierRowDataArr.push(
                             {
@@ -239,7 +237,6 @@ export class MainTableSharedService {
                             }
                     );
                 }
-
             }
             return carrierRowDataArr;
         }

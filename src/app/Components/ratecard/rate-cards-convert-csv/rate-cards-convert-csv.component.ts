@@ -1,12 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
 import { GridApi } from 'ag-grid';
 import { PapaParseService } from 'ngx-papaparse';
 import { saveAs } from 'file-saver/FileSaver';
 
 import { NestedAgGridService } from '../../../shared/services/global/nestedAgGrid.shared.service';
 import { RateCardsService } from '../../../shared/api-services/ratecard/rate-cards.api.service';
-import { RateCardsTableComponent } from '../rate-cards-table/rate-cards-table.component';
 
 @Component({
   selector: 'app-rate-cards-convert-csv',
@@ -45,23 +43,27 @@ export class RateCardsConvertCsvComponent implements OnInit {
     // Ratecard API Service
     // ================================================================================
     get_ratecards(): void {
-        this.rateCardsService.get_ratecard().subscribe(
-            data => {
-                this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
-            },
-            error => { console.log(error); },
-        );
-    }
-
-    get_specificRatecard(ratecard_id: number, fileName: string): void {
-        this.rateCardsService.get_ratesInRatecard(ratecard_id)
+        this.rateCardsService.get_ratecard()
             .subscribe(
                 data => {
-                    const csv = this.papaUnparse(data);
-                    this.saveToFileSystem(csv, fileName);
+                    this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
+                },
+                error => { console.log(error); },
+                () => {
+                    // console.log(this.rowData);
                 }
             );
     }
+
+    // get_specificRatecard(ratecard_id: number, fileName: string): void {
+    //     this.rateCardsService.get_ratesInRatecard(ratecard_id)
+    //         .subscribe(
+    //             data => {
+    //                 const csv = this.papaUnparse(data);
+    //                 this.saveToFileSystem(csv, fileName);
+    //             }
+    //         );
+    // }
 
     get_specificRatecardOneFile(ratecard_id: number, fileName: string): void {
         this.rateCardsService.get_ratesInRatecard(ratecard_id)
@@ -69,13 +71,16 @@ export class RateCardsConvertCsvComponent implements OnInit {
                 data => {
                     this.arrOfRates.push(data);
                 },
+                error => {
+
+                },
             );
     }
 
     // ================================================================================
     // AG Grid Initiation
     // ================================================================================
-    on_GridReady(params): void {
+    onGridReady(params): void {
         this.gridApi = params.api;
         params.api.sizeColumnsToFit();
     }
@@ -86,22 +91,16 @@ export class RateCardsConvertCsvComponent implements OnInit {
                 headerName: 'RateCard Group', field: 'ratecard_bundle',
                 cellRenderer: 'agGroupCellRenderer', checkboxSelection: true,
                 width: 300, cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                unSortIcon: true, sort: 'asc',
             },
             {
-                headerName: 'Country', field: 'country', width: 180,
+                headerName: 'Country', field: 'country',
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                unSortIcon: true,
             },
             {
-                headerName: 'Approve?', editable: true, field: 'confirmed', width: 100,
-                valueFormatter: function(params) {
-                    if (params.value === 1) { return true; }
-                    if (params.value === 0) { return false; }
-                },
-                cellEditor: 'select', cellEditorParams: {values: [true, false]},
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Enabled?', field: 'active', filter: 'agNumberColumnFilter', hide: true, width: 100,
+                headerName: 'Date', field: 'dateAdded',
+                unSortIcon: true,
             }
         ];
     }
@@ -113,7 +112,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
         params.api.sizeColumnsToFit();
     }
 
-    rowSelected(params) {
+    rowSelected() {
         this.currentSelectedRows = this.gridApi.getSelectedRows();
     }
 
@@ -124,8 +123,13 @@ export class RateCardsConvertCsvComponent implements OnInit {
         for ( let i = 0; i < this.currentSelectedRows.length; i++ ) {
             const eachRatecard = this.currentSelectedRows[i].id;
             const fileName = this.getSelectedFileNames(i);
-            this.get_specificRatecard(eachRatecard, fileName);
+            // this.get_specificRatecard(eachRatecard, fileName);
         }
+        this.currentSelectedRows.array.forEach( (element, index) => {
+            const eaRatecard = element.id;
+            const fileName = this.getSelectedFileNames(index);
+
+        });
     }
 
     getSelectedFileNames(id): string {
@@ -204,6 +208,4 @@ export class RateCardsConvertCsvComponent implements OnInit {
         this.arrOfRates = [];
         this.disableStep2 = !this.disableStep2;
     }
-
-
 }

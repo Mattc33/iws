@@ -145,7 +145,13 @@ import { ExpandCollaspeComponent } from './shared/components/buttons/expand-coll
     HttpModule, HttpClientModule, BrowserModule,
     FormsModule, CommonModule, ReactiveFormsModule,
     // Third Party Modules
-    PapaParseModule, SidebarModule, AgGridModule.withComponents([]),
+    PapaParseModule, SidebarModule,
+    AgGridModule.withComponents([
+        CarrierTableComponent, RateCardsTableComponent, ImporterTableComponent, UploadRatesDialogComponent, RatecardViewCarrierSComponent,
+        RatecardViewCarrierPComponent, TrunksTableComponent, AddTrunksComponent, CallPlanTableComponent, AddCallPlanComponent,
+        CallPlanAddRatecardComponent, CallPlanAddCodeComponent, AddRateCardComponent, AddCodeComponent, LcrCallPlanTableComponent,
+        LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent
+    ]),
     // Angular Materials Modules
     BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatDatepickerModule, MatNativeDateModule,

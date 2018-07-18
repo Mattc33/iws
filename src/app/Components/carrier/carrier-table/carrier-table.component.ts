@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { GridApi } from 'ag-grid';
 
 import { DelCarrierDialogComponent } from './dialog/del-carrier/del-carrier-dialog.component';
@@ -74,7 +74,7 @@ export class CarrierTableComponent implements OnInit {
     }
 
     // ================================================================================
-    // AG Grid Init
+    // * AG Grid Init
     // ================================================================================
     on_GridReady(params): void {
         this.gridApi = params.api;
