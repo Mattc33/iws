@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 import { RateCardsTableComponent } from '../../rate-cards-table.component';
 
@@ -10,46 +11,71 @@ import { SnackbarSharedService } from '../../../../../shared/services/global/sna
 
 @Component({
     selector: 'app-del-rate-cards-dialog',
-    templateUrl: './delete-rate-cards-dialog.component.html',
+    template:  `<h2 mat-dialog-title>Are you sure?</h2>
+                    <div mat-dialog-actions>
+                    <button tabindex="-1" mat-button (click)="deleteRatecardHandler()" >Yes</button>
+                    <button tabindex="-1" mat-button (click)="closeDialog()">No</button>
+                </div>`,
     styleUrls: ['./delete-rate-cards-dialog.component.scss']
   })
   export class DeleteRateCardsDialogComponent implements OnInit {
 
     addCarrierFormGroup: FormGroup;
-    rowObj;
+    rowsToDelete;
 
     constructor(
-      public dialogRef: MatDialogRef <RateCardsTableComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any,
-      private rateCardsService: RateCardsService,
-      private rateCardsSharedService: RateCardsSharedService,
-      private _snackbar: SnackbarSharedService
+        public dialogRef: MatDialogRef <RateCardsTableComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private rateCardsService: RateCardsService,
+        private rateCardsSharedService: RateCardsSharedService,
+        private _snackbar: SnackbarSharedService
     ) {}
 
     ngOnInit() {
-        this.rateCardsSharedService.currentRowAllObj.subscribe(data => this.rowObj = data);
+        this.rateCardsSharedService.currentRowAllObj
+            .subscribe(data => this.rowsToDelete = data);
     }
 
-    del_disableRatecard() {
-        for (let i = 0; i < this.rowObj.length; i++) {
-            this.rateCardsService.del_deleteRatecard(this.rowObj[i].id)
-                .subscribe(
-                    (resp) => {
-                        console.log(resp);
-                        if ( resp.status === 200 ) {
-                            this._snackbar.snackbar_success('Ratecard Disabled', 2000);
-                        }
-                    },
-                    error => {
-                        console.log(error);
-                        this._snackbar.snackbar_error('Ratecard Failed to Disable', 2000);
+    // ! Async Await Pattern
+    // service(row) {
+    //     this.rateCardsService.del_deleteRatecard(row.id)
+    //         .subscribe(
+    //             resp => {
+    //                 if ( resp.status === 200 ) {
+    //                     this._snackbar.snackbar_success('Ratecard Disabled', 2000);
+    //                 }
+    //             },
+    //             error => {
+    //                 this._snackbar.snackbar_error('Ratecard Failed to Disable', 2000);
+    //             }
+    //         );
+    // }
+
+    // del_disableRatecard() {
+    //     for (const row of this.rowsToDelete) {
+    //         this.service(row);
+    //     }
+    //     console.log('Final done');
+    // }
+
+    disableRatecards() { // ! Needs Async Code(with Observables) Here for Delete
+        this.rowsToDelete.forEach(row => {
+            this.rateCardsService.del_deleteRatecard(row.id)
+            .subscribe(
+                resp => {
+                    if ( resp.status === 200 ) {
+                        this._snackbar.snackbar_success('Ratecard Disabled', 2000);
                     }
-                );
-        }
+                },
+                error => {
+                    this._snackbar.snackbar_error('Ratecard Failed to Disable', 2000);
+                }
+            );
+        });
     }
 
-    click_delRateCard() {
-        this.del_disableRatecard();
+    deleteRatecardHandler() {
+        this.disableRatecards();
         this.closeDialog();
     }
 
@@ -58,3 +84,15 @@ import { SnackbarSharedService } from '../../../../../shared/services/global/sna
     }
 
   }
+
+
+/*
+    let observables: Observable[] = [];
+    for (let i = 0; i < this.waypointIds.length; i++) {
+        observables.push(this.categoryApi.getCategoryData(this.waypointIds[i]))
+    }
+    Observable.forkJoin(observables)
+        .subscribe(dataArray => {
+            // All observables in `observables` array have resolved and `dataArray` is an array of result of each observable
+        });
+*/

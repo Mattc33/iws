@@ -1,0 +1,31 @@
+main {
+    padding: 5px 5px 0px 5px;
+    
+    header {
+        display: grid;
+        grid-template-columns: 260px 3fr;
+        grid-template-rows: 40px 40px;
+        border-bottom: 1px solid #ccc;
+
+        .toCarrierContainer {
+            grid-column: 0 / 1;
+            grid-row: 0 / 1;
+            background-color: lightblue;
+        }
+
+        &:nth-child(n + 1) {
+            span {
+                margin-right: 5px;
+            }
+        }
+        
+    }
+
+    section {
+        height: 800px;
+        ag-grid-angular {
+            height: 100%;
+        }
+    }
+
+}

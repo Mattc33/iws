@@ -76,7 +76,6 @@ export class RateCardsTableComponent implements OnInit {
             .subscribe(
                 data => {
                     this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
-                    console.log(data);
                 },
                 error => console.log(error)
             );
@@ -156,6 +155,7 @@ export class RateCardsTableComponent implements OnInit {
                 headerName: 'Ratecard Group', field: 'ratecard_bundle',
                 cellRenderer: 'agGroupCellRenderer', checkboxSelection: true,
                 width: 300, cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                sort: 'asc'
             },
             {
                 headerName: 'Country', field: 'country', width: 180,
@@ -171,7 +171,8 @@ export class RateCardsTableComponent implements OnInit {
                     if (params.value === 1) { return true; }
                     if (params.value === 0) { return false; }
                 },
-                cellEditor: 'select', cellEditorParams: {values: [true, false]}
+                cellEditor: 'select', cellEditorParams: {values: [true, false]},
+                hide: true
             }
         ];
     }
@@ -388,7 +389,6 @@ export class RateCardsTableComponent implements OnInit {
             const dialogRef = this.dialog.open(DeleteRateCardsDialogComponent, {});
 
             dialogRef.afterClosed().subscribe(() => {
-                this.gridApi.setRowData([]);
                 this.get_allRatecards();
             });
         }

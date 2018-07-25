@@ -1,0 +1,56 @@
+<main>
+    <header>
+        <!-- To Carrier --> 
+        <div classs="toCarrierContainer">
+            <span>To:</span>
+            <nz-select 
+                style="width: 200px;"
+                nzShowSearch 
+                nzAllowClear 
+                nzPlaceHolder="Carrier" 
+                [(ngModel)]="toCarrierValue"
+                (ngModelChange)="toCarrierChangeHandler($event)"
+            >
+                <nz-option *ngFor="let carrier of toCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
+            </nz-select>
+        </div>
+
+        <!-- From Carrier -->
+        <div>
+            <span>From:</span>
+            <nz-select 
+                style="width: 94%;"
+                nzMode="multiple"
+                nzAllowClear 
+                nzPlaceHolder="Carrier" 
+                [(ngModel)]="fromCarrierValue"
+                (ngModelChange)="fromCarrierChangeHandler($event)"
+            >
+                <nz-option *ngFor="let carrier of fromCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
+            </nz-select>
+        </div>
+            <!-- Choose Product Tier -->
+            <div>
+                <nz-select 
+                    style="width: 200px; margin-left: 25px;" 
+                    nzShowSearch 
+                    nzAllowClear 
+                    nzPlaceHolder="Product Tier" 
+                    [(ngModel)]="productTierValue"
+                >
+                    <nz-option *ngFor="let productTier of productTierOptions" [nzLabel]="productTier.label" [nzValue]="productTier.value"></nz-option>
+                </nz-select>
+            </div>
+    </header>
+    <section>
+        <ag-grid-angular class="ag-theme-balham"
+            [columnDefs]="columnDefs" [rowData]="rowData" 
+            [headerHeight]="40" 
+
+            (gridReady)="onGridReady($event)"
+        >
+        </ag-grid-angular> 
+        <br/> 
+        <button nz-button nzType="primary" (click)="testButton()">TEST</button>
+    </section>
+</main>

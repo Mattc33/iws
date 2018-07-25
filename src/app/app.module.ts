@@ -36,6 +36,7 @@ import { ErrorSnackbarComponent } from './shared/components/snackbars/error/erro
 import { AgGridModule } from 'ag-grid-angular';
 import { PapaParseModule } from 'ngx-papaparse';
 import { SidebarModule } from 'ng-sidebar';
+import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
 
 // ? DashBoard
 import { DashboardComponent } from './Components/dashboard/dashboard.component';
@@ -52,6 +53,7 @@ import { RateCardsTableComponent } from './Components/ratecard/rate-cards-table/
 import { DeleteRateCardsDialogComponent } from './Components/ratecard/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component';
 import { RateCardsAddTrunksComponent } from './Components/ratecard/rate-cards-add-trunks/rate-cards-add-trunks.component';
 import { RateCardsConvertCsvComponent } from './Components/ratecard/rate-cards-convert-csv/rate-cards-convert-csv.component';
+import { RateCardManagerComponent } from './Components/ratecard/rate-card-manager/rate-card-manager.component';
 
 import { IsoCodesSharedService } from './shared/services/ratecard/iso-codes.shared.service';
 import { RateCardsService } from './shared/api-services/ratecard/rate-cards.api.service';
@@ -111,6 +113,14 @@ import { LCRSharedService } from './shared/services/lcr/lcr.shared.service';
 import { AccountsComponent } from './Components/accounts/accounts.component';
 import { ExpandCollaspeComponent } from './shared/components/buttons/expand-collaspe/expand-collaspe.component';
 
+// ? App Module Service
+import { AppRoutes } from './Containers/routes/routes';
+
+// ? config angular i18n
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+registerLocaleData(en);
+
 @NgModule({
     declarations:
     [
@@ -137,54 +147,25 @@ import { ExpandCollaspeComponent } from './shared/components/buttons/expand-coll
         // Account
         AccountsComponent,
         // Global
-        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent,
+        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateCardManagerComponent,
     ],
   imports:
   [
     // Core Angular Modules
     HttpModule, HttpClientModule, BrowserModule,
     FormsModule, CommonModule, ReactiveFormsModule,
+    BrowserAnimationsModule,
     // Third Party Modules
     PapaParseModule, SidebarModule,
-    AgGridModule.withComponents([
-        CarrierTableComponent, RateCardsTableComponent, ImporterTableComponent, UploadRatesDialogComponent, RatecardViewCarrierSComponent,
-        RatecardViewCarrierPComponent, TrunksTableComponent, AddTrunksComponent, CallPlanTableComponent, AddCallPlanComponent,
-        CallPlanAddRatecardComponent, CallPlanAddCodeComponent, AddRateCardComponent, AddCodeComponent, LcrCallPlanTableComponent,
-        LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent
-    ]),
+    AgGridModule.withComponents([]),
+    BrowserAnimationsModule,
     // Angular Materials Modules
-    BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
+    MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatDatepickerModule, MatNativeDateModule,
     MatTabsModule, MatAutocompleteModule, MatExpansionModule, MatSliderModule, MatSnackBarModule,
     // Ag Grid & Routing
-    RouterModule.forRoot([
-        {path: '', component: DashboardComponent},
-        {path: 'dashboard', component: DashboardComponent},
-
-        {path: 'carrier-view', component: CarrierTableComponent},
-
-        {path: 'rate-card-importer', component: ImporterTableComponent},
-        {path: 'rate-card-view', component: RateCardsTableComponent},
-        {path: 'rate-card-add-trunks', component: RateCardsAddTrunksComponent},
-        {path: 'rate-card-convert-csv', component: RateCardsConvertCsvComponent},
-        {path: 'rate-card-view-carrier', component: RatecardViewCarrierSComponent},
-        {path: 'rate-card-view-carrier-p', component: RatecardViewCarrierPComponent},
-
-        {path: 'trunks', component: TrunksTableComponent},
-
-        {path: 'call-plan-view', component: CallPlanTableComponent},
-        {path: 'call-plan-add-ratecard', component: CallPlanAddRatecardComponent},
-        {path: 'call-plan-add-code', component: CallPlanAddCodeComponent},
-
-        {path: 'lcr-carrier', component: LcrCarrierTableComponent},
-        {path: 'lcr-ratecard', component: LcrRatecardTableComponent},
-        {path: 'lcr-trunk', component: LcrTrunkTableComponent},
-        {path: 'lcr-callplan', component: LcrCallPlanTableComponent},
-
-        {path: 'accounts', component: AccountsComponent},
-        {path: 'login', component: LoginComponent},
-        {path: 'registration', component: RegistrationComponent}
-    ])
+    RouterModule.forRoot(AppRoutes),
+    NgZorroAntdModule
   ],
     providers: [
         // ? Global services
@@ -204,7 +185,8 @@ import { ExpandCollaspeComponent } from './shared/components/buttons/expand-coll
         TrunksService, TrunksSharedService,
         CallPlanService, CallPlanSharedService, CodesFormSharedService,
         LCRService, LCRSharedService,
-    ], // Applications services
+        { provide: NZ_I18N, useValue: en_US }
+    ],
     bootstrap: [ AppComponent ],
     entryComponents: [
         // Carrier

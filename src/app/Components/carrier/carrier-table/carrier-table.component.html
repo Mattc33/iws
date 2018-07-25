@@ -1,5 +1,5 @@
-<section id="grid-wrapper">
-    <div class="table-container">
+<main>
+    <section>
         <ag-grid-angular class="ag-theme-balham" 
             [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
             [rowSelection]="rowSelection" (selectionChanged)="selectionChanged()" (rowSelected)="rowSelected()" [suppressRowClickSelection]="true"
@@ -18,13 +18,14 @@
         <mat-toolbar-row>
             <button (click)="openDialogDel()" [disabled]="toggleButtonStates()"> <i class="fas fa-trash-alt"></i> </button>
             <button (click)="openDialogAdd()"> <i class="fas fa-plus"></i> Carrier </button>
+            <button (click)="testButton()">TEST</button>
             <mat-form-field class="search-bar">
                     <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                     <input matInput placeholder="Search Carrier Table..." (keyup)="onQuickFilterChanged()" [(ngModel)]="quickSearchValue">
             </mat-form-field>
         </mat-toolbar-row>
-    </div>
-</section>
+    </section>
+</main>
 
 
 
