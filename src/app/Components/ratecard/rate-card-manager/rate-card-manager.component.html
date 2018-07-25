@@ -46,11 +46,10 @@
         <ag-grid-angular class="ag-theme-balham"
             [columnDefs]="columnDefs" [rowData]="rowData" 
             [headerHeight]="40" 
-
+            [context]="context" [frameworkComponents]="frameworkComponents"
             (gridReady)="onGridReady($event)"
         >
         </ag-grid-angular> 
         <br/> 
-        <button nz-button nzType="primary" (click)="testButton()">TEST</button>
     </section>
 </main>

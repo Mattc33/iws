@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi } from 'ag-grid';
+import { GridApi, ColumnApi } from 'ag-grid';
 
 import { CarrierService } from './../../../shared/api-services/carrier/carrier.api.service';
+import { CarrierCellComponent } from './carrier-cell/carrier-cell.component';
 
 @Component({
   selector: 'app-rate-card-manager',
@@ -10,8 +11,9 @@ import { CarrierService } from './../../../shared/api-services/carrier/carrier.a
 })
 export class RateCardManagerComponent implements OnInit {
 
+    // ! Top Toolbar
     // * Select Dropdown Option Values
-    toCarrierOptions: Array<{}>;
+    toCarrierOptions: any;
     fromCarrierOptions: Array<{}>;
     productTierOptions: Array<{}> = [
         {label: 'Standard', value: 'standard'},
@@ -23,17 +25,27 @@ export class RateCardManagerComponent implements OnInit {
     fromCarrierValue: Array<string>;
     productTierValue: String;
 
+    // ! AG Grid
     // * row data and column definitions
-    rowData;
+    rowData: any[];
     columnDefs;
 
-    // * gridApi & gridUI props
+    // * gridApi
     gridApi: GridApi;
+    columnApi: ColumnApi;
+
+    // * gridUI props
+    context;
+    frameworkComponents;
 
     constructor(
         private _CarrierService: CarrierService
     ) {
         this.columnDefs = this.createColumnDefs();
+        this.context = {rateCardManagerTableComponent: this};
+        this.frameworkComponents = {
+            _carrierCellComponent: CarrierCellComponent
+        };
     }
 
     ngOnInit() {
@@ -49,49 +61,79 @@ export class RateCardManagerComponent implements OnInit {
         );
     }
 
-    // ? Event Handlers
+    // ================================================================================
+    // * Event Handlers
+    // ================================================================================
     toCarrierChangeHandler(e): void {
         const carrierId = e;
         console.log(carrierId);
-        
+        this.gridApi.setRowData(this.createRowData());
     }
 
-    fromCarrierChangeHandler(e): void {
-        const carrierArr = e;
-        const howManyCarriers = carrierArr.length;
-        console.log(carrierArr);
+    fromCarrierChangeHandler(carrierIdArr): void {
+        const lookupArr = [];
+        carrierIdArr.forEach(carrier => {
+            const lookupItem = this._find(this.toCarrierOptions, 'id', carrier );
+            if (lookupItem) {
+                lookupArr.push(lookupItem);
+            }
+        });
 
-        // this.gridApi.
+        const carrierColDefs = lookupArr.map( carrier => {
+            return {
+                headerName: carrier.name, field: carrier.id.toString(), coldId: carrier.id.toString(),
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                cellRenderer: '_carrierCellComponent'
+            };
+        });
+
+        const countries = [this._find(this.columnDefs, 'colId', 'countries')];
+        const obietelCols = [
+            this._find(this.columnDefs, 'colId', 'finalRate'),
+            this._find(this.columnDefs, 'colId', 'fixedMinimumRate'),
+            this._find(this.columnDefs, 'colId', 'previousRate')
+        ];
+
+        this.gridApi.setColumnDefs([].concat(countries, carrierColDefs, obietelCols));
     }
 
     productTierChangeHandler(): void {
 
     }
 
-    testButton(): void {
-        const rowData = this.createRowData();
-        this.gridApi.setRowData(rowData);
+    testConsoleLog(cell) {
+        alert(`Parent Component Method from: ${cell}`);
     }
+
+    _find = (array, key, value) => array.find( obj => obj[key] === value);
+
+
 
     // ? Grid Initiation
     createColumnDefs(): Array<{}> {
         return [
             {
-                headerName: 'Countries', field: 'countries',
+                headerName: 'Countries', field: 'countries', colId: 'countries',
+                cellStyle: { 'border-right': '1px solid #000' },
+            },
+            {
+                headerName: 'Final Rate', field: 'finalRate', colId: 'finalRate',
+                cellStyle: { 'border-right': '1px solid #E0E0E0', 'border-left': '1px solid #000' },
+            },
+            {
+                headerName: 'Min Rate', field: 'fixedMinimumRate', colId: 'fixedMinimumRate',
+                width: 120,
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Final Rate', field: 'finalRate',
+                headerName: 'Prev Rate', field: 'previousRate', colId: 'previousRate',
+                width: 120,
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Fixed Min Rate', field: 'fixedMinimumRate',
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Previous Rate', field: 'previousRate',
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
+                headerName: 'test cell',
+                cellRenderer: '_carrierCellComponent'
+            }
         ];
     }
 
@@ -102,6 +144,7 @@ export class RateCardManagerComponent implements OnInit {
                 finalRate: 3,
                 fixedMinimumRate: 2,
                 previousRate: 2.5
+                // ! i need to attach each carrier's rate here
             },
             {
                 countries: 'Albania',
@@ -120,9 +163,7 @@ export class RateCardManagerComponent implements OnInit {
 
     onGridReady(params): void {
         this.gridApi = params.api;
+        this.columnApi = params.columnApi;
         params.api.sizeColumnsToFit();
     }
-
-
-
 }
