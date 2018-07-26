@@ -8,6 +8,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 })
 export class CarrierCellComponent implements ICellRendererAngularComp {
     public params: any;
+    checked = false;
 
     constructor() { }
 
@@ -15,12 +16,12 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
         this.params = params;
     }
 
-    public invokeParentMethod() {
+    public toggleCarrierHandler(value: boolean): void {
         // params will be an AG grid obj passsed to this child cell render component
         // you will then access context which is a var set equal to <this> aka parent component
         this.params.context
             .rateCardManagerTableComponent
-            .testConsoleLog(`Row: ${this.params.node.rowIndex}, Col: ${this.params.colDef.headerName}`);
+            .testConsoleLog(this.params, value); // `Row: ${this.params.node.rowIndex}, Col: ${this.params.colDef.headerName}`
     }
 
     refresh = (): boolean => true; // AG Grid Cells life cycle hook on cell refresh

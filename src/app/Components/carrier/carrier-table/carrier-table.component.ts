@@ -76,7 +76,7 @@ export class CarrierTableComponent implements OnInit {
     // ================================================================================
     // * AG Grid Init
     // ================================================================================
-    on_GridReady(params): void {
+    onGridReady(params): void {
         this.gridApi = params.api;
         params.api.sizeColumnsToFit();
     }

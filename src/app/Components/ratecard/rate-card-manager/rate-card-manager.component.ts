@@ -3,6 +3,7 @@ import { GridApi, ColumnApi } from 'ag-grid';
 
 import { CarrierService } from './../../../shared/api-services/carrier/carrier.api.service';
 import { CarrierCellComponent } from './carrier-cell/carrier-cell.component';
+import { ObietelCellComponent } from './obietel-cell/obietel-cell.component';
 
 @Component({
   selector: 'app-rate-card-manager',
@@ -44,7 +45,8 @@ export class RateCardManagerComponent implements OnInit {
         this.columnDefs = this.createColumnDefs();
         this.context = {rateCardManagerTableComponent: this};
         this.frameworkComponents = {
-            _carrierCellComponent: CarrierCellComponent
+            _carrierCellComponent: CarrierCellComponent,
+            _obietelCellComponent: ObietelCellComponent
         };
     }
 
@@ -52,11 +54,17 @@ export class RateCardManagerComponent implements OnInit {
         this.getCarriers();
     }
 
-    // ? Services
+    // ================================================================================
+    // * Service
+    // ================================================================================
     getCarriers(): void {
         const carrierObservable = this._CarrierService.get_carriers();
         carrierObservable.subscribe(
-            data =>  { this.toCarrierOptions = data; this.fromCarrierOptions = data; console.log(data); },
+            data =>  {
+                this.toCarrierOptions = data;
+                this.fromCarrierOptions = data;
+                console.log(data);
+            },
             error =>  console.log(error)
         );
     }
@@ -81,8 +89,8 @@ export class RateCardManagerComponent implements OnInit {
 
         const carrierColDefs = lookupArr.map( carrier => {
             return {
-                headerName: carrier.name, field: carrier.id.toString(), coldId: carrier.id.toString(),
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                headerName: carrier.name, field: carrier.id.toString(), coldId: carrier.id.toString(), 
+                width: 180, cellStyle: { 'border-right': '1px solid #E0E0E0' },
                 cellRenderer: '_carrierCellComponent'
             };
         });
@@ -101,38 +109,38 @@ export class RateCardManagerComponent implements OnInit {
 
     }
 
-    testConsoleLog(cell) {
-        alert(`Parent Component Method from: ${cell}`);
+    carrierCellHandler(cell: Object, checkboxValue: boolean): void {
+        console.log(cell);
+        console.log(checkboxValue);
     }
 
     _find = (array, key, value) => array.find( obj => obj[key] === value);
 
-
-
     // ? Grid Initiation
     createColumnDefs(): Array<{}> {
+        const commonCellStyle = { 'border-right': '1px solid #ccc', 'line-height': '70px',
+        'text-align': 'center' };
+
         return [
             {
-                headerName: 'Countries', field: 'countries', colId: 'countries',
-                cellStyle: { 'border-right': '1px solid #000' },
+                headerName: 'Countries', field: 'countries', colId: 'countries', width: 120,
+                cellStyle: { 'border-right': '1px solid #000', 'line-height': '70px',
+                'text-align': 'center', 'font-weight': 'bold' },
             },
             {
-                headerName: 'Final Rate', field: 'finalRate', colId: 'finalRate',
+                headerName: 'Obie Rate', field: 'finalRate', colId: 'finalRate', width: 210,
                 cellStyle: { 'border-right': '1px solid #E0E0E0', 'border-left': '1px solid #000' },
+                cellRenderer: '_obietelCellComponent'
             },
             {
                 headerName: 'Min Rate', field: 'fixedMinimumRate', colId: 'fixedMinimumRate',
                 width: 120,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                cellStyle: commonCellStyle,
             },
             {
                 headerName: 'Prev Rate', field: 'previousRate', colId: 'previousRate',
                 width: 120,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'test cell',
-                cellRenderer: '_carrierCellComponent'
+                cellStyle: commonCellStyle,
             }
         ];
     }
@@ -164,6 +172,7 @@ export class RateCardManagerComponent implements OnInit {
     onGridReady(params): void {
         this.gridApi = params.api;
         this.columnApi = params.columnApi;
-        params.api.sizeColumnsToFit();
+        // params.api.sizeColumnsToFit();
+        this.gridApi.setRowData(this.createRowData());
     }
 }

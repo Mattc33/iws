@@ -10,7 +10,6 @@ main {
         .toCarrierContainer {
             grid-column: 0 / 1;
             grid-row: 0 / 1;
-            background-color: lightblue;
         }
 
         &:nth-child(n + 1) {
@@ -23,8 +22,17 @@ main {
 
     section {
         height: 800px;
-        ag-grid-angular {
+
+        ag-grid-angular /deep/ {
             height: 100%;
+
+            .ag-cell-focus, .ag-cell-no-focus {
+                border: none;
+            }
+
+            .ag-cell:focus {
+                outline: none;
+            }
         }
     }
 

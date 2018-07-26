@@ -19,7 +19,7 @@
         <div>
             <span>From:</span>
             <nz-select 
-                style="width: 94%;"
+                style="width: 90%;"
                 nzMode="multiple"
                 nzAllowClear 
                 nzPlaceHolder="Carrier" 
@@ -45,7 +45,7 @@
     <section>
         <ag-grid-angular class="ag-theme-balham"
             [columnDefs]="columnDefs" [rowData]="rowData" 
-            [headerHeight]="40" 
+            [headerHeight]="40" [rowHeight]="70"
             [context]="context" [frameworkComponents]="frameworkComponents"
             (gridReady)="onGridReady($event)"
         >
