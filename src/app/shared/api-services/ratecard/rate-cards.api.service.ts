@@ -15,8 +15,8 @@ export class RateCardsService {
         private _http: Http,
         private _apiSettings: ApiSettingsSharedService
     ) {
-        this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
-        this.options = new RequestOptions({ headers: this.headers });
+        // this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
+        // this.options = new RequestOptions({ headers: this.headers });
         this.url = this._apiSettings.getUrl();
     }
 

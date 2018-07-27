@@ -74,6 +74,7 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
     import { RateCardManagerComponent } from './Components/ratecard/rate-card-manager/rate-card-manager.component';
     import { CarrierCellComponent } from './Components/ratecard/rate-card-manager/carrier-cell/carrier-cell.component';
     import { ObietelCellComponent } from './Components/ratecard/rate-card-manager/obietel-cell/obietel-cell.component';
+    import { RatecardManagerService } from './shared/api-services/ratecard/rate-card-manager.api.service';
 
 // ? Trunks
 import { TrunksTableComponent } from './Components/trunks/trunks-table/trunks-table.component';
@@ -191,6 +192,7 @@ registerLocaleData(en);
 
         // ? Ratecard
         ImporterService, ImporterSharedService, RateCardsService, RateCardsSharedService,
+        RatecardManagerService,
 
         // ? Ratecard Viewer
         IsoCodesSharedService, MainTableSharedService,
