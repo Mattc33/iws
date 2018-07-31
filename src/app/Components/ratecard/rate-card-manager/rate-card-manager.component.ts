@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { GridApi, ColumnApi } from 'ag-grid';
 
 import { CarrierService } from './../../../shared/api-services/carrier/carrier.api.service';
 import { CarrierCellComponent } from './carrier-cell/carrier-cell.component';
 import { ObietelCellComponent } from './obietel-cell/obietel-cell.component';
+import { RateTableModalComponent } from './rate-table-modal/rate-table-modal.component';
 
 @Component({
   selector: 'app-rate-card-manager',
@@ -11,6 +12,8 @@ import { ObietelCellComponent } from './obietel-cell/obietel-cell.component';
   styleUrls: ['./rate-card-manager.component.scss']
 })
 export class RateCardManagerComponent implements OnInit {
+
+    @ViewChild(RateTableModalComponent) _rateTableModal: RateTableModalComponent;
 
     // ! Top Toolbar
     // * Select Dropdown Option Values
@@ -38,6 +41,9 @@ export class RateCardManagerComponent implements OnInit {
     // * gridUI props
     context;
     frameworkComponents;
+
+    // ! Passed to Modal
+    carrierCellInfo;
 
     constructor(
         private _CarrierService: CarrierService
@@ -78,7 +84,7 @@ export class RateCardManagerComponent implements OnInit {
         this.gridApi.setRowData(this.createRowData());
     }
 
-    fromCarrierChangeHandler(carrierIdArr): void {
+    fromCarrierChangeHandler(carrierIdArr): void { // * responsible for adding the right carriers as cols to grid
         const lookupArr = [];
         carrierIdArr.forEach(carrier => {
             const lookupItem = this._find(this.toCarrierOptions, 'id', carrier );
@@ -89,9 +95,11 @@ export class RateCardManagerComponent implements OnInit {
 
         const carrierColDefs = lookupArr.map( carrier => {
             return {
-                headerName: carrier.name, field: carrier.id.toString(), coldId: carrier.id.toString(), 
+                headerName: carrier.name, field: carrier.id.toString(), coldId: carrier.id.toString(),
                 width: 180, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                cellRenderer: '_carrierCellComponent'
+                cellRenderer: '_carrierCellComponent',
+                // self-defined values
+                ratecard_id: '<insert ratecard_id here>'
             };
         });
 
@@ -109,13 +117,31 @@ export class RateCardManagerComponent implements OnInit {
 
     }
 
-    carrierCellHandler(cell: Object, checkboxValue: boolean): void {
+    _find = (array, key, value) => array.find( obj => obj[key] === value);
+
+    // ================================================================================
+    // * Event Handlers From Cells
+    // ================================================================================
+    fromCarrierCellToggleHandler(cell: Object, checkboxValue: boolean): void {
         console.log(cell);
         console.log(checkboxValue);
     }
 
-    _find = (array, key, value) => array.find( obj => obj[key] === value);
+    fromCarrierCellInfoHandler(cell: Object): void {
+        // open a modal, set global var to cell obj which is later passed to modal via @Input
+        this.carrierCellInfo = cell;
+        this._rateTableModal.showModal();
+    }
 
+    obieCellInfoHandler(cell: Object): void {
+        console.log('obie info', cell);
+        this.carrierCellInfo = cell;
+        this._rateTableModal.showModal();
+    }
+
+    // ================================================================================
+    // * AG Grid
+    // ================================================================================
     // ? Grid Initiation
     createColumnDefs(): Array<{}> {
         const commonCellStyle = { 'border-right': '1px solid #ccc', 'line-height': '70px',

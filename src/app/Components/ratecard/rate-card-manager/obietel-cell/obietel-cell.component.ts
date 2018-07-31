@@ -13,8 +13,8 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
 
     constructor() { }
 
-    agInit = (): void => {
-
+    agInit = (params: any): void => {
+        this.params = params;
     }
 
     public switchChangeHandler(value: boolean): void {
@@ -24,6 +24,14 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
         } else {
             this.rateInputDisabled = true;
         }
+    }
+
+    // another event handler to change prefix inside obieratecard for country
+    // based on a user input
+    public openObieCellModal(): void {
+        this.params.context
+            .rateCardManagerTableComponent
+            .obieCellInfoHandler(this.params);
     }
 
     refresh = (): boolean => true;

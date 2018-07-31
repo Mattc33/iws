@@ -1,3 +1,42 @@
+<header>
+    <!-- logo -->
+    <img src="https://preview.ibb.co/cJqWBn/obie_TEL.png" alt="obietel logo">
+</header>
+<article>
+    <h1>WELCOME TO OBIE IWS ADMIN PORTAL</h1>
+    <p>This is the ObieTel Portal for managing carriers and ratecards.</p>
+</article>
 <section>
-    <header><h1>Login</h1></header>
+    <div class="loginContainer">
+        <h3>PLEASE LOG IN</h3>
+        <p>Use your globie app credentials.</p>
+        <div class="loginBox">
+            <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="submitForm()">
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-input-group nzPrefixIcon="anticon anticon-user">
+                            <input type="text" nz-input formControlName="userName" placeholder="Username">
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-input-group nzPrefixIcon="anticon anticon-lock">
+                            <input type="password" nz-input formControlName="password" placeholder="Password">
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-divider></nz-divider>
+                <nz-form-item>
+                    <nz-form-control>
+                        <button nz-button class="login-form-button" [nzType]="'primary'">Log in</button>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </div>
+        <!-- horizontal line -->
+        <div class="loginButton"></div>
+    </div>
 </section>
+
+

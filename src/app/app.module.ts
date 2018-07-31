@@ -26,13 +26,13 @@ import { AppComponent } from './app.component';
 import { SideNavComponent } from './Containers/side-nav/side-nav.component';
 import { TopNavComponent } from './Containers/top-nav/top-nav.component';
 import { LoginComponent } from './Containers/login/login.component';
-import { RegistrationComponent } from './Containers/registration/registration.component';
 
 // ? Global Services
 import { NestedAgGridService } from './shared/services/global/nestedAgGrid.shared.service';
 import { ToggleButtonStateService } from './shared/services/global/buttonStates.shared.service';
 import { ApiSettingsSharedService } from './shared/services/global/api-settings.shared.service';
 import { CodesSharedService } from './shared/services/global/codes.shared.service';
+import { LoginService } from './shared/api-services/login/login.api.service';
 
 import { SnackbarSharedService } from './shared/services/global/snackbar.shared.service';
 import { SuccessSnackbarComponent } from './shared/components/snackbars/success/success.snackbar.component';
@@ -75,6 +75,7 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
     import { CarrierCellComponent } from './Components/ratecard/rate-card-manager/carrier-cell/carrier-cell.component';
     import { ObietelCellComponent } from './Components/ratecard/rate-card-manager/obietel-cell/obietel-cell.component';
     import { RatecardManagerService } from './shared/api-services/ratecard/rate-card-manager.api.service';
+    import { RateTableModalComponent } from './Components/ratecard/rate-card-manager/rate-table-modal/rate-table-modal.component';
 
 // ? Trunks
 import { TrunksTableComponent } from './Components/trunks/trunks-table/trunks-table.component';
@@ -131,7 +132,7 @@ registerLocaleData(en);
         AppComponent, SideNavComponent, TopNavComponent,
 
         // ? User
-        LoginComponent, RegistrationComponent,
+        LoginComponent,
 
         // ? Dashboard
         DashboardComponent,
@@ -160,7 +161,7 @@ registerLocaleData(en);
         AccountsComponent,
 
         // ? Global
-        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent,
+        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent,
     ],
   imports:
   [
@@ -185,7 +186,7 @@ registerLocaleData(en);
     providers: [
         // ? Global services
         NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, CodesSharedService,
-        ApiSettingsSharedService,
+        ApiSettingsSharedService, LoginService,
 
         // ? Carrier
         CarrierService, CarrierSharedService,
@@ -207,7 +208,7 @@ registerLocaleData(en);
     ],
     bootstrap: [ AppComponent ],
     entryComponents: [
-        // Carrier
+        // ? Carrier
         AddCarrierDialogComponent, DelCarrierDialogComponent,
         // Ratecard
         DeleteRateCardsDialogComponent, UploadRatesDialogComponent,

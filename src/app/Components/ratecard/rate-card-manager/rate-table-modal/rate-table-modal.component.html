@@ -1,0 +1,19 @@
+<nz-modal 
+    [(nzVisible)]="isVisible" 
+    [nzTitle]="modalTitle" 
+    nzWidth="40vw"
+    (nzOnCancel)="handleCancel()" 
+    (nzOnOk)="handleOk()"
+    (nzAfterOpen)="nzAfterOpen()"
+    
+>
+    <ng-template #modalTitle>
+        {{ratecardName}}
+    </ng-template>
+
+    <ag-grid-angular class="ag-theme-balham"
+        [suppressNoRowsOverlay]="true"
+        (gridReady)="onGridReady($event)"
+    >
+    </ag-grid-angular> 
+</nz-modal>

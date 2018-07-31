@@ -33,14 +33,14 @@ export class RatecardManagerService {
             .post(this.url + carrierId, body)
             .pipe (
                 catchError(this.handleError)
-            )
+            );
     }
 
     // ? get a list of ratecards by carrierId
     // filter for active, filter for standard or premium
     get_listOfRatecards(carrierId: number, productTier: string): Observable<any> {
         return this._http
-            .get(this.url + carrierId + '/?active=1' + `&ratecard_tier=${productTier}`)
+            .get(this.url + 'fromCarrier/' + carrierId + '/tier/' + productTier + '/ratecards')
             .pipe (
                 map(res => res.json()),
                 catchError(this.handleError)

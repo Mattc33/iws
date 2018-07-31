@@ -1,4 +1,3 @@
-import { RegistrationComponent } from './../registration/registration.component';
 import { LoginComponent } from './../login/login.component';
 import { AccountsComponent } from './../../Components/accounts/accounts.component';
 
@@ -54,6 +53,5 @@ export const AppRoutes: Routes =
         {path: 'lcr-callplan', component: LcrCallPlanTableComponent},
 
         {path: 'accounts', component: AccountsComponent},
-        {path: 'login', component: LoginComponent},
-        {path: 'registration', component: RegistrationComponent}
+        {path: 'login', component: LoginComponent}
     ];

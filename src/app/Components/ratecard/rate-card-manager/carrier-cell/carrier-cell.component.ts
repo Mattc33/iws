@@ -16,12 +16,19 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
         this.params = params;
     }
 
-    public toggleCarrierHandler(value: boolean): void {
+    public toggleCarrier(value: boolean): void {
+        // exposed method for parent component
         // params will be an AG grid obj passsed to this child cell render component
         // you will then access context which is a var set equal to <this> aka parent component
         this.params.context
             .rateCardManagerTableComponent
-            .testConsoleLog(this.params, value); // `Row: ${this.params.node.rowIndex}, Col: ${this.params.colDef.headerName}`
+            .fromCarrierCellToggleHandler(this.params, value); // `Row: ${this.params.node.rowIndex}, Col: ${this.params.colDef.headerName}`
+    }
+
+    public openCarrierCellModal(): void {
+        this.params.context
+            .rateCardManagerTableComponent
+            .fromCarrierCellInfoHandler(this.params);
     }
 
     refresh = (): boolean => true; // AG Grid Cells life cycle hook on cell refresh

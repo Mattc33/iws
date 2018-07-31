@@ -1,5 +1,8 @@
 <main class="app-container">
     <app-top-nav (sidenavToggleEvent)="eventReceiveSidenavToggle($event)"></app-top-nav>
     <app-side-nav></app-side-nav>
-    <section [class.active]="isSideBarMini"><router-outlet></router-outlet></section>
+    <section [class.active]="isSideBarMini">
+        <router-outlet></router-outlet>
+    </section>
+    <!-- <app-login></app-login> -->
 </main>
