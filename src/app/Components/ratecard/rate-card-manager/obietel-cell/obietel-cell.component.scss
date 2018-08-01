@@ -1,0 +1,40 @@
+section {
+    width: 100%; height: 100%;
+    font-size: .7rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas:
+        ". . . carrierSelected"
+        "switch rateInput rateInput info";
+    
+    .carrierSelected {
+        grid-area: carrierSelected;
+        justify-self: end;
+    }
+
+    .switch {
+        grid-area: switch;
+        align-self: start;
+        justify-self: start;
+    }
+
+    .rateInput {
+        grid-area: rateInput;
+        align-self: start;
+        justify-self: center;
+    }
+
+    .anticon-info-circle {
+        grid-area: info;
+        justify-self: end;
+        margin-top: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #497EA5;
+
+        &:hover {
+            opacity: .5;
+        }
+    }
+}

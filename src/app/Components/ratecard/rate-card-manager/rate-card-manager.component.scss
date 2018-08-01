@@ -1,0 +1,39 @@
+main {
+    padding: 5px 5px 0px 5px;
+    
+    header {
+        display: grid;
+        grid-template-columns: 260px 3fr;
+        grid-template-rows: 40px 40px;
+        border-bottom: 1px solid #ccc;
+
+        .toCarrierContainer {
+            grid-column: 0 / 1;
+            grid-row: 0 / 1;
+        }
+
+        &:nth-child(n + 1) {
+            span {
+                margin-right: 5px;
+            }
+        }
+        
+    }
+
+    section {
+        height: 800px;
+
+        ag-grid-angular /deep/ {
+            height: 100%;
+
+            .ag-cell-focus, .ag-cell-no-focus {
+                border: none;
+            }
+
+            .ag-cell:focus {
+                outline: none;
+            }
+        }
+    }
+
+}

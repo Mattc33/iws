@@ -1,0 +1,24 @@
+<section>
+    <span class="carrierSelected">Carrier</span>
+    <nz-switch class="switch" 
+        [nzCheckedChildren]="checkedTemplate" 
+        [nzUnCheckedChildren]="unCheckedTemplate"
+        (ngModelChange)="switchChangeHandler($event)"
+    >
+    </nz-switch>
+    <nz-input-number class="rateInput"
+        [(ngModel)]="rateValue"
+        [nzDisabled]="rateInputDisabled"
+        [nzSize]="10"
+        [nzMin]="0" [nzMax]="10" 
+        [nzStep]="0.1"
+        style="height: 30px"
+    >
+    </nz-input-number>
+    <i (click)="openObieCellModal()" class="anticon anticon-info-circle"></i>
+</section>
+
+<ng-template #checkedTemplate>C</ng-template>
+<ng-template #unCheckedTemplate><i class="anticon anticon-cross"></i></ng-template>
+
+<!--         (ngModelChange)="someChangeHandlerForCustomNumbersHere()" -->

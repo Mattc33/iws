@@ -167,9 +167,7 @@ export class RatecardViewCarrierSComponent implements OnInit {
     // ================================================================================
     onSelectionChangedCountry() {
         const selectedNode = this.gridApiCountry.getSelectedNodes();
-
         this._rateCardsShared.countryObjChange(selectedNode[0].id); // * set shared observable as country selection id
-
         this.gridApiMain.setRowData([]); // * set main grid empty
 
         if ( selectedNode[0].data.code === 'world') { // * condition to check for world if not call country api as normal

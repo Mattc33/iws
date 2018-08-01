@@ -1,0 +1,136 @@
+@host_server = http://172.20.13.129:8943
+
+# 33 = voxbeam, 34 = PNG
+@test_carrier_id = 33 
+@test_tier = 'standard'
+
+# =======================================
+# >>> To Add More Carriers To Profile <<<
+# =======================================
+
+### Get Carriers
+GET {{host_server}}/carriers
+
+### Get List of Ratecards based on Carrier Id
+GET {{host_server}}/fromCarrier/{fromCarrierId}/tier/{tier}/ratecards
+
+### Get ratecard info and rates inside
+GET {{host_server}}/fromCarrier/{fromCarrierId}/ratecard/{ratecardId}
+
+# =======================================
+# >>> TO SAVE/GET PROFILE <<<
+# =======================================
+
+## Post /toCarrier/{toCarrierId}/tier/{tier}/profile
+# Posting a profile after export action
+POST {{host_server}}/toCarrier/{{test_carrier_id}}/tier/{{test_tier}}/profile
+Content-Type: application/json
+
+{
+    "rateMarkup": 1.02,
+    "fromCarrierList": [ 
+        {
+            "iso": "AF", 
+            "fromCarrier": [
+                {
+                    "fromCarrierId": 34, 
+                    "rateCardTier": "standard"
+                },
+                {
+
+                }
+            ]
+        }
+    ],
+    "customRateList": [ 
+        {
+            "iso": "AF", 
+            "finalRate": 0,
+            "minRate": 0
+        }
+    ]
+}
+
+# GET Past Rate
+GET /toCarrier/{toCarrierId}/tier/{tier}/rates
+
+
+POST /toCarrier/{toCarrierId}/tier/{tier}/rates
+
+{
+  "profile": {
+	rateMarkup,
+  	fromCarrierList: [ {
+     		iso: AF, 
+     		fromCarrier: [{fromCarrierId, rateCardTier}]
+        }
+      ],
+  	customRateList:[ {
+     		iso: AF, 
+     		finalRate,
+     		minRate
+    		}
+  	   ],
+  },
+  "rates":{
+	"AU" : [ 
+        {
+            "prefix" : "93",
+            "destination" : "AFGHANISTAN",
+            "sell_rate" : 0.125,
+            "sell_rate_minimum" :1,
+            "sell_rate_increment" : 1,
+            "start_ts" : long,
+            "end_ts" : long1	 }, 
+        {
+            "id" : 6,
+            "prefix" : "9370",
+            "destination" : "AFGHANISTAN MOBILE AWCC",
+            "sell_rate" : 0.125,
+            "sell_rate_minimum" :1,
+            "sell_rate_increment" : 1,
+            "start_ts" : long,
+            "end_ts" : long
+ 	    }
+	]
+   }
+}
+
+# DB Tables：
+# ==========
+# 1. customer_carrier_profile:
+# id, 	    	   	<== auto gen
+# to_carrier,  	<== POST input: Customer
+# tier,	        	<== POST input: Tier
+# ts,	        	<== current timestamp
+# markup	   	<== POST input: rate_markup
+
+# 2. customer_carriers
+# id, 			<== auto gen
+# profile_id,	<== foreign key of customer_profile.id 
+# iso, 			<== POST input: fromCarrierList.iso
+# carrier_id, 	<== POST input: fromCarrierList.fromCarrierId
+# rate_card_tier	<== POST input: fromCarrierList.rateCardTier
+
+# 3. customer_carrier_profile_rate
+# id, 			<== auto gen
+# profile_id,	<== foreign key of customer_profile.id 
+# iso, 			<== POST input: customRateList.iso
+# final_rate,	<== POST input: customRateList.finalRate
+# min_rate		<== POST input: customRateList.minRate
+
+# 4. customer_carrier_profile_price
+# id, 			<== auto gen
+# profile_id, 	<== foreign key of customer_profile.id
+# ts,			<== current timestamp 
+# price (Json)	<== POST input: price
+
+
+# price:
+# {
+#   [
+#     {"profile": {...}, "rates": {...}}, （whole body of POST /toCarrier/{toCarrierId}/tier/{tier}/rates - see above)
+#     ...,
+#     {...}
+#   ]
+# }

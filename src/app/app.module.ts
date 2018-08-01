@@ -6,36 +6,37 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes, RouterLinkActive } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // * UI Library: Angular Materials
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MatButtonModule, MatInputModule, MatStepperModule, MatSelectModule } from '@angular/material';
 import { MatIconModule, MatRadioModule, MatDialogModule, MatDatepickerModule } from '@angular/material';
 import { MatNativeDateModule, MatAutocompleteModule, MatSliderModule, MatSnackBarModule } from '@angular/material';
 import { MatToolbarModule, MatTabsModule, MatExpansionModule, MatCheckboxModule } from '@angular/material';
 import 'hammerjs';
 
-// ? Main components
+// ! Third Party Components
+import { AgGridModule } from 'ag-grid-angular';
+import { PapaParseModule } from 'ngx-papaparse';
+import { SidebarModule } from 'ng-sidebar';
+import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
+
+// ? Main/Layout components
 import { AppComponent } from './app.component';
 import { SideNavComponent } from './Containers/side-nav/side-nav.component';
 import { TopNavComponent } from './Containers/top-nav/top-nav.component';
 import { LoginComponent } from './Containers/login/login.component';
-import { RegistrationComponent } from './Containers/registration/registration.component';
 
 // ? Global Services
 import { NestedAgGridService } from './shared/services/global/nestedAgGrid.shared.service';
 import { ToggleButtonStateService } from './shared/services/global/buttonStates.shared.service';
 import { ApiSettingsSharedService } from './shared/services/global/api-settings.shared.service';
 import { CodesSharedService } from './shared/services/global/codes.shared.service';
+import { LoginService } from './shared/api-services/login/login.api.service';
 
 import { SnackbarSharedService } from './shared/services/global/snackbar.shared.service';
 import { SuccessSnackbarComponent } from './shared/components/snackbars/success/success.snackbar.component';
 import { ErrorSnackbarComponent } from './shared/components/snackbars/error/error.snackbar.component';
-
-// ! Third Party Components
-import { AgGridModule } from 'ag-grid-angular';
-import { PapaParseModule } from 'ngx-papaparse';
-import { SidebarModule } from 'ng-sidebar';
 
 // ? DashBoard
 import { DashboardComponent } from './Components/dashboard/dashboard.component';
@@ -52,24 +53,29 @@ import { RateCardsTableComponent } from './Components/ratecard/rate-cards-table/
 import { DeleteRateCardsDialogComponent } from './Components/ratecard/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component';
 import { RateCardsAddTrunksComponent } from './Components/ratecard/rate-cards-add-trunks/rate-cards-add-trunks.component';
 import { RateCardsConvertCsvComponent } from './Components/ratecard/rate-cards-convert-csv/rate-cards-convert-csv.component';
-
 import { IsoCodesSharedService } from './shared/services/ratecard/iso-codes.shared.service';
 import { RateCardsService } from './shared/api-services/ratecard/rate-cards.api.service';
 import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.shared.service';
 
-// ? Ratecard Importer
-import { ImporterTableComponent } from './Components/ratecard/ratecard-importer/importer-table/importer-table.component';
+    // ? Ratecard Importer
+    import { ImporterTableComponent } from './Components/ratecard/ratecard-importer/importer-table/importer-table.component';
+    import { ImporterService } from './shared/api-services/ratecard/importer.api.service';
+    import { ImporterSharedService } from './shared/services/ratecard/importer.shared.service';
+    import { UploadRatesDialogComponent } from './Components/ratecard/ratecard-importer/importer-table/dialog/upload-rates/upload-rates-dialog.component';
 
-import { ImporterService } from './shared/api-services/ratecard/importer.api.service';
-import { ImporterSharedService } from './shared/services/ratecard/importer.shared.service';
-import { UploadRatesDialogComponent } from './Components/ratecard/ratecard-importer/importer-table/dialog/upload-rates/upload-rates-dialog.component';
+    // ? Ratecard View By Carrier
+    import { RatecardViewCarrierSComponent } from './Components/ratecard/ratecard-view-carrier-s/ratecard-view-carrier-s.component';
+    import { RatecardViewCarrierPComponent } from './Components/ratecard/ratecard-view-carrier-p/ratecard-view-carrier-p.component';
 
-// ? Ratecard View By Carrier
-import { RatecardViewCarrierSComponent } from './Components/ratecard/ratecard-view-carrier-s/ratecard-view-carrier-s.component';
-import { RatecardViewCarrierPComponent } from './Components/ratecard/ratecard-view-carrier-p/ratecard-view-carrier-p.component';
+    import { MainTableSharedService } from './shared/services/ratecard/main-table.shared.service';
+    import { MainTableCommonSharedService } from './shared/services/ratecard/main-table-common.shared.service';
 
-import { MainTableSharedService } from './shared/services/ratecard/main-table.shared.service';
-import { MainTableCommonSharedService } from './shared/services/ratecard/main-table-common.shared.service';
+    // ? Ratecard Manager
+    import { RateCardManagerComponent } from './Components/ratecard/rate-card-manager/rate-card-manager.component';
+    import { CarrierCellComponent } from './Components/ratecard/rate-card-manager/carrier-cell/carrier-cell.component';
+    import { ObietelCellComponent } from './Components/ratecard/rate-card-manager/obietel-cell/obietel-cell.component';
+    import { RatecardManagerService } from './shared/api-services/ratecard/rate-card-manager.api.service';
+    import { RateTableModalComponent } from './Components/ratecard/rate-card-manager/rate-table-modal/rate-table-modal.component';
 
 // ? Trunks
 import { TrunksTableComponent } from './Components/trunks/trunks-table/trunks-table.component';
@@ -111,103 +117,98 @@ import { LCRSharedService } from './shared/services/lcr/lcr.shared.service';
 import { AccountsComponent } from './Components/accounts/accounts.component';
 import { ExpandCollaspeComponent } from './shared/components/buttons/expand-collaspe/expand-collaspe.component';
 
+// ? App Module Service
+import { AppRoutes } from './Containers/routes/routes';
+
+// ? config angular i18n
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+registerLocaleData(en);
+
 @NgModule({
     declarations:
     [
-        // Main Layout Components
+        // ? Main Layout Components
         AppComponent, SideNavComponent, TopNavComponent,
-        // User
-        LoginComponent, RegistrationComponent,
-        // Dashboard
+
+        // ? User
+        LoginComponent,
+
+        // ? Dashboard
         DashboardComponent,
-        // Carrier
+
+        // ? Carrier
         CarrierTableComponent, AddCarrierDialogComponent, DelCarrierDialogComponent,
-        // Ratecard
+
+        // ? Ratecard
         RateCardsTableComponent, DeleteRateCardsDialogComponent, ImporterTableComponent,
         UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent, DeleteRatesComponent,
-        RatecardViewCarrierSComponent, RatecardViewCarrierPComponent,
-        // Trunk
+        RatecardViewCarrierSComponent, RatecardViewCarrierPComponent, RateCardManagerComponent, CarrierCellComponent,
+        ObietelCellComponent,
+
+        // ? Trunk
         TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DetachTrunksComponent,
-        // Call Plan
+
+        // ? Call Plan
         CallPlanTableComponent, AddCallPlanComponent, DelCallPlanComponent, CallPlanAddRatecardComponent,
         CallPlanAddCodeComponent, AddCodeComponent, AddRateCardComponent, DettachRatecardsComponent,
         DettachCodesComponent,
-        // LCR
+
+        // ? LCR
         LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent,
-        // Account
+
+        // ? Account
         AccountsComponent,
-        // Global
-        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent,
+
+        // ? Global
+        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent,
     ],
   imports:
   [
-    // Core Angular Modules
+    // ? Core Angular Modules
     HttpModule, HttpClientModule, BrowserModule,
     FormsModule, CommonModule, ReactiveFormsModule,
-    // Third Party Modules
+    BrowserAnimationsModule,
+
+    // ? Third Party Modules
     PapaParseModule, SidebarModule,
-    AgGridModule.withComponents([
-        CarrierTableComponent, RateCardsTableComponent, ImporterTableComponent, UploadRatesDialogComponent, RatecardViewCarrierSComponent,
-        RatecardViewCarrierPComponent, TrunksTableComponent, AddTrunksComponent, CallPlanTableComponent, AddCallPlanComponent,
-        CallPlanAddRatecardComponent, CallPlanAddCodeComponent, AddRateCardComponent, AddCodeComponent, LcrCallPlanTableComponent,
-        LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent
-    ]),
-    // Angular Materials Modules
-    BrowserAnimationsModule, MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
+    AgGridModule.withComponents([CarrierCellComponent, ObietelCellComponent]),
+
+    // ? Angular Materials Modules
+    MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,
     MatRadioModule, MatIconModule, MatDialogModule, MatToolbarModule, MatDatepickerModule, MatNativeDateModule,
     MatTabsModule, MatAutocompleteModule, MatExpansionModule, MatSliderModule, MatSnackBarModule,
-    // Ag Grid & Routing
-    RouterModule.forRoot([
-        {path: '', component: DashboardComponent},
-        {path: 'dashboard', component: DashboardComponent},
 
-        {path: 'carrier-view', component: CarrierTableComponent},
-
-        {path: 'rate-card-importer', component: ImporterTableComponent},
-        {path: 'rate-card-view', component: RateCardsTableComponent},
-        {path: 'rate-card-add-trunks', component: RateCardsAddTrunksComponent},
-        {path: 'rate-card-convert-csv', component: RateCardsConvertCsvComponent},
-        {path: 'rate-card-view-carrier', component: RatecardViewCarrierSComponent},
-        {path: 'rate-card-view-carrier-p', component: RatecardViewCarrierPComponent},
-
-        {path: 'trunks', component: TrunksTableComponent},
-
-        {path: 'call-plan-view', component: CallPlanTableComponent},
-        {path: 'call-plan-add-ratecard', component: CallPlanAddRatecardComponent},
-        {path: 'call-plan-add-code', component: CallPlanAddCodeComponent},
-
-        {path: 'lcr-carrier', component: LcrCarrierTableComponent},
-        {path: 'lcr-ratecard', component: LcrRatecardTableComponent},
-        {path: 'lcr-trunk', component: LcrTrunkTableComponent},
-        {path: 'lcr-callplan', component: LcrCallPlanTableComponent},
-
-        {path: 'accounts', component: AccountsComponent},
-        {path: 'login', component: LoginComponent},
-        {path: 'registration', component: RegistrationComponent}
-    ])
+    // ? Ag Grid & Routing
+    RouterModule.forRoot(AppRoutes),
+    NgZorroAntdModule
   ],
     providers: [
         // ? Global services
         NestedAgGridService, SnackbarSharedService, ToggleButtonStateService, CodesSharedService,
-        ApiSettingsSharedService,
+        ApiSettingsSharedService, LoginService,
 
         // ? Carrier
         CarrierService, CarrierSharedService,
 
         // ? Ratecard
         ImporterService, ImporterSharedService, RateCardsService, RateCardsSharedService,
+        RatecardManagerService,
 
         // ? Ratecard Viewer
         IsoCodesSharedService, MainTableSharedService,
         MainTableCommonSharedService,
 
+        // ? Trunk
         TrunksService, TrunksSharedService,
+
         CallPlanService, CallPlanSharedService, CodesFormSharedService,
         LCRService, LCRSharedService,
-    ], // Applications services
+        { provide: NZ_I18N, useValue: en_US }
+    ],
     bootstrap: [ AppComponent ],
     entryComponents: [
-        // Carrier
+        // ? Carrier
         AddCarrierDialogComponent, DelCarrierDialogComponent,
         // Ratecard
         DeleteRateCardsDialogComponent, UploadRatesDialogComponent,
@@ -215,7 +216,7 @@ import { ExpandCollaspeComponent } from './shared/components/buttons/expand-coll
         DeleteTrunksComponent, AddTrunksComponent, DeleteRatesComponent, DetachTrunksComponent, // Trunks
         AddCallPlanComponent, DelCallPlanComponent, AddCodeComponent, AddRateCardComponent, // Callplans
         DettachRatecardsComponent, DettachCodesComponent
-    ] , // Add in dialog
+    ]
 })
 
 export class AppModule { }

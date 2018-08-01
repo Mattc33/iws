@@ -76,7 +76,7 @@ export class CarrierTableComponent implements OnInit {
     // ================================================================================
     // * AG Grid Init
     // ================================================================================
-    on_GridReady(params): void {
+    onGridReady(params): void {
         this.gridApi = params.api;
         params.api.sizeColumnsToFit();
     }
@@ -87,6 +87,7 @@ export class CarrierTableComponent implements OnInit {
                 headerName: 'Name', field: 'name',
                 editable: true, checkboxSelection: true,
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                sort: 'asc'
             },
             {
                 headerName: 'Phone Number', field: 'phone',
