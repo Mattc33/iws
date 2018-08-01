@@ -3,7 +3,7 @@
         <ag-grid-angular class="ag-theme-balham" id="ratecards-table"
             [getNodeChildDetails]="getNodeChildDetails"
             [columnDefs]="columnDefs" [rowData]="rowData" [animateRows]="true"
-            [rowSelection]="rowSelectionTypeM" (rowSelected)="rowSelected($event)" [groupSelectsChildren]="true"
+            [rowSelection]="rowSelectionTypeM" (rowSelected)="rowSelected()" [groupSelectsChildren]="true"
             [stopEditingWhenGridLosesFocus]="true" [singleClickEdit]="true" [suppressRowClickSelection]="true"
             [floatingFilter]="true" [enableSorting]="true"
             [enableColResize]="true" (gridSizeChanged)="gridSizeChanged($event)"
