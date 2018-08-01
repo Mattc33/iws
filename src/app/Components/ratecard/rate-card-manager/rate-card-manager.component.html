@@ -19,28 +19,33 @@
         <div>
             <span>From:</span>
             <nz-select 
-                style="width: 90%;"
-                nzMode="multiple"
-                nzAllowClear 
-                nzPlaceHolder="Carrier" 
-                [(ngModel)]="fromCarrierValue"
-                (ngModelChange)="fromCarrierChangeHandler($event)"
+                style="width: 200px; margin-right: 5px;" 
+                [(ngModel)]="fromCarrierValue" 
+                (ngModelChange)="uponFromCarrierSelection($event)"
             >
-                <nz-option *ngFor="let carrier of fromCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
+                <nz-option *ngFor="let carrier of toCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
+            </nz-select>
+            <nz-select 
+                style="width: 240px;" 
+                [(ngModel)]="fromCarrierRatecardValue"
+            >
+                <nz-option *ngFor="let ratecard of fromCarrierRatecardData[fromCarrierValue]" [nzValue]="ratecard" [nzLabel]="ratecard"></nz-option>
             </nz-select>
         </div>
-            <!-- Choose Product Tier -->
-            <div>
-                <nz-select 
-                    style="width: 200px; margin-left: 25px;" 
-                    nzShowSearch 
-                    nzAllowClear 
-                    nzPlaceHolder="Product Tier" 
-                    [(ngModel)]="productTierValue"
-                >
-                    <nz-option *ngFor="let productTier of productTierOptions" [nzLabel]="productTier.label" [nzValue]="productTier.value"></nz-option>
-                </nz-select>
-            </div>
+
+        <!-- Choose Product Tier -->
+        <div>
+            <nz-select 
+                style="width: 200px; margin-left: 25px;" 
+                nzShowSearch 
+                nzAllowClear 
+                nzPlaceHolder="Product Tier" 
+                [(ngModel)]="productTierValue"
+            >
+                <nz-option *ngFor="let productTier of productTierOptions" [nzLabel]="productTier.label" [nzValue]="productTier.value"></nz-option>
+            </nz-select>
+        </div>
+
     </header>
     <section>
         <ag-grid-angular class="ag-theme-balham"

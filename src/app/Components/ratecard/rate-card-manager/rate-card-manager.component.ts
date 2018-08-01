@@ -23,11 +23,16 @@ export class RateCardManagerComponent implements OnInit {
         {label: 'Standard', value: 'standard'},
         {label: 'Premium', value: 'premium'}
     ];
+    fromCarrierRatecardData = {
+      33: [ 'ratecard1', 'ratecard2' ],
+      34 : [ 'ratecard1', 'ratecard2', 'ratecard3' ]
+    };
 
     // * Selected Values
     toCarrierValue: string;
-    fromCarrierValue: Array<string>;
-    productTierValue: String;
+    productTierValue: string;
+    fromCarrierValue;
+    fromCarrierRatecardValue;
 
     // ! AG Grid
     // * row data and column definitions
@@ -76,8 +81,12 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     // ================================================================================
-    // * Event Handlers
+    // * Event Handlers from Top Toolbar
     // ================================================================================
+
+    // Utils
+    _find = (array, key, value) => array.find( obj => obj[key] === value);
+
     toCarrierChangeHandler(e): void {
         const carrierId = e;
         console.log(carrierId);
@@ -85,39 +94,45 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     fromCarrierChangeHandler(carrierIdArr): void { // * responsible for adding the right carriers as cols to grid
-        const lookupArr = [];
-        carrierIdArr.forEach(carrier => {
-            const lookupItem = this._find(this.toCarrierOptions, 'id', carrier );
-            if (lookupItem) {
-                lookupArr.push(lookupItem);
-            }
-        });
+        // const lookupArr = [];
+        // carrierIdArr.forEach(carrier => {
+        //     const lookupItem = this._find(this.toCarrierOptions, 'id', carrier );
+        //     if (lookupItem) {
+        //         lookupArr.push(lookupItem);
+        //     }
+        // });
 
-        const carrierColDefs = lookupArr.map( carrier => {
-            return {
-                headerName: carrier.name, field: carrier.id.toString(), coldId: carrier.id.toString(),
-                width: 180, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                cellRenderer: '_carrierCellComponent',
-                // self-defined values
-                ratecard_id: '<insert ratecard_id here>'
-            };
-        });
+        // const carrierColDefs = lookupArr.map( carrier => {
+        //     return {
+        //         headerName: carrier.name, field: carrier.id.toString(), coldId: carrier.id.toString(),
+        //         width: 180, cellStyle: { 'border-right': '1px solid #E0E0E0' },
+        //         cellRenderer: '_carrierCellComponent',
+        //         // self-defined values
+        //         ratecard_id: '<insert ratecard_id here>'
+        //     };
+        // });
 
-        const countries = [this._find(this.columnDefs, 'colId', 'countries')];
-        const obietelCols = [
-            this._find(this.columnDefs, 'colId', 'finalRate'),
-            this._find(this.columnDefs, 'colId', 'fixedMinimumRate'),
-            this._find(this.columnDefs, 'colId', 'previousRate')
-        ];
+        // const countries = [this._find(this.columnDefs, 'colId', 'countries')];
+        // const obietelCols = [
+        //     this._find(this.columnDefs, 'colId', 'finalRate'),
+        //     this._find(this.columnDefs, 'colId', 'fixedMinimumRate'),
+        //     this._find(this.columnDefs, 'colId', 'previousRate')
+        // ];
 
-        this.gridApi.setColumnDefs([].concat(countries, carrierColDefs, obietelCols));
+        // this.gridApi.setColumnDefs([].concat(countries, carrierColDefs, obietelCols));
     }
 
     productTierChangeHandler(): void {
 
     }
 
-    _find = (array, key, value) => array.find( obj => obj[key] === value);
+    fromCarrierRatecardChangeHandler(): void {
+        // add to ag grid as column
+    }
+
+    uponFromCarrierSelection(value: string): void {
+        this.fromCarrierRatecardValue = this.fromCarrierRatecardData[ value ];
+    }
 
     // ================================================================================
     // * Event Handlers From Cells

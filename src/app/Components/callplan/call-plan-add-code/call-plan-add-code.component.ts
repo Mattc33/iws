@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { GridApi } from 'ag-grid';
 
 import { CallPlanService } from '../../../shared/api-services/callplan/call-plan.api.service';
@@ -122,12 +122,13 @@ export class CallPlanAddCodeComponent implements OnInit {
         };
     }
 
-    buildCountryCodeFormGroup() {
+    buildCountryCodeFormGroup(): FormGroup {
         return this._formBuilder.group({
             originationCtrl: ['', Validators.required],
             destinationCtrl: ['', Validators.required]
         });
     }
+    
 
     // ================================================================================
     // AG Grid Init
@@ -183,7 +184,7 @@ export class CallPlanAddCodeComponent implements OnInit {
     // ================================================================================
     addCodes(): void {
         const control = <FormArray>this.attachCodesFormGroup.controls['codes'];
-            control.push(this.buildCountryCodeFormGroup ());
+            control.push(this.buildCountryCodeFormGroup());
     }
 
     removeAddress(index: number) {
@@ -194,7 +195,7 @@ export class CallPlanAddCodeComponent implements OnInit {
     codesObjBuilder() {
         const countryCodeArr = this.attachCodesFormGroup.get('codes').value;
 
-        for ( let i = 0; i < countryCodeArr.length; i++ ) {
+        for ( let i = 0; i < countryCodeArr.length; i++ ) { // Re-evaluate the data structure in this loop
             const ori_cc = countryCodeArr[i].originationCtrl;
             const destinationLen = countryCodeArr[i].destinationCtrl.length;
             for ( let x = 0; x < destinationLen; x++ ) {
