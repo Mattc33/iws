@@ -1,7 +1,6 @@
 <section>
     <span class="carrierSelected">Carrier</span>
     <nz-switch class="switch" 
-        [ngModel]="switchValue" 
         [nzCheckedChildren]="checkedTemplate" 
         [nzUnCheckedChildren]="unCheckedTemplate"
         (ngModelChange)="switchChangeHandler($event)"
@@ -13,7 +12,6 @@
         [nzSize]="10"
         [nzMin]="0" [nzMax]="10" 
         [nzStep]="0.1"
-        (ngModelChange)="someChangeHandlerForCustomNumbersHere()"
         style="height: 30px"
     >
     </nz-input-number>
@@ -22,3 +20,5 @@
 
 <ng-template #checkedTemplate>C</ng-template>
 <ng-template #unCheckedTemplate><i class="anticon anticon-cross"></i></ng-template>
+
+<!--         (ngModelChange)="someChangeHandlerForCustomNumbersHere()" -->
