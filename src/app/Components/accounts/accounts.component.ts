@@ -8,8 +8,7 @@ import { saveAs } from 'file-saver/FileSaver';
   styleUrls: ['./accounts.component.scss']
 })
 export class AccountsComponent implements OnInit {
-
-    csvData;
+    
     groupedData;
     endResultCsv;
 
@@ -22,6 +21,7 @@ export class AccountsComponent implements OnInit {
 
     uploadBtnHandler(e): void {
         this.csvToJson(e.target.files[0]);
+
     }
 
     csvToJson(csvfile): void {
@@ -29,7 +29,7 @@ export class AccountsComponent implements OnInit {
             complete: (results, file) => {
                 const data = results.data;
                 console.log('Parsed: ', data, file);
-                this.csvData = data;
+                this.processJson(data);
             }
         };
         this._papa.parse(csvfile, papaOptions);
@@ -42,8 +42,8 @@ export class AccountsComponent implements OnInit {
         console.log(this.endResultCsv);
     }
 
-    processJson(): void {
-        const csvData = this.csvData;
+    processJson(data): void {
+        const csvData = data;
         const remappedData = csvData.map( obj => {
             return {
                 destination: obj[4],
@@ -70,7 +70,6 @@ export class AccountsComponent implements OnInit {
                         total_cost: sumSessionBill
                     }
                 );
-
             }
         }
         const json = temp.slice(0 , -1);

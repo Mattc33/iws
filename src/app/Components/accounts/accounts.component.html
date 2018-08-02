@@ -2,6 +2,4 @@
     <span>Select CSV File</span>
     <input #fileInput type="file" (change)="uploadBtnHandler($event)" accept=".csv" style="display:none;" />
 </button>
-
-<button nz-button nzType="default" (click)="processJson()">Process Json</button>
 <button nz-button nzType="default" (click)="saveToFileSystem()">Get results</button>
