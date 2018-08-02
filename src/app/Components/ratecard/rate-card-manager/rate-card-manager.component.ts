@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GridApi, ColumnApi } from 'ag-grid';
 
-import { CarrierService } from './../../../shared/api-services/carrier/carrier.api.service';
+import { CarrierService } from '../../../shared/api-services/carrier/carrier.api.service';
 import { CarrierCellComponent } from './carrier-cell/carrier-cell.component';
 import { ObietelCellComponent } from './obietel-cell/obietel-cell.component';
 import { RateTableModalComponent } from './rate-table-modal/rate-table-modal.component';

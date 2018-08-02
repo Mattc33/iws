@@ -3,20 +3,26 @@ import { PapaParseService } from 'ngx-papaparse';
 import { saveAs } from 'file-saver/FileSaver';
 
 @Component({
-  selector: 'app-accounts',
-  templateUrl: './accounts.component.html',
-  styleUrls: ['./accounts.component.scss']
+  selector: 'app-invoice',
+  templateUrl: './invoice.component.html',
+  styleUrls: ['./invoice.component.scss']
 })
-export class AccountsComponent implements OnInit {
-    
+export class InvoiceComponent implements OnInit {
+
     groupedData;
     endResultCsv;
+
+    sumTotalCalls;
+    sumTotalSeconds;
+    sumTotalMinutes;
+    sumTotalCost;
 
     constructor(
         private _papa: PapaParseService
     ) { }
 
     ngOnInit() {
+
     }
 
     uploadBtnHandler(e): void {
@@ -36,10 +42,13 @@ export class AccountsComponent implements OnInit {
     }
 
     jsonToCsv(json): void {
-        const fields = ['destination',  'total_calls', 'total_seconds', 'unit_cost', 'total_cost'];
+        const fields = ['destination',  'total_calls', 'total_seconds', 'total_minutes', 'unit_cost', 'total_cost'];
         const csv = this._papa.unparse({data: json, fields: fields});
-        this.endResultCsv = csv;
-        console.log(this.endResultCsv);
+        this.endResultCsv = csv
+        + '\n\n'
+        + ', total_calls, total_seconds, total_minutes, , total_cost'
+        + '\n'
+        + `, ${this.sumTotalCalls}, ${this.sumTotalSeconds}, ${this.sumTotalMinutes}, ,${this.sumTotalCost}`;
     }
 
     processJson(data): void {
@@ -48,7 +57,6 @@ export class AccountsComponent implements OnInit {
             return {
                 destination: obj[4],
                 totalSeconds: obj[7],
-                totalCost: obj[13],
                 unitCost: obj[6]
             };
         });
@@ -66,14 +74,20 @@ export class AccountsComponent implements OnInit {
                         destination: key,
                         total_calls: element.length,
                         total_seconds: sumSessionTime,
+                        total_minutes: sumSessionTime / 60,
                         unit_cost: element[0].unitCost,
-                        total_cost: sumSessionBill
+                        total_cost: (sumSessionTime / 60) * element[0].unitCost
                     }
                 );
             }
         }
         const json = temp.slice(0 , -1);
         console.log(json);
+
+        this.sumTotalCalls = this.sumCol(json, 'total_calls');
+        this.sumTotalSeconds = this.sumCol(json, 'total_seconds');
+        this.sumTotalCost = this.sumCol(json, 'total_cost');
+        this.sumTotalMinutes = this.sumCol(json, 'total_minutes');
 
         this.jsonToCsv(json);
 
@@ -88,6 +102,13 @@ export class AccountsComponent implements OnInit {
         }, {});
     }
 
+    sumCol(arr, value) {
+        return arr.reduce( (acc, cur) => {
+            const result = acc + cur[value];
+            return result;
+        }, 0);
+    }
+
     sum(arr, value) {
         return arr.reduce( (acc, cur) => {
             const eachItem = parseFloat(cur[value]);
@@ -100,7 +121,6 @@ export class AccountsComponent implements OnInit {
         const blob = new Blob([this.endResultCsv], { type: 'text/plain' });
         saveAs(blob, filename);
     }
-
 
 }
 

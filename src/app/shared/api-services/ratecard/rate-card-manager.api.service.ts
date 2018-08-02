@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 
 import { ApiSettingsSharedService } from '../../services/global/api-settings.shared.service';
-import { makeParamDecorator } from '../../../../../node_modules/@angular/core/src/util/decorators';
+import { makeParamDecorator } from '@angular/core/src/util/decorators';
 
 @Injectable()
 export class RatecardManagerService {

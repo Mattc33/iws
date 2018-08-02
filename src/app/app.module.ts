@@ -114,7 +114,7 @@ import { LCRService } from './shared/api-services/lcr/lcr.api.service';
 import { LCRSharedService } from './shared/services/lcr/lcr.shared.service';
 
 // ? Accounts
-import { AccountsComponent } from './Components/accounts/accounts.component';
+import { InvoiceComponent } from './Components/invoice/invoice.component';
 import { ExpandCollaspeComponent } from './shared/components/buttons/expand-collaspe/expand-collaspe.component';
 
 // ? App Module Service
@@ -158,7 +158,7 @@ registerLocaleData(en);
         LcrCallPlanTableComponent, LcrCarrierTableComponent, LcrRatecardTableComponent, LcrTrunkTableComponent,
 
         // ? Account
-        AccountsComponent,
+        InvoiceComponent,
 
         // ? Global
         SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent,
