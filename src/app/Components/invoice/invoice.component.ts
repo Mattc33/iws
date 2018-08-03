@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PapaParseService } from 'ngx-papaparse';
 import { saveAs } from 'file-saver/FileSaver';
+import { InvoiceService } from './../../shared/api-services/invoice/invoice.api.service';
 
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.scss']
 })
-export class InvoiceComponent implements OnInit {
+export class InvoiceComponent {
 
+    prefixLookupArr;
     groupedData;
     endResultCsv;
 
@@ -18,11 +20,18 @@ export class InvoiceComponent implements OnInit {
     sumTotalCost;
 
     constructor(
-        private _papa: PapaParseService
-    ) { }
+        private _papa: PapaParseService,
+        private _invoiceService: InvoiceService
+    ) {
+        this.get_prefixLookup();
+    }
 
-    ngOnInit() {
-
+    // ================================================================================
+    // * Invoice API Service
+    // ================================================================================
+    get_prefixLookup() {
+        this._invoiceService.get_prefixLookup()
+            .subscribe( data => {this.prefixLookupArr = data; console.log(data); } );
     }
 
     uploadBtnHandler(e): void {
@@ -42,36 +51,37 @@ export class InvoiceComponent implements OnInit {
     }
 
     jsonToCsv(json): void {
-        const fields = ['destination',  'total_calls', 'total_seconds', 'total_minutes', 'unit_cost', 'total_cost'];
+        const fields = ['prefix', 'destination',  'total_calls', 'total_seconds', 'total_minutes', 'unit_cost', 'total_cost'];
         const csv = this._papa.unparse({data: json, fields: fields});
         this.endResultCsv = csv
         + '\n\n'
-        + ', total_calls, total_seconds, total_minutes, , total_cost'
+        + ', , total_calls, total_seconds, total_minutes, , total_cost'
         + '\n'
-        + `, ${this.sumTotalCalls}, ${this.sumTotalSeconds}, ${this.sumTotalMinutes}, ,${this.sumTotalCost}`;
+        + `, , ${this.sumTotalCalls}, ${this.sumTotalSeconds}, ${this.sumTotalMinutes}, ,${this.sumTotalCost}`;
+        console.log(this.endResultCsv);
     }
 
     processJson(data): void {
         const csvData = data;
         const remappedData = csvData.map( obj => {
             return {
-                destination: obj[4],
+                prefix: obj[4],
                 totalSeconds: obj[7],
                 unitCost: obj[6]
             };
         });
 
-        const groupedData = this.groupBy(remappedData, 'destination');
+        const groupedData = this.groupBy(remappedData, 'prefix');
 
         const temp = [];
         for (const key in groupedData) {
             if (groupedData.hasOwnProperty(key)) {
                 const element = groupedData[key];
                 const sumSessionTime = this.sum(element, 'totalSeconds');
-                const sumSessionBill = this.sum(element, 'unitCost');
                 temp.push(
                     {
-                        destination: key,
+                        prefix: key,
+                        destination: '',
                         total_calls: element.length,
                         total_seconds: sumSessionTime,
                         total_minutes: sumSessionTime / 60,
@@ -82,6 +92,8 @@ export class InvoiceComponent implements OnInit {
             }
         }
         const json = temp.slice(0 , -1);
+        this.updateWithDestination(json, this.prefixLookupArr);
+
         console.log(json);
 
         this.sumTotalCalls = this.sumCol(json, 'total_calls');
@@ -91,6 +103,23 @@ export class InvoiceComponent implements OnInit {
 
         this.jsonToCsv(json);
 
+    }
+
+    updateWithDestination(arr, comparatorArr) {
+        const lookup = comparatorArr.reduce( (acc, cur) => {
+            acc[cur.Prefix] = cur.Destination;
+            return acc;
+        }, {});
+
+        return arr.map(item => {
+            const match = lookup[item.prefix];
+            if (!match) {
+                item.destination = 'not found update lookup table';
+            } else {
+                item.destination = match;
+            }
+            return item;
+        });
     }
 
     groupBy(arr, value) {

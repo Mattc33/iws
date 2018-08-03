@@ -115,6 +115,8 @@ import { LCRSharedService } from './shared/services/lcr/lcr.shared.service';
 
 // ? Accounts
 import { InvoiceComponent } from './Components/invoice/invoice.component';
+import { InvoiceService } from './shared/api-services/invoice/invoice.api.service';
+
 import { ExpandCollaspeComponent } from './shared/components/buttons/expand-collaspe/expand-collaspe.component';
 
 // ? App Module Service
@@ -203,6 +205,9 @@ registerLocaleData(en);
         TrunksService, TrunksSharedService,
 
         CallPlanService, CallPlanSharedService, CodesFormSharedService,
+
+        InvoiceService,
+
         LCRService, LCRSharedService,
         { provide: NZ_I18N, useValue: en_US }
     ],

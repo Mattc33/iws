@@ -332,7 +332,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
         this.defaultProfile(data);
-        this._importerSharedService.changeRatesCSVAmount(this.ratesPreviewObj.length);
+        this._importerSharedService.changeRatesCSVAmount(this.ratesPreviewObj.length); // display length of rates array
     }
 
     generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview
@@ -366,8 +366,8 @@ export class UploadRatesDialogComponent implements OnInit {
     defaultProfile(data): void {
         const dataSliced = data.slice(1);
         for ( let i = 0; i < dataSliced.length; i++) {
-            const destination: string = dataSliced[i][0];
-            const prefix: string = dataSliced[i][1];
+            const prefix: string = dataSliced[i][0];
+            const destination: string = dataSliced[i][1];
             const buyrate: number = dataSliced[i][2] * 1;
             const sellrate: number = buyrate;
             this.generateRateObj(destination, prefix, buyrate, sellrate);
