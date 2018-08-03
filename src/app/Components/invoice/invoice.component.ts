@@ -67,7 +67,8 @@ export class InvoiceComponent {
             return {
                 prefix: obj[4],
                 totalSeconds: obj[7],
-                unitCost: obj[6]
+                unitCost: obj[6],
+                totalCost: obj[13]
             };
         });
 
@@ -78,15 +79,16 @@ export class InvoiceComponent {
             if (groupedData.hasOwnProperty(key)) {
                 const element = groupedData[key];
                 const sumSessionTime = this.sum(element, 'totalSeconds');
+                const sumTotalCost = this.sum(element, 'totalCost');
                 temp.push(
                     {
                         prefix: key,
                         destination: '',
                         total_calls: element.length,
                         total_seconds: sumSessionTime,
-                        total_minutes: sumSessionTime / 60,
+                        total_minutes: (sumSessionTime / 60),
                         unit_cost: element[0].unitCost,
-                        total_cost: (sumSessionTime / 60) * element[0].unitCost
+                        total_cost: parseFloat(sumTotalCost.toFixed(4))
                     }
                 );
             }
@@ -98,8 +100,9 @@ export class InvoiceComponent {
 
         this.sumTotalCalls = this.sumCol(json, 'total_calls');
         this.sumTotalSeconds = this.sumCol(json, 'total_seconds');
-        this.sumTotalCost = this.sumCol(json, 'total_cost');
+        this.sumTotalCost = this.sumCol(json, 'total_cost').toFixed(2);
         this.sumTotalMinutes = this.sumCol(json, 'total_minutes');
+
 
         this.jsonToCsv(json);
 
