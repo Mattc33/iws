@@ -55,16 +55,6 @@ export class RateCardsConvertCsvComponent implements OnInit {
             );
     }
 
-    // get_specificRatecard(ratecard_id: number, fileName: string): void {
-    //     this.rateCardsService.get_ratesInRatecard(ratecard_id)
-    //         .subscribe(
-    //             data => {
-    //                 const csv = this.papaUnparse(data);
-    //                 this.saveToFileSystem(csv, fileName);
-    //             }
-    //         );
-    // }
-
     get_specificRatecardOneFile(ratecard_id: number, fileName: string): void {
         this.rateCardsService.get_ratesInRatecard(ratecard_id)
             .subscribe(
