@@ -29,14 +29,13 @@ export class InvoiceComponent {
     // ================================================================================
     // * Invoice API Service
     // ================================================================================
-    get_prefixLookup() {
+    get_prefixLookup(): void {
         this._invoiceService.get_prefixLookup()
             .subscribe( data => {this.prefixLookupArr = data; console.log(data); } );
     }
 
     uploadBtnHandler(e): void {
         this.csvToJson(e.target.files[0]);
-
     }
 
     csvToJson(csvfile): void {
@@ -64,11 +63,12 @@ export class InvoiceComponent {
     processJson(data): void {
         const csvData = data;
         const remappedData = csvData.map( obj => {
+            const totalCost = parseFloat(obj[13]).toFixed(4);
             return {
                 prefix: obj[4],
                 totalSeconds: obj[7],
                 unitCost: obj[6],
-                totalCost: obj[13]
+                totalCost: totalCost
             };
         });
 
@@ -96,19 +96,15 @@ export class InvoiceComponent {
         const json = temp.slice(0 , -1);
         this.updateWithDestination(json, this.prefixLookupArr);
 
-        console.log(json);
-
         this.sumTotalCalls = this.sumCol(json, 'total_calls');
         this.sumTotalSeconds = this.sumCol(json, 'total_seconds');
-        this.sumTotalCost = this.sumCol(json, 'total_cost').toFixed(2);
+        this.sumTotalCost = this.sumCol(json, 'total_cost').toFixed(4);
         this.sumTotalMinutes = this.sumCol(json, 'total_minutes');
 
-
         this.jsonToCsv(json);
-
     }
 
-    updateWithDestination(arr, comparatorArr) {
+    updateWithDestination(arr, comparatorArr): Array<any> {
         const lookup = comparatorArr.reduce( (acc, cur) => {
             acc[cur.Prefix] = cur.Destination;
             return acc;
@@ -125,7 +121,7 @@ export class InvoiceComponent {
         });
     }
 
-    groupBy(arr, value) {
+    groupBy(arr, value): Array<any> {
         return arr.reduce( (acc, cur) => {
             const key = cur[value];
             acc[key] = acc[key] || [];
@@ -134,21 +130,21 @@ export class InvoiceComponent {
         }, {});
     }
 
-    sumCol(arr, value) {
+    sumCol(arr, value): Number {
         return arr.reduce( (acc, cur) => {
             const result = acc + cur[value];
             return result;
         }, 0);
     }
 
-    sum(arr, value) {
+    sum(arr, value): Number {
         return arr.reduce( (acc, cur) => {
             const eachItem = parseFloat(cur[value]);
             return acc + eachItem;
         }, 0);
     }
 
-    saveToFileSystem() {
+    saveToFileSystem(): void {
         const filename = 'results.csv';
         const blob = new Blob([this.endResultCsv], { type: 'text/plain' });
         saveAs(blob, filename);

@@ -82,7 +82,7 @@ export class MainTableSharedService {
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
                             const ratesArr = _mainTableCommon.extractRates(params);
-                            const min = Math.min(...ratesArr).toFixed(4);
+                            const min = Math.min(...ratesArr).toFixed(5);
                             const minToNum = parseFloat(min) * 1.01;
                             return minToNum.toFixed(4);
                         },
@@ -94,7 +94,7 @@ export class MainTableSharedService {
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
                             const ratesArr = _mainTableCommon.extractRates(params).sort();
-                            const min = Math.min(...ratesArr).toFixed(4);
+                            const min = Math.min(...ratesArr).toFixed(5);
                             const minToNum = parseFloat(min) * 1.02;
                             return minToNum.toFixed(4);
                         },
@@ -106,7 +106,7 @@ export class MainTableSharedService {
                         filter: 'agNumberColumnFilter', editable: true, lockPosition: true,
                         valueGetter(params) {
                             const ratesArr = _mainTableCommon.extractRates(params);
-                            const min = Math.min(...ratesArr).toFixed(4);
+                            const min = Math.min(...ratesArr).toFixed(5);
                             const minToNum = parseFloat(min) * 1.03;
                             return minToNum.toFixed(4);
                         },
