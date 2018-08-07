@@ -86,7 +86,7 @@ export class InvoiceComponent {
                         destination: '',
                         total_calls: element.length,
                         total_seconds: sumSessionTime,
-                        total_minutes: (sumSessionTime / 60),
+                        total_minutes: sumSessionTime / 60,
                         unit_cost: element[0].unitCost,
                         total_cost: parseFloat(sumTotalCost.toFixed(4))
                     }
@@ -137,7 +137,7 @@ export class InvoiceComponent {
         }, 0);
     }
 
-    sum(arr, value): Number {
+    sum(arr, value): any {
         return arr.reduce( (acc, cur) => {
             const eachItem = parseFloat(cur[value]);
             return acc + eachItem;
