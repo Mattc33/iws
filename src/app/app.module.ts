@@ -125,6 +125,7 @@ import { AppRoutes } from './Containers/routes/routes';
 // ? config angular i18n
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
+import { RateCardStatusComponent } from './Components/ratecard/rate-card-status/rate-card-status.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -163,7 +164,7 @@ registerLocaleData(en);
         InvoiceComponent,
 
         // ? Global
-        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent,
+        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, RateCardStatusComponent,
     ],
   imports:
   [

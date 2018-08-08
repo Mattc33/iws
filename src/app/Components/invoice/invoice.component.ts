@@ -63,12 +63,11 @@ export class InvoiceComponent {
     processJson(data): void {
         const csvData = data;
         const remappedData = csvData.map( obj => {
-            const totalCost = parseFloat(obj[13]).toFixed(4);
             return {
                 prefix: obj[4],
                 totalSeconds: obj[7],
                 unitCost: obj[6],
-                totalCost: totalCost
+                totalCost: obj[13]
             };
         });
 
@@ -80,6 +79,8 @@ export class InvoiceComponent {
                 const element = groupedData[key];
                 const sumSessionTime = this.sum(element, 'totalSeconds');
                 const sumTotalCost = this.sum(element, 'totalCost');
+                const unit_cost = parseFloat(element[0].unitCost).toFixed(4);
+                const total_cost = parseFloat(parseFloat(sumTotalCost).toFixed(2));
                 temp.push(
                     {
                         prefix: key,
@@ -87,8 +88,8 @@ export class InvoiceComponent {
                         total_calls: element.length,
                         total_seconds: sumSessionTime,
                         total_minutes: sumSessionTime / 60,
-                        unit_cost: element[0].unitCost,
-                        total_cost: parseFloat(sumTotalCost.toFixed(4))
+                        unit_cost: unit_cost,
+                        total_cost: total_cost
                     }
                 );
             }
@@ -98,8 +99,10 @@ export class InvoiceComponent {
 
         this.sumTotalCalls = this.sumCol(json, 'total_calls');
         this.sumTotalSeconds = this.sumCol(json, 'total_seconds');
-        this.sumTotalCost = this.sumCol(json, 'total_cost').toFixed(4);
+        this.sumTotalCost = this.sumCol(json, 'total_cost');
         this.sumTotalMinutes = this.sumCol(json, 'total_minutes');
+
+        console.log(json);
 
         this.jsonToCsv(json);
     }
