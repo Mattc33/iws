@@ -125,7 +125,8 @@ import { AppRoutes } from './Containers/routes/routes';
 // ? config angular i18n
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
-import { RateCardStatusComponent } from './Components/ratecard/rate-card-status/rate-card-status.component';
+import { RateCardsStatusComponent } from './Components/ratecard/rate-cards-status/rate-cards-status.component';
+import { AntdUploadAreaComponent } from './shared/components/uploadarea/antd-upload-area/antd-upload-area.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -164,7 +165,8 @@ registerLocaleData(en);
         InvoiceComponent,
 
         // ? Global
-        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, RateCardStatusComponent,
+        SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, 
+        RateCardsStatusComponent, AntdUploadAreaComponent,
     ],
   imports:
   [

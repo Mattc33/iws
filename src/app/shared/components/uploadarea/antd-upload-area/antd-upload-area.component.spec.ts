@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RateCardStatusComponent } from './rate-card-status.component';
+import { AntdUploadAreaComponent } from './antd-upload-area.component';
 
-describe('RateCardStatusComponent', () => {
-  let component: RateCardStatusComponent;
-  let fixture: ComponentFixture<RateCardStatusComponent>;
+describe('AntdUploadAreaComponent', () => {
+  let component: AntdUploadAreaComponent;
+  let fixture: ComponentFixture<AntdUploadAreaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RateCardStatusComponent ]
+      declarations: [ AntdUploadAreaComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RateCardStatusComponent);
+    fixture = TestBed.createComponent(AntdUploadAreaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

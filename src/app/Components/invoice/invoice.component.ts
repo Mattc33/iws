@@ -80,14 +80,17 @@ export class InvoiceComponent {
                 const sumSessionTime = this.sum(element, 'totalSeconds');
                 const sumTotalCost = this.sum(element, 'totalCost');
                 const unit_cost = parseFloat(element[0].unitCost).toFixed(4);
-                const total_cost = parseFloat(parseFloat(sumTotalCost).toFixed(2));
+                // const total_cost = parseFloat(parseFloat(sumTotalCost).toFixed(2));
+                // ! temp fix
+                const total_minute = sumSessionTime / 60;
+                const total_cost = parseFloat((total_minute * element[0].unitCost).toFixed(2));
                 temp.push(
                     {
                         prefix: key,
                         destination: '',
                         total_calls: element.length,
                         total_seconds: sumSessionTime,
-                        total_minutes: sumSessionTime / 60,
+                        total_minutes: total_minute,
                         unit_cost: unit_cost,
                         total_cost: total_cost
                     }

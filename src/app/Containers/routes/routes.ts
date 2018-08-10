@@ -11,6 +11,7 @@ import { RateCardsTableComponent } from '../../Components/ratecard/rate-cards-ta
 import { RatecardViewCarrierPComponent } from '../../Components/ratecard/ratecard-view-carrier-p/ratecard-view-carrier-p.component';
 import { ImporterTableComponent } from '../../Components/ratecard/ratecard-importer/importer-table/importer-table.component';
 import { RateCardManagerComponent } from '../../Components/ratecard/rate-card-manager/rate-card-manager.component';
+import { RateCardsStatusComponent } from './../../Components/ratecard/rate-cards-status/rate-cards-status.component';
 
 import { TrunksTableComponent } from '../../Components/trunks/trunks-table/trunks-table.component';
 
@@ -40,6 +41,7 @@ export const AppRoutes: Routes =
         {path: 'rate-card-convert-csv', component: RateCardsConvertCsvComponent},
         {path: 'rate-card-view-carrier', component: RatecardViewCarrierSComponent},
         {path: 'rate-card-view-carrier-p', component: RatecardViewCarrierPComponent},
+        {path: 'rate-card-status', component: RateCardsStatusComponent},
         {path: 'app-rate-card-manager', component: RateCardManagerComponent},
 
         {path: 'trunks', component: TrunksTableComponent},

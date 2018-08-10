@@ -4,58 +4,215 @@
 @test_carrier_id = 33 
 @test_tier = 'standard'
 
-# =======================================
-# >>> To Add More Carriers To Profile <<<
-# =======================================
-
-### Get Carriers
-GET {{host_server}}/carriers
-
-### Get List of Ratecards based on Carrier Id
-GET {{host_server}}/fromCarrier/{fromCarrierId}/tier/{tier}/ratecards
-
-### Get ratecard info and rates inside
-GET {{host_server}}/fromCarrier/{fromCarrierId}/ratecard/{ratecardId}
-
-# =======================================
-# >>> TO SAVE/GET PROFILE <<<
-# =======================================
-
-## Post /toCarrier/{toCarrierId}/tier/{tier}/profile
-# Posting a profile after export action
-POST {{host_server}}/toCarrier/{{test_carrier_id}}/tier/{{test_tier}}/profile
-Content-Type: application/json
-
+###
+POST /toCarrier/{toCarrierId}/tier/{tier}/profile
 {
-    "rateMarkup": 1.02,
-    "fromCarrierList": [ 
-        {
-            "iso": "AF", 
-            "fromCarrier": [
-                {
-                    "fromCarrierId": 34, 
-                    "rateCardTier": "standard"
-                },
-                {
-
-                }
-            ]
-        }
-    ],
-    "customRateList": [ 
-        {
-            "iso": "AF", 
-            "finalRate": 0,
-            "minRate": 0
-        }
-    ]
+  "rateMarkup": 1.05,
+  "fromCarrierList" : [ {
+     "iso": "AF", 
+     "fromCarrier" : [{"fromCarrierId": 36, "rateCardTier": "carrier36_tier"}]
+    }
+  ],
+  "customRateList" :[ {
+     "iso": "AF", 
+     "finalRate" : 1.29,
+     "minRate" : 1.21
+    }
+  ]
 }
 
-# GET Past Rate
-GET /toCarrier/{toCarrierId}/tier/{tier}/rates
+
+###
+GET /toCarrier/{toCarrierId}/tier/{tier}/profile
+
+response body:
+{
+  CustomerCarrierName,
+  RateMarkup,
+  fromCarrierList: [ {iso: AF, 
+     fromCarrier: [{fromCarrierId, rateCardTier}]
+    }
+  ],
+  customRateList:[ {
+     iso: AF, 
+     finalRate,
+     minRate
+    }
+  ]
+}
+
+###
+GET /fromCarrier/{fromCarrierId}/tier/{ratecardTier}/ratecards
+
+response body:
+{
+	"ratecards": [{
+		"ratecardId",
+		"ratecardName",
+		"start_ts",
+		"end_ts",
+		"add_ts"
+	   }
+	]
+}
+
+###
+GET /fromCarrier/{fromCarrierId}/ratecard/{ratecardId}
+
+response body:
+
+{
+	"AF" : [ {
+  	  "id" : 6,
+  	  "prefix" : "93",
+  	  "destination" : "AFGHANISTAN",
+ 	  "buy_rate" : 0.125,
+  	  "buy_rate_minimum" :1,
+  	  "buy_rate_increment" : 1,
+	  "start_ts" : long,
+  	  "end_ts" : long
+	 }, {
+  	  "id" : 6,
+  	  "prefix" : "9370",
+  	  "destination" : "AFGHANISTAN MOBILE AWCC",
+  	  "buy_rate" : 0.125,
+  	  "buy_rate_minimum" :1,
+  	  "buy_rate_increment" : 1,
+	  "start_ts" : long,
+  	  "end_ts" : long
+ 	 }
+	]
+}
 
 
-POST /toCarrier/{toCarrierId}/tier/{tier}/rates
+###
+GET /toCarrier/{toCarrierId}/tier/{tier}/price?limit=N (N=1,2,...)
+# (give first N records from the customer_carrier_profile_price table (table 4 below),
+# latest record first.  The default N=1, means if no 'limit=N' given, 
+# you will the latest record)
+# result body will be:
+# { 
+#   "price" : 
+#   [ {
+#     "time" : mmddyyyy:HH:MM:SS
+#     "rates" : {
+#       "AF" : [ {
+# 	"id" : 6,
+#         "start_ts" : 1511668130000,
+#         "end_ts" : 1511968130000,
+#         "prefix" : "93",
+#         "sell_rate_minimum" : 1,
+#         "buy_rate_minimum" : 1,
+#         "destination" : "AFGHANISTAN",
+#         "buy_rate_increment" : 1,
+#         "sell_rate" : 0.125,
+#         "buy_rate" : 0.125,
+#         "sell_rate_increment" : 1
+#       }, {
+# 	"id" : 6,
+#         "start_ts" : 1511868130000,
+#         "end_ts" : 1512868130000,
+#         "prefix" : "9370",
+#         "sell_rate_minimum" : 1,
+#         "buy_rate_minimum" : 1,
+#         "destination" : "AFGHANISTAN MOBILE AWCC",
+#         "buy_rate_increment" : 1,
+#         "sell_rate" : 0.125,
+#         "buy_rate" : 0.125,
+#         "sell_rate_increment" : 1
+#       } ]
+#     },
+#     "profile" : {
+#       "rateMarkup" : 1.25,
+#       "customRateList" : [ {
+#         "iso" : "AF",
+#         "minRate" : 1.21,
+#         "finalRate" : 1.29
+#       }, {
+#         "iso" : "US",
+#         "minRate" : 0.19,
+#         "finalRate" : 0.39
+#       }, {
+#         "iso" : "CN",
+#         "minRate" : 0.29,
+#         "finalRate" : 0.59
+#       } ],
+#       "fromCarrierList" : [ {
+#         "iso" : "AF",
+#         "fromCarrier" : [ {
+#           "rateCardTier" : "carrier36_tier",
+#           "fromCarrierId" : 36
+#         }, {
+#           "rateCardTier" : "carrier33_tier",
+#           "fromCarrierId" : 33
+#         }, {
+#           "rateCardTier" : "carrier35_tier",
+#           "fromCarrierId" : 35
+#         } ]
+#       } ]
+#     }
+#   }, {
+#     "time" : mmddyyyy:HH:MM:SS
+#     "rates" : {
+#       "AF" : [ {
+#         "start_ts" : 1511668130000,
+#         "end_ts" : 1511968130000,
+#         "prefix" : "93",
+#         "sell_rate_minimum" : 1,
+#         "buy_rate_minimum" : 1,
+#         "destination" : "AFGHANISTAN",
+#         "buy_rate_increment" : 1,
+#         "sell_rate" : 0.125,
+#         "buy_rate" : 0.125,
+#         "sell_rate_increment" : 1
+#       }, {
+#         "start_ts" : 1511868130000,
+#         "end_ts" : 1512868130000,
+#         "prefix" : "9370",
+#         "sell_rate_minimum" : 1,
+#         "buy_rate_minimum" : 1,
+#         "destination" : "AFGHANISTAN MOBILE AWCC",
+#         "buy_rate_increment" : 1,
+#         "id" : 6,
+#         "sell_rate" : 0.125,
+#         "buy_rate" : 0.125,
+#         "sell_rate_increment" : 1
+#       } ]
+#     },
+#     "profile" : {
+#       "rateMarkup" : 1.25,
+#       "customRateList" : [ {
+#         "iso" : "AF",
+#         "minRate" : 1.21,
+#         "finalRate" : 1.29
+#       }, {
+#         "iso" : "US",
+#         "minRate" : 0.19,
+#         "finalRate" : 0.39
+#       }, {
+#         "iso" : "CN",
+#         "minRate" : 0.29,
+#         "finalRate" : 0.59
+#       } ],
+#       "fromCarrierList" : [ {
+#         "iso" : "AF",
+#         "fromCarrier" : [ {
+#           "rateCardTier" : "carrier36_tier",
+#           "fromCarrierId" : 36
+#         }, {
+#           "rateCardTier" : "carrier33_tier",
+#           "fromCarrierId" : 33
+#         }, {
+#           "rateCardTier" : "carrier35_tier",
+#           "fromCarrierId" : 35
+#         } ]
+#       } ]
+#     }
+#   } ]
+# }
+
+###
+POST /toCarrier/{toCarrierId}/tier/{tier}/price
 
 {
   "profile": {
@@ -73,26 +230,33 @@ POST /toCarrier/{toCarrierId}/tier/{tier}/rates
   	   ],
   },
   "rates":{
-	"AU" : [ 
-        {
-            "prefix" : "93",
-            "destination" : "AFGHANISTAN",
-            "sell_rate" : 0.125,
-            "sell_rate_minimum" :1,
-            "sell_rate_increment" : 1,
-            "start_ts" : long,
-            "end_ts" : long1	 }, 
-        {
-            "id" : 6,
-            "prefix" : "9370",
-            "destination" : "AFGHANISTAN MOBILE AWCC",
-            "sell_rate" : 0.125,
-            "sell_rate_minimum" :1,
-            "sell_rate_increment" : 1,
-            "start_ts" : long,
-            "end_ts" : long
- 	    }
-	]
+     "AU" : [ {
+	   "id" : 5,
+  	   "prefix" : "93",
+  	   "destination" : "AFGHANISTAN",
+ 	   "buy_rate" : 0.125,
+  	   "buy_rate_minimum" :1,
+  	   "buy_rate_increment" : 1,
+ 	   "sell_rate" : 0.125,
+  	   "sell_rate_minimum" :1,
+  	   "sell_rate_increment" : 1,
+	   "start_ts" : long,
+  	   "end_ts" : long	 
+	 }, 
+	 {
+  	   "id" : 6,
+  	   "prefix" : "9370",
+  	   "destination" : "AFGHANISTAN MOBILE AWCC",
+  	   "buy_rate" : 0.125,
+  	   "buy_rate_minimum" :1,
+  	   "buy_rate_increment" : 1,
+ 	   "sell_rate" : 0.125,
+  	   "sell_rate_minimum" :1,
+  	   "sell_rate_increment" : 1,
+	   "start_ts" : long,
+  	   "end_ts" : long
+ 	 }
+      ]
    }
 }
 
@@ -100,29 +264,29 @@ POST /toCarrier/{toCarrierId}/tier/{tier}/rates
 # ==========
 # 1. customer_carrier_profile:
 # id, 	    	   	<== auto gen
-# to_carrier,  	<== POST input: Customer
+# customer_carrier_id,  	<== POST input: Customer
 # tier,	        	<== POST input: Tier
 # ts,	        	<== current timestamp
-# markup	   	<== POST input: rate_markup
+# markup	   		<== POST input: rate_markup
 
-# 2. customer_carriers
+# 2. customer_from_carrierlist
 # id, 			<== auto gen
-# profile_id,	<== foreign key of customer_profile.id 
-# iso, 			<== POST input: fromCarrierList.iso
-# carrier_id, 	<== POST input: fromCarrierList.fromCarrierId
-# rate_card_tier	<== POST input: fromCarrierList.rateCardTier
+# profile_id,		<== foreign key of customer_carrier_profile.id 
+# country_iso, 		<== POST input: fromCarrierList.iso
+# from_carrier_id, 	<== POST input: fromCarrierList.fromCarrierId
+# ratecard_tier		<== POST input: fromCarrierList.rateCardTier
 
 # 3. customer_carrier_profile_rate
-# id, 			<== auto gen
-# profile_id,	<== foreign key of customer_profile.id 
-# iso, 			<== POST input: customRateList.iso
+# id, 		<== auto gen
+# profile_id,	<== foreign key of customer_carrier_profile.id 
+# country_iso, 	<== POST input: customRateList.iso
 # final_rate,	<== POST input: customRateList.finalRate
-# min_rate		<== POST input: customRateList.minRate
+# min_rate	<== POST input: customRateList.minRate
 
 # 4. customer_carrier_profile_price
-# id, 			<== auto gen
-# profile_id, 	<== foreign key of customer_profile.id
-# ts,			<== current timestamp 
+# id, 		<== auto gen
+# profile_id, 	<== foreign key of customer_carrier_profile.id
+# ts,		<== current timestamp 
 # price (Json)	<== POST input: price
 
 
