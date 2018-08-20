@@ -18,16 +18,16 @@ import { ToggleButtonStateService } from '../../../shared/services/global/button
 export class CarrierTableComponent implements OnInit {
 
     // * row data and column definitions
-    rowData;
-    columnDefs;
+    rowData: Array<{}>
+    columnDefs: Array<{}>
 
     // * gridApi & gridUI props
-    gridApi: GridApi;
-    quickSearchValue = '';
-    rowSelection = 'single';
+    gridApi: GridApi
+    quickSearchValue: string = ''
+    rowSelection: string = 'single'
 
     // ? Internal Service
-    rowObj;
+    rowObj
 
     // * UI Props
     gridSelectionStatus: number;
@@ -81,7 +81,7 @@ export class CarrierTableComponent implements OnInit {
         params.api.sizeColumnsToFit();
     }
 
-    private createColumnDefs() {
+    private createColumnDefs(): Array<{}> {
         return [
             {
                 headerName: 'Name', field: 'name',
@@ -105,27 +105,27 @@ export class CarrierTableComponent implements OnInit {
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Taxable', field: 'taxable', editable: true,
+                headerName: 'Taxable', field: 'taxable', editable: true, width: 120,
                 cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Tier Number', field: 'tier', editable: true,
+                headerName: 'Tier Number', field: 'tier', editable: true, width: 120,
                 cellEditor: 'select', cellEditorParams: {values: [ 1, 2, 3, 4, 5]},
                 filter: 'agNumberColumnFilter',
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Carrier Code', field: 'code',
+                headerName: 'Carrier Code', field: 'code', width: 120,
                 editable: true,
-            },
+            }
         ];
     }
 
     // ================================================================================
     // Grid UI Interactions
     // ================================================================================
-    gridSizeChanged(params) {
+    gridSizeChanged(params): void {
         params.api.sizeColumnsToFit();
     }
 
@@ -145,7 +145,7 @@ export class CarrierTableComponent implements OnInit {
         return this.toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus);
     }
 
-    onQuickFilterChanged() { // external global search
+    onQuickFilterChanged(): void { // external global search
         this.gridApi.setQuickFilter(this.quickSearchValue);
     }
 
@@ -163,11 +163,7 @@ export class CarrierTableComponent implements OnInit {
     onCellValueChanged(params: any): void {
         const id = params.data.id;
         let taxable = params.data.taxable;
-            if (taxable === 'false') {
-                taxable = false;
-            } else {
-                taxable = true;
-            }
+            (taxable === 'false') ? taxable = false : taxable = true
         const carrierObj = {
             code: params.data.code,
             name: params.data.name,

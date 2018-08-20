@@ -1,60 +1,45 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid';
+import { Component, OnInit, ViewChild } from '@angular/core'
+import { GridApi, ColumnApi } from 'ag-grid'
 
-import { CarrierService } from '../../../shared/api-services/carrier/carrier.api.service';
-import { CarrierCellComponent } from './carrier-cell/carrier-cell.component';
-import { ObietelCellComponent } from './obietel-cell/obietel-cell.component';
-import { RateTableModalComponent } from './rate-table-modal/rate-table-modal.component';
+import { CarrierCellComponent } from './carrier-cell/carrier-cell.component'
+import { ObietelCellComponent } from './obietel-cell/obietel-cell.component'
+import { RateTableModalComponent } from './rate-table-modal/rate-table-modal.component'
+import { RatecardManagerUtils } from './../../../shared/utils/ratecard/rate-card-manager.utils';
+import { RatecardManagerService } from './../../../shared/api-services/ratecard/rate-card-manager.api.service';
 
 @Component({
-  selector: 'app-rate-card-manager',
-  templateUrl: './rate-card-manager.component.html',
-  styleUrls: ['./rate-card-manager.component.scss']
+    selector: 'app-rate-card-manager',
+    templateUrl: './rate-card-manager.component.html',
+    styleUrls: ['./rate-card-manager.component.scss']
 })
 export class RateCardManagerComponent implements OnInit {
 
-    @ViewChild(RateTableModalComponent) _rateTableModal: RateTableModalComponent;
-
-    // ! Top Toolbar
-    // * Select Dropdown Option Values
-    toCarrierOptions: any;
-    fromCarrierOptions: Array<{}>;
-    productTierOptions: Array<{}> = [
-        {label: 'Standard', value: 'standard'},
-        {label: 'Premium', value: 'premium'}
-    ];
-    fromCarrierRatecardData = {
-      33: [ 'ratecard1', 'ratecard2' ],
-      34 : [ 'ratecard1', 'ratecard2', 'ratecard3' ]
-    };
-
-    // * Selected Values
-    toCarrierValue: string;
-    productTierValue: string;
-    fromCarrierValue;
-    fromCarrierRatecardValue;
+    @ViewChild(RateTableModalComponent) _rateTableModal: RateTableModalComponent
 
     // ! AG Grid
     // * row data and column definitions
-    rowData: any[];
-    columnDefs;
+    rowData: Array<any>
+    columnDefs: Array<{}>
 
     // * gridApi
-    gridApi: GridApi;
-    columnApi: ColumnApi;
+    gridApi: GridApi
+    columnApi: ColumnApi
 
     // * gridUI props
-    context;
-    frameworkComponents;
+    context: object
+    frameworkComponents: object
+
+    // ! Holds Ratecard Col Defs
+    ratecardColDefs: Array<any> = []
 
     // ! Passed to Modal
-    carrierCellInfo;
+    carrierCellInfo
 
     constructor(
-        private _CarrierService: CarrierService
+        private _ratecardManagerUtils: RatecardManagerUtils
     ) {
         this.columnDefs = this.createColumnDefs();
-        this.context = {rateCardManagerTableComponent: this};
+        this.context = {rateCardManagerTableComponent: this} // provides context of the carrier component to the cell components
         this.frameworkComponents = {
             _carrierCellComponent: CarrierCellComponent,
             _obietelCellComponent: ObietelCellComponent
@@ -62,96 +47,68 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getCarriers();
     }
 
     // ================================================================================
     // * Service
     // ================================================================================
-    getCarriers(): void {
-        const carrierObservable = this._CarrierService.get_carriers();
-        carrierObservable.subscribe(
-            data =>  {
-                this.toCarrierOptions = data;
-                this.fromCarrierOptions = data;
-                console.log(data);
-            },
-            error =>  console.log(error)
-        );
+    getRatecardRates = (): void => {
+
     }
+    
+    postCarrierListToProfile = (): void  => {
+
+    }
+
+    postCarrierRatesInfoToProfile = (): void  => {
+
+    }
+
+
 
     // ================================================================================
     // * Event Handlers from Top Toolbar
     // ================================================================================
 
-    // Utils
-    _find = (array, key, value) => array.find( obj => obj[key] === value);
+    addRatecardAsCol(ratecardList): void { // * responsible for adding the right carriers as cols to grid
+        this.updateColDefs(ratecardList)
 
-    toCarrierChangeHandler(e): void {
-        const carrierId = e;
-        console.log(carrierId);
-        this.gridApi.setRowData(this.createRowData());
-    }
 
-    fromCarrierChangeHandler(carrierIdArr): void { // * responsible for adding the right carriers as cols to grid
-        // const lookupArr = [];
-        // carrierIdArr.forEach(carrier => {
-        //     const lookupItem = this._find(this.toCarrierOptions, 'id', carrier );
-        //     if (lookupItem) {
-        //         lookupArr.push(lookupItem);
-        //     }
-        // });
+        const formattedRatecardList = ratecardList.map(eaRatecard => {
+            return {
+                countries: eaRatecard.country,
+                minRange: 1,
+                maxRange: 2,
+                finalRate: 3,
+                fixedMinimumRate: 2,
+                previousRate: 2.5
+            }
+        })
+        formattedRatecardList.forEach(eaRatecard => {
+            this.gridApi.updateRowData( { add: [eaRatecard] })
+        });
 
-        // const carrierColDefs = lookupArr.map( carrier => {
-        //     return {
-        //         headerName: carrier.name, field: carrier.id.toString(), coldId: carrier.id.toString(),
-        //         width: 180, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-        //         cellRenderer: '_carrierCellComponent',
-        //         // self-defined values
-        //         ratecard_id: '<insert ratecard_id here>'
-        //     };
-        // });
 
-        // const countries = [this._find(this.columnDefs, 'colId', 'countries')];
-        // const obietelCols = [
-        //     this._find(this.columnDefs, 'colId', 'finalRate'),
-        //     this._find(this.columnDefs, 'colId', 'fixedMinimumRate'),
-        //     this._find(this.columnDefs, 'colId', 'previousRate')
-        // ];
-
-        // this.gridApi.setColumnDefs([].concat(countries, carrierColDefs, obietelCols));
-    }
-
-    productTierChangeHandler(): void {
-
-    }
-
-    fromCarrierRatecardChangeHandler(): void {
-        // add to ag grid as column
-    }
-
-    uponFromCarrierSelection(value: string): void {
-        this.fromCarrierRatecardValue = this.fromCarrierRatecardData[ value ];
     }
 
     // ================================================================================
     // * Event Handlers From Cells
     // ================================================================================
     fromCarrierCellToggleHandler(cell: Object, checkboxValue: boolean): void {
-        console.log(cell);
-        console.log(checkboxValue);
+        console.log(cell)
+        console.log(checkboxValue)
     }
 
     fromCarrierCellInfoHandler(cell: Object): void {
         // open a modal, set global var to cell obj which is later passed to modal via @Input
-        this.carrierCellInfo = cell;
-        this._rateTableModal.showModal();
+        this.carrierCellInfo = cell
+        this._rateTableModal.showModal()
     }
 
     obieCellInfoHandler(cell: Object): void {
-        console.log('obie info', cell);
-        this.carrierCellInfo = cell;
-        this._rateTableModal.showModal();
+        console.log('obie info', cell)
+        this.carrierCellInfo = cell
+        this._rateTableModal.showModal()
     }
 
     // ================================================================================
@@ -160,7 +117,7 @@ export class RateCardManagerComponent implements OnInit {
     // ? Grid Initiation
     createColumnDefs(): Array<{}> {
         const commonCellStyle = { 'border-right': '1px solid #ccc', 'line-height': '70px',
-        'text-align': 'center' };
+        'text-align': 'center' }
 
         return [
             {
@@ -186,27 +143,27 @@ export class RateCardManagerComponent implements OnInit {
         ];
     }
 
-    createRowData(): Array<{}> {
+    createRowData(): Array<any> {
         return [
-            {
-                countries: 'Afghanistan',
-                finalRate: 3,
-                fixedMinimumRate: 2,
-                previousRate: 2.5
-                // ! i need to attach each carrier's rate here
-            },
-            {
-                countries: 'Albania',
-                finalRate: 3,
-                fixedMinimumRate: 2,
-                previousRate: 2.5
-            },
-            {
-                countries: 'Algeria',
-                finalRate: 3,
-                fixedMinimumRate: 2,
-                previousRate: 2.5
-            }
+            // {
+            //     countries: 'Afghanistan',
+            //     finalRate: 3,
+            //     fixedMinimumRate: 2,
+            //     previousRate: 2.5
+            //     // ! i need to attach each carrier's rate here
+            // },
+            // {
+            //     countries: 'Albania',
+            //     finalRate: 3,
+            //     fixedMinimumRate: 2,
+            //     previousRate: 2.5
+            // },
+            // {
+            //     countries: 'Algeria',
+            //     finalRate: 3,
+            //     fixedMinimumRate: 2,
+            //     previousRate: 2.5
+            // }
         ];
     }
 
@@ -214,6 +171,21 @@ export class RateCardManagerComponent implements OnInit {
         this.gridApi = params.api;
         this.columnApi = params.columnApi;
         // params.api.sizeColumnsToFit();
-        this.gridApi.setRowData(this.createRowData());
+        this.gridApi.setRowData(this.createRowData())
+    }
+
+    updateColDefs(ratecardList: object): void {
+        const unix = ratecardList[0].groupId.split('_')[1]
+        const date = this._ratecardManagerUtils.unixToLocalTime(unix)
+        const ratecardName = `${ratecardList[0].groupId.split('_')[0]} ${date}`
+        const countries = [this.columnDefs[0]]
+        this.ratecardColDefs.push({
+            headerName: ratecardName,
+            colId: ratecardList[0].groupId,
+            width: 260, cellStyle: { 'border-right': '1px solid #E0E0E0' },
+            cellRenderer: '_carrierCellComponent'
+        })
+        const obieRate = this.columnDefs.slice(1)
+        this.gridApi.setColumnDefs([].concat(countries, this.ratecardColDefs, obieRate))
     }
 }

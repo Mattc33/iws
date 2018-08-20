@@ -1,52 +1,8 @@
 <main>
-    <header>
-        <!-- To Carrier --> 
-        <div classs="toCarrierContainer">
-            <span>To:</span>
-            <nz-select 
-                style="width: 200px;"
-                nzShowSearch 
-                nzAllowClear 
-                nzPlaceHolder="Carrier" 
-                [(ngModel)]="toCarrierValue"
-                (ngModelChange)="toCarrierChangeHandler($event)"
-            >
-                <nz-option *ngFor="let carrier of toCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
-            </nz-select>
-        </div>
-
-        <!-- From Carrier -->
-        <div>
-            <span>From:</span>
-            <nz-select 
-                style="width: 200px; margin-right: 5px;" 
-                [(ngModel)]="fromCarrierValue" 
-                (ngModelChange)="uponFromCarrierSelection($event)"
-            >
-                <nz-option *ngFor="let carrier of toCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
-            </nz-select>
-            <nz-select 
-                style="width: 240px;" 
-                [(ngModel)]="fromCarrierRatecardValue"
-            >
-                <nz-option *ngFor="let ratecard of fromCarrierRatecardData[fromCarrierValue]" [nzValue]="ratecard" [nzLabel]="ratecard"></nz-option>
-            </nz-select>
-        </div>
-
-        <!-- Choose Product Tier -->
-        <div>
-            <nz-select 
-                style="width: 200px; margin-left: 25px;" 
-                nzShowSearch 
-                nzAllowClear 
-                nzPlaceHolder="Product Tier" 
-                [(ngModel)]="productTierValue"
-            >
-                <nz-option *ngFor="let productTier of productTierOptions" [nzLabel]="productTier.label" [nzValue]="productTier.value"></nz-option>
-            </nz-select>
-        </div>
-
-    </header>
+    <app-rate-card-manager-toolbar
+        (e_addRatecardCol)="addRatecardAsCol($event)"
+    >
+    </app-rate-card-manager-toolbar>
     <section>
         <ag-grid-angular class="ag-theme-balham"
             [columnDefs]="columnDefs" [rowData]="rowData" 

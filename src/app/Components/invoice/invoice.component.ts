@@ -78,12 +78,12 @@ export class InvoiceComponent {
             if (groupedData.hasOwnProperty(key)) {
                 const element = groupedData[key];
                 const sumSessionTime = this.sum(element, 'totalSeconds');
-                const sumTotalCost = this.sum(element, 'totalCost');
-                const unit_cost = parseFloat(element[0].unitCost).toFixed(4);
-                // const total_cost = parseFloat(parseFloat(sumTotalCost).toFixed(2));
-                // ! temp fix
                 const total_minute = sumSessionTime / 60;
-                const total_cost = parseFloat((total_minute * element[0].unitCost).toFixed(2));
+                const unit_cost = parseFloat(element[0].unitCost).toFixed(4);
+                const sumTotalCost = this.sum(element, 'totalCost');
+                // const total_cost = parseFloat(parseFloat(sumTotalCost).toFixed(2));
+                    // ! temp fix for a2billing csv with 60/60 billing interval
+                    const total_cost = parseFloat((total_minute * element[0].unitCost).toFixed(2));
                 temp.push(
                     {
                         prefix: key,
@@ -118,11 +118,7 @@ export class InvoiceComponent {
 
         return arr.map(item => {
             const match = lookup[item.prefix];
-            if (!match) {
-                item.destination = 'not found update lookup table';
-            } else {
-                item.destination = match;
-            }
+            (!match) ? item.destination = 'not found update lookup table' : item.destination = match;
             return item;
         });
     }
@@ -136,7 +132,7 @@ export class InvoiceComponent {
         }, {});
     }
 
-    sumCol(arr, value): Number {
+    sumCol(arr, value): number {
         return arr.reduce( (acc, cur) => {
             const result = acc + cur[value];
             return result;

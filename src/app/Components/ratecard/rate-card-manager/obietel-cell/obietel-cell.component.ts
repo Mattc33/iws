@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { Component } from '@angular/core'
+import { ICellRendererAngularComp } from 'ag-grid-angular'
 
 @Component({
   selector: 'app-obietel-cell',
@@ -7,23 +7,20 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
   styleUrls: ['./obietel-cell.component.scss']
 })
 export class ObietelCellComponent implements ICellRendererAngularComp {
-    public params: any;
-    rateValue = 0.0;
-    rateInputDisabled = true;
+    public params: any
+    switchValue = false
+    rateValue = 0.0
+    rateInputDisabled = true
 
     constructor() { }
 
     agInit = (params: any): void => {
-        this.params = params;
+        this.params = params
     }
 
-    public switchChangeHandler(value: boolean): void {
+    switchChangeHandler(value: boolean): void {
         console.log(value);
-        if (value) {
-            this.rateInputDisabled = false;
-        } else {
-            this.rateInputDisabled = true;
-        }
+        (value) ? this.rateInputDisabled = false : this.rateInputDisabled = true
     }
 
     // another event handler to change prefix inside obieratecard for country
@@ -31,9 +28,9 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
     public openObieCellModal(): void {
         this.params.context
             .rateCardManagerTableComponent
-            .obieCellInfoHandler(this.params);
+            .obieCellInfoHandler(this.params)
     }
 
-    refresh = (): boolean => true;
+    refresh = (): boolean => true
 
 }

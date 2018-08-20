@@ -1,8 +1,7 @@
 <section>
     <span class="carrierSelected">Carrier</span>
     <nz-switch class="switch" 
-        [nzCheckedChildren]="checkedTemplate" 
-        [nzUnCheckedChildren]="unCheckedTemplate"
+        [(ngModel)]="switchValue"
         (ngModelChange)="switchChangeHandler($event)"
     >
     </nz-switch>
