@@ -13,4 +13,14 @@ export class RatecardManagerUtils {
     find(array, key, value) {
         return array.find( obj => obj[key] === value)
     }
+
+    getMinRate(arr: Array<{buy_rate: number}>): number {
+        const rateArr = arr.map( eaRate => eaRate.buy_rate)
+        return Math.min(...rateArr)
+    }
+
+    getMaxRate(arr: Array<{buy_rate: number}>): number {
+        const rateArr = arr.map( eaRate => eaRate.buy_rate)
+        return Math.max(...rateArr)
+    }
 }

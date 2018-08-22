@@ -115,5 +115,6 @@ export class RateCardsService {
     }
 
     handleError(error: any): any {
+        console.log(error)
     }
 }

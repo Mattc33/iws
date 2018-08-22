@@ -129,7 +129,6 @@ export class RateCardManagerToolbarComponent implements OnInit {
 
     fromCarrierRatecardChangeHandler = (e): void => {
         const ratecardInfo = this.fromRatecardObj[e]
-        console.log(ratecardInfo)
         // trigger an event @ parent => add a new column
         this.e_addRatecardCol.emit(ratecardInfo)
     }

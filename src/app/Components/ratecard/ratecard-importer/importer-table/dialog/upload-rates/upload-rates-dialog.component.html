@@ -61,7 +61,7 @@
 
             <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext (click)="clickConstructJson()"> Next</button>
+                <button mat-button matStepperNext> Next</button>
             </div>
         </form>
     </mat-step>
@@ -72,33 +72,21 @@
             <ng-template matStepLabel>Upload CSV</ng-template>
             <button class="uploadBtn" mat-button (click)="fileInput.click()">
                 <span>Select CSV File</span>
-                <input #fileInput type="file" (change)="changeListenerUploadBtn($event)" accept=".csv" formControlName="uploadRatesCtrl" style="display:none;" />
+                <input #fileInput type="file" (change)="onUploadCsv($event)" accept=".csv" formControlName="uploadRatesCtrl" style="display:none;" />
             </button>
             <div>
                 <b>File Name:</b> {{fileName}} <br>
-                <b>Rates Inserted:</b> {{ratesPreviewObj.length}} <br>
+                <b>Rates Inserted:</b> {{numberOfRates}} <br>
                 <b>Preview First 3 rates:</b> <br>
-                <pre>{{ratesPreviewObj[0] | json }} {{ratesPreviewObj[1] | json }} {{ratesPreviewObj[2] | json }}</pre>
+                <pre>{{ratesList[0] | json }} {{ratesList[1] | json }} {{ratesList[2] | json }}</pre>
             </div>
             <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext [disabled]="uploadValidator()"> Next </button>
+                <button mat-button matStepperNext [disabled]="uploadRateStepNextBtn" (click)="formPostBody()"> Next </button>
             </div>
         </form>
     </mat-step>
     
-    <!-- Details & Finalize  -->
-    <mat-step [completed]="false">
-        <ng-template matStepLabel>Review</ng-template>
-        <div class="details">
-            <pre>{{finalRatecardPreviewObj | json}}</pre>
-        </div>
-        <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext (click)="post_addRates()" >Next</button>
-        </div>
-    </mat-step>
-
     <!-- Add Trunks -->
     <mat-step [completed]="false">
         <ng-template matStepLabel>Attach Trunk to Ratecards, Submit</ng-template>

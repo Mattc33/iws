@@ -4,20 +4,14 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class ImporterSharedService {
 
-    postTableObjSource = new BehaviorSubject<Array<[{}]>>([]);
-    currentPostTableObj = this.postTableObjSource.asObservable();
+    numberOfRatesInRatecard = new BehaviorSubject<number>(0)
+    currentNumberOfRatesInRatecard = this.numberOfRatesInRatecard.asObservable()
 
-    postRatesCSVAmount = new BehaviorSubject<number>(0);
-    currentRatesCSVAmount = this.postRatesCSVAmount.asObservable();
+    numberOfRatesInResponse = new BehaviorSubject<Array<[{}]>>([])
+    currentNumberOfRatesInReponse = this.numberOfRatesInResponse.asObservable()
 
-    changePostTableObj(rowArr: Array<[{}]>) {
-        this.postTableObjSource.next(rowArr);
-        console.log(rowArr);
-    }
-
-    changeRatesCSVAmount(ratesAmount: number) { // * before the api upload | parse csv phase
-        this.postRatesCSVAmount.next(ratesAmount);
-        console.log(ratesAmount);
+    changeNumberOfRatesInRatecard(rateNumber: number): void {
+        this.numberOfRatesInRatecard.next(rateNumber)
     }
 
 }

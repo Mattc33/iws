@@ -1,7 +1,7 @@
 <nz-modal 
     [(nzVisible)]="isVisible" 
     [nzTitle]="modalTitle" 
-    nzWidth="60vw"
+    nzWidth="70vw"
     (nzOnCancel)="handleCancel()" 
     (nzOnOk)="handleOk()"
     (nzAfterOpen)="nzAfterOpen()"
@@ -13,6 +13,7 @@
 
     <ag-grid-angular class="ag-theme-balham"
         [suppressNoRowsOverlay]="true"
+        (gridSizeChanged)="gridSizeChanged($event)"
         (gridReady)="onGridReady($event)"
     >
     </ag-grid-angular> 

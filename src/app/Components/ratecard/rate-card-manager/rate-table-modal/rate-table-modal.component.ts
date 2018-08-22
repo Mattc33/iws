@@ -8,19 +8,19 @@ import { GridApi } from 'ag-grid';
 })
 export class RateTableModalComponent {
 
-    @Input() passCarrierCellInfo: any;
+    @Input() passCarrierCellInfo: any
 
     // ! Modal
-    isVisible = false;
-    ratecardName: string;
+    isVisible = false
+    ratecardName: string
 
     // ! AG Grid
     // * gridApi
-    gridApi: GridApi;
+    gridApi: GridApi
 
     // ! Service Call
-    ratecardId: number;
-    carrierId: number;
+    ratecardId: number
+    carrierId: number
 
     // ================================================================================
     // * Event Handlers Modal
@@ -28,24 +28,25 @@ export class RateTableModalComponent {
     nzAfterOpen(): void {
         // ? initiate some variables after Modal opens
         this.ratecardName = this.passCarrierCellInfo.colDef.headerName;
-        console.log('init', this.ratecardName);
+        console.log('init', this.ratecardName)
 
-        // ? call service here
-        this.gridApi.setColumnDefs(this.createColumnDefs());
+        // ? populate Col and Row data
+        this.gridApi.setColumnDefs(this.createColumnDefs())
+        this.gridApi.setRowData(this.passCarrierCellInfo.data.rates)
     }
 
     showModal(): void {
-        this.isVisible = true;
+        this.isVisible = true
     }
 
     handleOk(): void {
-        console.log('Modal Button Ok');
-        this.isVisible = false;
+        console.log('Modal Button Ok')
+        this.isVisible = false
     }
 
     handleCancel(): void {
-        console.log('Modal Button Cancel');
-        this.isVisible = false;
+        console.log('Modal Button Cancel')
+        this.isVisible = false
     }
 
     // ================================================================================
@@ -55,16 +56,16 @@ export class RateTableModalComponent {
         const commonCellStyle = { 'border-right': '1px solid #ccc' };
         return [
             {
-                headerName: 'Prefix', field: 'prefix', width: 100
+                headerName: 'Prefix', field: 'prefix', width: 100,
             },
             {
                 headerName: 'Destination', field: 'destination'
             },
             {
-                headerName: 'Rate', field: 'rate', width: 100
+                headerName: 'Rate', field: 'buy_rate', width: 100,
             },
             {
-                headerName: 'Status', field: 'status', width: 100
+                headerName: 'Status', field: 'status', width: 100,
             },
             {
                 headerName: 'Eff. Date', field: 'date'
@@ -73,34 +74,17 @@ export class RateTableModalComponent {
     }
 
     createRowData(): Array<{}> {
-        return [
-            {
-                prefix: '93',
-                destination: 'af',
-                rate: '0.15',
-                status: 'current',
-                date: '07/27/2018'
-            },
-            {
-                prefix: '93',
-                destination: 'af',
-                rate: '0.15',
-                status: 'current',
-                date: '07/27/2018'
-            },
-            {
-                prefix: '93',
-                destination: 'af',
-                rate: '0.15',
-                status: 'current',
-                date: '07/27/2018'
-            }
-        ];
+        return []
     }
 
     onGridReady(params): void {
-        this.gridApi = params.api;
-        this.gridApi.setRowData(this.createRowData());
+        this.gridApi = params.api
+        this.gridApi.setRowData(this.createRowData())
+        params.api.sizeColumnsToFit()
+    }
+
+    gridSizeChanged(params): void {
+        params.api.sizeColumnsToFit();
     }
 
 

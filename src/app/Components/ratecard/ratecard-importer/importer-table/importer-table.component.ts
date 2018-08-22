@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { GridApi, ColumnApi } from 'ag-grid';
+import { MatDialog } from '@angular/material';
+import { GridApi } from 'ag-grid';
 
 import { ImporterService } from '../../../../shared/api-services/ratecard/importer.api.service';
 import { ImporterSharedService } from '../../../../shared/services/ratecard/importer.shared.service';
@@ -45,20 +45,20 @@ export class ImporterTableComponent implements OnInit {
 
     ngOnInit() {
         this.getNodeChildDetails = this.setGroups();
-        this.importerSharedService.currentPostTableObj.subscribe(
-            data => {
-                this.totalRatesProcessed = 0;
-                this.rowData = data;
-                for ( let i = 0; i < this.rowData.length; i++ ) { this.totalRatesProcessed += this.rowData[i].rates.length; }
-            }
-        );
+        // this.importerSharedService.currentPostTableObj.subscribe(
+        //     data => {
+        //         this.totalRatesProcessed = 0;
+        //         this.rowData = data;
+        //         for ( let i = 0; i < this.rowData.length; i++ ) { this.totalRatesProcessed += this.rowData[i].rates.length; }
+        //     }
+        // );
 
-        this.importerSharedService.currentRatesCSVAmount.subscribe(
-            data => {
-                this.totalRatesFromCSV = 0;
-                this.totalRatesFromCSV = data;
-            }
-        );
+        // this.importerSharedService.currentRatesCSVAmount.subscribe(
+        //     data => {
+        //         this.totalRatesFromCSV = 0;
+        //         this.totalRatesFromCSV = data;
+        //     }
+        // );
     }
 
     // ================================================================================
@@ -141,91 +141,6 @@ export class ImporterTableComponent implements OnInit {
             // checkboxSelection: true, headerCheckboxSelection: true,
             cellStyle: { 'border-right': '2px solid #E0E0E0' },
         },
-        // {
-        //     headerName: 'Tele-U(Data Base)',
-        //     marryChildren: true,
-        //     children: [
-        //         {
-        //             headerName: 'Buy Rate', field: 'teleu_db_buy_rate', width: 140,
-        //             editable: true, columnGroupShow: 'closed',
-        //             cellClassRules: {
-        //                 'teleu_db-buyrate-highlight': function(params) {
-        //                     return params.value < params.data.teleu_buy_rate;
-        //                 }
-        //             },
-        //             cellStyle: { 'border-right': '1px solid #E0E0E0' },
-        //         },
-        //         {
-        //             headerName: 'Sell Rate', field: 'teleu_db_sell_rate', width: 140,
-        //             editable: true, columnGroupShow: 'closed',
-        //             cellStyle: { 'border-right': '1px solid #E0E0E0' },
-        //         },
-        //         {
-        //             headerName: 'Difference', width: 170,
-        //             valueGetter: function(params) {
-        //                 if (params.data.teleu_db_buy_rate > 0) {
-        //                     const diff = (params.data.teleu_db_sell_rate - params.data.teleu_db_buy_rate);
-        //                     const percent = ((diff) / params.data.teleu_db_buy_rate) * 100;
-        //                     const diffFixed = diff.toFixed(4);
-        //                     const percentFixed = percent.toFixed(2);
-        //                     return `${diffFixed}(${percentFixed}%)`;
-        //                 } else {
-        //                     return '';
-        //                 }
-        //             }, columnGroupShow: 'closed',
-        //             cellStyle: { 'border-right': '1px solid #E0E0E0' },
-        //         },
-        //         {
-        //             headerName: 'Fixed', field: 'fixed', width: 120, editable: true,
-        //             cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
-        //             columnGroupShow: 'closed',
-        //             cellStyle: { 'border-right': '2px solid #E0E0E0' },
-        //         }
-        //     ]
-        // },
-        // {
-        //     headerName: 'Tele-U(From Ratecard)',
-        //     marryChildren: true,
-        //     children: [
-        //         {
-        //             headerName: 'Buy Rate', field: 'teleu_buy_rate', width: 140,
-        //             editable: true, volatile: true, columnGroupShow: 'closed',
-        //             cellClassRules: {
-        //                 'teleu-buyrate-highlight': function(params) {
-        //                     return params.value > params.data.teleu_db_buy_rate;
-        //                 }
-        //             },
-        //             cellStyle: { 'border-right': '1px solid #E0E0E0' },
-        //         },
-        //         {
-        //             headerName: 'Sell Rate', field: 'teleu_sell_rate', width: 140,
-        //             editable: true, columnGroupShow: 'closed',
-        //             cellStyle: { 'border-right': '1px solid #E0E0E0' },
-        //         },
-        //         {
-        //             headerName: 'Difference', width: 170, columnGroupShow: 'closed',
-        //             valueGetter: function(params) {
-        //                 if (params.data.teleu_buy_rate > 0) {
-        //                     const diff = (params.data.teleu_sell_rate - params.data.teleu_buy_rate);
-        //                     const percent = ((diff) / params.data.teleu_buy_rate) * 100;
-        //                     const diffFixed = diff.toFixed(4);
-        //                     const percentFixed = percent.toFixed(2);
-        //                     return `${diffFixed}(${percentFixed}%)`;
-        //                 } else {
-        //                     return '';
-        //                 }
-        //             },
-        //             cellStyle: { 'border-right': '1px solid #E0E0E0' },
-        //         },
-        //         {
-        //             headerName: 'Confirmed?', field: 'teleu_confirmed', width: 120, editable: true,
-        //             cellEditor: 'select', cellEditorParams: {values: [ 'true', 'false']},
-        //             cellStyle: {
-        //                 'border-right': '2px solid #E0E0E0'
-        //             }, columnGroupShow: 'closed',
-        //         }
-        //     ]
-        // },
         {
             headerName: 'Private Offer',
             marryChildren: true,

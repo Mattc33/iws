@@ -62,6 +62,7 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
     import { ImporterService } from './shared/api-services/ratecard/importer.api.service'
     import { ImporterSharedService } from './shared/services/ratecard/importer.shared.service'
     import { UploadRatesDialogComponent } from './Components/ratecard/ratecard-importer/importer-table/dialog/upload-rates/upload-rates-dialog.component'
+    import { RatecardImporterUtils } from './shared/utils/ratecard/rate-card-importer.utils'
 
     // ? Ratecard View By Carrier
     import { RatecardViewCarrierSComponent } from './Components/ratecard/ratecard-view-carrier-s/ratecard-view-carrier-s.component'
@@ -199,7 +200,7 @@ registerLocaleData(en);
 
         // ? Ratecard
         ImporterService, ImporterSharedService, RateCardsService, 
-        RateCardsSharedService,
+        RateCardsSharedService, RatecardImporterUtils,
 
         // ? Ratecard Viewer
         IsoCodesSharedService, MainTableSharedService,

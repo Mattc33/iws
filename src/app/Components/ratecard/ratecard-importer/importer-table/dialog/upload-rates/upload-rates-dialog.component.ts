@@ -1,17 +1,21 @@
-import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { GridApi } from 'ag-grid';
 
-import { PapaParseService } from 'ngx-papaparse';
+import { Component, OnInit, EventEmitter } from '@angular/core'
+import { MatDialogRef } from '@angular/material'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
+import { GridApi } from 'ag-grid'
 
-import { ImporterTableComponent } from '../../importer-table.component';
-import { ImporterService } from '../../../../../../shared/api-services/ratecard/importer.api.service';
-import { CarrierService } from '../../../../../../shared/api-services/carrier/carrier.api.service';
-import { ImporterSharedService } from '../../../../../../shared/services/ratecard/importer.shared.service';
-import { TrunksService } from '../../../../../../shared/api-services/trunk/trunks.api.service';
-import { SnackbarSharedService } from '../../../../../../shared/services/global/snackbar.shared.service';
-import { ToggleButtonStateService } from '../../../../../../shared/services/global/buttonStates.shared.service';
+import { PapaParseService } from 'ngx-papaparse'
+
+import { ImporterService } from '../../../../../../shared/api-services/ratecard/importer.api.service'
+import { CarrierService } from '../../../../../../shared/api-services/carrier/carrier.api.service'
+import { TrunksService } from '../../../../../../shared/api-services/trunk/trunks.api.service'
+
+import { ImporterTableComponent } from '../../importer-table.component'
+import { RatecardImporterUtils } from './../../../../../../shared/utils/ratecard/rate-card-importer.utils'
+import { ImporterSharedService } from '../../../../../../shared/services/ratecard/importer.shared.service'
+
+import { SnackbarSharedService } from '../../../../../../shared/services/global/snackbar.shared.service'
+import { ToggleButtonStateService } from '../../../../../../shared/services/global/buttonStates.shared.service'
 
 @Component({
   selector: 'app-upload-rates',
@@ -20,48 +24,56 @@ import { ToggleButtonStateService } from '../../../../../../shared/services/glob
 })
 export class UploadRatesDialogComponent implements OnInit {
 
-    // event
-    event_passTrunkId = new EventEmitter;
+    event_passTrunkId = new EventEmitter // passing trunkId to? where
 
-    // Form Group var
-    carrierFormGroup: FormGroup;
-    ratecardFormGroup: FormGroup;
-    percentFormGroup: FormGroup;
-    uploadRatesFormGroup: FormGroup;
+    // ! String Interpolation Values
+    numberOfRates: number = 0
+    fileName: string
 
-    // * Ag Grid row & column defs for trunks
-    rowData; columnDefs;
+    // ! Reactive Form
+    // * Form Groups
+    carrierFormGroup: FormGroup
+    ratecardFormGroup: FormGroup
+    percentFormGroup: FormGroup
+    uploadRatesFormGroup: FormGroup
 
-    // Ag grid api & ui
-    gridApi: GridApi;
-    gridSelectionStatus: number;
-
-    // * DB Objects
-    carrierObj = [];
-    currentRateCardNames = []; // rate cards obj populated by method  currentRateCardList()
-    ratecardTier = [
+    // * Form Options
+    ratecardTier: Array<{value: string, viewValue: string}> = [
         {value: 'standard', viewValue: 'Silver'},
         {value: 'standard', viewValue: 'Standard'},
         {value: 'premium', viewValue: 'Gold'},
         {value: 'premium', viewValue: 'Premium'},
         {value: 'premium', viewValue: 'Platinum'},
-    ];
+    ]
 
-    // Insert Rates Props
-    rateCardID: number;
-    fileName: string;
-    disableUploadBoolean = true;
+    // * Form Values
+    ratesList: Array<any> = []
+    postBody: object
 
-    finalRatecardObj;
-    finalRatecardPreviewObj = [];
-    ratesPreviewObj = [];
+    // * Form Disabled
+    uploadRateStepNextBtn = false
+
+    // ! AG Grid
+    // * Ag Grid row & column defs for trunks
+    rowData: Array<any>
+    columnDefs: Array<any>
+
+    // * Ag grid api & ui
+    gridApi: GridApi
+    gridSelectionStatus: number
+
+    // * DB Objects
+    carrierObj = []
+    currentRateCardNames = [] // rate cards obj populated by method  currentRateCardList()
+
+    disableUploadBoolean = true
 
     // Internal Service
-    postTableArr;
+    postTableArr
     totalRatesProcessed = 0;
 
     constructor(
-        public dialogRef: MatDialogRef <ImporterTableComponent>,
+        public dialogRef: MatDialogRef <ImporterTableComponent>, // referencing parent component
         private _papa: PapaParseService,
         private _formBuilder: FormBuilder,
         private _importerService: ImporterService,
@@ -69,7 +81,8 @@ export class UploadRatesDialogComponent implements OnInit {
         private _importerSharedService: ImporterSharedService,
         private _trunksService: TrunksService,
         private _snackbarSharedService: SnackbarSharedService,
-        private _toggleButtonStateService: ToggleButtonStateService
+        private _toggleButtonStateService: ToggleButtonStateService,
+        private _ratecardImporterUtils: RatecardImporterUtils
     ) {
         this.columnDefs = this.createColumnDefs();
     }
@@ -78,7 +91,6 @@ export class UploadRatesDialogComponent implements OnInit {
         this.get_trunks();
         this.get_carriers();
         this.uploadRatecardFormBuilder();
-
         this.percentFormGroup.controls.teleUCheckboxCtrl.setValue(false);
         this.percentFormGroup.controls.privateCheckboxCtrl.setValue(true);
     }
@@ -102,12 +114,13 @@ export class UploadRatesDialogComponent implements OnInit {
         );
     }
 
-    post_addRates(): void {
-        this._importerService.post_AddRateCard(this.finalRatecardObj)
+    post_addRates(postBody: object): void {
+        this._importerService.post_AddRateCard(postBody)
             .subscribe(
                 (resp) => {
-                    for ( let i = 0; i < resp.length; i++ ) { this.totalRatesProcessed += resp[i].rates.length; }
+                    // for ( let i = 0; i < resp.length; i++ ) { this.totalRatesProcessed += resp[i].rates.length; }
                     if ( resp.status === 200 ) {
+                        console.log(resp)
                         this._snackbarSharedService.snackbar_success('Ratecards successful imported.', 2000);
                     }
                 },
@@ -200,8 +213,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     getMarkupTeleuAsPercent(): any {
         if ( this.input_getMarkupTeleu() > 0 ) {
-            const value = ((this.input_getMarkupTeleu() * 100) - 100).toFixed(4);
-            return value;
+            return ((this.input_getMarkupTeleu() * 100) - 100).toFixed(4);
         } else {
             return 0;
         }
@@ -209,8 +221,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     getMarkupPrivateAsPercent(): any {
         if ( this.input_getMarkupTeleu() > 0 ) {
-            const value = ((this.input_getMarkupPrivate() * 100) - 100).toFixed(4);
-            return value;
+            return ((this.input_getMarkupPrivate() * 100) - 100).toFixed(4);
         } else {
             return 0;
         }
@@ -236,17 +247,6 @@ export class UploadRatesDialogComponent implements OnInit {
         return !this.percentFormGroup.get('privateCheckboxCtrl').value;
     }
 
-    changeListenerUploadBtn(event): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button
-        if (event.target.files && event.target.files[0]) {
-            const csvFile = event.target.files[0];
-            this.fileName = csvFile.name;
-            this.papaParse(csvFile);
-            this.disableUploadBoolean = false; // pass boolean flag for valdation
-        } else {
-            this.disableUploadBoolean = true;
-        }
-    }
-
     uploadValidator(): boolean { // pass into step 2's [disable] to control button disable
         if (this.disableUploadBoolean === true) {
             return true;
@@ -256,25 +256,11 @@ export class UploadRatesDialogComponent implements OnInit {
         }
     }
 
-    /*
-        ~~~~~~~~~~ AG Grid Methods ~~~~~~~~~~
-    */
-    aggrid_addRatecard() {
-        this._importerSharedService.currentPostTableObj.subscribe( data => { this.postTableArr = data; });
-        this.event_passTrunkId.emit(this.gridApi.getSelectedRows[0]);
-    }
-
     // ================================================================================
-    // Construct JSON
+    // * Construct JSON
     // ================================================================================
-    clickConstructJson() {
-        this.pushFinalRatecard();
-        this.pushFinalRatecardPreview();
-    }
-
-    pushFinalRatecard() {
-        // * push final ratecard obj to a global var, so the api can subscribe on
-        this.finalRatecardObj = {
+    formPostBody() {
+        const ratecardBody = {
             name: this.ratecardFormGroup.get('ratecardCtrl').value + ' - ' + this.ratecardFormGroup.get('ratecardTierCtrl').value,
             carrier_id: this.input_getCarrierId(),
             addToTeleU: this.percentFormGroup.get('teleUCheckboxCtrl').value,
@@ -282,95 +268,78 @@ export class UploadRatesDialogComponent implements OnInit {
             asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
             privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
             tier: this.ratecardFormGroup.get('ratecardTierCtrl').value,
-            rates: []
-        };
+            rates: this.ratesList
+        }
+        console.log(ratecardBody)
+        this.post_addRates(ratecardBody)
+        // this.postBody = ratecardBody
     }
-
-    pushFinalRatecardPreview() {
-        // * remove the last entry in the object
-        this.finalRatecardPreviewObj.push(
-            {
-                name: this.ratecardFormGroup.get('ratecardCtrl').value + ' - ' + this.ratecardFormGroup.get('ratecardTierCtrl').value,
-                carrier_id: this.input_getCarrierId(),
-                addToTeleU: this.percentFormGroup.get('teleUCheckboxCtrl').value,
-                teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
-                asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
-                privateMarkup: this.percentFormGroup.get('privatePercentCtrl').value,
-                tier: this.ratecardFormGroup.get('ratecardTierCtrl').value,
-            }
-        );
-    }
-
     // ================================================================================
-    // Dialog
+    // * Dialog
     // ================================================================================
     closeDialog(): void {
-        this.dialogRef.close();
+        this.dialogRef.close()
     }
 
     passTrunkId () {
-        this.event_passTrunkId.emit(this.gridApi.getSelectedRows()[0].id);
+        this.event_passTrunkId.emit(this.gridApi.getSelectedRows()[0].id)
     }
 
     click_addRates(): void {
-        this.passTrunkId();
-        this.closeDialog();
+        this.passTrunkId()
+        this.closeDialog()
     }
 
-    /*
-        ~~~~~~~~~~ CSV Parser ~~~~~~~~~~
-    */
-    papaParse(csvFile): void { // Parse csv string into JSON
-        this._papa.parse(csvFile, {
-            complete: (results) => {
-                console.log('Parsed: ', results);
-                const data = results.data;
-                this.profileSorter(data);
-            }
-        });
-    }
-
-    profileSorter(data) { // Based on the Carrier Name match the String to trigger the right profile
-        this.defaultProfile(data);
-        this._importerSharedService.changeRatesCSVAmount(this.ratesPreviewObj.length); // display length of rates array
-    }
-
-    generateRateObj(destination, prefix, buyrate, sellrate): void { // Create a rate obj for POST and seperately for preview
-        let destinationRemoveBadChar = destination.replace(/\\|'|\\'/ , '');
-        if  (destinationRemoveBadChar.length > 64) {destinationRemoveBadChar = destinationRemoveBadChar.substring(0, 64); }
-
-        this.finalRatecardObj.rates.push(
-            {   destination: destinationRemoveBadChar,
-                prefix: prefix,
-                buy_rate: buyrate,
-                buy_rate_minimum: 1,
-                buy_rate_increment: 1,
-                sell_rate: sellrate,
-                sell_rate_minimum: 60,
-                sell_rate_increment: 60
-            },
-        );
-        this.ratesPreviewObj.push(
-            { destination: destinationRemoveBadChar,
-                prefix: prefix,
-                buy_rate: buyrate,
-                buy_rate_minimum: 1,
-                buy_rate_increment: 1,
-                sell_rate: sellrate,
-                sell_rate_minimum: 60,
-                sell_rate_increment: 60
-            },
-        );
-    }
-
-    defaultProfile(data): void {
-        const dataSliced = data.slice(1);
-        for ( let i = 0; i < dataSliced.length; i++) {
-            const prefix: string = dataSliced[i][0];
-            const destination: string = dataSliced[i][1];
-            const buyrate: number = dataSliced[i][2] * 1;
-            const sellrate: number = buyrate;
-            this.generateRateObj(destination, prefix, buyrate, sellrate);
+    // ================================================================================
+    // * CSV Parser
+    // ================================================================================
+    onUploadCsv(e): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button
+        if (e.target.files && e.target.files[0]) {
+            const csvFile = e.target.files[0];
+            this.fileName = csvFile.name;
+            this.papaParse(csvFile);
         }
+    }
+
+    papaParse(csvArr: File): void { // Parse csv string into JSON
+        this._papa.parse(csvArr, {
+            complete: results => {
+                console.log('Parsed: ', results)
+                const data = results.data
+                this.profileSorter(data)
+            }
+        })
+    }
+
+    // ! this method should be on a web worker
+    profileSorter(data: Array<any>): void { // Based on the Carrier Name match the String to trigger the right profile
+        new Promise( (resolve, reject) => {
+            resolve(this.defaultProfile(data))
+        })
+        .then( rateList => {
+            this.numberOfRates = this.ratesList.length
+        })
+        .then( rateList => {
+            this.formPostBody()
+        })
+    }
+
+    defaultProfile(data: Array<any>): Array<any> {
+        const dataNoHeaders = data.slice(1) // remove headers
+        const rateList = dataNoHeaders.map( eaRate => {
+            return {
+                prefix: eaRate[0],
+                destination: eaRate[1],
+                buy_rate: parseFloat(eaRate[2]),
+                buy_rate_minimum: 1,
+                buy_rate_increment: 1,
+                sell_Rate: parseFloat(eaRate[2]),
+                sell_rate_minimum: 60,
+                sell_rate_increment: 60,
+                start_ts: this._ratecardImporterUtils.dateToEpoch(eaRate[3]) // some util function that parses dates
+            }
+        })
+        this.ratesList = rateList
+        return dataNoHeaders
     }
 }

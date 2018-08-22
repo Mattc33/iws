@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { GridApi, ColumnApi } from 'ag-grid'
+import { Observable } from 'rxjs';
 
 import { CarrierCellComponent } from './carrier-cell/carrier-cell.component'
 import { ObietelCellComponent } from './obietel-cell/obietel-cell.component'
 import { RateTableModalComponent } from './rate-table-modal/rate-table-modal.component'
 import { RatecardManagerUtils } from './../../../shared/utils/ratecard/rate-card-manager.utils';
-import { RatecardManagerService } from './../../../shared/api-services/ratecard/rate-card-manager.api.service';
+import { RatecardManagerService } from '../../../shared/api-services/ratecard/rate-card-manager.api.service';
 
 @Component({
     selector: 'app-rate-card-manager',
@@ -36,7 +37,8 @@ export class RateCardManagerComponent implements OnInit {
     carrierCellInfo
 
     constructor(
-        private _ratecardManagerUtils: RatecardManagerUtils
+        private _ratecardManagerUtils: RatecardManagerUtils,
+        private _ratecardManagerService: RatecardManagerService
     ) {
         this.columnDefs = this.createColumnDefs();
         this.context = {rateCardManagerTableComponent: this} // provides context of the carrier component to the cell components
@@ -52,10 +54,11 @@ export class RateCardManagerComponent implements OnInit {
     // ================================================================================
     // * Service
     // ================================================================================
-    getRatecardRates = (): void => {
-
+    getRatecardRates = (carrierId: number, ratecardId: number): Observable<any> => {
+        return this._ratecardManagerService.get_ratecardRates(carrierId, ratecardId)
     }
     
+ 
     postCarrierListToProfile = (): void  => {
 
     }
@@ -65,30 +68,34 @@ export class RateCardManagerComponent implements OnInit {
     }
 
 
-
     // ================================================================================
     // * Event Handlers from Top Toolbar
     // ================================================================================
-
-    addRatecardAsCol(ratecardList): void { // * responsible for adding the right carriers as cols to grid
+    addRatecardAsCol(ratecardList: Array<any>): void { // * responsible for adding the right carriers as cols to grid
         this.updateColDefs(ratecardList)
-
-
         const formattedRatecardList = ratecardList.map(eaRatecard => {
             return {
                 countries: eaRatecard.country,
-                minRange: 1,
-                maxRange: 2,
+                ratecardId: eaRatecard.ratecard_id,
+                carrierId: eaRatecard.carrierId,
+                rates: [],
+                minRate: 0,
+                maxRate: 0,
                 finalRate: 3,
                 fixedMinimumRate: 2,
                 previousRate: 2.5
             }
         })
         formattedRatecardList.forEach(eaRatecard => {
+            this.getRatecardRates(eaRatecard.carrierId, eaRatecard.ratecardId)
+                .subscribe( rates => {
+                    const getRateAsArr = rates[Object.keys(rates)[0]]
+                    eaRatecard.rates = getRateAsArr
+                    eaRatecard.minRate = this._ratecardManagerUtils.getMinRate(getRateAsArr)
+                    eaRatecard.maxRate = this._ratecardManagerUtils.getMaxRate(getRateAsArr)
+                })
             this.gridApi.updateRowData( { add: [eaRatecard] })
-        });
-
-
+        })
     }
 
     // ================================================================================
@@ -101,6 +108,7 @@ export class RateCardManagerComponent implements OnInit {
 
     fromCarrierCellInfoHandler(cell: Object): void {
         // open a modal, set global var to cell obj which is later passed to modal via @Input
+        console.log(cell)
         this.carrierCellInfo = cell
         this._rateTableModal.showModal()
     }
@@ -123,7 +131,7 @@ export class RateCardManagerComponent implements OnInit {
             {
                 headerName: 'Countries', field: 'countries', colId: 'countries', width: 120,
                 cellStyle: { 'border-right': '1px solid #000', 'line-height': '70px',
-                'text-align': 'center', 'font-weight': 'bold' },
+                'font-weight': 'bold' },
             },
             {
                 headerName: 'Obie Rate', field: 'finalRate', colId: 'finalRate', width: 210,
@@ -144,27 +152,7 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     createRowData(): Array<any> {
-        return [
-            // {
-            //     countries: 'Afghanistan',
-            //     finalRate: 3,
-            //     fixedMinimumRate: 2,
-            //     previousRate: 2.5
-            //     // ! i need to attach each carrier's rate here
-            // },
-            // {
-            //     countries: 'Albania',
-            //     finalRate: 3,
-            //     fixedMinimumRate: 2,
-            //     previousRate: 2.5
-            // },
-            // {
-            //     countries: 'Algeria',
-            //     finalRate: 3,
-            //     fixedMinimumRate: 2,
-            //     previousRate: 2.5
-            // }
-        ];
+        return []
     }
 
     onGridReady(params): void {

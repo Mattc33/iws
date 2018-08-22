@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { Component } from '@angular/core'
+import { ICellRendererAngularComp } from 'ag-grid-angular'
 
 @Component({
   selector: 'app-carrier-cell',
@@ -10,13 +10,17 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
     public params: any
     checked = false
 
-    constructor() { }
+    constructor(
+    ) { }
 
     agInit(params: any): void { // initialization life cycle hook for AG Grid Cells
         this.params = params
         console.log(this.params)
     }
 
+    // ================================================================================
+    // * Service
+    // ================================================================================
     public toggleCarrier(value: boolean): void {
         // exposed method for parent component
         // params will be an AG grid obj passsed to this child cell render component

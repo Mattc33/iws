@@ -50,14 +50,14 @@ export class CarrierTableComponent implements OnInit {
     // ================================================================================
     // * Carrier API Service
     // ================================================================================
-    get_carrierRowData() {
+    get_carrierRowData(): void {
         this.carrierService.get_carriers().subscribe(
             data =>  this.rowData = data,
             error =>  console.log(error)
         );
     }
 
-    put_editCarrier(carrierObj, id) {
+    put_editCarrier(carrierObj: object, id: number): void {
         this.carrierService.put_EditCarrier(carrierObj, id)
             .subscribe(
                 (resp: Response) => {
