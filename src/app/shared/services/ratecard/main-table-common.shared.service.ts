@@ -73,19 +73,19 @@ export class MainTableCommonSharedService {
                 rate = parseFloat(arr[0]) * 1.02;
                 rate = rate.toFixed(4);
             }
-            if (arr.length === 2) {
+            else if (arr.length === 2) {
                 const sort = arr.sort();
                 const percentDiff = this.percentDiffFn(sort[0], sort[1]);
                 if (percentDiff >= 30) {
                     rate = parseFloat(sort[0]) * 1.02;
                     rate = rate.toFixed(4);
                 }
-                if (percentDiff < 30) {
+                else if (percentDiff < 30) {
                     const mean = this.returnMean(arr) * 1.02;
                     rate = mean.toFixed(4);
                 }
             }
-            if (arr.length >= 3 ) {
+            else if (arr.length >= 3 ) {
                 const removeOutliers = this.removeOutliersFn(arr);
                 rate = this.returnMean(removeOutliers);
             }
@@ -107,7 +107,5 @@ export class MainTableCommonSharedService {
         }
         return filteredArray;
     }
-
-
 
 }

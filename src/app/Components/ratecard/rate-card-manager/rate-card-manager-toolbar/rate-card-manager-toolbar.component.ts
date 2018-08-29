@@ -12,8 +12,10 @@ import { RatecardManagerUtils } from './../../../../shared/utils/ratecard/rate-c
 })
 export class RateCardManagerToolbarComponent implements OnInit {
 
-    @Output()
-    e_addRatecardCol = new EventEmitter<{}>()
+    @Output() 
+    e_addRatecardData = new EventEmitter<{}>()
+    @Output() 
+    e_addRatecardDataToTable = new EventEmitter()
 
     // ! Top Toolbar
     // * Select Dropdown Option Values
@@ -57,7 +59,6 @@ export class RateCardManagerToolbarComponent implements OnInit {
             .subscribe(
                 toCarrierList => {
                     this.toCarrierOptions = toCarrierList
-                    console.log(toCarrierList)
                 },
                 error => console.log(error)
             )
@@ -108,16 +109,13 @@ export class RateCardManagerToolbarComponent implements OnInit {
         (this[currentSelectState]) ?  this[selectToToggleDisabled] = false : this[selectToToggleDisabled] = true
     }
 
-    // events
     toCarrierChangeHandler = (): void => {
         this.disabledSelectHandler('toCarrierValue', 'productTierDisabled')
         this.fromCarrierOptions = this.toCarrierOptions.filter( carrier => carrier.id !== this.toCarrierValue )
     }
 
     productTierChangeHandler = (): void => {
-        
         this.disabledSelectHandler('productTierValue', 'fromCarrierDisabled')
-
         // trigger an event @ parent => load profile
     }
 
@@ -130,19 +128,11 @@ export class RateCardManagerToolbarComponent implements OnInit {
     fromCarrierRatecardChangeHandler = (e): void => {
         const ratecardInfo = this.fromRatecardObj[e]
         // trigger an event @ parent => add a new column
-        this.e_addRatecardCol.emit(ratecardInfo)
+        this.e_addRatecardData.emit(ratecardInfo)
     }
 
-    // ================================================================================
-    // * Event Bubbling to Parent
-    // ================================================================================
-    loadProfile = (): void => {
-        // success
-            // parse json
-            // convert it to a format AG Grid can use
-
-        // fail
-            // present a message saying http call failed
+    addRatecardDataToTable(): void {
+        this.e_addRatecardDataToTable.emit() // trigger an event @ parent => add to table
     }
 
 }

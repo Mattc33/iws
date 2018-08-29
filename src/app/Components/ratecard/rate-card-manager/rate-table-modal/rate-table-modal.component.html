@@ -1,19 +1,23 @@
 <nz-modal 
     [(nzVisible)]="isVisible" 
     [nzTitle]="modalTitle" 
+    [nzFooter]="modalFooter"
     nzWidth="70vw"
-    (nzOnCancel)="handleCancel()" 
     (nzOnOk)="handleOk()"
     (nzAfterOpen)="nzAfterOpen()"
-    
 >
     <ng-template #modalTitle>
-        {{ratecardName}}
+        <b>Ratecard: </b>{{ratecardName}}
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">OK</button>
     </ng-template>
 
     <ag-grid-angular class="ag-theme-balham"
         [suppressNoRowsOverlay]="true"
         (gridSizeChanged)="gridSizeChanged($event)"
+        [enableFilter]="true" [enableSorting]="true"
         (gridReady)="onGridReady($event)"
     >
     </ag-grid-angular> 

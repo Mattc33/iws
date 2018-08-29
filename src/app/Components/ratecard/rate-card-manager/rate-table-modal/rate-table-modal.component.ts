@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { GridApi } from 'ag-grid';
+import { Component, Input } from '@angular/core'
+import { GridApi } from 'ag-grid'
 
+import * as _moment from 'moment'
 @Component({
   selector: 'app-rate-table-modal',
   templateUrl: './rate-table-modal.component.html',
@@ -22,6 +23,11 @@ export class RateTableModalComponent {
     ratecardId: number
     carrierId: number
 
+    constructor(
+    ) {
+
+    }
+
     // ================================================================================
     // * Event Handlers Modal
     // ================================================================================
@@ -32,7 +38,8 @@ export class RateTableModalComponent {
 
         // ? populate Col and Row data
         this.gridApi.setColumnDefs(this.createColumnDefs())
-        this.gridApi.setRowData(this.passCarrierCellInfo.data.rates)
+        const columnId = this.passCarrierCellInfo.colDef.field
+        this.gridApi.setRowData(this.passCarrierCellInfo.data[`${columnId}`].rates)
     }
 
     showModal(): void {
@@ -44,11 +51,6 @@ export class RateTableModalComponent {
         this.isVisible = false
     }
 
-    handleCancel(): void {
-        console.log('Modal Button Cancel')
-        this.isVisible = false
-    }
-
     // ================================================================================
     // * AG Grid
     // ================================================================================
@@ -57,18 +59,26 @@ export class RateTableModalComponent {
         return [
             {
                 headerName: 'Prefix', field: 'prefix', width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Destination', field: 'destination'
+                headerName: 'Destination', field: 'destination',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Rate', field: 'buy_rate', width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
                 headerName: 'Status', field: 'status', width: 100,
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Eff. Date', field: 'date'
+                headerName: 'Eff. Date', field: 'start_ts',
+                cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                valueFormatter: function(params) {
+                    return _moment(params.value).format('MMMM Do, YYYY')
+                },
             }
         ];
     }

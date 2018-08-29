@@ -1,17 +1,20 @@
 <main>
     <app-rate-card-manager-toolbar
-        (e_addRatecardCol)="addRatecardAsCol($event)"
+        (e_addRatecardData)="addRatecardData($event)"
+        (e_addRatecardDataToTable)="addRatecardDataToTable()"
     >
     </app-rate-card-manager-toolbar>
+
     <section>
         <ag-grid-angular class="ag-theme-balham"
             [columnDefs]="columnDefs" [rowData]="rowData" 
             [headerHeight]="40" [rowHeight]="70"
             [context]="context" [frameworkComponents]="frameworkComponents"
+            [paginationAutoPageSize]="paginationToggle" [pagination]="paginationToggle"
+            [enableFilter]="true" [enableSorting]="true"
             (gridReady)="onGridReady($event)"
         >
         </ag-grid-angular> 
-        <br/> 
     </section>
 </main>
 

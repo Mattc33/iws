@@ -6,7 +6,7 @@
             <ng-template matStepLabel>Enter Rate Card Name</ng-template>
                 <mat-form-field>
                     <mat-select placeholder="Choose Carrier" formControlName="carrierCtrl">
-                        <mat-option *ngFor="let carrier of carrierObj" [value]="carrier.id" >
+                        <mat-option *ngFor="let carrier of carrierList" [value]="carrier.id" >
                             {{carrier.name}}
                         </mat-option>
                     </mat-select>
@@ -82,7 +82,7 @@
             </div>
             <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext [disabled]="uploadRateStepNextBtn" (click)="formPostBody()"> Next </button>
+                <button mat-button matStepperNext [disabled]="uploadRateStepNextBtn" (click)="postAddRates()"> Next </button>
             </div>
         </form>
     </mat-step>

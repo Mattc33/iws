@@ -1,22 +1,16 @@
-
 import { Component, OnInit, EventEmitter } from '@angular/core'
 import { MatDialogRef } from '@angular/material'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { GridApi } from 'ag-grid'
-
 import { PapaParseService } from 'ngx-papaparse'
-
 import { ImporterService } from '../../../../../../shared/api-services/ratecard/importer.api.service'
 import { CarrierService } from '../../../../../../shared/api-services/carrier/carrier.api.service'
 import { TrunksService } from '../../../../../../shared/api-services/trunk/trunks.api.service'
-
 import { ImporterTableComponent } from '../../importer-table.component'
 import { RatecardImporterUtils } from './../../../../../../shared/utils/ratecard/rate-card-importer.utils'
 import { ImporterSharedService } from '../../../../../../shared/services/ratecard/importer.shared.service'
-
 import { SnackbarSharedService } from '../../../../../../shared/services/global/snackbar.shared.service'
 import { ToggleButtonStateService } from '../../../../../../shared/services/global/buttonStates.shared.service'
-
 @Component({
   selector: 'app-upload-rates',
   templateUrl: './upload-rates-dialog.component.html',
@@ -38,6 +32,7 @@ export class UploadRatesDialogComponent implements OnInit {
     uploadRatesFormGroup: FormGroup
 
     // * Form Options
+    carrierList: [{}]
     ratecardTier: Array<{value: string, viewValue: string}> = [
         {value: 'standard', viewValue: 'Silver'},
         {value: 'standard', viewValue: 'Standard'},
@@ -52,6 +47,7 @@ export class UploadRatesDialogComponent implements OnInit {
 
     // * Form Disabled
     uploadRateStepNextBtn = false
+    disableUploadBoolean = true
 
     // ! AG Grid
     // * Ag Grid row & column defs for trunks
@@ -62,18 +58,8 @@ export class UploadRatesDialogComponent implements OnInit {
     gridApi: GridApi
     gridSelectionStatus: number
 
-    // * DB Objects
-    carrierObj = []
-    currentRateCardNames = [] // rate cards obj populated by method  currentRateCardList()
-
-    disableUploadBoolean = true
-
-    // Internal Service
-    postTableArr
-    totalRatesProcessed = 0;
-
     constructor(
-        public dialogRef: MatDialogRef <ImporterTableComponent>, // referencing parent component
+        public _dialogRef: MatDialogRef <ImporterTableComponent>, // referencing parent component
         private _papa: PapaParseService,
         private _formBuilder: FormBuilder,
         private _importerService: ImporterService,
@@ -84,51 +70,52 @@ export class UploadRatesDialogComponent implements OnInit {
         private _toggleButtonStateService: ToggleButtonStateService,
         private _ratecardImporterUtils: RatecardImporterUtils
     ) {
-        this.columnDefs = this.createColumnDefs();
+        this.columnDefs = this.createColumnDefs()
     }
 
     ngOnInit() {
-        this.get_trunks();
-        this.get_carriers();
-        this.uploadRatecardFormBuilder();
-        this.percentFormGroup.controls.teleUCheckboxCtrl.setValue(false);
-        this.percentFormGroup.controls.privateCheckboxCtrl.setValue(true);
+        this.getTrunks()
+        this.getCarriers()
+        this.uploadRatecardFormBuilder()
+        this.percentFormGroup.controls.teleUCheckboxCtrl.setValue(false)
+        this.percentFormGroup.controls.privateCheckboxCtrl.setValue(true)
     }
 
     // ================================================================================
     // * API Services
     // ================================================================================
-    get_carriers(): void {
+    getCarriers(): void {
         this._carrierService.get_carriers()
             .subscribe(
-                data => { this.carrierObj = data; console.log(data); },
-                error => { console.log(error); }
-            );
+                carrierList => this.carrierList = carrierList,
+                error => console.log(error) 
+            )
     }
 
-    get_trunks(): void {
+    getTrunks(): void {
         this._trunksService.get_allTrunks()
         .subscribe(
-            data => { this.rowData = data; },
-            error => { console.log(error); }
-        );
+            trunkList => this.rowData = trunkList,
+            error => console.log(error)
+        )
     }
 
-    post_addRates(postBody: object): void {
-        this._importerService.post_AddRateCard(postBody)
+    postAddRates(): void {
+        this._importerService.post_AddRateCard(this.postBody)
             .subscribe(
-                (resp) => {
-                    // for ( let i = 0; i < resp.length; i++ ) { this.totalRatesProcessed += resp[i].rates.length; }
-                    if ( resp.status === 200 ) {
-                        console.log(resp)
-                        this._snackbarSharedService.snackbar_success('Ratecards successful imported.', 2000);
-                    }
+                (resp: Response) => {
+                    console.log('POST RESP', resp)
+                    const responseRatesLen: number = resp[0].rates.length
+                    const responseRates: [{}] = resp[0].rates
+                    this._importerSharedService.changeNumberOfRatesInResponse(responseRatesLen)
+                    this._importerSharedService.changeRatesInResponse(responseRates)
+                    this._snackbarSharedService.snackbar_success('Ratecards successful imported.', 2000);
                 },
                 error => {
                     console.log(error);
                     this._snackbarSharedService.snackbar_error('Ratecards failed to import.', 2000);
                 }
-            );
+            )
     }
 
     // ================================================================================
@@ -139,25 +126,25 @@ export class UploadRatesDialogComponent implements OnInit {
         params.api.sizeColumnsToFit();
     }
 
-    private createColumnDefs() {
+    createColumnDefs(): Array<{}> {
         return [
             {
                 headerName: 'Trunk Name', field: 'trunk_name',
                 checkboxSelection: true, width: 350,
-                cellStyle: { 'border-right': '2px solid #E0E0E0' },
+                cellStyle: { 'border-right': '2px solid #E0E0E0' }
             },
             {
                 headerName: 'Carrier', field: 'carrier_name',
-                cellStyle: { 'border-right': '2px solid #E0E0E0' },
+                cellStyle: { 'border-right': '2px solid #E0E0E0' }
             },
             {
                 headerName: 'Trunk IP', field: 'trunk_ip',
-                cellStyle: { 'border-right': '2px solid #E0E0E0' },
+                cellStyle: { 'border-right': '2px solid #E0E0E0' }
             },
             {
-                headerName: 'Trunk Port', field: 'trunk_port',
+                headerName: 'Trunk Port', field: 'trunk_port'
             }
-        ];
+        ]
     }
 
     // ================================================================================
@@ -186,51 +173,26 @@ export class UploadRatesDialogComponent implements OnInit {
         });
     }
 
-    buildUploadRatesFormGroup() {
-        return this.uploadRatesFormGroup = this._formBuilder.group({
-            uploadRatesCtrl: ['']
-        });
-    }
+    buildUploadRatesFormGroup = (): FormGroup => this.uploadRatesFormGroup = this._formBuilder.group({uploadRatesCtrl: ['']})
+    
 
     // ================================================================================
     // * Input data
     // ================================================================================
-    input_getCarrierId(): number {
-        return this.ratecardFormGroup.get('carrierCtrl').value;
-    }
-
-    input_getRateCardName(): number {
-        return this.ratecardFormGroup.get('ratecardCtrl').value;
-    }
-
-    input_getMarkupPrivate(): number {
-        return this.percentFormGroup.get('privatePercentCtrl').value;
-    }
-
-    input_getMarkupTeleu(): number {
-        return this.percentFormGroup.get('teleUPercentCtrl').value;
-    }
-
     getMarkupTeleuAsPercent(): any {
-        if ( this.input_getMarkupTeleu() > 0 ) {
-            return ((this.input_getMarkupTeleu() * 100) - 100).toFixed(4);
-        } else {
-            return 0;
-        }
+        const teleuPercentValue = ((this.percentFormGroup.get('teleUPercentCtrl').value * 100) - 100).toFixed(4)
+        return (this.percentFormGroup.get('teleUPercentCtrl').value > 0 ) ? teleuPercentValue : 0
     }
 
     getMarkupPrivateAsPercent(): any {
-        if ( this.input_getMarkupTeleu() > 0 ) {
-            return ((this.input_getMarkupPrivate() * 100) - 100).toFixed(4);
-        } else {
-            return 0;
-        }
+        const privatePercentValue = this.percentFormGroup.get('privatePercentCtrl').value
+        const teleuPerentValue = this.percentFormGroup.get('teleUPercentCtrl').value
+        return ( teleuPerentValue > 0 ) ? ((privatePercentValue * 100) - 100).toFixed(4) : 0
     }
 
-    /*
-        ~~~~~~~~~~ UI Interactions ~~~~~~~~~~
-    */
-    // For button Toggle
+    // ================================================================================
+    // * UI Interaction
+    // ================================================================================
     rowSelected(): void { // Toggle button boolean if rowSelected > 0
         this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
     }
@@ -248,21 +210,16 @@ export class UploadRatesDialogComponent implements OnInit {
     }
 
     uploadValidator(): boolean { // pass into step 2's [disable] to control button disable
-        if (this.disableUploadBoolean === true) {
-            return true;
-        }
-        if ( this.disableUploadBoolean === false ) {
-            return false;
-        }
+        return (this.disableUploadBoolean) ? true : false
     }
 
     // ================================================================================
     // * Construct JSON
     // ================================================================================
     formPostBody() {
-        const ratecardBody = {
+        this.postBody = {
             name: this.ratecardFormGroup.get('ratecardCtrl').value + ' - ' + this.ratecardFormGroup.get('ratecardTierCtrl').value,
-            carrier_id: this.input_getCarrierId(),
+            carrier_id: this.ratecardFormGroup.get('carrierCtrl').value,
             addToTeleU: this.percentFormGroup.get('teleUCheckboxCtrl').value,
             teleUMarkup: this.percentFormGroup.get('teleUPercentCtrl').value,
             asAPrivate: this.percentFormGroup.get('privateCheckboxCtrl').value,
@@ -270,15 +227,12 @@ export class UploadRatesDialogComponent implements OnInit {
             tier: this.ratecardFormGroup.get('ratecardTierCtrl').value,
             rates: this.ratesList
         }
-        console.log(ratecardBody)
-        this.post_addRates(ratecardBody)
-        // this.postBody = ratecardBody
     }
     // ================================================================================
     // * Dialog
     // ================================================================================
     closeDialog(): void {
-        this.dialogRef.close()
+        this._dialogRef.close()
     }
 
     passTrunkId () {
@@ -310,16 +264,16 @@ export class UploadRatesDialogComponent implements OnInit {
             }
         })
     }
-
-    // ! this method should be on a web worker
+    
     profileSorter(data: Array<any>): void { // Based on the Carrier Name match the String to trigger the right profile
         new Promise( (resolve, reject) => {
             resolve(this.defaultProfile(data))
         })
-        .then( rateList => {
+        .then( () => {
             this.numberOfRates = this.ratesList.length
+            this._importerSharedService.changeNumberOfRatesInRatecard(this.numberOfRates)
         })
-        .then( rateList => {
+        .then( () => {
             this.formPostBody()
         })
     }
@@ -336,7 +290,7 @@ export class UploadRatesDialogComponent implements OnInit {
                 sell_Rate: parseFloat(eaRate[2]),
                 sell_rate_minimum: 60,
                 sell_rate_increment: 60,
-                start_ts: this._ratecardImporterUtils.dateToEpoch(eaRate[3]) // some util function that parses dates
+                start_ts: (this._ratecardImporterUtils.dateToEpoch(eaRate[3]) * 1000).toString() // some util function that parses dates
             }
         })
         this.ratesList = rateList

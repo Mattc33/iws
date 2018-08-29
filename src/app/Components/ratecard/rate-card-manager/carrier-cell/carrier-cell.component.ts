@@ -1,3 +1,4 @@
+import { MatFormFieldModule } from '@angular/material';
 import { Component } from '@angular/core'
 import { ICellRendererAngularComp } from 'ag-grid-angular'
 
@@ -9,13 +10,35 @@ import { ICellRendererAngularComp } from 'ag-grid-angular'
 export class CarrierCellComponent implements ICellRendererAngularComp {
     public params: any
     checked = false
+    uiDisabled = true
+
+    // ! string interpolation values
+    minRate: number
+    maxRate: number
+    effDate: string
 
     constructor(
     ) { }
 
     agInit(params: any): void { // initialization life cycle hook for AG Grid Cells
         this.params = params
-        console.log(this.params)
+        this.partitionDataForStringInterpolation(params)
+    }
+
+    // ================================================================================
+    // * Get Data
+    // ================================================================================
+    partitionDataForStringInterpolation(params: any) {
+        console.log(params)
+        const columnId = params.colDef.field
+        // console.log(params.data)
+        
+        if ( params.data.hasOwnProperty(`${columnId}`)) {
+            this.uiDisabled = !this.uiDisabled
+            this.minRate = params.data[`${columnId}`].minRate
+            this.maxRate = params.data[`${columnId}`].maxRate
+            this.effDate = params.data[`${columnId}`].date
+        }
     }
 
     // ================================================================================

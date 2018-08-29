@@ -1,0 +1,25 @@
+.carrierHeaderContainer {
+    width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 7fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+        "checkbox name name name"
+        ". date date date";
+
+    .checkbox {
+        grid-area: checkbox;
+    }
+
+    .headerName {
+        grid-area: name;
+        justify-self: start;
+    }
+
+    .headerDate {
+        grid-area: date;
+        justify-self: start;
+        font-size: .6rem;
+        margin-top: -20px;
+    }
+}

@@ -228,6 +228,7 @@ export class MainTableSharedService {
         function carrierRowDataFn(filteredData) {
             const carrierRowDataArr = [];
 
+            // ! @@@ modify datastrucutre to become a lookup
             for ( let i = 0; i < filteredData.length; i++ ) {
                 const prefixFieldKey = 'prefix';
                 const destinationField = `destination_${filteredData[i].ratecard_id}`;

@@ -29,10 +29,7 @@ export class ImporterService {
                 map(res => res.json()),
                 catchError(this.handleError),
                  // * performs a side effect, but still returns observable, storing imported rate card for later
-                tap(res => { 
-                    // this._importer.changePostTableObj(res); 
-                })
-            );
+            )
     }
 
     put_EditRates(ratesId: number, body: any): Observable<any> {
