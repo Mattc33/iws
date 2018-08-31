@@ -1,4 +1,3 @@
-import { MatFormFieldModule } from '@angular/material';
 import { Component } from '@angular/core'
 import { ICellRendererAngularComp } from 'ag-grid-angular'
 
@@ -42,7 +41,7 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
     }
 
     // ================================================================================
-    // * Service
+    // * Child To Parent Event Handlers
     // ================================================================================
     public toggleCarrier(value: boolean): void {
         // exposed method for parent component
@@ -59,8 +58,16 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
             .fromCarrierCellInfoHandler(this.params)
     }
 
-    refresh = (): boolean => true // AG Grid Cells life cycle hook on cell refresh
+    // ================================================================================
+    // * Parent To Child Event Handlers
+    // ================================================================================
+    toggleCheckbox() {
+        this.checked = !this.checked
+    }
 
+    refresh(): boolean {  // AG Grid Cells life cycle hook on cell refresh
+        return true
+    }
 }
 
 // ! example: https://www.ag-grid.com/javascript-grid-cell-rendering-components/

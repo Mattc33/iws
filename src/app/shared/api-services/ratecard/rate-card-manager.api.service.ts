@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 
@@ -7,12 +7,16 @@ import { ApiSettingsSharedService } from '../../services/global/api-settings.sha
 
 @Injectable()
 export class RatecardManagerService {
-    url: string;
+    private url: string;
+    private headers: Headers;
+    private options: RequestOptions;
 
     constructor(
         private _http: Http,
         private _apiSettings: ApiSettingsSharedService
     ) {
+        this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
+        this.options = new RequestOptions({ headers: this.headers });
         this.url = this._apiSettings.getUrl();
     }
 
@@ -33,6 +37,20 @@ export class RatecardManagerService {
                 catchError(this.handleError)
             )
 
+    post_carrierListToProfile = (toCarrier_id: number, tier: string, body: Array<{}>): Observable<any> => 
+        this._http
+            .post(`${this.url}toCarriers/${toCarrier_id}/tier/${tier}/profile`, body, this.options)
+            .pipe(
+                catchError(this.handleError)
+            )
+
+    post_carrierRatesInfoToProfile = (toCarrier_id: number, tier: string, body: Array<{}>): Observable<any> => 
+        this._http
+            .post(`${this.url}toCarriers/${toCarrier_id}/tier/${tier}/profile`, body, this.options)
+            .pipe(
+                catchError(this.handleError)
+            )    
+
     // // ? get profile
     // get_profileByToCarrier(carrierId: number): Observable<any> {
     //     return this._http
@@ -43,14 +61,6 @@ export class RatecardManagerService {
     //         );
     // }
 
-    // // ? post<store> profile
-    // post_profileByToCarrier(carrierId: number, body: any): Observable<any> {
-    //     return this._http
-    //         .post(this.url + carrierId, body)
-    //         .pipe (
-    //             catchError(this.handleError)
-    //         );
-    // }
 
     // // ? get a list of ratecards by carrierId
     // // filter for active, filter for standard or premium

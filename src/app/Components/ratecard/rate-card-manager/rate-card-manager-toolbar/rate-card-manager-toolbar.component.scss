@@ -1,18 +1,39 @@
 header {
     display: grid;
-    grid-template-columns: 260px 3fr;
-    grid-template-rows: 40px 40px;
-    border-bottom: 1px solid #ccc;
+    width: 100%;
+    height: 80px;
+    grid-template-columns: 3fr 4fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+        "toCarrier fromCarrier addToTable"
+        "productTier fromCarrierRatecard addToTable";
 
     .toCarrierContainer {
-        grid-column: 0 / 1;
-        grid-row: 0 / 1;
-    }
+        grid-area: toCarrier;
+        padding: 0px 5px 0px 5px;
 
-    &:nth-child(n + 1) {
         span {
             margin-right: 5px;
         }
+
+        .toCarrierSelect /deep/ {
+            width: 200px;
+        }
     }
-    
+
+    .productTierContainer {
+        grid-area: productTier;
+    }
+
+    .fromCarrierContainer {
+        grid-area: fromCarrier;
+    }
+
+    .fromCarrierRatecardContainer {
+        grid-area: fromCarrierRatecard;
+    }
+
+    .addToTableContainer {
+        grid-area: addToTable;
+    }
 }

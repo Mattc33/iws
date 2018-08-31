@@ -1,10 +1,7 @@
-
 import { Component, OnInit, Output, EventEmitter } from '@angular/core'
-
 import { CarrierService } from '../../../../shared/api-services/carrier/carrier.api.service'
 import { RatecardManagerService } from '../../../../shared/api-services/ratecard/rate-card-manager.api.service' 
 import { RatecardManagerUtils } from './../../../../shared/utils/ratecard/rate-card-manager.utils';
-
 @Component({
     selector: 'app-rate-card-manager-toolbar',
     templateUrl: './rate-card-manager-toolbar.component.html',
@@ -40,6 +37,7 @@ export class RateCardManagerToolbarComponent implements OnInit {
     productTierDisabled = true
     fromCarrierDisabled = true
     fromCarrierRatecardDisabled = true
+    addDataToTableDisabled = true
 
     constructor(
         private _carrierSerivce: CarrierService,
@@ -105,28 +103,34 @@ export class RateCardManagerToolbarComponent implements OnInit {
     // ================================================================================
     // * Event Handlers from Top Toolbar
     // ================================================================================
-    disabledSelectHandler = (currentSelectState: string, selectToToggleDisabled: string): void => {
-        (this[currentSelectState]) ?  this[selectToToggleDisabled] = false : this[selectToToggleDisabled] = true
+    disabledSelectHandler = (currentSelectState: string, selectToToggleDisabled: string, selectToToggleDisabledArr: Array<string>): void => {
+        (this[currentSelectState]) ? this[selectToToggleDisabled] = false : selectToToggleDisabledArr.forEach( eaUI => this[eaUI] = true)
     }
 
     toCarrierChangeHandler = (): void => {
-        this.disabledSelectHandler('toCarrierValue', 'productTierDisabled')
+        const disabledArr = ['productTierDisabled', 'fromCarrierDisabled', 'fromCarrierRatecardDisabled', 'addDataToTableDisabled']
+        this.disabledSelectHandler('toCarrierValue', 'productTierDisabled', disabledArr)
+        // affects from Carrier Selection filters out the carrier selected in toCarrier 
         this.fromCarrierOptions = this.toCarrierOptions.filter( carrier => carrier.id !== this.toCarrierValue )
     }
 
     productTierChangeHandler = (): void => {
-        this.disabledSelectHandler('productTierValue', 'fromCarrierDisabled')
+        const disabledArr = ['fromCarrierDisabled', 'fromCarrierRatecardDisabled', 'addDataToTableDisabled']
+        this.disabledSelectHandler('productTierValue', 'fromCarrierDisabled', disabledArr)
         // trigger an event @ parent => load profile
     }
 
     fromCarrierChangeHandler = (): void => {
         this.fromCarrierRatecardValue = ''
-        this.disabledSelectHandler('fromCarrierValue', 'fromCarrierRatecardDisabled')
+        const disabledArr = ['fromCarrierRatecardDisabled', 'addDataToTableDisabled']
+        this.disabledSelectHandler('fromCarrierValue', 'fromCarrierRatecardDisabled', disabledArr)
         this.getRatecardsInCarriersByTier(parseInt(this.fromCarrierValue), this.productTierValue)
     }
 
     fromCarrierRatecardChangeHandler = (e): void => {
         const ratecardInfo = this.fromRatecardObj[e]
+        const disabledArr = ['addDataToTableDisabled']
+        this.disabledSelectHandler('fromCarrierRatecardValue', 'addDataToTableDisabled', disabledArr)
         // trigger an event @ parent => add a new column
         this.e_addRatecardData.emit(ratecardInfo)
     }
@@ -134,5 +138,4 @@ export class RateCardManagerToolbarComponent implements OnInit {
     addRatecardDataToTable(): void {
         this.e_addRatecardDataToTable.emit() // trigger an event @ parent => add to table
     }
-
 }

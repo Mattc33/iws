@@ -4,11 +4,11 @@ import { Injectable } from '@angular/core';
 export class IsoCodesSharedService {
     getCountryCodes() {
         return [
-              {
-                'country': 'World',
-                'code': 'world',
-                'call_code': '000'
-              },
+            //   {
+            //     'country': 'World',
+            //     'code': 'world',
+            //     'call_code': '000'
+            //   },
               {
                 'country': 'Afghanistan',
                 'code': 'af',

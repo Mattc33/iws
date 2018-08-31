@@ -8,7 +8,6 @@ import { CarrierHeaderComponent } from './carrier-header/carrier-header.componen
 import { RateTableModalComponent } from './rate-table-modal/rate-table-modal.component'
 import { RatecardManagerUtils } from './../../../shared/utils/ratecard/rate-card-manager.utils'
 import { RatecardManagerService } from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
-import { RatecardImporterUtils } from '../../../shared/utils/ratecard/rate-card-importer.utils'
 import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared';
 import * as _moment from 'moment'
 @Component({
@@ -18,7 +17,7 @@ import * as _moment from 'moment'
 })
 export class RateCardManagerComponent implements OnInit {
 
-    @ViewChild(RateTableModalComponent) _rateTableModal: RateTableModalComponent
+    @ViewChild(RateTableModalComponent) private _rateTableModal: RateTableModalComponent
 
     // ! AG Grid
     // * row data and column definitions
@@ -41,13 +40,9 @@ export class RateCardManagerComponent implements OnInit {
     // ! Passed to Modal 
     carrierCellInfo
 
-    // ! Test
-    test
-
     constructor(
         private _ratecardManagerUtils: RatecardManagerUtils,
         private _ratecardManagerService: RatecardManagerService,
-        private _ratecardImporterUtils: RatecardImporterUtils,
         private _countryCodeRowDataSharedService: CountryCodeRowDataSharedService
     ) {
         this.columnDefs = this.createColumnDefs()
@@ -68,14 +63,6 @@ export class RateCardManagerComponent implements OnInit {
     // ================================================================================
     getRatecardRates = (carrierId: number, ratecardId: number): Observable<any> => {
         return this._ratecardManagerService.get_ratecardRates(carrierId, ratecardId)
-    }
-    
-    postCarrierListToProfile = (): void  => {
-
-    }
-
-    postCarrierRatesInfoToProfile = (): void  => {
-
     }
 
     // ================================================================================
@@ -159,7 +146,6 @@ export class RateCardManagerComponent implements OnInit {
         const ratecardName = `${ratecardList[0].groupId}`
         const countries = [this.columnDefs[0]]
         const obieRate = this.columnDefs.slice(1)
-
         this.ratecardColDefs.push({
             headerName: ratecardName,
             field: ratecardList[0].colId,
@@ -223,6 +209,13 @@ export class RateCardManagerComponent implements OnInit {
         })
 
         this.tableRowData = insert
+    }
+
+    // ================================================================================
+    // * Test Methods
+    // ================================================================================
+    selectAllCheckBox() {
+        
     }
 
 }

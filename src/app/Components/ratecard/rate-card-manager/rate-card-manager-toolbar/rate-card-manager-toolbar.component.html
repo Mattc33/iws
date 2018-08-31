@@ -1,12 +1,11 @@
 <header>
     <!-- To Carrier --> 
     <div class="toCarrierContainer">
-        <span>To:</span>
         <nz-select 
-            style="width: 200px;"
+            style="display: inline;"
             nzShowSearch 
             nzAllowClear 
-            nzPlaceHolder="Carrier" 
+            nzPlaceHolder="To: Carrier" 
             [(ngModel)]="toCarrierValue"
             (ngModelChange)="toCarrierChangeHandler($event)"
         >
@@ -14,21 +13,8 @@
         </nz-select>
     </div>
 
-    <!-- From Carrier -->
-    <div>
-        <span>From:</span>
-        <nz-select 
-            style="width: 200px; margin-right: 5px;" 
-            [(ngModel)]="fromCarrierValue" 
-            [nzDisabled]="fromCarrierDisabled"
-            (ngModelChange)="fromCarrierChangeHandler($event)"
-        >
-            <nz-option *ngFor="let carrier of fromCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
-        </nz-select>
-    </div>
-
     <!-- Choose Product Tier -->
-    <div>
+    <div class="productTierContainer">
         <nz-select
             style="width: 200px; margin-left: 25px;" 
             nzShowSearch 
@@ -42,16 +28,42 @@
         </nz-select>
     </div>
 
+    <!-- From Carrier -->
+    <div class="fromCarrierContainer">
+        <span>From:</span>
+        <nz-select 
+            nzAllowClear 
+            [(ngModel)]="fromCarrierValue" 
+            [nzDisabled]="fromCarrierDisabled"
+            (ngModelChange)="fromCarrierChangeHandler($event)"
+        >
+            <nz-option *ngFor="let carrier of fromCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
+        </nz-select>
+    </div>
+
     <!-- From Carrier Ratecard -->
+    <div class="fromCarrierRatecardContainer">
     <nz-select 
         style="width: 300px; margin-left: 43px;" 
+        nzAllowClear 
         [nzDisabled]="fromCarrierRatecardDisabled"
         [(ngModel)]="fromCarrierRatecardValue"
         (ngModelChange)="fromCarrierRatecardChangeHandler($event)"
     >
         <nz-option *ngFor="let ratecard of fromCarrierRatecardOptions" [nzValue]="ratecard.id" [nzLabel]="ratecard.display"></nz-option>
     </nz-select>
+    </div>
 
-    <button nz-button [nzSize]="large" nzType="primary" (click)="addRatecardDataToTable()">Primary</button>
+    <div class="addToTableContainer">
+        <button 
+            nz-button 
+            [nzSize]="large" 
+            nzType="dashed" 
+            class="addRatecardBtn" 
+            (click)="addRatecardDataToTable()"
+            [disabled]="addDataToTableDisabled"
+        >
+        Add Ratecard</button>
+    </div>
 
 </header>

@@ -4,7 +4,6 @@
         (e_addRatecardDataToTable)="addRatecardDataToTable()"
     >
     </app-rate-card-manager-toolbar>
-
     <section>
         <ag-grid-angular class="ag-theme-balham"
             [columnDefs]="columnDefs" [rowData]="rowData" 
@@ -16,6 +15,10 @@
         >
         </ag-grid-angular> 
     </section>
+
+    <app-rate-card-manager-saveprofile></app-rate-card-manager-saveprofile>
+    <button (click)="methodFromParent()">Select All Col's Btn</button>
 </main>
 
 <app-rate-table-modal [passCarrierCellInfo]="carrierCellInfo"></app-rate-table-modal>
+<app-carrier-cell></app-carrier-cell>

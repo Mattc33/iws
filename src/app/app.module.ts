@@ -133,7 +133,12 @@ import { AppRoutes } from './Containers/routes/routes'
 import { registerLocaleData } from '@angular/common'
 import en from '@angular/common/locales/en'
 import { RateCardsStatusComponent } from './Components/ratecard/rate-cards-status/rate-cards-status.component'
-import { AntdUploadAreaComponent } from './shared/components/uploadarea/antd-upload-area/antd-upload-area.component'
+import { AntdUploadAreaComponent } from './shared/components/uploadarea/antd-upload-area/antd-upload-area.component';
+import { RateCardPreviewerComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer.component';
+import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component';
+import { RateCardPreviewerToolbarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-toolbar/rate-card-previewer-toolbar.component';
+import { RateCardPreviewerSidebarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-sidebar/rate-card-previewer-sidebar.component';
+import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-saveprofile/rate-card-manager-saveprofile.component'
 
 registerLocaleData(en);
 
@@ -178,7 +183,7 @@ registerLocaleData(en);
 
         // ? Global
         SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, 
-        RateCardsStatusComponent, AntdUploadAreaComponent, 
+        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardPreviewerComponent, EffdateHeaderComponent, RateCardPreviewerToolbarComponent, RateCardPreviewerSidebarComponent, RateCardManagerSaveprofileComponent, 
     ],
     imports: [
         // ? Core Angular Modules
