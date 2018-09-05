@@ -138,7 +138,8 @@ import { RateCardPreviewerComponent } from './Components/ratecard/rate-card-prev
 import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component';
 import { RateCardPreviewerToolbarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-toolbar/rate-card-previewer-toolbar.component';
 import { RateCardPreviewerSidebarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-sidebar/rate-card-previewer-sidebar.component';
-import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-saveprofile/rate-card-manager-saveprofile.component'
+import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-saveprofile/rate-card-manager-saveprofile.component';
+import { ObieTableModalComponent } from './Components/ratecard/rate-card-manager/obie-table-modal/obie-table-modal.component'
 
 registerLocaleData(en);
 
@@ -183,7 +184,7 @@ registerLocaleData(en);
 
         // ? Global
         SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, 
-        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardPreviewerComponent, EffdateHeaderComponent, RateCardPreviewerToolbarComponent, RateCardPreviewerSidebarComponent, RateCardManagerSaveprofileComponent, 
+        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardPreviewerComponent, EffdateHeaderComponent, RateCardPreviewerToolbarComponent, RateCardPreviewerSidebarComponent, RateCardManagerSaveprofileComponent, ObieTableModalComponent, 
     ],
     imports: [
         // ? Core Angular Modules

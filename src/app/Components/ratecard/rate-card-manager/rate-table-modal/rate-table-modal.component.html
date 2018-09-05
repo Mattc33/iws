@@ -4,20 +4,31 @@
     [nzFooter]="modalFooter"
     nzWidth="70vw"
     (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
     (nzAfterOpen)="nzAfterOpen()"
 >
     <ng-template #modalTitle>
-        <b>Ratecard: </b>{{ratecardName}}
+        <div class="modalTitle">
+            <span><b>Ratecard: </b>{{ratecardName}}</span>
+            <span><b>Date: </b>{{ratecardDate}}</span>
+            <span><b>Country: </b>{{ratecardCountry}}</span>
+        </div>
     </ng-template>
 
     <ng-template #modalFooter>
+        <div class="modalFooter">
+            <span><b># of Prefixes: </b>{{ratecardPrefixAmount}}</span>
+            <span><b>Average Rate: </b>{{ratecardRatesMean}}</span>
+        </div>
         <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">OK</button>
     </ng-template>
-
+    
     <ag-grid-angular class="ag-theme-balham"
         [suppressNoRowsOverlay]="true"
-        (gridSizeChanged)="gridSizeChanged($event)"
+        [enableColResize]="true"
         [enableFilter]="true" [enableSorting]="true"
+        (rowDataChanged)="onRowDataChanged($event)"
+        (gridSizeChanged)="onGridSizeChanged($event)"
         (gridReady)="onGridReady($event)"
     >
     </ag-grid-angular> 

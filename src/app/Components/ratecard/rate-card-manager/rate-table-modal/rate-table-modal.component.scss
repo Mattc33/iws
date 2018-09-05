@@ -1,8 +1,30 @@
-nz-modal /deep/  {
+nz-modal {
     padding: 0;
+
+    .modalTitle {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modalFooter {
+        float: left;
+
+        span {
+            padding-right: 10px;
+        }
+    }
+
     ag-grid-angular {
-        width: 100%;
+        width: auto; 
         height: 400px;
         border: none;
+
+        .ag-cell-focus, .ag-cell-no-focus /deep/ {
+            border: none;
+        }
+
+        .ag-cell:focus /deep/ {
+            outline: none;
+        }
     }
 }

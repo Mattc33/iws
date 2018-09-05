@@ -3,5 +3,6 @@
         <label (ngModelChange)="toggleAllCarrier($event)" nz-checkbox [(ngModel)]="checked"></label>
     </span>
     <span class="headerName">{{headerName}}</span>
+    <span class="removeCol" (click)="removeCol()"><i class="anticon anticon-close"></i></span>
     <span class="headerDate">{{headerDate}}</span>
 </div>

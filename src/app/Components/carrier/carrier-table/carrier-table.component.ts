@@ -116,7 +116,7 @@ export class CarrierTableComponent implements OnInit {
                 headerName: 'Code', field: 'code', width: 120,
                 editable: true,
             }
-        ];
+        ]
     }
 
     // ================================================================================

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core'
-import { GridApi } from 'ag-grid'
-
+import { GridApi, ColumnApi } from 'ag-grid'
+import { MainTableCommonSharedService } from './../../../../shared/services/ratecard/main-table-common.shared.service'
 import * as _moment from 'moment'
 @Component({
   selector: 'app-rate-table-modal',
@@ -13,17 +13,25 @@ export class RateTableModalComponent {
 
     // ! Modal
     isVisible = false
+
+    // ! String interpolation values
     ratecardName: string
+    ratecardDate: string
+    ratecardCountry: string
+    ratecardPrefixAmount: number
+    ratecardRatesMean: number
 
     // ! AG Grid
     // * gridApi
     gridApi: GridApi
+    columnApi: ColumnApi
 
     // ! Service Call
     ratecardId: number
     carrierId: number
 
     constructor(
+        private _mainTableCommonSharedService: MainTableCommonSharedService
     ) {
 
     }
@@ -33,13 +41,11 @@ export class RateTableModalComponent {
     // ================================================================================
     nzAfterOpen(): void {
         // ? initiate some variables after Modal opens
-        this.ratecardName = this.passCarrierCellInfo.colDef.headerName;
-        console.log('init', this.ratecardName)
+        this.applyStringInterpolationDataHeader()
+        this.applyStringInterpolationDataFooter()
 
         // ? populate Col and Row data
-        this.gridApi.setColumnDefs(this.createColumnDefs())
-        const columnId = this.passCarrierCellInfo.colDef.field
-        this.gridApi.setRowData(this.passCarrierCellInfo.data[`${columnId}`].rates)
+        this.populateColRowData()
     }
 
     showModal(): void {
@@ -47,15 +53,41 @@ export class RateTableModalComponent {
     }
 
     handleOk(): void {
-        console.log('Modal Button Ok')
         this.isVisible = false
+    }
+
+    handleCancel(): void {
+        this.isVisible = false
+    }
+
+    // ================================================================================
+    // * Modal Data
+    // ================================================================================
+    applyStringInterpolationDataHeader(): void {
+        const params = this.passCarrierCellInfo
+        this.ratecardName = params.colDef.headerName.split('_')[0]
+        this.ratecardDate = _moment.unix(params.colDef.headerName.split('_')[1]).format('MMMM Do, YYYY')
+        this.ratecardCountry = params.data.countries
+    }
+
+    applyStringInterpolationDataFooter(): void {
+        const params = this.passCarrierCellInfo
+        this.ratecardPrefixAmount = params.data[`${params.colDef.field}`].rates.length
+        this.ratecardRatesMean = this._mainTableCommonSharedService.returnMean(
+            (params.data[`${params.colDef.field}`].rates).map( eaPrefix => eaPrefix.buy_rate)
+        ).toFixed(4)
+    }
+
+    populateColRowData(): void {
+        this.gridApi.setColumnDefs(this.createColumnDefs())
+        const columnId = this.passCarrierCellInfo.colDef.field
+        this.gridApi.setRowData(this.passCarrierCellInfo.data[`${columnId}`].rates)
     }
 
     // ================================================================================
     // * AG Grid
     // ================================================================================
     createColumnDefs(): Array<{}> {
-        const commonCellStyle = { 'border-right': '1px solid #ccc' };
         return [
             {
                 headerName: 'Prefix', field: 'prefix', width: 100,
@@ -70,32 +102,24 @@ export class RateTableModalComponent {
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
             },
             {
-                headerName: 'Status', field: 'status', width: 100,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
                 headerName: 'Eff. Date', field: 'start_ts',
                 cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                valueFormatter: function(params) {
-                    return _moment(params.value).format('MMMM Do, YYYY')
-                },
+                valueFormatter: params => _moment(params.value).format('MMMM Do, YYYY'),
             }
-        ];
-    }
-
-    createRowData(): Array<{}> {
-        return []
+        ]
     }
 
     onGridReady(params): void {
         this.gridApi = params.api
-        this.gridApi.setRowData(this.createRowData())
+        this.columnApi = params.ColumnApi
+    }
+
+    onRowDataChanged(params) { // resize cols on load
         params.api.sizeColumnsToFit()
     }
 
-    gridSizeChanged(params): void {
-        params.api.sizeColumnsToFit();
+    onGridSizeChanged(params) { // resize cols on screen adjust
+        params.api.sizeColumnsToFit()
     }
-
 
 }

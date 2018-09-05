@@ -19,7 +19,6 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
     }
 
     switchChangeHandler(value: boolean): void {
-        console.log(value);
         (value) ? this.rateInputDisabled = false : this.rateInputDisabled = true
     }
 
@@ -28,7 +27,7 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
     public openObieCellModal(): void {
         this.params.context
             .rateCardManagerTableComponent
-            .obieCellInfoHandler(this.params)
+            .obieCellInfoHandler(this.params) // when opening modal pass the checked off value that comes from parent
     }
 
     refresh = (): boolean => true

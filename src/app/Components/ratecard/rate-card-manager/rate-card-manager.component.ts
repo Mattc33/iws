@@ -8,7 +8,8 @@ import { CarrierHeaderComponent } from './carrier-header/carrier-header.componen
 import { RateTableModalComponent } from './rate-table-modal/rate-table-modal.component'
 import { RatecardManagerUtils } from './../../../shared/utils/ratecard/rate-card-manager.utils'
 import { RatecardManagerService } from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
-import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared';
+import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared'
+import { RateCardManagerToolbarComponent } from './rate-card-manager-toolbar/rate-card-manager-toolbar.component'
 import * as _moment from 'moment'
 @Component({
     selector: 'app-rate-card-manager',
@@ -18,10 +19,10 @@ import * as _moment from 'moment'
 export class RateCardManagerComponent implements OnInit {
 
     @ViewChild(RateTableModalComponent) private _rateTableModal: RateTableModalComponent
+    @ViewChild(RateCardManagerToolbarComponent) private _rateTableToolbar: RateCardManagerToolbarComponent
 
     // ! AG Grid
     // * row data and column definitions
-    rowData: Array<any>
     columnDefs: Array<{}>
 
     // * gridApi
@@ -87,6 +88,19 @@ export class RateCardManagerComponent implements OnInit {
     // * Event Handlers From Cells
     // ================================================================================
     fromCarrierCellToggleHandler(cell: Object, checkboxValue: boolean): void {
+        const columnId = cell['colDef'].field
+        checkboxValue 
+        ? this.changeIsChecked(cell['data'].countries, columnId, true) 
+        : this.changeIsChecked(cell['data'].countries, columnId, false)
+    }
+
+    changeIsChecked(country: string, colId: string, isChecked: boolean): void {
+        const countryMatch = country
+            this.tableRowData.map( eaCountry => {
+                if (eaCountry.countries === countryMatch) {
+                    isChecked ? eaCountry[`${colId}`].isChecked = true : eaCountry[`${colId}`].isChecked = false
+                }
+            })
     }
 
     fromCarrierCellInfoHandler(cell: Object): void {
@@ -101,12 +115,23 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     // ================================================================================
+    // * Event Handlers From Headers
+    // ================================================================================
+    fromCarrierRemoveCol(headerField: string) {
+        this.tableColDef = this.tableColDef.filter(eaCol => eaCol.field !== headerField) // filter out header field for both arrays containing col data
+        this.ratecardColDefs = this.ratecardColDefs.filter(eaCol => eaCol.field !== headerField)
+
+        this.tableRowData.forEach(eaRow => { delete eaRow[`${headerField}`]}) // remove key/value pair that matches headerField
+
+        this.gridApi.setColumnDefs(this.tableColDef) // set column to the new col def
+
+        this._rateTableToolbar.fromCarrierRatecardValue = null // triggers a call to child toolbar header to set from carreir ratecard value to []
+    }
+
+    // ================================================================================
     // * AG Grid
     // ================================================================================
-    // ? Grid Initiation
     createColumnDefs(): Array<{}> {
-        const commonCellStyle = { 'border-right': '1px solid #ccc', 'line-height': '70px',
-        'text-align': 'center' }
         return [
             {
                 headerName: 'Countries', field: 'countries', colId: 'countries', width: 140,
@@ -166,7 +191,8 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     updateRowData(ratecardList) {
-        const formattedRatecardList = ratecardList.map(eaRatecard => {
+        const formattedRatecardList = ratecardList.map(eaRatecard => { // remap into new row data
+
             return {
                 countries: eaRatecard.country,
                 ratecardId: eaRatecard.ratecard_id,
@@ -178,7 +204,7 @@ export class RateCardManagerComponent implements OnInit {
                 [`${eaRatecard.colId}`]: {}
             }
         })
-        formattedRatecardList.forEach(eaRatecard => {
+        formattedRatecardList.forEach(eaRatecard => { // for each ratecard call api and insert rate data
             this.getRatecardRates(eaRatecard.carrierId, eaRatecard.ratecardId) // GET, feeding in ea carrierId, ratecardId
                 .subscribe( eaCountry => { 
                     const getEaCountryAsArr = eaCountry[Object.keys(eaCountry)[0]]
@@ -187,11 +213,12 @@ export class RateCardManagerComponent implements OnInit {
                     eaRatecard[`${colGroup}`].minRate = this._ratecardManagerUtils.getMinRate(getEaCountryAsArr)
                     eaRatecard[`${colGroup}`].maxRate = this._ratecardManagerUtils.getMaxRate(getEaCountryAsArr)
                     eaRatecard[`${colGroup}`].date = this.displayEffDate(getEaCountryAsArr)
+                    eaRatecard[`${colGroup}`].isChecked = false
                 })
         })
         
-        const lookup = formattedRatecardList.reduce( (acc, cur) => {
-            acc[cur.countries] = {
+        const lookup = formattedRatecardList.reduce( (acc, cur) => { // create a hash to figure out which country to insert data into, 
+            acc[cur.countries] = {                                   // at the same time reduce to only the fields needed for ea cell
                 finalRate: cur.finalRate,
                 fixedMinimumRate: cur.fixedMinimumRate,
                 previousRate: cur.previousRate,
@@ -200,22 +227,15 @@ export class RateCardManagerComponent implements OnInit {
             return acc
         }, {})
 
-        const insert = this.tableRowData.map( eaCountry => {
+        const insert = this.tableRowData.map( eaCountry => { // if countries field match merge objects else return
             const match = lookup[eaCountry.countries]
             if (match) {
                 Object.assign(eaCountry, match)
+                console.log(eaCountry.isChecked)
             }
             return eaCountry
         })
 
         this.tableRowData = insert
     }
-
-    // ================================================================================
-    // * Test Methods
-    // ================================================================================
-    selectAllCheckBox() {
-        
-    }
-
 }

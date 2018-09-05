@@ -218,7 +218,7 @@ export class RatecardViewCarrierSComponent implements OnInit {
             this.showCol(`carrier_rate_${colId}`);
             this.showCol(`carrier_dest_${colId}`);
         }
-        if ( condition === false ) {
+        else if ( condition === false ) {
             this.hideCol(`carrier_rate_${colId}`);
             this.hideCol(`carrier_dest_${colId}`);
         }

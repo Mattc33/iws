@@ -27,4 +27,12 @@ export class CarrierHeaderComponent implements IHeaderAngularComp {
         this.headerDate = _moment.unix(split[1]).format('MMMM Do, YYYY')
     }
 
+    // ================================================================================
+    // * Child To Parent Event Handlers
+    // ================================================================================
+    public removeCol(): void {
+        this.params.context.rateCardManagerTableComponent
+            .fromCarrierRemoveCol(this.params.column.colDef.field)
+    }
+
 }

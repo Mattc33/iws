@@ -4,11 +4,20 @@
     grid-template-columns: 1fr 7fr;
     grid-template-rows: 1fr 1fr;
     grid-template-areas:
-        "checkbox name name name"
+        "checkbox name name remove"
         ". date date date";
 
     .checkbox {
         grid-area: checkbox;
+    }
+
+    .removeCol {
+        grid-area: remove;
+    }
+
+    .removeCol:hover {
+        color: red;
+        cursor: pointer;
     }
 
     .headerName {
@@ -22,4 +31,6 @@
         font-size: .6rem;
         margin-top: -20px;
     }
+
+
 }

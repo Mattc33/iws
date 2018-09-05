@@ -11,29 +11,49 @@ header {
     .toCarrierContainer {
         grid-area: toCarrier;
         padding: 0px 5px 0px 5px;
+        display: flex;
 
         span {
+            font-weight: bold;
+            line-height: 30px;
+            font-size: 14px;
             margin-right: 5px;
-        }
-
-        .toCarrierSelect /deep/ {
-            width: 200px;
         }
     }
 
     .productTierContainer {
         grid-area: productTier;
+        padding: 0px 5px 0px 5px;
+        display: flex;
     }
 
     .fromCarrierContainer {
         grid-area: fromCarrier;
+        padding: 0px 5px 0px 5px;
+        display: flex;
+
+        span {
+            font-weight: bold;
+            line-height: 30px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
     }
 
     .fromCarrierRatecardContainer {
         grid-area: fromCarrierRatecard;
+        padding: 0px 5px 0px 5px;
     }
 
     .addToTableContainer {
+        height: 100%;
+        padding: 0px 5px 0px 5px;
         grid-area: addToTable;
+
+        .addRatecardBtn {
+            height: 70px;
+            width: 100%;
+            font-weight: bold;
+        }
     }
 }

@@ -1,6 +1,6 @@
+import { CountryCodeRowDataSharedService } from './../../../../shared/services/ratecard-manager/country-row-data.shared';
 import { Component } from '@angular/core'
 import { ICellRendererAngularComp } from 'ag-grid-angular'
-
 @Component({
   selector: 'app-carrier-cell',
   templateUrl: './carrier-cell.component.html',
@@ -22,21 +22,31 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
     agInit(params: any): void { // initialization life cycle hook for AG Grid Cells
         this.params = params
         this.partitionDataForStringInterpolation(params)
+
+        // check isChecked field
+        this.shouldCheckboxBeChecked(params)
     }
 
     // ================================================================================
-    // * Get Data
+    // * Get/Set Data
     // ================================================================================
-    partitionDataForStringInterpolation(params: any) {
-        console.log(params)
+    partitionDataForStringInterpolation(params: any): void {
         const columnId = params.colDef.field
-        // console.log(params.data)
-        
+
         if ( params.data.hasOwnProperty(`${columnId}`)) {
             this.uiDisabled = !this.uiDisabled
             this.minRate = params.data[`${columnId}`].minRate
             this.maxRate = params.data[`${columnId}`].maxRate
             this.effDate = params.data[`${columnId}`].date
+        }
+    }
+
+    shouldCheckboxBeChecked(params: any): void {
+        const columnId = params.colDef.field
+
+        if ( params.data.hasOwnProperty(`${columnId}`)) {
+            const isChecked = params.data[`${columnId}`].isChecked
+            isChecked ? this.checked = true : this.checked = false
         }
     }
 
@@ -47,14 +57,12 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
         // exposed method for parent component
         // params will be an AG grid obj passsed to this child cell render component
         // you will then access context which is a var set equal to <this> aka parent component
-        this.params.context
-            .rateCardManagerTableComponent
+        this.params.context.rateCardManagerTableComponent
             .fromCarrierCellToggleHandler(this.params, value) // `Row: ${this.params.node.rowIndex}, Col: ${this.params.colDef.headerName}`
     }
 
     public openCarrierCellModal(): void {
-        this.params.context
-            .rateCardManagerTableComponent
+        this.params.context.rateCardManagerTableComponent
             .fromCarrierCellInfoHandler(this.params)
     }
 

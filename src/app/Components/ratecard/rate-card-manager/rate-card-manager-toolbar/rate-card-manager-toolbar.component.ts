@@ -124,7 +124,10 @@ export class RateCardManagerToolbarComponent implements OnInit {
         this.fromCarrierRatecardValue = ''
         const disabledArr = ['fromCarrierRatecardDisabled', 'addDataToTableDisabled']
         this.disabledSelectHandler('fromCarrierValue', 'fromCarrierRatecardDisabled', disabledArr)
-        this.getRatecardsInCarriersByTier(parseInt(this.fromCarrierValue), this.productTierValue)
+
+        if (this.fromCarrierValue !== null ) {
+            this.getRatecardsInCarriersByTier(parseInt(this.fromCarrierValue), this.productTierValue)
+        }
     }
 
     fromCarrierRatecardChangeHandler = (e): void => {
