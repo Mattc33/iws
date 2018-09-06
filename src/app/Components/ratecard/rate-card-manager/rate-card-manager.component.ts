@@ -89,9 +89,25 @@ export class RateCardManagerComponent implements OnInit {
     // ================================================================================
     fromCarrierCellToggleHandler(cell: Object, checkboxValue: boolean): void {
         const columnId = cell['colDef'].field
-        checkboxValue 
-        ? this.changeIsChecked(cell['data'].countries, columnId, true) 
-        : this.changeIsChecked(cell['data'].countries, columnId, false)
+        if (checkboxValue) {
+            this.changeIsChecked(cell['data'].countries, columnId, true) 
+
+            console.log(cell)
+        } else {
+            this.changeIsChecked(cell['data'].countries, columnId, false)
+        }
+
+        
+
+        // ? on check=true find the correct rate table for the cell
+        // ? when obie-cell info btn is clicked a new component modal is formed
+
+        // ? on the init phase of the new obie-cell info modal
+        // ? a row-field will be updated to reflect the selected rate table for that row
+        // ? The modal component will know from that string which rate table to find in the row obj
+        // ? that row obj will become the rowData for that obie-cell
+
+
     }
 
     changeIsChecked(country: string, colId: string, isChecked: boolean): void {
@@ -171,16 +187,22 @@ export class RateCardManagerComponent implements OnInit {
         const ratecardName = `${ratecardList[0].groupId}`
         const countries = [this.columnDefs[0]]
         const obieRate = this.columnDefs.slice(1)
-        this.ratecardColDefs.push({
-            headerName: ratecardName,
-            field: ratecardList[0].colId,
-            colId: ratecardList[0].colId,
-            width: 240, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            cellRenderer: '_carrierCellComponent',
-            headerComponent: '_carrierHeaderComponent'
-        })
+        const checkDups = this.ratecardColDefs.some( eaCol => ratecardList[0].colId === eaCol.field) // return false if no match is found, return true if dup is found
 
-        this.tableColDef = [].concat(countries, this.ratecardColDefs, obieRate)
+        if(!checkDups) {
+            this.ratecardColDefs.push({
+                headerName: ratecardName,
+                field: ratecardList[0].colId,
+                colId: ratecardList[0].colId,
+                width: 240, cellStyle: { 'border-right': '1px solid #E0E0E0' },
+                cellRenderer: '_carrierCellComponent',
+                headerComponent: '_carrierHeaderComponent'
+            })
+            this.tableColDef = [].concat(countries, this.ratecardColDefs, obieRate)
+        } else {
+            alert('Ratecard is already in the Grid') // !@@@ alert is temp, provide a snackbar feedback later
+            this._rateTableToolbar.addDataToTableDisabled = true
+        }
     }
 
     displayEffDate(ratesInRatecardArr: Array<any>): string {
@@ -192,7 +214,6 @@ export class RateCardManagerComponent implements OnInit {
 
     updateRowData(ratecardList) {
         const formattedRatecardList = ratecardList.map(eaRatecard => { // remap into new row data
-
             return {
                 countries: eaRatecard.country,
                 ratecardId: eaRatecard.ratecard_id,
@@ -222,6 +243,7 @@ export class RateCardManagerComponent implements OnInit {
                 finalRate: cur.finalRate,
                 fixedMinimumRate: cur.fixedMinimumRate,
                 previousRate: cur.previousRate,
+                currentSelectedRatecard: [],
                 [`${cur.colId}`]: cur[`${cur.colId}`]
             }
             return acc
@@ -231,7 +253,6 @@ export class RateCardManagerComponent implements OnInit {
             const match = lookup[eaCountry.countries]
             if (match) {
                 Object.assign(eaCountry, match)
-                console.log(eaCountry.isChecked)
             }
             return eaCountry
         })
