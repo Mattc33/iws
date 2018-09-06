@@ -3,9 +3,10 @@ import { GridApi, ColumnApi } from 'ag-grid'
 import { Observable } from 'rxjs';
 
 import { CarrierCellComponent } from './carrier-cell/carrier-cell.component'
-import { ObietelCellComponent } from './obietel-cell/obietel-cell.component'
+import { ObietelCellComponent } from './obie-cell/obie-cell.component'
 import { CarrierHeaderComponent } from './carrier-header/carrier-header.component'
 import { RateTableModalComponent } from './rate-table-modal/rate-table-modal.component'
+import { ObieTableModalComponent } from './obie-table-modal/obie-table-modal.component'
 import { RatecardManagerUtils } from './../../../shared/utils/ratecard/rate-card-manager.utils'
 import { RatecardManagerService } from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
 import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared'
@@ -18,8 +19,9 @@ import * as _moment from 'moment'
 })
 export class RateCardManagerComponent implements OnInit {
 
-    @ViewChild(RateTableModalComponent) private _rateTableModal: RateTableModalComponent
     @ViewChild(RateCardManagerToolbarComponent) private _rateTableToolbar: RateCardManagerToolbarComponent
+    @ViewChild(RateTableModalComponent) private _rateTableModal: RateTableModalComponent
+    @ViewChild(ObieTableModalComponent) private _obieTableModal: ObieTableModalComponent
 
     // ! AG Grid
     // * row data and column definitions
@@ -40,6 +42,7 @@ export class RateCardManagerComponent implements OnInit {
 
     // ! Passed to Modal 
     carrierCellInfo
+    obieCellInfo
 
     constructor(
         private _ratecardManagerUtils: RatecardManagerUtils,
@@ -85,38 +88,50 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     // ================================================================================
-    // * Event Handlers From Cells
+    // * Event Handlers From Carrier Cells
     // ================================================================================
-    fromCarrierCellToggleHandler(cell: Object, checkboxValue: boolean): void {
-        const columnId = cell['colDef'].field
+    fromCarrierCellToggleHandler(cell: any, checkboxValue: boolean): void {
+        const columnId = cell.colDef.field
+        const rowNode = this.gridApi.getRowNode(cell.node.id)
+        const originalData = cell.data
         if (checkboxValue) {
-            this.changeIsChecked(cell['data'].countries, columnId, true) 
-
-            console.log(cell)
+            this.toggleIsChecked(cell, rowNode, originalData, columnId, true)
+            this.tellObieCellWhichRatecard(rowNode, originalData, columnId)
         } else {
-            this.changeIsChecked(cell['data'].countries, columnId, false)
+            this.toggleIsChecked(cell, rowNode, originalData, columnId, false)
         }
-
-        
-
-        // ? on check=true find the correct rate table for the cell
-        // ? when obie-cell info btn is clicked a new component modal is formed
-
-        // ? on the init phase of the new obie-cell info modal
-        // ? a row-field will be updated to reflect the selected rate table for that row
-        // ? The modal component will know from that string which rate table to find in the row obj
-        // ? that row obj will become the rowData for that obie-cell
-
-
     }
 
-    changeIsChecked(country: string, colId: string, isChecked: boolean): void {
-        const countryMatch = country
-            this.tableRowData.map( eaCountry => {
-                if (eaCountry.countries === countryMatch) {
-                    isChecked ? eaCountry[`${colId}`].isChecked = true : eaCountry[`${colId}`].isChecked = false
-                }
-            })
+    toggleIsChecked(cell: any, rowNode: any, originalData: any, colId: string, isChecked: boolean) {
+        if (isChecked) {
+            originalData[colId].isChecked = true
+            this.toggleIsCheckedOtherCols(originalData, colId)
+         } else {
+            originalData[colId].isChecked = false
+         } 
+        rowNode.setData(originalData) // set new row data and refresh only this row
+        this.gridApi.redrawRows(rowNode)
+    }
+
+    toggleIsCheckedOtherCols(originalData: any, colId: string) {
+        const filteredOut = ['code', 'countries', 'currentSelectedRatecard', 'finalRate', 
+                             'fixedMinimumRate', 'previousRate', 'isToggled', `${colId}`]
+        const keyToDisable = Object.keys(originalData).filter( eaKey => {
+            if(!filteredOut.includes(eaKey)) {
+                return eaKey
+            }
+        })
+        keyToDisable.forEach( eaKey => {
+            originalData[eaKey].isChecked = false
+        })
+    }
+
+    tellObieCellWhichRatecard(rowNode: any, originalData: any, colId: string) {
+        // For the future when we want to check for dups and obierate can match against all selected rates in arr
+        // const checkDups = originalData.currentSelectedRatecard.some( eaRatecard => eaRatecard === colId ) // return false if no match is found, return true if dup is found
+        // console.log(checkDups)
+        originalData.currentSelectedRatecard = [colId]
+        rowNode.setData(originalData)
     }
 
     fromCarrierCellInfoHandler(cell: Object): void {
@@ -125,9 +140,17 @@ export class RateCardManagerComponent implements OnInit {
         this._rateTableModal.showModal()
     }
 
+    // ================================================================================
+    // * Event Handlers From Obie Cells
+    // ================================================================================
+    obieCellToggleHandler(cell: any, toggleValue: boolean): void {
+        console.log(cell)
+        console.log(toggleValue)
+    }
+
     obieCellInfoHandler(cell: Object): void {
-        this.carrierCellInfo = cell
-        this._rateTableModal.showModal()
+        this.obieCellInfo = cell
+        this._obieTableModal.showModal()
     }
 
     // ================================================================================
@@ -172,15 +195,9 @@ export class RateCardManagerComponent implements OnInit {
         ]
     }
 
-    createRowData(): Array<any> {
-        return []
-    }
-
     onGridReady(params): void {
         this.gridApi = params.api
         this.columnApi = params.columnApi
-        // params.api.sizeColumnsToFit()
-        this.gridApi.setRowData(this.createRowData())
     }
 
     updateColDefs(ratecardList: any): void {
@@ -239,11 +256,12 @@ export class RateCardManagerComponent implements OnInit {
         })
         
         const lookup = formattedRatecardList.reduce( (acc, cur) => { // create a hash to figure out which country to insert data into, 
-            acc[cur.countries] = {                                   // at the same time reduce to only the fields needed for ea cell
+            acc[cur.countries] = {                                // at the same time reduce to only the fields needed for ea cell
                 finalRate: cur.finalRate,
                 fixedMinimumRate: cur.fixedMinimumRate,
                 previousRate: cur.previousRate,
                 currentSelectedRatecard: [],
+                isToggled: false,
                 [`${cur.colId}`]: cur[`${cur.colId}`]
             }
             return acc
@@ -258,5 +276,10 @@ export class RateCardManagerComponent implements OnInit {
         })
 
         this.tableRowData = insert
+    }
+
+    save() {
+        console.log(this.tableRowData)
+        console.log(this.tableColDef)
     }
 }

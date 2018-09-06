@@ -25,11 +25,7 @@ export class RateTableModalComponent {
     // * gridApi
     gridApi: GridApi
     columnApi: ColumnApi
-
-    // ! Service Call
-    ratecardId: number
-    carrierId: number
-
+    
     constructor(
         private _mainTableCommonSharedService: MainTableCommonSharedService
     ) {

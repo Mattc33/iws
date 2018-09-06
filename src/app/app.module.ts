@@ -74,7 +74,7 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
     // ? Ratecard Manager
     import { RateCardManagerComponent } from './Components/ratecard/rate-card-manager/rate-card-manager.component'
     import { CarrierCellComponent } from './Components/ratecard/rate-card-manager/carrier-cell/carrier-cell.component'
-    import { ObietelCellComponent } from './Components/ratecard/rate-card-manager/obietel-cell/obietel-cell.component'
+    import { ObietelCellComponent } from './Components/ratecard/rate-card-manager/obie-cell/obie-cell.component'
     import { RatecardManagerService } from './shared/api-services/ratecard/rate-card-manager.api.service'
     import { RateTableModalComponent } from './Components/ratecard/rate-card-manager/rate-table-modal/rate-table-modal.component'
     import { RatecardsManagerSharedService } from './shared/services/ratecard-manager/rate-cards-manager.shared.service'
@@ -139,7 +139,8 @@ import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewe
 import { RateCardPreviewerToolbarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-toolbar/rate-card-previewer-toolbar.component';
 import { RateCardPreviewerSidebarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-sidebar/rate-card-previewer-sidebar.component';
 import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-saveprofile/rate-card-manager-saveprofile.component';
-import { ObieTableModalComponent } from './Components/ratecard/rate-card-manager/obie-table-modal/obie-table-modal.component'
+import { ObieTableModalComponent } from './Components/ratecard/rate-card-manager/obie-table-modal/obie-table-modal.component';
+import { ObieHeaderComponent } from './Components/ratecard/rate-card-manager/obie-header/obie-header.component'
 
 registerLocaleData(en);
 
@@ -184,7 +185,7 @@ registerLocaleData(en);
 
         // ? Global
         SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, 
-        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardPreviewerComponent, EffdateHeaderComponent, RateCardPreviewerToolbarComponent, RateCardPreviewerSidebarComponent, RateCardManagerSaveprofileComponent, ObieTableModalComponent, 
+        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardPreviewerComponent, EffdateHeaderComponent, RateCardPreviewerToolbarComponent, RateCardPreviewerSidebarComponent, RateCardManagerSaveprofileComponent, ObieTableModalComponent, ObieHeaderComponent, 
     ],
     imports: [
         // ? Core Angular Modules

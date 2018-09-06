@@ -21,7 +21,7 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
 
     agInit(params: any): void { // initialization life cycle hook for AG Grid Cells
         this.params = params
-        this.partitionDataForStringInterpolation(params)
+        this.parseDataForStringInterpolation(params)
 
         // check isChecked field
         this.shouldCheckboxBeChecked(params)
@@ -30,9 +30,8 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
     // ================================================================================
     // * Get/Set Data
     // ================================================================================
-    partitionDataForStringInterpolation(params: any): void {
+    parseDataForStringInterpolation(params: any): void {
         const columnId = params.colDef.field
-
         if ( params.data.hasOwnProperty(`${columnId}`)) {
             this.uiDisabled = !this.uiDisabled
             this.minRate = params.data[`${columnId}`].minRate
@@ -43,7 +42,6 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
 
     shouldCheckboxBeChecked(params: any): void {
         const columnId = params.colDef.field
-
         if ( params.data.hasOwnProperty(`${columnId}`)) {
             const isChecked = params.data[`${columnId}`].isChecked
             isChecked ? this.checked = true : this.checked = false
@@ -57,12 +55,14 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
         // exposed method for parent component
         // params will be an AG grid obj passsed to this child cell render component
         // you will then access context which is a var set equal to <this> aka parent component
-        this.params.context.rateCardManagerTableComponent
+        this.params.context
+            .rateCardManagerTableComponent
             .fromCarrierCellToggleHandler(this.params, value) // `Row: ${this.params.node.rowIndex}, Col: ${this.params.colDef.headerName}`
     }
 
     public openCarrierCellModal(): void {
-        this.params.context.rateCardManagerTableComponent
+        this.params.context
+            .rateCardManagerTableComponent
             .fromCarrierCellInfoHandler(this.params)
     }
 
