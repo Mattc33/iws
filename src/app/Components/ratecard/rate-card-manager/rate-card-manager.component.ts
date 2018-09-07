@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { GridApi, ColumnApi } from 'ag-grid'
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs'
 
 import { CarrierCellComponent } from './carrier-cell/carrier-cell.component'
 import { ObietelCellComponent } from './obie-cell/obie-cell.component'
@@ -94,18 +94,14 @@ export class RateCardManagerComponent implements OnInit {
         const columnId = cell.colDef.field
         const rowNode = this.gridApi.getRowNode(cell.node.id)
         const originalData = cell.data
-        if (checkboxValue) {
-            this.toggleIsChecked(cell, rowNode, originalData, columnId, true)
-            this.tellObieCellWhichRatecard(rowNode, originalData, columnId)
-        } else {
-            this.toggleIsChecked(cell, rowNode, originalData, columnId, false)
-        }
+        this.carrierCellToggleIsChecked(rowNode, originalData, columnId, checkboxValue)
+        this.tellObieCellWhichRatecard(rowNode, originalData, columnId)
     }
 
-    toggleIsChecked(cell: any, rowNode: any, originalData: any, colId: string, isChecked: boolean) {
+    carrierCellToggleIsChecked(rowNode: any, originalData: any, colId: string, isChecked: boolean) {
         if (isChecked) {
             originalData[colId].isChecked = true
-            this.toggleIsCheckedOtherCols(originalData, colId)
+            this.carrierCellToggleIsCheckedOtherCols(originalData, colId)
          } else {
             originalData[colId].isChecked = false
          } 
@@ -113,7 +109,7 @@ export class RateCardManagerComponent implements OnInit {
         this.gridApi.redrawRows(rowNode)
     }
 
-    toggleIsCheckedOtherCols(originalData: any, colId: string) {
+    carrierCellToggleIsCheckedOtherCols(originalData: any, colId: string) {
         const filteredOut = ['code', 'countries', 'currentSelectedRatecard', 'finalRate', 
                              'fixedMinimumRate', 'previousRate', 'isToggled', `${colId}`]
         const keyToDisable = Object.keys(originalData).filter( eaKey => {
@@ -127,6 +123,7 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     tellObieCellWhichRatecard(rowNode: any, originalData: any, colId: string) {
+        // !@@@
         // For the future when we want to check for dups and obierate can match against all selected rates in arr
         // const checkDups = originalData.currentSelectedRatecard.some( eaRatecard => eaRatecard === colId ) // return false if no match is found, return true if dup is found
         // console.log(checkDups)
@@ -144,8 +141,15 @@ export class RateCardManagerComponent implements OnInit {
     // * Event Handlers From Obie Cells
     // ================================================================================
     obieCellToggleHandler(cell: any, toggleValue: boolean): void {
-        console.log(cell)
-        console.log(toggleValue)
+        const rowNode = this.gridApi.getRowNode(cell.node.id)
+        const originalData = cell.data
+        this.obieCellToggleIsToggle(rowNode, originalData, toggleValue)
+    }
+
+    obieCellToggleIsToggle(rowNode: any, originalData: any, isToggle: boolean) {
+        isToggle ? originalData.isToggled = true : originalData.isToggled = false
+        rowNode.setData(originalData) // set new row data and refresh only this row
+        // this.gridApi.redrawRows(rowNode)
     }
 
     obieCellInfoHandler(cell: Object): void {
@@ -261,7 +265,6 @@ export class RateCardManagerComponent implements OnInit {
                 fixedMinimumRate: cur.fixedMinimumRate,
                 previousRate: cur.previousRate,
                 currentSelectedRatecard: [],
-                isToggled: false,
                 [`${cur.colId}`]: cur[`${cur.colId}`]
             }
             return acc

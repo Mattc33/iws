@@ -22,8 +22,6 @@ export class CarrierCellComponent implements ICellRendererAngularComp {
     agInit(params: any): void { // initialization life cycle hook for AG Grid Cells
         this.params = params
         this.parseDataForStringInterpolation(params)
-
-        // check isChecked field
         this.shouldCheckboxBeChecked(params)
     }
 

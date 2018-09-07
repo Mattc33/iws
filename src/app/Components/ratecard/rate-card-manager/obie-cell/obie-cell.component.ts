@@ -10,7 +10,7 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
     public params: any
     uiDisabled = true
 
-    // ! ui values
+    // ! switch values
     switchValue = false
     rateValue = 0.0
 
@@ -21,6 +21,7 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
     agInit = (params: any): void => {
         this.params = params
         this.parseData(params)
+        this.shouldToggleBeToggled(params)
     }
 
     // ================================================================================
@@ -33,13 +34,17 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
         } 
     }
 
+    shouldToggleBeToggled(params): void {
+        params.data.isToggled ? this.switchValue = true : this.switchValue = false
+    }
+
     // ================================================================================
     // * Child To Parent Event Handlers
     // ================================================================================
     public switchChangeHandler(value: boolean): void {
         (value) ? this.rateInputDisabled = false : this.rateInputDisabled = true
 
-        this.params.ComponentFixture
+        this.params.context
             .rateCardManagerTableComponent
             .obieCellToggleHandler(this.params, value)
     }
