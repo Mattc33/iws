@@ -7,7 +7,7 @@
             nzShowSearch 
             nzAllowClear 
             nzPlaceHolder="Carrier" 
-            [(ngModel)]="toCarrierValue"
+            [(ngModel)]="selectedValues.toCarrierValue"
             (ngModelChange)="toCarrierChangeHandler($event)"
         >
             <nz-option *ngFor="let carrier of toCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
@@ -21,8 +21,8 @@
             nzShowSearch 
             nzAllowClear 
             nzPlaceHolder="Product Tier" 
-            [(ngModel)]="productTierValue"
-            [nzDisabled]="productTierDisabled"
+            [(ngModel)]="selectedValues.productTierValue"
+            [nzDisabled]="selectDisabled.productTierDisabled"
             (ngModelChange)="productTierChangeHandler($event)"
         >
             <nz-option *ngFor="let productTier of productTierOptions" [nzLabel]="productTier.label" [nzValue]="productTier.value"></nz-option>
@@ -36,8 +36,8 @@
             style="width: 100%;"
             nzAllowClear 
             nzPlaceHolder="From Carrier" 
-            [(ngModel)]="fromCarrierValue" 
-            [nzDisabled]="fromCarrierDisabled"
+            [(ngModel)]="selectedValues.fromCarrierValue" 
+            [nzDisabled]="selectDisabled.fromCarrierDisabled"
             (ngModelChange)="fromCarrierChangeHandler($event)"
         >
             <nz-option *ngFor="let carrier of fromCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
@@ -50,8 +50,8 @@
         style="width: 100%; padding-left: 44px;"
         nzAllowClear 
         nzPlaceHolder="From Carrier Ratecard" 
-        [nzDisabled]="fromCarrierRatecardDisabled"
-        [(ngModel)]="fromCarrierRatecardValue"
+        [nzDisabled]="selectDisabled.fromCarrierRatecardDisabled"
+        [(ngModel)]="selectedValues.fromCarrierRatecardValue"
         (ngModelChange)="fromCarrierRatecardChangeHandler($event)"
     >
         <nz-option *ngFor="let ratecard of fromCarrierRatecardOptions" [nzValue]="ratecard.id" [nzLabel]="ratecard.display"></nz-option>
@@ -65,7 +65,7 @@
             nzType="primary" 
             class="addRatecardBtn" 
             (click)="addRatecardDataToTable()"
-            [disabled]="addDataToTableDisabled"
+            [disabled]="selectDisabled.addDataToTableDisabled"
         >
         Add Ratecard</button>
     </div>

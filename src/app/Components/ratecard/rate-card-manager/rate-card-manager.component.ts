@@ -110,7 +110,8 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     carrierCellToggleIsCheckedOtherCols(originalData: any, colId: string) {
-        const filteredOut = ['code', 'countries', 'currentSelectedRatecard', 'finalRate', 
+        // ! @@@ Not the best solution... maybe filter for any values that doesn't have multiple _?
+        const filteredOut = ['code', 'countries', 'currentSelectedRatecard', 'customRate', 'markup',
                              'fixedMinimumRate', 'previousRate', 'isToggled', `${colId}`]
         const keyToDisable = Object.keys(originalData).filter( eaKey => {
             if(!filteredOut.includes(eaKey)) {
@@ -140,19 +141,26 @@ export class RateCardManagerComponent implements OnInit {
     // ================================================================================
     // * Event Handlers From Obie Cells
     // ================================================================================
-    obieCellToggleHandler(cell: any, toggleValue: boolean): void {
+    obieCellSwitchHandler(cell: any, toggleValue: boolean): void {
         const rowNode = this.gridApi.getRowNode(cell.node.id)
         const originalData = cell.data
-        this.obieCellToggleIsToggle(rowNode, originalData, toggleValue)
+        this.obieCellSwitchIsToggled(rowNode, originalData, toggleValue)
     }
 
-    obieCellToggleIsToggle(rowNode: any, originalData: any, isToggle: boolean) {
+    obieCellSwitchIsToggled(rowNode: any, originalData: any, isToggle: boolean) {
         isToggle ? originalData.isToggled = true : originalData.isToggled = false
         rowNode.setData(originalData) // set new row data and refresh only this row
-        // this.gridApi.redrawRows(rowNode)
+        this.gridApi.redrawRows(rowNode)
     }
 
-    obieCellInfoHandler(cell: Object): void {
+    obieCellRateInput(cell: any, rateValue: number): void {
+        const rowNode = this.gridApi.getRowNode(cell.node.id)
+        const originalData = cell.data
+        originalData.customRate = rateValue
+        rowNode.setData(originalData)
+    }
+
+    obieCellInfoHandler(cell: any): void {
         this.obieCellInfo = cell
         this._obieTableModal.showModal()
     }
@@ -168,7 +176,7 @@ export class RateCardManagerComponent implements OnInit {
 
         this.gridApi.setColumnDefs(this.tableColDef) // set column to the new col def
 
-        this._rateTableToolbar.fromCarrierRatecardValue = null // triggers a call to child toolbar header to set from carreir ratecard value to []
+        this._rateTableToolbar.selectedValues.fromCarrierRatecardValue = null // triggers a call to child toolbar header to set from carreir ratecard value to []
     }
 
     // ================================================================================
@@ -222,7 +230,7 @@ export class RateCardManagerComponent implements OnInit {
             this.tableColDef = [].concat(countries, this.ratecardColDefs, obieRate)
         } else {
             alert('Ratecard is already in the Grid') // !@@@ alert is temp, provide a snackbar feedback later
-            this._rateTableToolbar.addDataToTableDisabled = true
+            this._rateTableToolbar.selectDisabled.addDataToTableDisabled = true
         }
     }
 
@@ -240,9 +248,9 @@ export class RateCardManagerComponent implements OnInit {
                 ratecardId: eaRatecard.ratecard_id,
                 carrierId: eaRatecard.carrierId,
                 colId: eaRatecard.colId,
-                finalRate: 3,
                 fixedMinimumRate: 2,
                 previousRate: 2.5,
+                markup: null,
                 [`${eaRatecard.colId}`]: {}
             }
         })
@@ -261,9 +269,9 @@ export class RateCardManagerComponent implements OnInit {
         
         const lookup = formattedRatecardList.reduce( (acc, cur) => { // create a hash to figure out which country to insert data into, 
             acc[cur.countries] = {                                // at the same time reduce to only the fields needed for ea cell
-                finalRate: cur.finalRate,
                 fixedMinimumRate: cur.fixedMinimumRate,
                 previousRate: cur.previousRate,
+                markup: 1.02,
                 currentSelectedRatecard: [],
                 [`${cur.colId}`]: cur[`${cur.colId}`]
             }
@@ -286,3 +294,6 @@ export class RateCardManagerComponent implements OnInit {
         console.log(this.tableColDef)
     }
 }
+
+// ! @@@ how can reduce the length of this class?
+// I can partition the ag grid related code to a helper file

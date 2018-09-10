@@ -12,22 +12,25 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
 
     // ! switch values
     switchValue = false
-    rateValue = 0.0
 
+    // ! input values
+    rateValue: number
     rateInputDisabled = true
 
     constructor() { }
 
     agInit = (params: any): void => {
         this.params = params
-        this.parseData(params)
+        this.rateValue = params.data.customRate
+        this.shouldCellBeShown(params)
         this.shouldToggleBeToggled(params)
+        this.shouldInputBeToggled()
     }
 
     // ================================================================================
     // * Get/Set Data
     // ================================================================================
-    parseData(params) {
+    shouldCellBeShown(params) {
         const numberOfRatecards = Object.keys(params.data).length
         if ( numberOfRatecards >= 6 ) {
             this.uiDisabled = !this.uiDisabled
@@ -38,21 +41,29 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
         params.data.isToggled ? this.switchValue = true : this.switchValue = false
     }
 
+    shouldInputBeToggled(): void {
+        this.switchValue ? this.rateInputDisabled = false : this.rateInputDisabled = true
+    }
+
     // ================================================================================
     // * Child To Parent Event Handlers
     // ================================================================================
-    public switchChangeHandler(value: boolean): void {
-        (value) ? this.rateInputDisabled = false : this.rateInputDisabled = true
-
+    public switchChangeHandler(toggleValue: boolean): void {
         this.params.context
             .rateCardManagerTableComponent
-            .obieCellToggleHandler(this.params, value)
+            .obieCellSwitchHandler(this.params, toggleValue, this.rateValue)
     }
 
     public openObieCellModal(): void {
         this.params.context
             .rateCardManagerTableComponent
             .obieCellInfoHandler(this.params) // when opening modal pass the checked off value that comes from parent
+    }
+
+    public changeRateInputValue(rateValue: number): void {
+        this.params.context 
+            .rateCardManagerTableComponent
+            .obieCellRateInput(this.params, rateValue)
     }
 
     refresh = (): boolean => true
