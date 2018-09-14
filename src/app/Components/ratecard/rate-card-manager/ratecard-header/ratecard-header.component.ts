@@ -1,24 +1,30 @@
-import { Component } from '@angular/core';
-import { IHeaderAngularComp } from 'ag-grid-angular';
+import { RateCardManagerComponent } from './../rate-card-manager.component';
+import { Component } from '@angular/core'
+import { IHeaderAngularComp } from 'ag-grid-angular'
 import * as _moment from 'moment'
 
 @Component({
   selector: 'app-carrier-header',
-  templateUrl: './carrier-header.component.html',
-  styleUrls: ['./carrier-header.component.scss']
+  templateUrl: './ratecard-header.component.html',
+  styleUrls: ['./ratecard-header.component.scss']
 })
-export class CarrierHeaderComponent implements IHeaderAngularComp {
+export class RatecardHeaderComponent implements IHeaderAngularComp {
     public params: any
 
     // ! string interpolation values
     headerName: string
     headerDate: string
+    checked: boolean
 
     constructor() { }
 
     agInit(params: any): void {
         this.params = params
         this.initiateStringInterpolationValues()
+        
+        if (params.column.colDef.uiParameters.hasOwnProperty('isHeaderChecked')) {
+            params.column.colDef.uiParameters.isHeaderChecked ? this.checked = true : this.checked = false
+        }
     }
 
     initiateStringInterpolationValues(): void {
@@ -32,7 +38,12 @@ export class CarrierHeaderComponent implements IHeaderAngularComp {
     // ================================================================================
     public removeCol(): void {
         this.params.context.rateCardManagerTableComponent
-            .fromCarrierRemoveCol(this.params.column.colDef.field)
+            .removeRatecardCol(this.params.column.colDef.field)
+    }
+
+    public toggleAllCountries(val: boolean): void {
+        this.params.context.rateCardManagerTableComponent
+            .toggleAllCountriesInCol(this.params.column.colId, val)
     }
 
 }

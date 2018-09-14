@@ -1,0 +1,18 @@
+.obieHeaderContainer {
+    width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+        "header percentInput";
+
+    .headerName {
+        grid-area: header;
+    }
+    
+    /deep/ .percentInput {
+        grid-area: percentInput;
+        align-self: center;
+        justify-self: end;
+        min-height: 30px;
+    }
+}

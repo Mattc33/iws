@@ -1,17 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
-import { GridApi, ColumnApi } from 'ag-grid'
-import { Observable } from 'rxjs'
+import { Component, OnInit, ViewChild }    from '@angular/core'
+import { GridApi, ColumnApi }              from 'ag-grid'
+import { Observable }                      from 'rxjs'
 
-import { CarrierCellComponent } from './carrier-cell/carrier-cell.component'
-import { ObietelCellComponent } from './obie-cell/obie-cell.component'
-import { CarrierHeaderComponent } from './carrier-header/carrier-header.component'
-import { RateTableModalComponent } from './rate-table-modal/rate-table-modal.component'
-import { ObieTableModalComponent } from './obie-table-modal/obie-table-modal.component'
-import { RatecardManagerUtils } from './../../../shared/utils/ratecard/rate-card-manager.utils'
-import { RatecardManagerService } from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
-import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared'
 import { RateCardManagerToolbarComponent } from './rate-card-manager-toolbar/rate-card-manager-toolbar.component'
-import * as _moment from 'moment'
+
+import { RatecardCellComponent }           from './ratecard-cell/ratecard-cell.component'
+import { RatecardHeaderComponent }          from './ratecard-header/ratecard-header.component'
+import { RateTableModalComponent }         from './rate-table-modal/rate-table-modal.component'
+
+import { ObietelCellComponent }            from './obie-cell/obie-cell.component'
+import { ObieTableModalComponent }         from './obie-table-modal/obie-table-modal.component'
+import { ObieHeaderComponent }             from './obie-header/obie-header.component'
+
+import { RatecardManagerUtils }            from './../../../shared/utils/ratecard/rate-card-manager.utils'
+import { RatecardManagerService }          from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
+import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared'
+import * as _moment                        from 'moment'
 @Component({
     selector: 'app-rate-card-manager',
     templateUrl: './rate-card-manager.component.html',
@@ -41,7 +45,7 @@ export class RateCardManagerComponent implements OnInit {
     tableRowData: Array<any> = []
 
     // ! Passed to Modal 
-    carrierCellInfo
+    ratecardCellInfo
     obieCellInfo
 
     constructor(
@@ -52,9 +56,10 @@ export class RateCardManagerComponent implements OnInit {
         this.columnDefs = this.createColumnDefs()
         this.context = {rateCardManagerTableComponent: this} // provides context of the carrier component to the cell components
         this.frameworkComponents = {
-            _carrierCellComponent: CarrierCellComponent,
+            _ratecardHeaderComponent: RatecardHeaderComponent,
+            _ratecardCellComponent: RatecardCellComponent,
             _obietelCellComponent: ObietelCellComponent,
-            _carrierHeaderComponent: CarrierHeaderComponent
+            _obieHeaderComponent: ObieHeaderComponent
         }
     }
 
@@ -88,53 +93,52 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     // ================================================================================
-    // * Event Handlers From Carrier Cells
+    // * Event Handlers From Ratecard Cells
     // ================================================================================
-    fromCarrierCellToggleHandler(cell: any, checkboxValue: boolean): void {
+    ratecardCellToggleHandler(cell: any, checkboxValue: boolean): void {
         const columnId = cell.colDef.field
         const rowNode = this.gridApi.getRowNode(cell.node.id)
         const originalData = cell.data
-        this.carrierCellToggleIsChecked(rowNode, originalData, columnId, checkboxValue)
-        this.tellObieCellWhichRatecard(rowNode, originalData, columnId)
+        this.ratecardCellToggleIsChecked(rowNode, originalData, columnId, checkboxValue)
     }
 
-    carrierCellToggleIsChecked(rowNode: any, originalData: any, colId: string, isChecked: boolean) {
+    ratecardCellToggleIsChecked(rowNode: any, originalData: any, colId: string, isChecked: boolean) {
         if (isChecked) {
             originalData[colId].isChecked = true
-            this.carrierCellToggleIsCheckedOtherCols(originalData, colId)
+            this.ratecardCellIsCheckedOtherCols(originalData, colId)
+            this.tellObieCellWhichRatecard(rowNode, originalData, colId)
          } else {
             originalData[colId].isChecked = false
+            this.tellObieCellWhichRatecard(rowNode, originalData)
          } 
         rowNode.setData(originalData) // set new row data and refresh only this row
         this.gridApi.redrawRows(rowNode)
     }
 
-    carrierCellToggleIsCheckedOtherCols(originalData: any, colId: string) {
-        // ! @@@ Not the best solution... maybe filter for any values that doesn't have multiple _?
-        const filteredOut = ['code', 'countries', 'currentSelectedRatecard', 'customRate', 'markup',
-                             'fixedMinimumRate', 'previousRate', 'isToggled', `${colId}`]
-        const keyToDisable = Object.keys(originalData).filter( eaKey => {
-            if(!filteredOut.includes(eaKey)) {
+    ratecardCellIsCheckedOtherCols(originalData: any, colId: string) {
+        const ratecardCheckboxToDisable = Object.keys(originalData).filter( eaKey => {
+            const colIdPattern = /([a-z]*)(\_)([a-z]*)(\_)([0-9]*)/g
+            if(eaKey.match(colIdPattern) && eaKey !== colId) {
                 return eaKey
             }
         })
-        keyToDisable.forEach( eaKey => {
+        ratecardCheckboxToDisable.forEach( eaKey => {
             originalData[eaKey].isChecked = false
         })
     }
 
-    tellObieCellWhichRatecard(rowNode: any, originalData: any, colId: string) {
+    tellObieCellWhichRatecard(rowNode: any, originalData: any, colId?: string) {
         // !@@@
         // For the future when we want to check for dups and obierate can match against all selected rates in arr
         // const checkDups = originalData.currentSelectedRatecard.some( eaRatecard => eaRatecard === colId ) // return false if no match is found, return true if dup is found
         // console.log(checkDups)
-        originalData.currentSelectedRatecard = [colId]
+        colId ? originalData.currentSelectedRatecard = [colId] : originalData.currentSelectedRatecard = []
         rowNode.setData(originalData)
     }
 
-    fromCarrierCellInfoHandler(cell: Object): void {
+    ratecardCellInfoHandler(cell: Object): void {
         // open a modal, set global var to cell obj which is later passed to modal via @Input
-        this.carrierCellInfo = cell
+        this.ratecardCellInfo = cell
         this._rateTableModal.showModal()
     }
 
@@ -168,7 +172,7 @@ export class RateCardManagerComponent implements OnInit {
     // ================================================================================
     // * Event Handlers From Headers
     // ================================================================================
-    fromCarrierRemoveCol(headerField: string) {
+    removeRatecardCol(headerField: string) {
         this.tableColDef = this.tableColDef.filter(eaCol => eaCol.field !== headerField) // filter out header field for both arrays containing col data
         this.ratecardColDefs = this.ratecardColDefs.filter(eaCol => eaCol.field !== headerField)
 
@@ -177,6 +181,40 @@ export class RateCardManagerComponent implements OnInit {
         this.gridApi.setColumnDefs(this.tableColDef) // set column to the new col def
 
         this._rateTableToolbar.selectedValues.fromCarrierRatecardValue = null // triggers a call to child toolbar header to set from carreir ratecard value to []
+    }
+
+    toggleAllCountriesInCol(colId, val) {
+
+        this.tableRowData.forEach( eaCountry => {
+                if(Object.keys(eaCountry).length > 6) {
+                    this.ratecardCellIsCheckedOtherCols(eaCountry, colId)
+                }
+            }
+        )
+
+        this.tableRowData.forEach(eaRow => {
+            if(eaRow.hasOwnProperty(colId)) {
+                eaRow[colId].isChecked = val
+                val ? eaRow.currentSelectedRatecard = [colId] : eaRow.currentSelectedRatecard = []
+            }
+        })
+
+        this.tableColDef.forEach( eaCol => {
+            if(eaCol.colId === colId) {
+                val ? eaCol.uiParameters.isHeaderChecked = true : eaCol.uiParameters.isHeaderChecked = false
+            }
+            else if ( eaCol.colId !== colId && eaCol.hasOwnProperty('uiParameters')) {
+                eaCol.uiParameters.isHeaderChecked = false
+            }
+        })
+        this.gridApi.refreshHeader()
+        this.gridApi.redrawRows()
+    }
+
+
+    obieHeaderChangeMarkup(params: any, markupVal: number) {
+        console.log(params)
+        console.log(markupVal)
     }
 
     // ================================================================================
@@ -192,7 +230,8 @@ export class RateCardManagerComponent implements OnInit {
             {
                 headerName: 'Obie Rate', field: 'finalRate', colId: 'finalRate', width: 220,
                 cellStyle: { 'border-right': '1px solid #E0E0E0', 'border-left': '1px solid #000' },
-                cellRenderer: '_obietelCellComponent'
+                cellRenderer: '_obietelCellComponent',
+                headerComponent: '_obieHeaderComponent'
             },
             // {
             //     headerName: 'Min Rate', field: 'fixedMinimumRate', colId: 'fixedMinimumRate',
@@ -224,8 +263,9 @@ export class RateCardManagerComponent implements OnInit {
                 field: ratecardList[0].colId,
                 colId: ratecardList[0].colId,
                 width: 240, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                cellRenderer: '_carrierCellComponent',
-                headerComponent: '_carrierHeaderComponent'
+                cellRenderer: '_ratecardCellComponent',
+                headerComponent: '_ratecardHeaderComponent',
+                uiParameters: {}
             })
             this.tableColDef = [].concat(countries, this.ratecardColDefs, obieRate)
         } else {
@@ -272,7 +312,6 @@ export class RateCardManagerComponent implements OnInit {
                 fixedMinimumRate: cur.fixedMinimumRate,
                 previousRate: cur.previousRate,
                 markup: 1.02,
-                currentSelectedRatecard: [],
                 [`${cur.colId}`]: cur[`${cur.colId}`]
             }
             return acc

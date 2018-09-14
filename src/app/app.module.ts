@@ -19,6 +19,7 @@ import 'hammerjs'
 import { AgGridModule } from 'ag-grid-angular'
 import { PapaParseModule } from 'ngx-papaparse'
 import { SidebarModule } from 'ng-sidebar'
+import { StoreModule } from '@ngrx/store'
 import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd'
 
 // ? Main/Layout components
@@ -37,6 +38,9 @@ import { LoginService } from './shared/api-services/login/login.api.service'
 import { SnackbarSharedService } from './shared/services/global/snackbar.shared.service'
 import { SuccessSnackbarComponent } from './shared/components/snackbars/success/success.snackbar.component'
 import { ErrorSnackbarComponent } from './shared/components/snackbars/error/error.snackbar.component'
+
+// ? Global Components
+import { ExpandCollaspeComponent } from './shared/components/buttons/expand-collaspe/expand-collaspe.component'
 
 // ? DashBoard
 import { DashboardComponent } from './Components/dashboard/dashboard.component'
@@ -63,6 +67,8 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
     import { ImporterSharedService } from './shared/services/ratecard/importer.shared.service'
     import { UploadRatesDialogComponent } from './Components/ratecard/ratecard-importer/importer-table/dialog/upload-rates/upload-rates-dialog.component'
     import { RatecardImporterUtils } from './shared/utils/ratecard/rate-card-importer.utils'
+    import { RateCardPreviewerToolbarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-toolbar/rate-card-previewer-toolbar.component'
+    import { RateCardPreviewerSidebarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-sidebar/rate-card-previewer-sidebar.component'
 
     // ? Ratecard View By Carrier
     import { RatecardViewCarrierSComponent } from './Components/ratecard/ratecard-view-carrier-s/ratecard-view-carrier-s.component'
@@ -73,15 +79,20 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
 
     // ? Ratecard Manager
     import { RateCardManagerComponent } from './Components/ratecard/rate-card-manager/rate-card-manager.component'
-    import { CarrierCellComponent } from './Components/ratecard/rate-card-manager/carrier-cell/carrier-cell.component'
-    import { ObietelCellComponent } from './Components/ratecard/rate-card-manager/obie-cell/obie-cell.component'
     import { RatecardManagerService } from './shared/api-services/ratecard/rate-card-manager.api.service'
-    import { RateTableModalComponent } from './Components/ratecard/rate-card-manager/rate-table-modal/rate-table-modal.component'
+    import { CountryCodeRowDataSharedService } from './shared/services/ratecard-manager/country-row-data.shared'
     import { RatecardsManagerSharedService } from './shared/services/ratecard-manager/rate-cards-manager.shared.service'
     import { RatecardManagerUtils } from './shared/utils/ratecard/rate-card-manager.utils'
     import { RateCardManagerToolbarComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-toolbar/rate-card-manager-toolbar.component'
-    import { CarrierHeaderComponent } from './Components/ratecard/rate-card-manager/carrier-header/carrier-header.component'
-    import { CountryCodeRowDataSharedService } from './shared/services/ratecard-manager/country-row-data.shared'
+        // * Ratecard Cell/Header
+        import { RatecardHeaderComponent } from './Components/ratecard/rate-card-manager/ratecard-header/ratecard-header.component'
+        import { RatecardCellComponent } from './Components/ratecard/rate-card-manager/ratecard-cell/ratecard-cell.component'
+        import { RateTableModalComponent } from './Components/ratecard/rate-card-manager/rate-table-modal/rate-table-modal.component'
+        // * Obie Cell/Header
+        import { ObietelCellComponent } from './Components/ratecard/rate-card-manager/obie-cell/obie-cell.component'
+        import { ObieTableModalComponent } from './Components/ratecard/rate-card-manager/obie-table-modal/obie-table-modal.component';
+        import { ObieHeaderComponent } from './Components/ratecard/rate-card-manager/obie-header/obie-header.component'
+    
 
 // ? Trunks
 import { TrunksTableComponent } from './Components/trunks/trunks-table/trunks-table.component'
@@ -123,26 +134,14 @@ import { LCRSharedService } from './shared/services/lcr/lcr.shared.service'
 import { InvoiceComponent } from './Components/invoice/invoice.component'
 import { InvoiceService } from './shared/api-services/invoice/invoice.api.service'
 
-
-import { ExpandCollaspeComponent } from './shared/components/buttons/expand-collaspe/expand-collaspe.component'
-
 // ? App Module Service
 import { AppRoutes } from './Containers/routes/routes'
 
-// ? config angular i18n
-import { registerLocaleData } from '@angular/common'
-import en from '@angular/common/locales/en'
 import { RateCardsStatusComponent } from './Components/ratecard/rate-cards-status/rate-cards-status.component'
-import { AntdUploadAreaComponent } from './shared/components/uploadarea/antd-upload-area/antd-upload-area.component';
-import { RateCardPreviewerComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer.component';
-import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component';
-import { RateCardPreviewerToolbarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-toolbar/rate-card-previewer-toolbar.component';
-import { RateCardPreviewerSidebarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-sidebar/rate-card-previewer-sidebar.component';
-import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-saveprofile/rate-card-manager-saveprofile.component';
-import { ObieTableModalComponent } from './Components/ratecard/rate-card-manager/obie-table-modal/obie-table-modal.component';
-import { ObieHeaderComponent } from './Components/ratecard/rate-card-manager/obie-header/obie-header.component'
-
-registerLocaleData(en);
+import { AntdUploadAreaComponent } from './shared/components/uploadarea/antd-upload-area/antd-upload-area.component'
+import { RateCardPreviewerComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer.component'
+import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component'
+import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-saveprofile/rate-card-manager-saveprofile.component'
 
 @NgModule({
     declarations: [
@@ -166,9 +165,15 @@ registerLocaleData(en);
         UploadRatesDialogComponent, RateCardsAddTrunksComponent, RateCardsConvertCsvComponent,
         DeleteRatesComponent,
 
+        // ? Ratecard Previewer
+        RateCardPreviewerComponent, RateCardPreviewerToolbarComponent, RateCardPreviewerSidebarComponent,
+        EffdateHeaderComponent, 
+
         // ? Ratecard Manager
-        RateCardManagerComponent, CarrierCellComponent, ObietelCellComponent, 
-        CarrierHeaderComponent, RateCardManagerToolbarComponent, 
+        RateCardManagerComponent, RatecardCellComponent, ObietelCellComponent, 
+        RatecardHeaderComponent, RateCardManagerToolbarComponent, RateCardManagerSaveprofileComponent, 
+        ObieTableModalComponent, ObieHeaderComponent, 
+
         // ? Trunk
         TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DetachTrunksComponent,
 
@@ -185,7 +190,7 @@ registerLocaleData(en);
 
         // ? Global
         SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, 
-        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardPreviewerComponent, EffdateHeaderComponent, RateCardPreviewerToolbarComponent, RateCardPreviewerSidebarComponent, RateCardManagerSaveprofileComponent, ObieTableModalComponent, ObieHeaderComponent, 
+        RateCardsStatusComponent, AntdUploadAreaComponent
     ],
     imports: [
         // ? Core Angular Modules
@@ -195,7 +200,8 @@ registerLocaleData(en);
 
         // ? Third Party Modules
         PapaParseModule, SidebarModule,
-        AgGridModule.withComponents([CarrierCellComponent, ObietelCellComponent, CarrierHeaderComponent]),
+        AgGridModule.withComponents([RatecardCellComponent, ObietelCellComponent, RatecardHeaderComponent, 
+            ObieHeaderComponent]),
 
         // ? Angular Materials Modules
         MatFormFieldModule, MatInputModule, MatStepperModule, MatButtonModule, MatSelectModule, MatCheckboxModule,

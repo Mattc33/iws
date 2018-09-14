@@ -1,3 +1,14 @@
-<p>
-  obie-header works!
-</p>
+<div class="obieHeaderContainer">
+    <span class="headerName">Obie Rate</span>
+    <nz-input-number 
+        class="percentInput"
+        [(ngModel)]="obieRatePercent" 
+        [nzMin]="0.1" 
+        [nzMax]="100" 
+        [nzStep]="0.1" 
+        [nzFormatter]="formatRateToPercent"
+        (ngModelChange)="changeObiePercentValue($event)"
+        (change)="changeObiePercentValue($event.target.value)"
+    >
+    </nz-input-number>
+</div>

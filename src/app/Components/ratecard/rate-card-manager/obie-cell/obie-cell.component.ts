@@ -10,6 +10,9 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
     public params: any
     uiDisabled = true
 
+    // ! string interpolation 
+    ratecardName: string = 'No ratecard selected'
+
     // ! switch values
     switchValue = false
 
@@ -20,24 +23,40 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
     constructor() { }
 
     agInit = (params: any): void => {
-        this.params = params
-        this.rateValue = params.data.customRate
-        this.shouldCellBeShown(params)
-        this.shouldToggleBeToggled(params)
-        this.shouldInputBeToggled()
+        if(this.shouldCellBeShown(params)) {
+            this.params = params
+            this.provideStringInterpolationValues(params)
+            this.shouldToggleBeToggled(params)
+            this.shouldInputBeToggled()
+        }
     }
 
     // ================================================================================
     // * Get/Set Data
     // ================================================================================
-    shouldCellBeShown(params) {
+    shouldCellBeShown(params: any): boolean {
         const numberOfRatecards = Object.keys(params.data).length
         if ( numberOfRatecards >= 6 ) {
             this.uiDisabled = !this.uiDisabled
-        } 
+            return true
+        } else {
+            return false
+        }
     }
 
-    shouldToggleBeToggled(params): void {
+    provideStringInterpolationValues(params: any): void {
+        this.rateValue = params.data.customRate
+        if(params.data.hasOwnProperty('currentSelectedRatecard')) {
+            if(params.data.currentSelectedRatecard.length > 0) {
+                const ratecardName = params.data.currentSelectedRatecard[0].split('_')
+                ratecardName.pop()
+                this.ratecardName = ratecardName.join(' - ')
+            }
+        }
+
+    }
+
+    shouldToggleBeToggled(params: any): void {
         params.data.isToggled ? this.switchValue = true : this.switchValue = false
     }
 

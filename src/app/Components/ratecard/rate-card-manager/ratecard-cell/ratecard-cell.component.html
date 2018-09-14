@@ -1,0 +1,6 @@
+<section [class.visible]="uiDisabled">
+    <span class="date">{{effDate}}</span>
+    <span class="checkbox" (ngModelChange)="toggleRatecard($event)" nz-checkbox [(ngModel)]="checked"></span>
+    <span class="rateRange">{{minRate}} - {{maxRate}}</span>
+    <i (click)="openRatecardCellModal()" class="anticon anticon-info-circle"></i>
+</section>

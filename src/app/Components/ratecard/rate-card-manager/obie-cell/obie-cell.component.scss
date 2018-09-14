@@ -5,7 +5,7 @@ section {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
     grid-template-areas:
-        ". . . carrierSelected"
+        ". . carrierSelected carrierSelected"
         "switch rateInput rateInput info";
     
     .carrierSelected {

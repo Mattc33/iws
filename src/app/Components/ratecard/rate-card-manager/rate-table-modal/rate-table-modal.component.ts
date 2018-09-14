@@ -9,7 +9,7 @@ import * as _moment from 'moment'
 })
 export class RateTableModalComponent {
 
-    @Input() passCarrierCellInfo: any
+    @Input() passRatecardCellInfo: any
 
     // ! Modal
     isVisible = false
@@ -60,14 +60,14 @@ export class RateTableModalComponent {
     // * Modal Data
     // ================================================================================
     applyStringInterpolationDataHeader(): void {
-        const params = this.passCarrierCellInfo
+        const params = this.passRatecardCellInfo
         this.ratecardName = params.colDef.headerName.split('_')[0]
         this.ratecardDate = _moment.unix(params.colDef.headerName.split('_')[1]).format('MMMM Do, YYYY')
         this.ratecardCountry = params.data.countries
     }
 
     applyStringInterpolationDataFooter(): void {
-        const params = this.passCarrierCellInfo
+        const params = this.passRatecardCellInfo
         this.ratecardPrefixAmount = params.data[`${params.colDef.field}`].rates.length
         this.ratecardRatesMean = this._mainTableCommonSharedService.returnMean(
             (params.data[`${params.colDef.field}`].rates).map( eaPrefix => eaPrefix.buy_rate)
@@ -76,8 +76,8 @@ export class RateTableModalComponent {
 
     populateColRowData(): void {
         this.gridApi.setColumnDefs(this.createColumnDefs())
-        const columnId = this.passCarrierCellInfo.colDef.field
-        this.gridApi.setRowData(this.passCarrierCellInfo.data[`${columnId}`].rates)
+        const columnId = this.passRatecardCellInfo.colDef.field
+        this.gridApi.setRowData(this.passRatecardCellInfo.data[`${columnId}`].rates)
     }
 
     // ================================================================================
