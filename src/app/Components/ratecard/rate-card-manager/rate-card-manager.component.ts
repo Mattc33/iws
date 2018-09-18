@@ -16,6 +16,12 @@ import { RatecardManagerUtils }            from './../../../shared/utils/ratecar
 import { RatecardManagerService }          from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
 import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared'
 import * as _moment                        from 'moment'
+import { PapaParseService } from 'ngx-papaparse'
+
+import FilesUtils from '../../../shared/utils/files/files.utils'
+import RatecardManagerGridHelper from './rate-card-manager.grid-helper'
+
+
 @Component({
     selector: 'app-rate-card-manager',
     templateUrl: './rate-card-manager.component.html',
@@ -43,6 +49,7 @@ export class RateCardManagerComponent implements OnInit {
     ratecardColDefs: Array<any> = []
     tableColDef: Array<any> = []
     tableRowData: Array<any> = []
+    markUp: number // current markup value
 
     // ! Passed to Modal 
     ratecardCellInfo
@@ -53,7 +60,7 @@ export class RateCardManagerComponent implements OnInit {
         private _ratecardManagerService: RatecardManagerService,
         private _countryCodeRowDataSharedService: CountryCodeRowDataSharedService
     ) {
-        this.columnDefs = this.createColumnDefs()
+        this.columnDefs = RatecardManagerGridHelper.createColumnDefs()
         this.context = {rateCardManagerTableComponent: this} // provides context of the carrier component to the cell components
         this.frameworkComponents = {
             _ratecardHeaderComponent: RatecardHeaderComponent,
@@ -157,10 +164,10 @@ export class RateCardManagerComponent implements OnInit {
         this.gridApi.redrawRows(rowNode)
     }
 
-    obieCellRateInput(cell: any, rateValue: number): void {
+    obieCellRateInput(cell: any, rateValue: string): void {
         const rowNode = this.gridApi.getRowNode(cell.node.id)
         const originalData = cell.data
-        originalData.customRate = rateValue
+        originalData.customRate = parseFloat(rateValue)
         rowNode.setData(originalData)
     }
 
@@ -212,49 +219,40 @@ export class RateCardManagerComponent implements OnInit {
     }
 
 
-    obieHeaderChangeMarkup(params: any, markupVal: number) {
-        console.log(params)
-        console.log(markupVal)
+    obieHeaderChangeMarkup(markupVal: number) {
+        this.tableRowData.forEach( eaCountry => {
+            if (eaCountry.hasOwnProperty('currentSelectedRatecard')) {
+                eaCountry.markUp = (markupVal / 100) + 1
+            }
+        })
     }
 
     // ================================================================================
     // * AG Grid
     // ================================================================================
-    createColumnDefs(): Array<{}> {
-        return [
-            {
-                headerName: 'Countries', field: 'countries', colId: 'countries', width: 140,
-                cellStyle: { 'border-right': '1px solid #000', 'line-height': '70px',
-                'font-weight': 'bold' }, 
-            },
-            {
-                headerName: 'Obie Rate', field: 'finalRate', colId: 'finalRate', width: 220,
-                cellStyle: { 'border-right': '1px solid #E0E0E0', 'border-left': '1px solid #000' },
-                cellRenderer: '_obietelCellComponent',
-                headerComponent: '_obieHeaderComponent'
-            },
-            // {
-            //     headerName: 'Min Rate', field: 'fixedMinimumRate', colId: 'fixedMinimumRate',
-            //     width: 120,
-            //     cellStyle: commonCellStyle,
-            // },
-            // {
-            //     headerName: 'Prev Rate', field: 'previousRate', colId: 'previousRate',
-            //     width: 120,
-            //     cellStyle: commonCellStyle,
-            // }
-        ]
-    }
-
     onGridReady(params): void {
         this.gridApi = params.api
         this.columnApi = params.columnApi
     }
 
+    rowDataChanged(): void {
+        this.showNonEmptyRows()
+    }
+
+    showNonEmptyRows(): void {
+        this.gridApi.getFilterInstance('isEmpty').setModel({
+            type: 'greaterThan',
+            filter: 0
+        })
+        this.gridApi.onFilterChanged()
+    }
+
     updateColDefs(ratecardList: any): void {
         const ratecardName = `${ratecardList[0].groupId}`
-        const countries = [this.columnDefs[0]]
-        const obieRate = this.columnDefs.slice(1)
+        const isEmpty = [this.columnDefs[0]]
+        const index = [this.columnDefs[1]]
+        const countries = [this.columnDefs[2]]
+        const obieRate = this.columnDefs.slice(3)
         const checkDups = this.ratecardColDefs.some( eaCol => ratecardList[0].colId === eaCol.field) // return false if no match is found, return true if dup is found
 
         if(!checkDups) {
@@ -267,7 +265,7 @@ export class RateCardManagerComponent implements OnInit {
                 headerComponent: '_ratecardHeaderComponent',
                 uiParameters: {}
             })
-            this.tableColDef = [].concat(countries, this.ratecardColDefs, obieRate)
+            this.tableColDef = [].concat(isEmpty, index, countries, this.ratecardColDefs, obieRate)
         } else {
             alert('Ratecard is already in the Grid') // !@@@ alert is temp, provide a snackbar feedback later
             this._rateTableToolbar.selectDisabled.addDataToTableDisabled = true
@@ -290,7 +288,7 @@ export class RateCardManagerComponent implements OnInit {
                 colId: eaRatecard.colId,
                 fixedMinimumRate: 2,
                 previousRate: 2.5,
-                markup: null,
+                markUp: 0,
                 [`${eaRatecard.colId}`]: {}
             }
         })
@@ -311,7 +309,6 @@ export class RateCardManagerComponent implements OnInit {
             acc[cur.countries] = {                                // at the same time reduce to only the fields needed for ea cell
                 fixedMinimumRate: cur.fixedMinimumRate,
                 previousRate: cur.previousRate,
-                markup: 1.02,
                 [`${cur.colId}`]: cur[`${cur.colId}`]
             }
             return acc
@@ -328,9 +325,54 @@ export class RateCardManagerComponent implements OnInit {
         this.tableRowData = insert
     }
 
+
+    // ================================================================================
+    // * Extra functionaility
+    // ================================================================================
     save() {
         console.log(this.tableRowData)
         console.log(this.tableColDef)
+    }
+
+    downloadForA2Billing(): void {
+        const preppedJson = this.filterOutTableData()
+        const A2BillingFormatJson = this.processIntoA2BillingFormat(preppedJson)
+        const csv = FilesUtils.jsonToCsv(A2BillingFormatJson, {headers: false}, 
+            ['prefix', 'destination', 'sell_rate', 'sell_rate_minimum', 'sell_rate_increment',
+            'buy_rate', 'buy_rate_minimum', 'buy_rate_increment'])
+        FilesUtils.saveAsFile(csv, 'result.csv')
+    }
+
+    filterOutTableData(): Array<{}> {
+        const filteredDataIsChecked = this.tableRowData.filter( eaCountry => {
+            return eaCountry.hasOwnProperty('currentSelectedRatecard')
+        })
+        if ( filteredDataIsChecked[0].hasOwnProperty('markUp')) {
+            this.markUp = filteredDataIsChecked[0].markUp
+            const preppedJson: any = filteredDataIsChecked.map( eaCountry => {
+                const currentKey = eaCountry.currentSelectedRatecard[0]
+                const relevantRates = eaCountry[currentKey].rates
+                return relevantRates
+            })
+            return preppedJson.flat()
+        } else {
+            console.log('no markup value entered')
+        }
+    }
+
+    processIntoA2BillingFormat(preppedJson: Array<any>): Array<any> {
+        return preppedJson.map( eaPrefix => {
+            return {
+                prefix: eaPrefix.prefix,
+                destination: eaPrefix.destination,
+                sell_rate: eaPrefix.buy_rate * this.markUp,
+                sell_rate_minimum: 1,
+                sell_rate_increment: 1,
+                buy_rate: eaPrefix.buy_rate,
+                buy_rate_minimum: 1,
+                buy_rate_increment: 1
+            }
+        })
     }
 }
 

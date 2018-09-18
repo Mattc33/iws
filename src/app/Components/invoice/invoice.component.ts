@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { PapaParseService } from 'ngx-papaparse';
-import { saveAs } from 'file-saver/FileSaver';
-import { InvoiceService } from './../../shared/api-services/invoice/invoice.api.service';
+import { Component } from '@angular/core'
+import { PapaParseService } from 'ngx-papaparse'
+
+import FilesUtils from '../../shared/utils/files/files.utils'
+import { InvoiceService } from './../../shared/api-services/invoice/invoice.api.service'
 
 @Component({
   selector: 'app-invoice',
@@ -57,7 +58,6 @@ export class InvoiceComponent {
         + ', , total_calls, total_seconds, total_minutes, , total_cost'
         + '\n'
         + `, , ${this.sumTotalCalls}, ${this.sumTotalSeconds}, ${this.sumTotalMinutes}, ,${this.sumTotalCost}`;
-        console.log(this.endResultCsv);
     }
 
     processJson(data): void {
@@ -105,8 +105,6 @@ export class InvoiceComponent {
         this.sumTotalCost = this.sumCol(json, 'total_cost');
         this.sumTotalMinutes = this.sumCol(json, 'total_minutes');
 
-        console.log(json);
-
         this.jsonToCsv(json);
     }
 
@@ -147,9 +145,7 @@ export class InvoiceComponent {
     }
 
     saveToFileSystem(): void {
-        const filename = 'results.csv';
-        const blob = new Blob([this.endResultCsv], { type: 'text/plain' });
-        saveAs(blob, filename);
+        FilesUtils.saveAsFile(this.endResultCsv, 'results.csv')
     }
 
 }

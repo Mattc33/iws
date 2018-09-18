@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { GridApi } from 'ag-grid';
-import { PapaParseService } from 'ngx-papaparse';
-import { saveAs } from 'file-saver/FileSaver';
+import { Component, OnInit } from '@angular/core'
+import { GridApi } from 'ag-grid'
+import { PapaParseService } from 'ngx-papaparse'
+import { saveAs } from 'file-saver/FileSaver'
 
-import { NestedAgGridService } from '../../../shared/services/global/nestedAgGrid.shared.service';
-import { RateCardsService } from '../../../shared/api-services/ratecard/rate-cards.api.service';
+import { NestedAgGridService } from '../../../shared/services/global/nestedAgGrid.shared.service'
+import { RateCardsService } from '../../../shared/api-services/ratecard/rate-cards.api.service'
 
 @Component({
   selector: 'app-rate-cards-convert-csv',
@@ -14,29 +14,29 @@ import { RateCardsService } from '../../../shared/api-services/ratecard/rate-car
 
 export class RateCardsConvertCsvComponent implements OnInit {
 
-    rowData;
-    columnDefs;
-    gridApi: GridApi;
+    rowData
+    columnDefs
+    gridApi: GridApi
 
-    rowSelectionTypeM = 'multiple';
-    getNodeChildDetails;
-    currentSelectedRows;
-    download: string;
-    oneCsv;
-    arrOfRates = [];
-    disableStep2 = true;
+    rowSelectionTypeM = 'multiple'
+    getNodeChildDetails
+    currentSelectedRows
+    download: string
+    oneCsv
+    arrOfRates = []
+    disableStep2 = true
 
     constructor(
         private rateCardsService: RateCardsService,
         private nestedAgGridService: NestedAgGridService,
         private papa: PapaParseService
     ) {
-        this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups();
-        this.columnDefs = this.createColumnDefs();
+        this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups()
+        this.columnDefs = this.createColumnDefs()
     }
 
     ngOnInit() {
-        this.get_ratecards();
+        this.get_ratecards()
     }
 
     // ================================================================================
@@ -48,11 +48,8 @@ export class RateCardsConvertCsvComponent implements OnInit {
                 data => {
                     this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
                 },
-                error => { console.log(error); },
-                () => {
-                    // console.log(this.rowData);
-                }
-            );
+                error => console.log(error),
+            )
     }
 
     get_specificRatecardOneFile(ratecard_id: number, fileName: string): void {
@@ -61,10 +58,8 @@ export class RateCardsConvertCsvComponent implements OnInit {
                 data => {
                     this.arrOfRates.push(data);
                 },
-                error => {
-
-                },
-            );
+                error => console.log(error)
+            )
     }
 
     // ================================================================================

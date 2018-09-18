@@ -141,7 +141,8 @@ import { RateCardsStatusComponent } from './Components/ratecard/rate-cards-statu
 import { AntdUploadAreaComponent } from './shared/components/uploadarea/antd-upload-area/antd-upload-area.component'
 import { RateCardPreviewerComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer.component'
 import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component'
-import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-saveprofile/rate-card-manager-saveprofile.component'
+import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-saveprofile/rate-card-manager-saveprofile.component';
+import { RateCardManagerBotToolbarComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-bot-toolbar/rate-card-manager-bot-toolbar.component'
 
 @NgModule({
     declarations: [
@@ -190,7 +191,7 @@ import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-
 
         // ? Global
         SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, 
-        RateCardsStatusComponent, AntdUploadAreaComponent
+        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardManagerBotToolbarComponent
     ],
     imports: [
         // ? Core Angular Modules

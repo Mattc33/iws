@@ -22,10 +22,15 @@ export class ObieHeaderComponent implements IHeaderAngularComp {
     // * Child To Parent Event Handlers
     // ================================================================================
     public changeObiePercentValue(markupVal: number): void {
+        if(typeof markupVal === 'string') {
+            markupVal = parseFloat(markupVal)
+        }
         this.obieRatePercent = markupVal
             this.params.context 
                 .rateCardManagerTableComponent 
-                .obieHeaderChangeMarkup(this.params, markupVal)
+                .obieHeaderChangeMarkup(markupVal)
     }
+
+
 
 }

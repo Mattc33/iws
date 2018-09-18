@@ -36,7 +36,7 @@ export class ObietelCellComponent implements ICellRendererAngularComp {
     // ================================================================================
     shouldCellBeShown(params: any): boolean {
         const numberOfRatecards = Object.keys(params.data).length
-        if ( numberOfRatecards >= 6 ) {
+        if ( numberOfRatecards >= 5 ) {
             this.uiDisabled = !this.uiDisabled
             return true
         } else {

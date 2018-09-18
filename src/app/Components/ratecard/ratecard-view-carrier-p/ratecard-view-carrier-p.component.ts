@@ -62,6 +62,10 @@ export class RatecardViewCarrierPComponent implements OnInit {
 
     get_everyCountryRates() {
         const countryArr = [];
+        // !@@@ This piece of code can use a lot of work
+        // Should be async
+        // If response = 200, add to rowData
+        // if not skip
         for ( let i = 1; i <= 240; i++ ) {
             this._rateCardsService.get_ratesByCountry(this.rowDataCountry[i].code)
                 .subscribe(

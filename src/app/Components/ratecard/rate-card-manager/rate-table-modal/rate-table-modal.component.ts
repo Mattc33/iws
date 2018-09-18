@@ -29,7 +29,7 @@ export class RateTableModalComponent {
     constructor(
         private _mainTableCommonSharedService: MainTableCommonSharedService
     ) {
-
+        
     }
 
     // ================================================================================

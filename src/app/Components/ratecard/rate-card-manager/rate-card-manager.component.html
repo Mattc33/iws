@@ -10,7 +10,8 @@
             [headerHeight]="40" [rowHeight]="70"
             [context]="context" [frameworkComponents]="frameworkComponents"
             [paginationAutoPageSize]="paginationToggle" [pagination]="paginationToggle"
-            [enableFilter]="true" [enableSorting]="true"
+            [enableSorting]="true" [enableFilter]="true"
+            (rowDataChanged)="rowDataChanged()"
             (gridReady)="onGridReady($event)"
         >
         </ag-grid-angular> 
@@ -18,6 +19,8 @@
 
     <app-rate-card-manager-saveprofile></app-rate-card-manager-saveprofile>
     <button (click)="save()">Save</button>
+    <button (click)="showNonEmpty()">Show Non Empty</button>
+    <button (click)="downloadForA2Billing()">Download for A2Billing</button>
 </main>
 
 <app-rate-table-modal [passRatecardCellInfo]="ratecardCellInfo"></app-rate-table-modal>

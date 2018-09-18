@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core'
 import { GridApi, ColumnApi } from 'ag-grid'
+
+import { MainTableCommonSharedService } from './../../../../shared/services/ratecard/main-table-common.shared.service'
 import * as _moment from 'moment'
 @Component({
   selector: 'app-obie-table-modal',
@@ -18,6 +20,8 @@ export class ObieTableModalComponent {
     currentDate: string
     ratecardCountry: string
     ratecardPrefixAmount: number
+    ratecardRatesMean: number
+
     ratecardPercentMarkup: string
 
     // ! AG Grid
@@ -25,17 +29,22 @@ export class ObieTableModalComponent {
     gridApi: GridApi
     columnApi: ColumnApi
 
-    constructor() { }
+    constructor(
+        private _mainTableCommonSharedService: MainTableCommonSharedService
+    ) { }
 
     // ================================================================================
     // * Event Handlers Modal
     // ================================================================================
     nzAfterOpen(): void {
-        // ? initiate some variables after Modal opens
-        this.applyStringInterpolationDataHeader()
-
-        // ? populate Col and Row data
-        this.populateColRowData()
+        const params = this.passObieCellInfo
+        if (params.data.hasOwnProperty('currentSelectedRatecard')) {
+            // ? initiate some variables after Modal opens
+            this.applyStringInterpolationDataHeader(params)
+            this.applyStringInterpolationDataFooter(params)
+            // ? populate Col and Row data
+            this.populateColRowData()
+        }
     }
 
     showModal(): void {
@@ -53,20 +62,21 @@ export class ObieTableModalComponent {
     // ================================================================================
     // * Modal Data
     // ================================================================================
-    applyStringInterpolationDataHeader(): void {
-        const params = this.passObieCellInfo
-        this.ratecardName = params.data.currentSelectedRatecard[0]
+    applyStringInterpolationDataHeader(params: any): void {
         this.currentDate = _moment().format('MMMM Do, YYYY')
         this.ratecardCountry = params.data.countries
+        params.data.hasOwnProperty('currentSelectedRatecard') ? this.ratecardName = params.data.currentSelectedRatecard[0] : null
     }
 
-    applyStringInterpolationDataFooter(): void {
-        const params = this.passObieCellInfo
-        this.ratecardPrefixAmount = params.data[`${params.colDef.field}`].rates.length
-
+    applyStringInterpolationDataFooter(params: any): void {
+        const currentRatecardKey = params.data.currentSelectedRatecard[0]
+        this.ratecardPrefixAmount = params.data[currentRatecardKey].rates.length
+        this.ratecardRatesMean = this._mainTableCommonSharedService.returnMean(
+            (params.data[currentRatecardKey].rates).map( eaPrefix => eaPrefix.buy_rate)
+        ).toFixed(4)
     }
 
-    populateColRowData(): void {
+    populateColRowData(): void { // !@@@ could use some refactoring
         this.gridApi.setColumnDefs(this.createColumnDefs())
         const getRatecard = this.passObieCellInfo.data.currentSelectedRatecard[0]
         const rowData = this.passObieCellInfo.data
