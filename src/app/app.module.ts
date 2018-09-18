@@ -141,9 +141,6 @@ import { RateCardsStatusComponent } from './Components/ratecard/rate-cards-statu
 import { AntdUploadAreaComponent } from './shared/components/uploadarea/antd-upload-area/antd-upload-area.component'
 import { RateCardPreviewerComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer.component'
 import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component'
-import { RateCardManagerSaveprofileComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-saveprofile/rate-card-manager-saveprofile.component';
-import { RateCardManagerBotToolbarComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-bot-toolbar/rate-card-manager-bot-toolbar.component'
-
 @NgModule({
     declarations: [
         // ? Main Layout Components
@@ -172,8 +169,8 @@ import { RateCardManagerBotToolbarComponent } from './Components/ratecard/rate-c
 
         // ? Ratecard Manager
         RateCardManagerComponent, RatecardCellComponent, ObietelCellComponent, 
-        RatecardHeaderComponent, RateCardManagerToolbarComponent, RateCardManagerSaveprofileComponent, 
-        ObieTableModalComponent, ObieHeaderComponent, 
+        RatecardHeaderComponent, RateCardManagerToolbarComponent, 
+        ObieTableModalComponent, ObieHeaderComponent,
 
         // ? Trunk
         TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DetachTrunksComponent,
@@ -191,7 +188,7 @@ import { RateCardManagerBotToolbarComponent } from './Components/ratecard/rate-c
 
         // ? Global
         SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, 
-        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardManagerBotToolbarComponent
+        RateCardsStatusComponent, AntdUploadAreaComponent, 
     ],
     imports: [
         // ? Core Angular Modules

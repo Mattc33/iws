@@ -9,6 +9,7 @@
         [nzFormatter]="formatRateToPercent"
         (ngModelChange)="changeObiePercentValue($event)"
         (change)="changeObiePercentValue($event.target.value)"
+        [nzDisabled]="obieRatePercentDisabled"
     >
     </nz-input-number>
 </div>

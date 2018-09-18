@@ -5,7 +5,7 @@ import { Observable }                      from 'rxjs'
 import { RateCardManagerToolbarComponent } from './rate-card-manager-toolbar/rate-card-manager-toolbar.component'
 
 import { RatecardCellComponent }           from './ratecard-cell/ratecard-cell.component'
-import { RatecardHeaderComponent }          from './ratecard-header/ratecard-header.component'
+import { RatecardHeaderComponent }         from './ratecard-header/ratecard-header.component'
 import { RateTableModalComponent }         from './rate-table-modal/rate-table-modal.component'
 
 import { ObietelCellComponent }            from './obie-cell/obie-cell.component'
@@ -16,12 +16,8 @@ import { RatecardManagerUtils }            from './../../../shared/utils/ratecar
 import { RatecardManagerService }          from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
 import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared'
 import * as _moment                        from 'moment'
-import { PapaParseService } from 'ngx-papaparse'
-
-import FilesUtils from '../../../shared/utils/files/files.utils'
-import RatecardManagerGridHelper from './rate-card-manager.grid-helper'
-
-
+import FilesUtils                          from '../../../shared/utils/files/files.utils'
+import RatecardManagerGridHelper           from './rate-card-manager.grid-helper'
 @Component({
     selector: 'app-rate-card-manager',
     templateUrl: './rate-card-manager.component.html',
@@ -77,10 +73,9 @@ export class RateCardManagerComponent implements OnInit {
     // ================================================================================
     // * Service
     // ================================================================================
-    getRatecardRates = (carrierId: number, ratecardId: number): Observable<any> => {
-        return this._ratecardManagerService.get_ratecardRates(carrierId, ratecardId)
-    }
-
+    getRatecardRates = (carrierId: number, ratecardId: number): Observable<any> => 
+        this._ratecardManagerService.get_ratecardRates(carrierId, ratecardId)
+    
     // ================================================================================
     // * Event Handlers from Top Toolbar
     // ================================================================================
@@ -89,7 +84,6 @@ export class RateCardManagerComponent implements OnInit {
             eaRatecard.colId = eaRatecard.groupId.replace(/\s/g, "").replace ('-', '_')
             return eaRatecard
         })
-
         this.updateColDefs(insertColumnId)
         this.updateRowData(insertColumnId)
     }
@@ -222,7 +216,7 @@ export class RateCardManagerComponent implements OnInit {
     obieHeaderChangeMarkup(markupVal: number) {
         this.tableRowData.forEach( eaCountry => {
             if (eaCountry.hasOwnProperty('currentSelectedRatecard')) {
-                eaCountry.markUp = (markupVal / 100) + 1
+                eaCountry.markUp = markupVal
             }
         })
     }
@@ -237,6 +231,7 @@ export class RateCardManagerComponent implements OnInit {
 
     rowDataChanged(): void {
         this.showNonEmptyRows()
+        this.gridApi.refreshHeader()
     }
 
     showNonEmptyRows(): void {
@@ -288,7 +283,6 @@ export class RateCardManagerComponent implements OnInit {
                 colId: eaRatecard.colId,
                 fixedMinimumRate: 2,
                 previousRate: 2.5,
-                markUp: 0,
                 [`${eaRatecard.colId}`]: {}
             }
         })
@@ -337,10 +331,10 @@ export class RateCardManagerComponent implements OnInit {
     downloadForA2Billing(): void {
         const preppedJson = this.filterOutTableData()
         const A2BillingFormatJson = this.processIntoA2BillingFormat(preppedJson)
-        const csv = FilesUtils.jsonToCsv(A2BillingFormatJson, {headers: false}, 
+        const csv = FilesUtils.jsonToCsv(A2BillingFormatJson, {header: false}, 
             ['prefix', 'destination', 'sell_rate', 'sell_rate_minimum', 'sell_rate_increment',
             'buy_rate', 'buy_rate_minimum', 'buy_rate_increment'])
-        FilesUtils.saveAsFile(csv, 'result.csv')
+        FilesUtils.saveAsFile(csv, 'result.txt')
     }
 
     filterOutTableData(): Array<{}> {
@@ -365,7 +359,7 @@ export class RateCardManagerComponent implements OnInit {
             return {
                 prefix: eaPrefix.prefix,
                 destination: eaPrefix.destination,
-                sell_rate: eaPrefix.buy_rate * this.markUp,
+                sell_rate: (this.markUp / 100) - 1 * eaPrefix.buy_rate,
                 sell_rate_minimum: 1,
                 sell_rate_increment: 1,
                 buy_rate: eaPrefix.buy_rate,
@@ -375,6 +369,3 @@ export class RateCardManagerComponent implements OnInit {
         })
     }
 }
-
-// ! @@@ how can reduce the length of this class?
-// I can partition the ag grid related code to a helper file

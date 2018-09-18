@@ -9,11 +9,23 @@ export class ObieHeaderComponent implements IHeaderAngularComp {
 
     public params: any
     obieRatePercent: number
+    public obieRatePercentDisabled = true
 
     constructor() { }
 
     agInit(params: any): void {
         this.params = params
+        this.populateStringInterpolationValues(params)
+    }
+
+    populateStringInterpolationValues = (params: any) => {
+        const tableRowData = params.context.rateCardManagerTableComponent.tableRowData.filter( eaCountry => 
+            eaCountry.hasOwnProperty('currentSelectedRatecard') && eaCountry.currentSelectedRatecard.length > 0
+        )
+        if (tableRowData.length > 0) {
+            this.obieRatePercent = tableRowData[0].markUp
+            this.obieRatePercentDisabled = false
+        }
     }
 
     formatRateToPercent = (value: number = 0) => `${value} %`
@@ -25,10 +37,8 @@ export class ObieHeaderComponent implements IHeaderAngularComp {
         if(typeof markupVal === 'string') {
             markupVal = parseFloat(markupVal)
         }
-        this.obieRatePercent = markupVal
-            this.params.context 
-                .rateCardManagerTableComponent 
-                .obieHeaderChangeMarkup(markupVal)
+        this.params.context.rateCardManagerTableComponent 
+            .obieHeaderChangeMarkup(markupVal)
     }
 
 
