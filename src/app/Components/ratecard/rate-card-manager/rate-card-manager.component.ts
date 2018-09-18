@@ -101,16 +101,17 @@ export class RateCardManagerComponent implements OnInit {
         const rowNode = this.gridApi.getRowNode(cell.node.id)
         const originalData = cell.data
         this.ratecardCellToggleIsChecked(rowNode, originalData, columnId, checkboxValue)
+        this.gridApi.refreshHeader()
     }
 
     ratecardCellToggleIsChecked(rowNode: any, originalData: any, colId: string, isChecked: boolean) {
         if (isChecked) {
             originalData[colId].isChecked = true
             this.ratecardCellIsCheckedOtherCols(originalData, colId)
-            this.tellObieCellWhichRatecard(rowNode, originalData, colId)
+            originalData.currentSelectedRatecard = [colId]
          } else {
             originalData[colId].isChecked = false
-            this.tellObieCellWhichRatecard(rowNode, originalData)
+            originalData.currentSelectedRatecard = []
          } 
         rowNode.setData(originalData) // set new row data and refresh only this row
         this.gridApi.redrawRows(rowNode)
@@ -126,15 +127,6 @@ export class RateCardManagerComponent implements OnInit {
         ratecardCheckboxToDisable.forEach( eaKey => {
             originalData[eaKey].isChecked = false
         })
-    }
-
-    tellObieCellWhichRatecard(rowNode: any, originalData: any, colId?: string) {
-        // !@@@
-        // For the future when we want to check for dups and obierate can match against all selected rates in arr
-        // const checkDups = originalData.currentSelectedRatecard.some( eaRatecard => eaRatecard === colId ) // return false if no match is found, return true if dup is found
-        // console.log(checkDups)
-        colId ? originalData.currentSelectedRatecard = [colId] : originalData.currentSelectedRatecard = []
-        rowNode.setData(originalData)
     }
 
     ratecardCellInfoHandler(cell: Object): void {
@@ -359,7 +351,7 @@ export class RateCardManagerComponent implements OnInit {
             return {
                 prefix: eaPrefix.prefix,
                 destination: eaPrefix.destination,
-                sell_rate: (this.markUp / 100) - 1 * eaPrefix.buy_rate,
+                sell_rate: ((eaPrefix.buy_rate * this.markUp) / 100) + eaPrefix.buy_rate,
                 sell_rate_minimum: 1,
                 sell_rate_increment: 1,
                 buy_rate: eaPrefix.buy_rate,
