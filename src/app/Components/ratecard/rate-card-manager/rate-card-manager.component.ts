@@ -234,7 +234,7 @@ export class RateCardManagerComponent implements OnInit {
         this.gridApi.onFilterChanged()
     }
 
-    updateColDefs(ratecardList: any): void {
+    updateColDefs(ratecardList: Array<any>): void {
         const ratecardName = `${ratecardList[0].groupId}`
         const isEmpty = [this.columnDefs[0]]
         const index = [this.columnDefs[1]]
@@ -244,6 +244,8 @@ export class RateCardManagerComponent implements OnInit {
 
         if(!checkDups) {
             this.ratecardColDefs.push({
+                carrierId: ratecardList[0].carrierId,
+                tier: ratecardList[0].colId.split('_')[1],
                 headerName: ratecardName,
                 field: ratecardList[0].colId,
                 colId: ratecardList[0].colId,
@@ -309,55 +311,5 @@ export class RateCardManagerComponent implements OnInit {
         })
 
         this.tableRowData = insert
-    }
-
-
-    // ================================================================================
-    // * Extra functionaility
-    // ================================================================================
-    save() {
-        console.log(this.tableRowData)
-        console.log(this.tableColDef)
-    }
-
-    downloadForA2Billing(): void {
-        const preppedJson = this.filterOutTableData()
-        const A2BillingFormatJson = this.processIntoA2BillingFormat(preppedJson)
-        const csv = FilesUtils.jsonToCsv(A2BillingFormatJson, {header: false}, 
-            ['prefix', 'destination', 'sell_rate', 'sell_rate_minimum', 'sell_rate_increment',
-            'buy_rate', 'buy_rate_minimum', 'buy_rate_increment'])
-        FilesUtils.saveAsFile(csv, 'result.txt')
-    }
-
-    filterOutTableData(): Array<{}> {
-        const filteredDataIsChecked = this.tableRowData.filter( eaCountry => {
-            return eaCountry.hasOwnProperty('currentSelectedRatecard')
-        })
-        if ( filteredDataIsChecked[0].hasOwnProperty('markUp')) {
-            this.markUp = filteredDataIsChecked[0].markUp
-            const preppedJson: any = filteredDataIsChecked.map( eaCountry => {
-                const currentKey = eaCountry.currentSelectedRatecard[0]
-                const relevantRates = eaCountry[currentKey].rates
-                return relevantRates
-            })
-            return preppedJson.flat()
-        } else {
-            console.log('no markup value entered')
-        }
-    }
-
-    processIntoA2BillingFormat(preppedJson: Array<any>): Array<any> {
-        return preppedJson.map( eaPrefix => {
-            return {
-                prefix: eaPrefix.prefix,
-                destination: eaPrefix.destination,
-                sell_rate: ((eaPrefix.buy_rate * this.markUp) / 100) + eaPrefix.buy_rate,
-                sell_rate_minimum: 1,
-                sell_rate_increment: 1,
-                buy_rate: eaPrefix.buy_rate,
-                buy_rate_minimum: 1,
-                buy_rate_increment: 1
-            }
-        })
     }
 }

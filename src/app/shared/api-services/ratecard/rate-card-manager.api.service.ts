@@ -20,6 +20,10 @@ export class RatecardManagerService {
         this.url = this._apiSettings.getUrl();
     }
 
+    // ================================================================================
+    // * Get Carrier/Ratecard Info
+    // ================================================================================
+
     get_ratecardsInCarriersByTier = (carrierId: number, tier: string): Observable<any> => 
         this._http
             .get(`${this.url}fromCarrier/${carrierId}/tier/${tier}/ratecards?active=1`)
@@ -37,6 +41,9 @@ export class RatecardManagerService {
                 catchError(this.handleError)
             )
 
+    // ================================================================================
+    // * Post/Get Profile
+    // ================================================================================
     post_carrierListToProfile = (toCarrier_id: number, tier: string, body: Array<{}>): Observable<any> => 
         this._http
             .post(`${this.url}toCarriers/${toCarrier_id}/tier/${tier}/profile`, body, this.options)
@@ -50,39 +57,6 @@ export class RatecardManagerService {
             .pipe(
                 catchError(this.handleError)
             )    
-
-    // // ? get profile
-    // get_profileByToCarrier(carrierId: number): Observable<any> {
-    //     return this._http
-    //         .get(this.url + carrierId)
-    //         .pipe (
-    //             map(res => res.json()),
-    //             catchError(this.handleError)
-    //         );
-    // }
-
-
-    // // ? get a list of ratecards by carrierId
-    // // filter for active, filter for standard or premium
-    // get_listOfRatecards(carrierId: number, productTier: string): Observable<any> {
-    //     return this._http
-    //         .get(this.url + 'fromCarrier/' + carrierId + '/tier/' + productTier + '/ratecards')
-    //         .pipe (
-    //             map(res => res.json()),
-    //             catchError(this.handleError)
-    //         );
-    // }
-
-    // // ? get a specific ratecard with nested rates array with iso code 
-    // // as the key and the prefixes as a value of array containing prefixes
-    // get_ratecardWithRatesByCountry(carrierId: number, ratecardId: number): Observable<any> {
-    //     return this._http
-    //         .get(this.url + carrierId + '/' + ratecardId + '/?active=1')
-    //         .pipe (
-    //             map(res => res.json()),
-    //             catchError(this.handleError)
-    //         );
-    // }
 
     handleError(error: any): any {
         console.error(error);

@@ -15,8 +15,7 @@ export default class RatecardManagerGridHelper {
                         return params.node.rowIndex
                     }
                 },
-                cellStyle: { 'border-right': '1px solid #E0E0E0', 'border-left': '1px solid #000',
-                'line-height': '70px', 'font-weight': 'bold', 'text-align': 'center'},
+                cellStyle: { 'border-right': '1px solid #E0E0E0', 'line-height': '70px', 'font-weight': 'bold', 'text-align': 'center'},
                 suppressFilter: true
             },
             {

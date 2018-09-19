@@ -1,0 +1,19 @@
+<footer>
+    <button nz-button nzType="primary" [nzSize]="large" (click)="test()" style="padding-right: 5px;">
+        <i class="anticon anticon-save"></i> Test 
+    </button>
+    <button nz-button nzType="primary" [nzSize]="large" (click)="saveProfile()">
+        <i class="anticon anticon-save"></i> Save Profile
+    </button>
+    <nz-divider nzType="vertical"></nz-divider>
+    <nz-dropdown [nzDisabled]="downloadAsDisabled">
+        <button nz-button nz-dropdown>
+            <span>Download As...</span> 
+            <i class="anticon anticon-down"></i>
+        </button>
+        <ul nz-menu>
+            <li nz-menu-item><a (click)="downloadForA2Billing('txt')">.txt</a></li>
+            <li nz-menu-item><a (click)="downloadForA2Billing('csv')">.csv</a></li>
+        </ul>
+    </nz-dropdown>
+</footer>

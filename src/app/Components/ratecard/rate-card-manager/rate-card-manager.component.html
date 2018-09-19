@@ -16,8 +16,12 @@
         >
         </ag-grid-angular> 
     </section>
-    <button (click)="save()">Save</button>
-    <button (click)="downloadForA2Billing()">Download for A2Billing</button>
+    <app-rate-card-manager-bot-toolbar
+        [_tableRowData]="tableRowData"
+        [_markUp]="markUp"
+        [_tableColDef]="tableColDef"
+    >
+    </app-rate-card-manager-bot-toolbar>
 </main>
 
 <app-rate-table-modal [passRatecardCellInfo]="ratecardCellInfo"></app-rate-table-modal>

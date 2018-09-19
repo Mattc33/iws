@@ -84,6 +84,7 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
     import { RatecardsManagerSharedService } from './shared/services/ratecard-manager/rate-cards-manager.shared.service'
     import { RatecardManagerUtils } from './shared/utils/ratecard/rate-card-manager.utils'
     import { RateCardManagerToolbarComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-toolbar/rate-card-manager-toolbar.component'
+    import { RateCardManagerBotToolbarComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-bot-toolbar/rate-card-manager-bot-toolbar.component'    
         // * Ratecard Cell/Header
         import { RatecardHeaderComponent } from './Components/ratecard/rate-card-manager/ratecard-header/ratecard-header.component'
         import { RatecardCellComponent } from './Components/ratecard/rate-card-manager/ratecard-cell/ratecard-cell.component'
@@ -140,7 +141,8 @@ import { AppRoutes } from './Containers/routes/routes'
 import { RateCardsStatusComponent } from './Components/ratecard/rate-cards-status/rate-cards-status.component'
 import { AntdUploadAreaComponent } from './shared/components/uploadarea/antd-upload-area/antd-upload-area.component'
 import { RateCardPreviewerComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer.component'
-import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component'
+import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component';
+
 @NgModule({
     declarations: [
         // ? Main Layout Components
@@ -188,7 +190,7 @@ import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewe
 
         // ? Global
         SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, 
-        RateCardsStatusComponent, AntdUploadAreaComponent, 
+        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardManagerBotToolbarComponent, 
     ],
     imports: [
         // ? Core Angular Modules

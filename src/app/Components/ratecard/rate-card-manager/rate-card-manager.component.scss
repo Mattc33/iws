@@ -2,9 +2,9 @@ main {
     padding: 5px 5px 0px 5px;
 
     section {
-        height: 80vh;
+        height: calc(100vh - 200px);
 
-        ag-grid-angular /deep/ {
+        /deep/ ag-grid-angular{
             height: 100%;
 
             .ag-cell-focus, .ag-cell-no-focus {
