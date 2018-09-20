@@ -6,10 +6,9 @@
     </app-rate-card-manager-toolbar>
     <section>
         <ag-grid-angular class="ag-theme-balham"
-            [columnDefs]="columnDefs" [rowData]="rowData" 
+            [columnDefs]="columnDefs"
             [headerHeight]="40" [rowHeight]="70"
             [context]="context" [frameworkComponents]="frameworkComponents"
-            [paginationAutoPageSize]="paginationToggle" [pagination]="paginationToggle"
             [enableSorting]="true" [enableFilter]="true"
             (rowDataChanged)="rowDataChanged()"
             (gridReady)="onGridReady($event)"

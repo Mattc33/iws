@@ -8,7 +8,7 @@
             nzAllowClear 
             nzPlaceHolder="Carrier" 
             [(ngModel)]="selectedValues.toCarrierValue"
-            (ngModelChange)="toCarrierChangeHandler($event)"
+            (ngModelChange)="toCarrierChangeHandler()"
         >
             <nz-option *ngFor="let carrier of toCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
         </nz-select>
@@ -23,7 +23,7 @@
             nzPlaceHolder="Product Tier" 
             [(ngModel)]="selectedValues.productTierValue"
             [nzDisabled]="selectDisabled.productTierDisabled"
-            (ngModelChange)="productTierChangeHandler($event)"
+            (ngModelChange)="productTierChangeHandler()"
         >
             <nz-option *ngFor="let productTier of productTierOptions" [nzLabel]="productTier.label" [nzValue]="productTier.value"></nz-option>
         </nz-select>
@@ -38,7 +38,7 @@
             nzPlaceHolder="From Carrier" 
             [(ngModel)]="selectedValues.fromCarrierValue" 
             [nzDisabled]="selectDisabled.fromCarrierDisabled"
-            (ngModelChange)="fromCarrierChangeHandler($event)"
+            (ngModelChange)="fromCarrierChangeHandler()"
         >
             <nz-option *ngFor="let carrier of fromCarrierOptions" [nzLabel]="carrier.name" [nzValue]="carrier.id"></nz-option>
         </nz-select>
@@ -61,7 +61,6 @@
     <div class="addToTableContainer">
         <button 
             nz-button 
-            [nzSize]="large" 
             nzType="primary" 
             class="addRatecardBtn" 
             (click)="addRatecardDataToTable()"
