@@ -88,43 +88,62 @@ export class RateCardManagerBotToolbarComponent {
     // ================================================================================
     saveProfile = () => {
 
-        //create body 
-        const bodyTemplate= {
-            "rateMarkup": this._markUp,
-            "fromCarrierList": [
+        console.log(this._markUp)
 
-            ],
-            "customerRateList": [
-
-            ]
-        }
 
         const fromCarrierList = this._tableRowData.map( eaCountry => {
-            // getCarrierId by matching rowColId with colField
             let carrierId: number
+            let carrierTier: string
             if (eaCountry.hasOwnProperty('currentSelectedRatecard')) {
                 const currentRatecard = eaCountry.currentSelectedRatecard[0]
-
                 this._tableColDef.forEach( eaCol => {
                     if(eaCol.hasOwnProperty('field') && eaCol.field === currentRatecard) {
-                        carrierId = eaCol.carrierId
+                        carrierId = eaCol.carrierId,
+                        carrierTier = eaCol.tier
                     }
                 })
 
                 return {
                     "country_iso": eaCountry.code,
                     "fromCarrier": [
-                        "fromCarrier_id": 
+                        {
+                            "fromCarrier_id": carrierId,
+                            "rateCardTier": carrierTier
+                        }
                     ]
                 }
+            } else {
+                return {
+                    "country_iso": eaCountry.code,
+                    "fromCarrier": []
+                }
             }
-
-
-
         })
 
-        // deep clone tableRowObj
-        // deep clone tableColObj
+        const customerRateList = this._tableRowData.map( eaCountry => {
+            let customRate: number = 0
+            if (eaCountry.hasOwnProperty('customRate') && eaCountry.customRate > 0) {
+                customRate = eaCountry.customRate
+            }
+
+            return {
+                "country_iso": eaCountry.code,
+                "finalRate": customRate,
+                "minRate": 0 // !@@@ to be added at a later date
+            }
+        })
+
+        // console.log(fromCarrierList)
+        // console.log(customerRateList)
+
+        //create body 
+        const bodyTemplate= {
+            "rateMarkup": this._markUp,
+            "fromCarrierList": fromCarrierList,
+            "customerRateList": customerRateList
+        }
+
+        // console.log(bodyTemplate)
 
     }
 

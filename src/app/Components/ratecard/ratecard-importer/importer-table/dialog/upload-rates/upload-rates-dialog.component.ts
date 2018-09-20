@@ -7,10 +7,11 @@ import { ImporterService } from '../../../../../../shared/api-services/ratecard/
 import { CarrierService } from '../../../../../../shared/api-services/carrier/carrier.api.service'
 import { TrunksService } from '../../../../../../shared/api-services/trunk/trunks.api.service'
 import { ImporterTableComponent } from '../../importer-table.component'
-import { RatecardImporterUtils } from './../../../../../../shared/utils/ratecard/rate-card-importer.utils'
 import { ImporterSharedService } from '../../../../../../shared/services/ratecard/importer.shared.service'
 import { SnackbarSharedService } from '../../../../../../shared/services/global/snackbar.shared.service'
 import { ToggleButtonStateService } from '../../../../../../shared/services/global/buttonStates.shared.service'
+
+import DateUtils from '../../../../../../shared/utils/date/date.utils'
 @Component({
   selector: 'app-upload-rates',
   templateUrl: './upload-rates-dialog.component.html',
@@ -67,8 +68,7 @@ export class UploadRatesDialogComponent implements OnInit {
         private _importerSharedService: ImporterSharedService,
         private _trunksService: TrunksService,
         private _snackbarSharedService: SnackbarSharedService,
-        private _toggleButtonStateService: ToggleButtonStateService,
-        private _ratecardImporterUtils: RatecardImporterUtils
+        private _toggleButtonStateService: ToggleButtonStateService
     ) {
         this.columnDefs = this.createColumnDefs()
     }
@@ -290,7 +290,8 @@ export class UploadRatesDialogComponent implements OnInit {
                 sell_Rate: parseFloat(eaRate[2]),
                 sell_rate_minimum: 60,
                 sell_rate_increment: 60,
-                start_ts: (this._ratecardImporterUtils.dateToEpoch(eaRate[3]) * 1000).toString() // some util function that parses dates
+                start_ts: (DateUtils.dateStringToEpoch(eaRate[3])).toString(),
+                end_ts: (DateUtils.dateStringToEpoch(eaRate[3]) + 31557600).toString() // add one year as end_ts
             }
         })
         this.ratesList = rateList

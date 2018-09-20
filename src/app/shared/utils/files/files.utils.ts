@@ -3,7 +3,6 @@ import { PapaParseService } from 'ngx-papaparse'
 
 export default class FilesUtils {
 
-
     static saveAsFile = (csv: any, fileName: string = 'results.csv') => {
         const blob = new Blob([csv], { type: 'text/plain' });
         saveAs(blob, fileName);

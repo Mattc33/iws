@@ -16,7 +16,6 @@ import { RatecardManagerUtils }            from './../../../shared/utils/ratecar
 import { RatecardManagerService }          from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
 import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared'
 import * as _moment                        from 'moment'
-import FilesUtils                          from '../../../shared/utils/files/files.utils'
 import RatecardManagerGridHelper           from './rate-card-manager.grid-helper'
 @Component({
     selector: 'app-rate-card-manager',
