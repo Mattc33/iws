@@ -60,6 +60,7 @@ export class MainTableSharedService {
                 headerName: 'Destination', field: 'destination', colId: 'destination',
                 width: 260, lockPosition: true, pinned: 'left',
                 cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightblue'},
+                filter: 'agTextColumnFilter',
                 sort: 'asc'
             },
             {
