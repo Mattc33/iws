@@ -2,6 +2,11 @@ import { Component, OnInit, ViewChild }    from '@angular/core'
 import { GridApi, ColumnApi }              from 'ag-grid'
 import { Observable }                      from 'rxjs'
 
+import * as _moment                        from 'moment'
+import RatecardManagerGridHelper           from './rate-card-manager.grid-helper'
+import CountryUtils                        from './../../../shared/utils/country/country.utils'
+import RatecardUtils                       from './../../../shared/utils/ratecard/rate-card.utils' 
+
 import { RateCardManagerToolbarComponent } from './rate-card-manager-toolbar/rate-card-manager-toolbar.component'
 
 import { RatecardCellComponent }           from './ratecard-cell/ratecard-cell.component'
@@ -12,11 +17,10 @@ import { ObietelCellComponent }            from './obie-cell/obie-cell.component
 import { ObieTableModalComponent }         from './obie-table-modal/obie-table-modal.component'
 import { ObieHeaderComponent }             from './obie-header/obie-header.component'
 
-import { RatecardManagerUtils }            from './../../../shared/utils/ratecard/rate-card-manager.utils'
+
 import { RatecardManagerService }          from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
-import { CountryCodeRowDataSharedService } from './../../../shared/services/ratecard-manager/country-row-data.shared'
-import * as _moment                        from 'moment'
-import RatecardManagerGridHelper           from './rate-card-manager.grid-helper'
+
+
 @Component({
     selector: 'app-rate-card-manager',
     templateUrl: './rate-card-manager.component.html',
@@ -39,12 +43,13 @@ export class RateCardManagerComponent implements OnInit {
     // * gridUI props
     context: object
     frameworkComponents: object
+    overlayLoadingTemplate
 
     // ! Holds Grid Info
     ratecardColDefs: Array<any> = []
     tableColDef: Array<any> = []
     tableRowData: Array<any> = []
-    markUp: number // current markup value
+    markUp: number = 0 // current markup value
 
     // ! Passed to Modal 
     ratecardCellInfo
@@ -52,8 +57,7 @@ export class RateCardManagerComponent implements OnInit {
 
     constructor(
         private _ratecardManagerUtils: RatecardManagerUtils,
-        private _ratecardManagerService: RatecardManagerService,
-        private _countryCodeRowDataSharedService: CountryCodeRowDataSharedService
+        private _ratecardManagerService: RatecardManagerService
     ) {
         this.columnDefs = RatecardManagerGridHelper.createColumnDefs()
         this.context = {rateCardManagerTableComponent: this} // provides context of the carrier component to the cell components
@@ -63,10 +67,12 @@ export class RateCardManagerComponent implements OnInit {
             _obietelCellComponent: ObietelCellComponent,
             _obieHeaderComponent: ObieHeaderComponent
         }
+        this.overlayLoadingTemplate = 
+            '<span class="ag-overlay-loading-center">Please select toCarrier and tier above.</span>'
     }
 
     ngOnInit() {
-        this.tableRowData = this._countryCodeRowDataSharedService.getCountryCodeRowData()
+        this.tableRowData = CountryUtils.getCountryCodeRowData()
     }
 
     // ================================================================================
@@ -144,9 +150,19 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     obieCellSwitchIsToggled(rowNode: any, originalData: any, isToggle: boolean) {
+        console.log(originalData)
         isToggle ? originalData.isToggled = true : originalData.isToggled = false
+        this.obieCustomRateRemoval(isToggle, originalData)
+        // ! here we can remove customRate from the object
+
         rowNode.setData(originalData) // set new row data and refresh only this row
         this.gridApi.redrawRows(rowNode)
+    }
+
+    obieCustomRateRemoval = (isToggle: boolean, originalData: any) => {
+        if(!isToggle && originalData.hasOwnProperty('customRate')) {
+            delete originalData.customRate
+        }
     }
 
     obieCellRateInput(cell: any, rateValue: string): void {
@@ -205,6 +221,7 @@ export class RateCardManagerComponent implements OnInit {
 
 
     obieHeaderChangeMarkup(markupVal: number) {
+        this.markUp = markupVal
         this.tableRowData.forEach( eaCountry => {
             if (eaCountry.hasOwnProperty('currentSelectedRatecard')) {
                 eaCountry.markUp = markupVal
@@ -285,8 +302,8 @@ export class RateCardManagerComponent implements OnInit {
                     const getEaCountryAsArr = eaCountry[Object.keys(eaCountry)[0]]
                     const colGroup = eaRatecard.colId
                     eaRatecard[`${colGroup}`].rates = getEaCountryAsArr
-                    eaRatecard[`${colGroup}`].minRate = this._ratecardManagerUtils.getMinRate(getEaCountryAsArr)
-                    eaRatecard[`${colGroup}`].maxRate = this._ratecardManagerUtils.getMaxRate(getEaCountryAsArr)
+                    eaRatecard[`${colGroup}`].minRate = RatecardUtils.getMinRate(getEaCountryAsArr)
+                    eaRatecard[`${colGroup}`].maxRate = RatecardUtils.getMaxRate(getEaCountryAsArr)
                     eaRatecard[`${colGroup}`].date = this.displayEffDate(getEaCountryAsArr)
                     eaRatecard[`${colGroup}`].isChecked = false
                 })

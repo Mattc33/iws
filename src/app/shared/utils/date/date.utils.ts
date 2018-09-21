@@ -7,4 +7,7 @@ export default class DateUtils {
     static dateStringToEpoch = (date: string): number => 
         _moment(date, ['DDMMYYYY', 'MMDDYYYY', "YYYYMDD", 'DD-MMM-YY']).unix() * 1000
 
+    static unixToLocalTime = (unix: number): string =>
+        _moment.utc(unix).toDate().toString()
+
 }

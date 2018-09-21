@@ -1,8 +1,5 @@
-import { Injectable } from '@angular/core'
-
-@Injectable()
-export class CountryCodeRowDataSharedService {
-    getCountryCodeRowData() {
+export default class CountryUtils {
+    static getCountryCodeRowData = (): Array<{countries: string, code: string}> => {
         return [
             {
                 'countries': 'Afghanistan',

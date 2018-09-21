@@ -87,10 +87,23 @@ export class RateCardManagerBotToolbarComponent {
     // * Save Profile
     // ================================================================================
     saveProfile = () => {
+        if ( this._markUp <= 0) {
+            alert('Please select a markup for Obie Col')
+            // !@@@ TEMP. Have a snackbar activate here
+        } else {
+            const fromCarrierList = this.buildFromCarrierListArr()
+            const customerRateList = this.buildCustomerRateListArr()
+            const bodyTemplate= {
+                "rateMarkup": this._markUp,
+                "fromCarrierList": fromCarrierList,
+                "customerRateList": customerRateList
+            }
 
-        console.log(this._markUp)
+            
+        }
+    }
 
-
+    buildFromCarrierListArr = (): Array<{country_iso: string, fromCarrier: Array<{}>}> => {
         const fromCarrierList = this._tableRowData.map( eaCountry => {
             let carrierId: number
             let carrierTier: string
@@ -119,7 +132,10 @@ export class RateCardManagerBotToolbarComponent {
                 }
             }
         })
+        return fromCarrierList
+    }
 
+    buildCustomerRateListArr = (): Array<{country_iso: string, finalRate: number, minRate: number}> => {
         const customerRateList = this._tableRowData.map( eaCountry => {
             let customRate: number = 0
             if (eaCountry.hasOwnProperty('customRate') && eaCountry.customRate > 0) {
@@ -132,19 +148,7 @@ export class RateCardManagerBotToolbarComponent {
                 "minRate": 0 // !@@@ to be added at a later date
             }
         })
-
-        // console.log(fromCarrierList)
-        // console.log(customerRateList)
-
-        //create body 
-        const bodyTemplate= {
-            "rateMarkup": this._markUp,
-            "fromCarrierList": fromCarrierList,
-            "customerRateList": customerRateList
-        }
-
-        // console.log(bodyTemplate)
-
+        return customerRateList
     }
 
     // ================================================================================
@@ -187,9 +191,9 @@ export class RateCardManagerBotToolbarComponent {
                 eaCountry[1].forEach( eaPrefix => eaPrefix.sell_rate = eaCountry[0] )
                 eaCountry.shift()
             }
-            return eaCountry.flat()
+            return eaCountry
         })
-        return customRateList.flat()
+        return customRateList.flat(2)
     }
 
     processIntoA2BillingFormat(preppedJson: Array<any>): Array<any> {

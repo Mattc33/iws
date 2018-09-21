@@ -19,7 +19,6 @@ import 'hammerjs'
 import { AgGridModule } from 'ag-grid-angular'
 import { PapaParseModule } from 'ngx-papaparse'
 import { SidebarModule } from 'ng-sidebar'
-import { StoreModule } from '@ngrx/store'
 import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd'
 
 // ? Main/Layout components
@@ -79,9 +78,7 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
     // ? Ratecard Manager
     import { RateCardManagerComponent } from './Components/ratecard/rate-card-manager/rate-card-manager.component'
     import { RatecardManagerService } from './shared/api-services/ratecard/rate-card-manager.api.service'
-    import { CountryCodeRowDataSharedService } from './shared/services/ratecard-manager/country-row-data.shared'
-    import { RatecardsManagerSharedService } from './shared/services/ratecard-manager/rate-cards-manager.shared.service'
-    import { RatecardManagerUtils } from './shared/utils/ratecard/rate-card-manager.utils'
+    import { RatecardsManagerSharedService } from './Components/ratecard/rate-card-manager/rate-card-manager-service/rate-cards-manager.shared.service'
     import { RateCardManagerToolbarComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-toolbar/rate-card-manager-toolbar.component'
     import { RateCardManagerBotToolbarComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-bot-toolbar/rate-card-manager-bot-toolbar.component'    
         // * Ratecard Cell/Header
@@ -229,7 +226,7 @@ import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewe
 
         // ? Ratecard Manager
         RatecardManagerService, RatecardsManagerSharedService,
-        RatecardManagerUtils, CountryCodeRowDataSharedService,
+        RatecardManagerUtils,
 
         // ? Trunk
         TrunksService, TrunksSharedService,

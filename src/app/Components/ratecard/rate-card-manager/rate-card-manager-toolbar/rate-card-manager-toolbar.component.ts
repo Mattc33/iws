@@ -1,7 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core'
-import { CarrierService } from '../../../../shared/api-services/carrier/carrier.api.service'
-import { RatecardManagerService } from '../../../../shared/api-services/ratecard/rate-card-manager.api.service' 
-import { RatecardManagerUtils } from './../../../../shared/utils/ratecard/rate-card-manager.utils';
+import { Component, OnInit, Output, EventEmitter }      from '@angular/core'
+import { CarrierService }                               from '../../../../shared/api-services/carrier/carrier.api.service'
+import { RatecardManagerService }                       from '../../../../shared/api-services/ratecard/rate-card-manager.api.service' 
+
+import DateUtils                                        from '../../../../shared/utils/date/date.utils'
+
 @Component({
     selector: 'app-rate-card-manager-toolbar',
     templateUrl: './rate-card-manager-toolbar.component.html',
@@ -45,8 +47,7 @@ export class RateCardManagerToolbarComponent implements OnInit {
 
     constructor(
         private _carrierSerivce: CarrierService,
-        private _ratecardManagerService: RatecardManagerService,
-        private _ratecardManagerUtils: RatecardManagerUtils
+        private _ratecardManagerService: RatecardManagerService
     ) { }
 
     ngOnInit() {
@@ -93,7 +94,7 @@ export class RateCardManagerToolbarComponent implements OnInit {
                     .then( reduced => {
                         const keysToArr = Object.keys(reduced).map( eaItem => {
                             const split = eaItem.split('_')
-                            const displayDate = this._ratecardManagerUtils.unixToLocalTime(parseInt(split[1]))
+                            const displayDate = DateUtils.unixToLocalTime(parseInt(split[1]))    
                             return { id: eaItem, display: `${split[0]}: ${displayDate}` }
                         })
                         this.fromCarrierRatecardOptions = keysToArr
