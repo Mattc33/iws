@@ -12,9 +12,11 @@ export class RateCardManagerBotToolbarComponent {
     @Input() _tableRowData: Array<any>
     @Input() _markUp: number
     @Input() _tableColDef: Array<any>
+    @Input() _numberOfChecked: number
 
     // ! string interpolation values
     downloadAsDisabled = false
+
 
     constructor(
         private _ratecardManagerService: RatecardManagerService
@@ -23,83 +25,37 @@ export class RateCardManagerBotToolbarComponent {
     // ================================================================================
     // * Save Profile API Services
     // ================================================================================
-    saveCarrierListToProfile = () => {
-        this._ratecardManagerService.post_carrierListToProfile
+    saveCarrierListToProfile = (toCarrier_id: number, tier: string, body: Array<{}>) => {
+        this._ratecardManagerService.post_carrierListToProfile(toCarrier_id, tier, body)
     }
 
-    // example of post body
-    /*
-        {
-            "rateMarkup": 0,                           <-- access this from parent's markUp prop
-            "fromCarrierList": [                       <-- form using ratecardTable
-                {           
-                    "country_iso": "string",
-                    "fromCarrier": [
-                        {
-                            "fromCarrierId": 0,        <-- from Carrier Id should be attached in an arr
-                            "rateCardTier": "string"   <-- from ratecardTier should be attached in an arr
-                        }
-                    ]
-                }
-            ],
-            "customerRateList": [
-                {
-                    "country_iso": "string",
-                    "finalRate": 0,                    <-- Custom Rate
-                    "minRate": 0
-                }
-            ]
-        }
-    */
-
-    saveCarrierRatesInfoToProfile = () => {
-        this._ratecardManagerService.post_carrierRatesInfoToProfile
+    saveCarrierRatesInfoToProfile = (toCarrier_id: number, tier: string, body: Array<{}>) => {
+        this._ratecardManagerService.post_carrierRatesInfoToProfile(toCarrier_id, tier, body)
     }
-
-    // example of post body
-    /*
-        {
-            "profile": {
-                "rateMarkup": 0,
-                "fromCarrierList": [
-                    {
-                        "country_iso": "string",
-                        "fromCarrier": [
-                            {
-                                "fromCarrier_id": 0,
-                                "rateCardTier": "string"
-                            }
-                        ]
-                    }
-                ],
-                "customerRateList": [
-                    {
-                        "country_iso": "string",
-                        "finalRate": 0,
-                        "minRate": 0
-                    }
-                ]
-            }
-        }
-    */
 
     // ================================================================================
     // * Save Profile
     // ================================================================================
     saveProfile = () => {
-        if ( this._markUp <= 0) {
-            alert('Please select a markup for Obie Col')
-            // !@@@ TEMP. Have a snackbar activate here
+        if ( this._numberOfChecked <= 0) {
+            alert('Please select at least one country')
+        } 
+        else if (this._markUp === undefined || this._markUp <= 0) {
+            alert('Please enter a markup value in obie col.')
         } else {
             const fromCarrierList = this.buildFromCarrierListArr()
             const customerRateList = this.buildCustomerRateListArr()
-            const bodyTemplate= {
+            const bodyTemplateForCarrierList = {
                 "rateMarkup": this._markUp,
                 "fromCarrierList": fromCarrierList,
                 "customerRateList": customerRateList
             }
 
-            
+            const bodyTemplateForCustomerList = {
+                "profile": bodyTemplateForCarrierList
+            }
+
+            console.log(bodyTemplateForCustomerList)
         }
     }
 
@@ -155,44 +111,52 @@ export class RateCardManagerBotToolbarComponent {
     // * Download as... for A2Billing
     // ================================================================================
     downloadForA2Billing = (fileType: string) => {
-        const A2BillingObj = JSON.parse(JSON.stringify(this._tableRowData)) // deep clone tableRowObj from parent
-        const preppedJson = this.filterOutTableData(A2BillingObj)
-        const applyCustom = this.applyCustomRate(preppedJson)
-        const A2BillingFormatJson = this.processIntoA2BillingFormat(applyCustom)
-        const csv = FilesUtils.jsonToCsv(A2BillingFormatJson, {header: false}, 
-            ['prefix', 'destination', 'sell_rate', 'sell_rate_minimum', 'sell_rate_increment',
-            'buy_rate', 'buy_rate_minimum', 'buy_rate_increment'])
-        FilesUtils.saveAsFile(csv, `result.${fileType}`)
-    }
-
-    filterOutTableData(A2BillingObj: any): any {
-        const filteredDataIsChecked = A2BillingObj.filter( eaCountry => {
-            return eaCountry.hasOwnProperty('currentSelectedRatecard')
-        })
-        if ( filteredDataIsChecked[0].hasOwnProperty('markUp')) {
-            this._markUp = filteredDataIsChecked[0].markUp
-            const preppedJson: any = filteredDataIsChecked.map( eaCountry => {
-                const currentKey = eaCountry.currentSelectedRatecard[0]
-                if(eaCountry[currentKey].hasOwnProperty('rates')) {
-                    const relevantRates = eaCountry[currentKey].rates
-                    return eaCountry.hasOwnProperty('customRate') ? [eaCountry.customRate, relevantRates] : relevantRates
-                }
-            })
-            return preppedJson
+        if ( this._numberOfChecked <= 0) {
+            alert('Please select at least one country')
         } 
+        else if (this._markUp === undefined || this._markUp <= 0) {
+            alert('Please enter a markup value in obie col.')
+        }
         else {
-            console.log('no markup value entered')
+            const A2BillingObj = JSON.parse(JSON.stringify(this._tableRowData)) // deep clone tableRowObj from parent
+            const preppedJson = this.filterOutTableData(A2BillingObj)
+            const applyCustom = this.applyCustomRate(preppedJson)
+            const A2BillingFormatJson = this.processIntoA2BillingFormat(applyCustom)
+            const csv = FilesUtils.jsonToCsv(A2BillingFormatJson, {header: false}, 
+                ['prefix', 'destination', 'sell_rate', 'sell_rate_minimum', 'sell_rate_increment',
+                'buy_rate', 'buy_rate_minimum', 'buy_rate_increment'])
+            FilesUtils.saveAsFile(csv, `result.${fileType}`)
         }
     }
 
-    applyCustomRate(preppedJson: any): any {
-        const customRateList = preppedJson.map( eaCountry => {
-            if (typeof(eaCountry[0]) === 'number') {
-                eaCountry[1].forEach( eaPrefix => eaPrefix.sell_rate = eaCountry[0] )
-                eaCountry.shift()
-            }
-            return eaCountry
+    filterOutTableData(A2BillingObj: Array<any>): any {
+        const filteredDataIsChecked = A2BillingObj.filter( eaCountry => { // Filters on only the checked ratecard
+            return eaCountry.hasOwnProperty('currentSelectedRatecard')
         })
+        const preppedJson: Array<any> = filteredDataIsChecked.map( eaCountry => {
+            const currentKey = eaCountry.currentSelectedRatecard[0]
+            if(eaCountry.hasOwnProperty(`${currentKey}`) && eaCountry[currentKey].hasOwnProperty('rates')) {
+                const relevantRates = eaCountry[currentKey].rates
+                return eaCountry.hasOwnProperty('customRate') ? [eaCountry.customRate, relevantRates] : relevantRates
+            }
+        })
+        return preppedJson
+    }
+
+    applyCustomRate(preppedJson: any): any {
+        // ? 3 possible scenarios 
+            // ? undefined(if country not checked)
+            // ? is an arr containing customRate and ratelist
+            // ? is a normal set of rates, return this
+        const customRateList = preppedJson
+            .filter( eaCountry => eaCountry !== undefined)
+            .map( (eaCountry) => {
+                if (eaCountry.length === 2) {
+                    eaCountry[1].forEach( eaPrefix => eaPrefix.sell_rate = eaCountry[0] )
+                    eaCountry.shift()
+                }
+                return eaCountry
+            })
         return customRateList.flat(2)
     }
 
@@ -219,5 +183,13 @@ export class RateCardManagerBotToolbarComponent {
     test() {
         console.log(this._tableRowData)
         console.log(this._tableColDef)
+    }
+
+    disabledIfNoChecked() {
+        if(this._numberOfChecked <= 0) {
+            this.downloadAsDisabled = true
+        } else {
+            this.downloadAsDisabled = false
+        }
     }
 }

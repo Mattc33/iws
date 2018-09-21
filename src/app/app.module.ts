@@ -226,8 +226,7 @@ import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewe
 
         // ? Ratecard Manager
         RatecardManagerService, RatecardsManagerSharedService,
-        RatecardManagerUtils,
-
+        
         // ? Trunk
         TrunksService, TrunksSharedService,
 

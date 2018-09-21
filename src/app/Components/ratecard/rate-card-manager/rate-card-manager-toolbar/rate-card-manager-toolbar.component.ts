@@ -94,7 +94,8 @@ export class RateCardManagerToolbarComponent implements OnInit {
                     .then( reduced => {
                         const keysToArr = Object.keys(reduced).map( eaItem => {
                             const split = eaItem.split('_')
-                            const displayDate = DateUtils.unixToLocalTime(parseInt(split[1]))    
+                            const date: number = parseInt(split[1])
+                            const displayDate = DateUtils.unixToLocalTime(date)    
                             return { id: eaItem, display: `${split[0]}: ${displayDate}` }
                         })
                         this.fromCarrierRatecardOptions = keysToArr

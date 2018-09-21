@@ -5,6 +5,10 @@ footer {
     flex-direction: row;
     padding: 10px 5px 10px 5px;
 
+    .checkedNum {
+        padding-right: 5px
+    }
+
     nz-divider {
         margin-top: 5px;
         height: 20px;

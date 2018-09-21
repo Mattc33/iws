@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewChild }    from '@angular/core'
 import { GridApi, ColumnApi }              from 'ag-grid'
 import { Observable }                      from 'rxjs'
@@ -17,8 +18,7 @@ import { ObietelCellComponent }            from './obie-cell/obie-cell.component
 import { ObieTableModalComponent }         from './obie-table-modal/obie-table-modal.component'
 import { ObieHeaderComponent }             from './obie-header/obie-header.component'
 
-
-import { RatecardManagerService }          from '../../../shared/api-services/ratecard/rate-card-manager.api.service'
+import { RatecardManagerService }          from './../../../shared/api-services/ratecard/rate-card-manager.api.service'
 
 
 @Component({
@@ -49,14 +49,14 @@ export class RateCardManagerComponent implements OnInit {
     ratecardColDefs: Array<any> = []
     tableColDef: Array<any> = []
     tableRowData: Array<any> = []
-    markUp: number = 0 // current markup value
+    markUp: number // current markup value
+    numberOfChecked: number = 0 //number of checked values in grid
 
     // ! Passed to Modal 
     ratecardCellInfo
     obieCellInfo
 
     constructor(
-        private _ratecardManagerUtils: RatecardManagerUtils,
         private _ratecardManagerService: RatecardManagerService
     ) {
         this.columnDefs = RatecardManagerGridHelper.createColumnDefs()
@@ -120,6 +120,7 @@ export class RateCardManagerComponent implements OnInit {
          } 
         rowNode.setData(originalData) // set new row data and refresh only this row
         this.gridApi.redrawRows(rowNode)
+        this.getNumberOfChecked()
     }
 
     ratecardCellIsCheckedOtherCols(originalData: any, colId: string) {
@@ -217,6 +218,7 @@ export class RateCardManagerComponent implements OnInit {
         })
         this.gridApi.refreshHeader()
         this.gridApi.redrawRows()
+        this.getNumberOfChecked()
     }
 
 
@@ -237,12 +239,21 @@ export class RateCardManagerComponent implements OnInit {
         this.columnApi = params.columnApi
     }
 
-    rowDataChanged(): void {
+    rowDataChanged = (): void => {
         this.showNonEmptyRows()
         this.gridApi.refreshHeader()
     }
 
-    showNonEmptyRows(): void {
+    getNumberOfChecked = (): void => {
+        const numberOfChecked = this.tableRowData.filter( eaCountry => {
+            if (eaCountry.hasOwnProperty('currentSelectedRatecard') && eaCountry.currentSelectedRatecard.length > 0) {
+                return eaCountry
+            }
+        })
+        this.numberOfChecked = numberOfChecked.length
+    }
+
+    showNonEmptyRows = (): void => {
         this.gridApi.getFilterInstance('isEmpty').setModel({
             type: 'greaterThan',
             filter: 0
