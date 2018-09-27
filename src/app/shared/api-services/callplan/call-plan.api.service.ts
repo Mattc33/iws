@@ -22,7 +22,7 @@ export class CallPlanService {
 
     get_allCallplan(): Observable<any> {
         return this._http
-            .get(this.url + 'callplans/')
+            .get(this.url + '/callplans/')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError),
@@ -32,7 +32,7 @@ export class CallPlanService {
 
     get_specificCallplan(callplan_id: number): Observable<any> {
         return this._http
-            .get(this.url + 'callplans/' + callplan_id)
+            .get(this.url + '/callplans/' + callplan_id)
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -41,7 +41,7 @@ export class CallPlanService {
 
     post_newCallPlan(body: any): Observable<any> {
         return this._http
-            .post(this.url + 'callplans/', body, this.options)
+            .post(this.url + '/callplans/', body, this.options)
             .pipe(
                 catchError(this.handleError)
             );
@@ -49,7 +49,7 @@ export class CallPlanService {
 
     del_callPlan(callplan_id: number): Observable<any> {
         return this._http
-            .delete(this.url + 'callplans/' + callplan_id)
+            .delete(this.url + '/callplans/' + callplan_id)
             .pipe(
                 catchError(this.handleError)
             );
@@ -57,7 +57,7 @@ export class CallPlanService {
 
     put_editCallPlan(body: any, callplan_id: number): Observable<any> {
         return this._http
-            .put(this.url + 'callplans/' + callplan_id, body)
+            .put(this.url + '/callplans/' + callplan_id, body)
             .pipe(
                 catchError(this.handleError)
             );
@@ -66,7 +66,7 @@ export class CallPlanService {
     // attach rate card to call plan
     post_attachRateCard(callplan_id: number, ratecard_id: number, body: any): Observable<any> {
         return this._http
-            .post(this.url + 'callplans/' + callplan_id + '/ratecards/' + ratecard_id, body)
+            .post(this.url + '/callplans/' + callplan_id + '/ratecards/' + ratecard_id, body)
             .pipe(
                 catchError(this.handleError)
             );
@@ -75,7 +75,7 @@ export class CallPlanService {
     // detach rate card from call plan
     del_detachRateCard(callplan_id: number, ratecard_id: number): Observable<any> {
         return this._http
-            .delete(this.url + 'callplans/' + callplan_id + '/ratecards/' + ratecard_id)
+            .delete(this.url + '/callplans/' + callplan_id + '/ratecards/' + ratecard_id)
             .pipe(
                 catchError(this.handleError)
             );
@@ -84,7 +84,7 @@ export class CallPlanService {
     // add new plan code from callplan
     post_newPlanCode(callplan_id: number, body: any): Observable<any> {
         return this._http
-            .post(this.url + 'callplans/' + callplan_id + '/code', body)
+            .post(this.url + '/callplans/' + callplan_id + '/code', body)
             .pipe(
                 catchError(this.handleError)
             );
@@ -93,7 +93,7 @@ export class CallPlanService {
     // update plan code from callplan
     put_editPlanCode(callplan_id: number, code_id: number, body: any): Observable<any> {
         return this._http
-            .put(this.url + 'callplans/' + callplan_id + '/code/' + code_id, body)
+            .put(this.url + '/callplans/' + callplan_id + '/code/' + code_id, body)
             .pipe(
                 catchError(this.handleError)
             );
@@ -102,7 +102,7 @@ export class CallPlanService {
     // delete plan code from callplan
     del_planCode(callplan_id: number, code_id: number): Observable<any> {
         return this._http
-            .delete(this.url + 'callplans/' + callplan_id + '/code/' + code_id)
+            .delete(this.url + '/callplans/' + callplan_id + '/code/' + code_id)
             .pipe(
                 catchError(this.handleError)
             );
@@ -113,7 +113,7 @@ export class CallPlanService {
     */
     post_callplanToLCR(callplan_id: number, body: any): Observable<any> {
         return this._http
-            .post(this.url + 'lcr/callplans/' + callplan_id, body)
+            .post(this.url + '/lcr/callplans/' + callplan_id, body)
             .pipe(
                 catchError(this.handleError)
             );

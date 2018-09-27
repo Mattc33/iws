@@ -11,4 +11,6 @@ export default class RatecardUtils {
         const rateArr = arr.map( eaRate => eaRate.buy_rate)
         return Math.max(...rateArr)
     }
+
+    static convertDollarToCent = (cents: number): number => cents * 100
 }

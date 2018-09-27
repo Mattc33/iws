@@ -22,7 +22,7 @@ export class CarrierService {
 
     get_carriers(): Observable<any> {
         return this._http
-            .get(this.url + 'carriers/')
+            .get(this.url + '/carriers/')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -31,7 +31,7 @@ export class CarrierService {
 
     post_AddRow(body: any): Observable<any> {
         return this._http
-            .post(this.url + 'carriers/', body, this.options)
+            .post(this.url + '/carriers/', body, this.options)
             .pipe(
                 catchError(this.handleError)
             )
@@ -39,7 +39,7 @@ export class CarrierService {
 
     del_DeleteRow(rowId: any): Observable<any> {
         return this._http
-            .delete(this.url + 'carriers/' + rowId)
+            .delete(this.url + '/carriers/' + rowId)
             .pipe(
                 catchError(this.handleError)
             )
@@ -47,7 +47,7 @@ export class CarrierService {
 
     put_EditCarrier(body: any, rowId: number): Observable<any> {
         return this._http
-            .put(this.url + 'carriers/' + rowId, body)
+            .put(this.url + '/carriers/' + rowId, body)
             .pipe(
                 catchError(this.handleError)
             )

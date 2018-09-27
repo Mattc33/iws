@@ -24,7 +24,7 @@ export class ImporterService {
 
     post_AddRateCard(body: any): Observable<any> {
         return this._http
-            .post(this.url + 'ratecards/', body)
+            .post(this.url + '/ratecards/', body)
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError),
@@ -34,7 +34,7 @@ export class ImporterService {
 
     put_EditRates(ratesId: number, body: any): Observable<any> {
         return this._http
-            .put(this.url + 'rates/' + ratesId, body)
+            .put(this.url + '/rates/' + ratesId, body)
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -43,7 +43,7 @@ export class ImporterService {
 
     put_EditTeleUDatabase(teleuId: number, body: object): Observable<any> {
         return this._http
-            .put(this.url + 'teleu/rate/' + teleuId, body)
+            .put(this.url + '/teleu/rate/' + teleuId, body)
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)

@@ -15,14 +15,14 @@ export class RateCardsService {
         private _http: Http,
         private _apiSettings: ApiSettingsSharedService
     ) {
-        // this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
-        // this.options = new RequestOptions({ headers: this.headers });
+        this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
+        this.options = new RequestOptions({ headers: this.headers });
         this.url = this._apiSettings.getUrl();
     }
 
     get_ratecard(): Observable<any> {
         return this._http
-            .get(this.url + 'ratecards/?active=1')
+            .get(this.url + '/ratecards/?active=1')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -31,7 +31,7 @@ export class RateCardsService {
 
     get_ratesInRatecard(ratecardId: number): Observable<any> {
         return this._http
-            .get(this.url + 'ratecards/' + ratecardId + '/rates')
+            .get(this.url + '/ratecards/' + ratecardId + '/rates')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -40,7 +40,7 @@ export class RateCardsService {
 
     get_specificRatecard(ratecardId: number): Observable<any> {
         return this._http
-            .get(this.url + 'ratecards/' + ratecardId)
+            .get(this.url + '/ratecards/' + ratecardId)
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -49,7 +49,7 @@ export class RateCardsService {
 
     get_ratesByCountry(isoCode: string) {
         return this._http
-            .get(this.url + 'carriers/ratecards/rates/' + isoCode + '?active=1')
+            .get(this.url + '/carriers/ratecards/rates/' + isoCode + '?active=1')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -58,7 +58,7 @@ export class RateCardsService {
 
     post_addRatecard(body: any): Observable<any> {
         return this._http
-            .post(this.url + 'ratecards/', body)
+            .post(this.url + '/ratecards/', body)
             .pipe(
                 catchError(this.handleError)
             );
@@ -66,7 +66,7 @@ export class RateCardsService {
 
     del_deleteRatecard(rowId: number): Observable<any> {
         return this._http
-            .delete(this.url + 'ratecards/' + rowId)
+            .delete(this.url + '/ratecards/' + rowId)
             .pipe(
                 catchError(this.handleError)
             );
@@ -74,7 +74,7 @@ export class RateCardsService {
 
     put_editRatecard(body: any, rowID: any): Observable<any> {
         return this._http
-            .put(this.url + 'ratecards/' + rowID, body)
+            .put(this.url + '/ratecards/' + rowID, body)
             .pipe(
                 catchError(this.handleError)
             );
@@ -83,7 +83,7 @@ export class RateCardsService {
     post_AttachTrunk(ratecardId: number, trunkId: number) {
         const body = {};
         return this._http
-            .post(this.url + 'ratecards/' + ratecardId + '/trunks/' + trunkId, body)
+            .post(this.url + '/ratecards/' + ratecardId + '/trunks/' + trunkId, body)
             .pipe(
                 catchError(this.handleError)
             );
@@ -92,7 +92,7 @@ export class RateCardsService {
     del_DetachTrunk(ratecardId: number, trunkId: number) {
         const body = {};
         return this._http
-            .delete(this.url + 'ratecards/' + ratecardId + '/trunks/' + trunkId, body)
+            .delete(this.url + '/ratecards/' + ratecardId + '/trunks/' + trunkId, body)
             .pipe(
                 catchError(this.handleError)
             );
@@ -100,7 +100,7 @@ export class RateCardsService {
 
     put_EditRates(ratesId: number, body: any): Observable<any> {
         return this._http
-            .put(this.url + 'rates/' + ratesId, body)
+            .put(this.url + '/rates/' + ratesId, body)
             .pipe(
                 catchError(this.handleError)
             );

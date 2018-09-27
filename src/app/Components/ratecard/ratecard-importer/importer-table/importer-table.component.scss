@@ -15,7 +15,13 @@ section {
         }
 
         .top-toolbar {
+            display: flex;
+            flex-direction: row;
             height: 30px;
+
+            .anticon-question-circle-o {
+
+            }
 
             button {
                 width: 30px; height: 30px;

@@ -58,13 +58,13 @@ export class CarrierTableComponent implements OnInit {
         this._carrierService.put_EditCarrier(carrierObj, id)
             .subscribe(
                 (resp: Response) => {
-                    console.log(resp);
+                    console.log(resp)
                     if ( resp.status === 200 ) {
                         this.snackbarSharedService.snackbar_success('Edit Successful.', 2000)
                     }
                 },
                 error => {
-                    console.log(error);
+                    console.log(error)
                     this.snackbarSharedService.snackbar_error('Edit failed.', 2000)
                 }
             )
@@ -172,7 +172,7 @@ export class CarrierTableComponent implements OnInit {
     // ================================================================================
     // * Carrier Dialog
     // ================================================================================
-    openDialogAdd() {
+    openDialogAdd(): void {
         const dialogRef = this._dialog.open(AddCarrierDialogComponent, {
             width: '40%',
         })
@@ -181,7 +181,7 @@ export class CarrierTableComponent implements OnInit {
         })
     }
 
-    openDialogDel() {
+    openDialogDel(): void {
         this._carrierSharedService.changeRowObj(this.rowObj)
         const dialogRef = this._dialog.open(DelCarrierDialogComponent, {})
         dialogRef.afterClosed().subscribe(() => {

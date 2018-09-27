@@ -33,7 +33,7 @@ export class LoginService {
 
     get_authentication(body: object): Observable<any> {
         return this._http
-            .post(this.url + 'auth', body, this.options)
+            .post(this.url + '/auth', body, this.options)
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -45,7 +45,7 @@ export class LoginService {
 
         };
         return this._http
-            .get(this.url + 'subscriber/' + accountId);
+            .get(this.url + '/subscriber/' + accountId);
     }
 
     handleError(error: any): any {

@@ -19,8 +19,6 @@ import { ObieTableModalComponent }         from './obie-table-modal/obie-table-m
 import { ObieHeaderComponent }             from './obie-header/obie-header.component'
 
 import { RatecardManagerService }          from './../../../shared/api-services/ratecard/rate-card-manager.api.service'
-
-
 @Component({
     selector: 'app-rate-card-manager',
     templateUrl: './rate-card-manager.component.html',
@@ -43,7 +41,7 @@ export class RateCardManagerComponent implements OnInit {
     // * gridUI props
     context: object
     frameworkComponents: object
-    overlayLoadingTemplate
+    overlayLoadingTemplate: string
 
     // ! Holds Grid Info
     ratecardColDefs: Array<any> = []
@@ -53,8 +51,8 @@ export class RateCardManagerComponent implements OnInit {
     numberOfChecked: number = 0 //number of checked values in grid
 
     // ! Passed to Modal 
-    ratecardCellInfo
-    obieCellInfo
+    ratecardCellInfo: Object
+    obieCellInfo: string
 
     constructor(
         private _ratecardManagerService: RatecardManagerService
@@ -193,7 +191,6 @@ export class RateCardManagerComponent implements OnInit {
     }
 
     toggleAllCountriesInCol(colId, val) {
-
         this.tableRowData.forEach( eaCountry => {
                 if(Object.keys(eaCountry).length > 6) {
                     this.ratecardCellIsCheckedOtherCols(eaCountry, colId)

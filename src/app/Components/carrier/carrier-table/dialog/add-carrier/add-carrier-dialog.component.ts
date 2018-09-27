@@ -1,12 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 
-import { CarrierTableComponent } from '../../carrier-table.component';
-
-import { CarrierService } from '../../../../../shared/api-services/carrier/carrier.api.service';
-import { CarrierSharedService } from '../../../../../shared/services/carrier/carrier.shared.service';
-import { SnackbarSharedService } from '../../../../../shared/services/global/snackbar.shared.service';
+import { CarrierTableComponent } from '../../carrier-table.component'
+import { CarrierService } from '../../../../../shared/api-services/carrier/carrier.api.service'
+import { SnackbarSharedService } from '../../../../../shared/services/global/snackbar.shared.service'
 
 @Component({
     selector: 'app-add-carrier-dialog-inner',
@@ -21,15 +19,15 @@ export class AddCarrierDialogComponent implements OnInit {
     // * Input Props
     taxableOptions = [
         {value: false, viewValue: 'No'},
-        {value: true, viewValue: 'Yes'},
-    ];
+        {value: true, viewValue: 'Yes'}
+    ]
     tierOptions = [
         {value: 1, viewValue: 'Tier 1'},
         {value: 2, viewValue: 'Tier 2'},
         {value: 3, viewValue: 'Tier 3'},
         {value: 4, viewValue: 'Tier 4'},
-        {value: 5, viewValue: 'Tier 5'},
-    ];
+        {value: 5, viewValue: 'Tier 5'}
+    ]
 
     constructor(
         public _dialogRef: MatDialogRef <CarrierTableComponent>,
@@ -40,7 +38,7 @@ export class AddCarrierDialogComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.addCarrierFormGroup = this.generateAddCarrierForm();
+        this.addCarrierFormGroup = this.generateAddCarrierForm()
     }
 
     // ================================================================================
@@ -50,14 +48,14 @@ export class AddCarrierDialogComponent implements OnInit {
         this._carrierService.post_AddRow(body)
             .subscribe(
                 (resp: Response) => {
-                    console.log(resp);
+                    console.log(resp)
                     if ( resp.status === 200 ) {
-                        this._snackbarSharedService.snackbar_success('Carrier successfully inserted.', 2000);
+                        this._snackbarSharedService.snackbar_success('Carrier successfully inserted.', 2000)
                     }
                 },
                 error => {
-                    console.log(error);
-                        this._snackbarSharedService.snackbar_error('Carrier failed to insert.', 2000);
+                    console.log(error)
+                        this._snackbarSharedService.snackbar_error('Carrier failed to insert.', 2000)
                 }
             );
     }

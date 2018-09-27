@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter }      from '@angular/core'
 import { CarrierService }                               from '../../../../shared/api-services/carrier/carrier.api.service'
 import { RatecardManagerService }                       from '../../../../shared/api-services/ratecard/rate-card-manager.api.service' 
+import { RatecardManagerSharedService }                 from './../rate-card-manager-service/rate-card-manager.shared.service'
 
 import DateUtils                                        from '../../../../shared/utils/date/date.utils'
 
@@ -47,7 +48,8 @@ export class RateCardManagerToolbarComponent implements OnInit {
 
     constructor(
         private _carrierSerivce: CarrierService,
-        private _ratecardManagerService: RatecardManagerService
+        private _ratecardManagerService: RatecardManagerService,
+        private _ratecardManagerSharedService: RatecardManagerSharedService
     ) { }
 
     ngOnInit() {
@@ -128,6 +130,8 @@ export class RateCardManagerToolbarComponent implements OnInit {
         this.disabledSelectHandler('toCarrierValue', 'productTierDisabled', disabledArr, toNullValuesArr)
         // filters out the carrier selected in toCarrier for from Carrier select
         this.fromCarrierOptions = this.toCarrierOptions.filter( carrier => carrier.id !== this.selectedValues.toCarrierValue )
+        // rxjs change carrierId
+        this._ratecardManagerSharedService.changeCarrierId(this.selectedValues.toCarrierValue)
     }
 
     productTierChangeHandler = (): void => {
@@ -135,6 +139,9 @@ export class RateCardManagerToolbarComponent implements OnInit {
         const toNullValuesArr = this.selectValuesArr().slice(1)
         this.disabledSelectHandler('productTierValue', 'fromCarrierDisabled', disabledArr, toNullValuesArr)
         // trigger an event @ parent => load profile
+
+        // rxjs change tier
+        this._ratecardManagerSharedService.changeTier(this.selectedValues.productTierValue)
     }
 
     fromCarrierChangeHandler = (): void => {

@@ -20,7 +20,7 @@ export class TrunksService {
 
     get_allTrunks(): Observable<any> {
         return this._http
-            .get(this.url + 'trunks')
+            .get(this.url + '/trunks')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -29,7 +29,7 @@ export class TrunksService {
 
     get_specificTrunk(trunkId: number): Observable<any> {
         return this._http
-            .get(this.url + 'trunks/' + trunkId)
+            .get(this.url + '/trunks/' + trunkId)
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -38,7 +38,7 @@ export class TrunksService {
 
     post_addTrunk(body: any): Observable<any> {
         return this._http
-            .post(this.url + 'trunks', body)
+            .post(this.url + '/trunks', body)
             .pipe(
                 catchError(this.handleError)
             );
@@ -46,7 +46,7 @@ export class TrunksService {
 
     del_deleteTrunk(trunkId: number): Observable<any> {
         return this._http
-            .delete(this.url + 'trunks/' + trunkId)
+            .delete(this.url + '/trunks/' + trunkId)
             .pipe(
                 catchError(this.handleError)
             );
@@ -54,7 +54,7 @@ export class TrunksService {
 
     put_editTrunk(trunkId: number, body): Observable<any> {
         return this._http
-            .put(this.url + 'trunks/' + trunkId, body)
+            .put(this.url + '/trunks/' + trunkId, body)
             .pipe(
                 catchError(this.handleError)
             );

@@ -22,7 +22,7 @@ import { SidebarModule } from 'ng-sidebar'
 import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd'
 
 // ? Main/Layout components
-import { AppComponent } from './app.component';
+import { AppComponent } from './app.component'
 import { SideNavComponent } from './Containers/side-nav/side-nav.component'
 import { TopNavComponent } from './Containers/top-nav/top-nav.component'
 import { LoginComponent } from './Containers/login/login.component'
@@ -78,7 +78,7 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
     // ? Ratecard Manager
     import { RateCardManagerComponent } from './Components/ratecard/rate-card-manager/rate-card-manager.component'
     import { RatecardManagerService } from './shared/api-services/ratecard/rate-card-manager.api.service'
-    import { RatecardsManagerSharedService } from './Components/ratecard/rate-card-manager/rate-card-manager-service/rate-cards-manager.shared.service'
+    import { RatecardManagerSharedService } from './Components/ratecard/rate-card-manager/rate-card-manager-service/rate-card-manager.shared.service'
     import { RateCardManagerToolbarComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-toolbar/rate-card-manager-toolbar.component'
     import { RateCardManagerBotToolbarComponent } from './Components/ratecard/rate-card-manager/rate-card-manager-bot-toolbar/rate-card-manager-bot-toolbar.component'    
         // * Ratecard Cell/Header
@@ -155,6 +155,7 @@ import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewe
 
         // ? Ratecard
         RateCardsTableComponent, DeleteRateCardsDialogComponent, ImporterTableComponent,
+        
 
         // ? Ratecard Viewer
         RatecardViewCarrierSComponent, RatecardViewCarrierPComponent,
@@ -168,7 +169,7 @@ import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewe
         // ? Ratecard Manager
         RateCardManagerComponent, RatecardCellComponent, ObietelCellComponent, 
         RatecardHeaderComponent, RateCardManagerToolbarComponent, 
-        ObieTableModalComponent, ObieHeaderComponent,
+        ObieTableModalComponent, ObieHeaderComponent, 
 
         // ? Trunk
         TrunksTableComponent, AddTrunksComponent, DeleteTrunksComponent, DetachTrunksComponent,
@@ -225,7 +226,7 @@ import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewe
         MainTableCommonSharedService,
 
         // ? Ratecard Manager
-        RatecardManagerService, RatecardsManagerSharedService,
+        RatecardManagerService, RatecardManagerSharedService,
         
         // ? Trunk
         TrunksService, TrunksSharedService,

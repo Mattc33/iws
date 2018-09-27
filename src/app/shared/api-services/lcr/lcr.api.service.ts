@@ -22,7 +22,7 @@ export class LCRService {
 
     get_allOffers(): Observable<any> { // All call plans in LCR
         return this._http
-            .get(this.url + 'lcr/offers')
+            .get(this.url + '/lcr/offers')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -40,7 +40,7 @@ export class LCRService {
 
     get_allCarriers(): Observable<any> { // All carriers in LCR
         return this._http
-            .get(this.url + 'lcr/providers')
+            .get(this.url + '/lcr/providers')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -49,7 +49,7 @@ export class LCRService {
 
     get_allTrunks(): Observable<any> {
         return this._http
-            .get(this.url + 'lcr/trunks')
+            .get(this.url + '/lcr/trunks')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -58,7 +58,7 @@ export class LCRService {
 
     get_allRatecards(): Observable<any> {
         return this._http
-            .get(this.url + 'lcr/ratecards')
+            .get(this.url + '/lcr/ratecards')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
@@ -67,7 +67,7 @@ export class LCRService {
 
     get_ratesInRatecard(ratecard_id: number): Observable<any> {
         return this._http
-            .get(this.url + 'lcr/ratecards/' + ratecard_id + '/rates')
+            .get(this.url + '/lcr/ratecards/' + ratecard_id + '/rates')
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
