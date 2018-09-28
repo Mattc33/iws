@@ -74,8 +74,9 @@ export class RateCardsTableComponent implements OnInit {
     getAllRatecards(): void {
         this.rateCardsService.get_ratecard()
             .subscribe(
-                data => {
-                    this.rowData = this.nestedAgGridService.formatDataToNestedArr(data);
+                ratecardData => {
+                    console.log(ratecardData)
+                    this.rowData = this.nestedAgGridService.formatDataToNestedArr(ratecardData)
                 },
                 error => console.log(error)
             )
@@ -85,7 +86,7 @@ export class RateCardsTableComponent implements OnInit {
         this.rateCardsService.get_ratesInRatecard(ratecardId)
             .subscribe(
                 data => {
-                    this.gridApiRates.updateRowData({ add: data });
+                    this.gridApiRates.updateRowData({ add: data })
                 }
             )
     }
@@ -94,7 +95,7 @@ export class RateCardsTableComponent implements OnInit {
         this.rateCardsService.get_specificRatecard(ratecardId)
             .subscribe (
                 data => {
-                    this.gridApiTrunks.updateRowData({ add: data.trunks });
+                    this.gridApiTrunks.updateRowData({ add: data.trunks })
                 }
             )
     }
@@ -105,12 +106,12 @@ export class RateCardsTableComponent implements OnInit {
                 resp => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
-                        this._snackbar.snackbar_success('Edit Successful', 2000);
+                        this._snackbar.snackbar_success('Edit Successful', 2000)
                     }
                 },
                 error => {
                     console.log(error);
-                    this._snackbar.snackbar_error('Edit Failed', 2000);
+                    this._snackbar.snackbar_error('Edit Failed', 2000)
                 }
             )
     }
@@ -121,12 +122,12 @@ export class RateCardsTableComponent implements OnInit {
                 resp => {
                     console.log(resp);
                     if ( resp.status === 200 ) {
-                        this._snackbar.snackbar_success('Edit Successful', 2000);
+                        this._snackbar.snackbar_success('Edit Successful', 2000)
                     }
                 },
                 error => {
                     console.log(error);
-                    this._snackbar.snackbar_error('Edit Failed', 2000);
+                    this._snackbar.snackbar_error('Edit Failed', 2000)
                 }
             )
     }

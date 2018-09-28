@@ -83,7 +83,11 @@ export class RateCardManagerToolbarComponent implements OnInit {
                             eaCarrier.carrierId = carrierId
                             return eaCarrier
                         }).filter( eaCarrier => eaCarrier.filter === 'private' )
-                        resolve(remapped)
+                        if(remapped) {
+                            resolve(remapped)
+                        } else {
+                            reject(console.log('error with remap'))
+                        }
                     })
                     .then( (remapped: Array<any>) => {
                         return remapped.reduce( (acc, eaCarrier) => {
@@ -154,7 +158,7 @@ export class RateCardManagerToolbarComponent implements OnInit {
     }
 
     fromCarrierRatecardChangeHandler = (e): void => {
-        const ratecardInfo = this.fromRatecardObj[e]
+        const ratecardInfo: Array<{}> = this.fromRatecardObj[e]
         const disabledArr = this.disabledSelectArr().slice(3)
         const toNullValuesArr = this.selectValuesArr().slice(3)
         this.disabledSelectHandler('fromCarrierRatecardValue', 'addDataToTableDisabled', disabledArr, toNullValuesArr)

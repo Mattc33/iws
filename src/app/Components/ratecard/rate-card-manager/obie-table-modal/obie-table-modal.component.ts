@@ -123,7 +123,7 @@ export class ObieTableModalComponent {
                         return { 'border-right': '1px solid #E0E0E0' }
                     }
                 },
-                valueFormatter: params => params.value * 1.02
+                valueFormatter: params => (params.value * 1.02).toFixed(4)
             },
             {
                 headerName: 'CustomRate', field: 'customRate', width: 100,

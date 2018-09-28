@@ -3,7 +3,7 @@
     <!-- Choose Rate Card Step -->
     <mat-step [stepControl]="ratecardFormGroup" [completed]="false">
         <form [formGroup]="ratecardFormGroup">
-            <ng-template matStepLabel>Enter Rate Card Name</ng-template>
+            <ng-template matStepLabel>Info</ng-template>
                 <mat-form-field>
                     <mat-select placeholder="Choose Carrier" formControlName="carrierCtrl">
                         <mat-option *ngFor="let carrier of carrierList" [value]="carrier.id" >
@@ -31,7 +31,7 @@
     <!-- Choose Sell Rate Mark up Step -->
     <mat-step [stepControl]="percentFormGroup" [completed]="false">
         <form [formGroup]="percentFormGroup" class="rate-modifier-step">
-            <ng-template matStepLabel>Choose Upload Parameters</ng-template>
+            <ng-template matStepLabel>Upload Parameters</ng-template>
 
             <div class="rate-modifier-form-group">
                 <div class="toggle-checkbox">
@@ -69,7 +69,7 @@
     <!-- Upload Rates Step -->
     <mat-step [stepControl]="uploadRatesFormGroup" [completed]="false">
         <form [formGroup]="uploadRatesFormGroup">
-            <ng-template matStepLabel>Upload CSV</ng-template>
+            <ng-template matStepLabel>Upload</ng-template>
             <button class="uploadBtn" mat-button (click)="fileInput.click()">
                 <span>Select CSV File</span>
                 <input #fileInput type="file" (change)="onUploadCsv($event)" accept=".csv" formControlName="uploadRatesCtrl" style="display:none;" />
@@ -82,7 +82,9 @@
             </div>
             <div>
                 <button mat-button matStepperPrevious >Back</button>
-                <button mat-button matStepperNext [disabled]="uploadRateStepNextBtn" (click)="postAddRates()"> Next </button>
+                <button mat-button matStepperNext [disabled]="uploadRateStepNextBtn" (click)="postAddRates()">
+                    <i class="anticon anticon-upload"></i> Upload 
+                </button>
             </div>
         </form>
     </mat-step>
@@ -98,7 +100,7 @@
         [suppressNoRowsOverlay]="true" [enableCellChangeFlash]="true"
         [headerHeight]="40" [floatingFiltersHeight]="30"
 
-        (gridReady)="on_GridReady($event)"
+        (gridReady)="onGridReady($event)"
     >
     </ag-grid-angular>
     <div>

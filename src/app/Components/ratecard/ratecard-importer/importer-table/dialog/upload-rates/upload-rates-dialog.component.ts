@@ -94,26 +94,27 @@ export class UploadRatesDialogComponent implements OnInit {
 
     getTrunks(): void {
         this._trunksService.get_allTrunks()
-        .subscribe(
-            trunkList => this.rowData = trunkList,
-            error => console.log(error)
-        )
+            .subscribe(
+                trunkList => this.rowData = trunkList,
+                error => console.log(error)
+            )
     }
 
     postAddRates(): void {
         this._importerService.post_AddRateCard(this.postBody)
             .subscribe(
-                (resp: Response) => {
-                    console.log('POST RESP', resp)
-                    const responseRatesLen: number = resp[0].rates.length
-                    const responseRates: [{}] = resp[0].rates
-                    this._importerSharedService.changeNumberOfRatesInResponse(responseRatesLen)
-                    this._importerSharedService.changeRatesInResponse(responseRates)
-                    this._snackbarSharedService.snackbar_success('Ratecards successful imported.', 2000);
+                ratecardGroup => {
+                    let prefixCount: number = 0
+                    ratecardGroup.forEach( eaRatecard => {
+                        prefixCount += eaRatecard.rates.length
+                    })
+                    this._importerSharedService.changeNumberOfRatesInResponse(prefixCount)
+                    // this._importerSharedService.changeRatesInResponse(responseRates)
+                    this._snackbarSharedService.snackbar_success('Ratecards successful imported.', 2000)
                 },
                 error => {
-                    console.log(error);
-                    this._snackbarSharedService.snackbar_error('Ratecards failed to import.', 2000);
+                    console.log(error)
+                    this._snackbarSharedService.snackbar_error('Ratecards failed to import.', 2000)
                 }
             )
     }
@@ -121,9 +122,9 @@ export class UploadRatesDialogComponent implements OnInit {
     // ================================================================================
     // * AG Grid Init
     // ================================================================================
-    on_GridReady(params): void {
-        this.gridApi = params.api;
-        params.api.sizeColumnsToFit();
+    onGridReady(params): void {
+        this.gridApi = params.api
+        params.api.sizeColumnsToFit()
     }
 
     createColumnDefs(): Array<{}> {
@@ -151,9 +152,9 @@ export class UploadRatesDialogComponent implements OnInit {
     // * Forms Builder
     // ================================================================================
     uploadRatecardFormBuilder() {
-        this.buildRatecardFormGroup();
-        this.buildPercentFormGroup();
-        this.buildUploadRatesFormGroup();
+        this.buildRatecardFormGroup()
+        this.buildPercentFormGroup()
+        this.buildUploadRatesFormGroup()
     }
 
     buildRatecardFormGroup() {
@@ -179,34 +180,38 @@ export class UploadRatesDialogComponent implements OnInit {
     // ================================================================================
     // * Input data
     // ================================================================================
-    getMarkupTeleuAsPercent(): any {
+    getMarkupTeleuAsPercent() {
         const teleuPercentValue = ((this.percentFormGroup.get('teleUPercentCtrl').value * 100) - 100).toFixed(4)
-        return (this.percentFormGroup.get('teleUPercentCtrl').value > 0 ) ? teleuPercentValue : 0
+        return (this.percentFormGroup.get('teleUPercentCtrl').value > 0 ) 
+                ? teleuPercentValue 
+                : 0
     }
 
     getMarkupPrivateAsPercent(): any {
         const privatePercentValue = this.percentFormGroup.get('privatePercentCtrl').value
         const teleuPerentValue = this.percentFormGroup.get('teleUPercentCtrl').value
-        return ( teleuPerentValue > 0 ) ? ((privatePercentValue * 100) - 100).toFixed(4) : 0
+        return ( teleuPerentValue > 0 ) 
+                ? ((privatePercentValue * 100) - 100).toFixed(4) 
+                : 0
     }
 
     // ================================================================================
     // * UI Interaction
     // ================================================================================
     rowSelected(): void { // Toggle button boolean if rowSelected > 0
-        this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
+        this.gridSelectionStatus = this.gridApi.getSelectedNodes().length
     }
 
     toggleButtonStates(): boolean {
-        return this._toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus);
+        return this._toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus)
     }
 
     checkBoxValueTeleU(): boolean {
-        return !this.percentFormGroup.get('teleUCheckboxCtrl').value;
+        return !this.percentFormGroup.get('teleUCheckboxCtrl').value
     }
 
     checkBoxValuePrivate(): boolean {
-        return !this.percentFormGroup.get('privateCheckboxCtrl').value;
+        return !this.percentFormGroup.get('privateCheckboxCtrl').value
     }
 
     uploadValidator(): boolean { // pass into step 2's [disable] to control button disable
@@ -249,9 +254,9 @@ export class UploadRatesDialogComponent implements OnInit {
     // ================================================================================
     onUploadCsv(e): void { // listens on change event, if file uploaded passes csv-parser check, change flag for button
         if (e.target.files && e.target.files[0]) {
-            const csvFile = e.target.files[0];
-            this.fileName = csvFile.name;
-            this.papaParse(csvFile);
+            const csvFile = e.target.files[0]
+            this.fileName = csvFile.name
+            this.papaParse(csvFile)
         }
     }
 

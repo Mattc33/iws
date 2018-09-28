@@ -34,6 +34,7 @@
         <span>From:</span>
         <nz-select 
             style="width: 100%;"
+            nzShowSearch 
             nzAllowClear 
             nzPlaceHolder="From Carrier" 
             [(ngModel)]="selectedValues.fromCarrierValue" 
@@ -48,6 +49,7 @@
     <div class="fromCarrierRatecardContainer">
     <nz-select 
         style="width: 100%; padding-left: 44px;"
+        nzShowSearch 
         nzAllowClear 
         nzPlaceHolder="From Carrier Ratecard" 
         [nzDisabled]="selectDisabled.fromCarrierRatecardDisabled"

@@ -2,7 +2,6 @@
     <div class="table-container">
         <div class="top-toolbar">
             <app-expand-collaspe  (collaspeExpandEvent)='expandCollaspeHandler($event)'></app-expand-collaspe>
-            <i class="anticon anticon-question-circle-o"></i>
         </div>
         
         <ag-grid-angular class="ag-theme-balham" 
@@ -23,7 +22,7 @@
 
         <mat-toolbar-row>
             <button (click)="openDialogUpload()"> <i class="fas fa-upload"></i> Rate Card</button>
-            <span> (Rates from CSV/Total Rates processed)  <b>{{numberOfRatesInResponse}}/{{numberOfRatesInRatecard}}</b></span>
+            <span> DB: <b>{{numberOfRatesInResponse}}</b>/CSV: <b>{{numberOfRatesInRatecard}}</b></span>
             <mat-form-field class="search-bar">
                     <span matPrefix><i class="fas fa-search"></i> &nbsp;</span>
                     <input matInput placeholder="Search Table...">

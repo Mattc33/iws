@@ -4,15 +4,15 @@ export default class RatecardManagerGridHelper {
         return [
             {
                 headerName: '', width: 50, field: 'isEmpty',
-                valueGetter: (params) => Object.keys(params.data).length >= 5 ? 1 : 0,
+                valueGetter: params => Object.keys(params.data).length >= 5 ? 1 : 0,
                 filter: "agNumberColumnFilter",
                 hide: true
             },
             {
                 headerName: '#', width: 50,
-                valueGetter: (params) => {
+                valueGetter: params => {
                     if(Object.keys(params.data).length >= 5) {
-                        return params.node.rowIndex
+                        return params.node.rowIndex + 1
                     }
                 },
                 cellStyle: { 'border-right': '1px solid #E0E0E0', 'line-height': '70px', 'font-weight': 'bold', 'text-align': 'center'},

@@ -218,7 +218,6 @@ export class RateCardManagerComponent implements OnInit {
         this.getNumberOfChecked()
     }
 
-
     obieHeaderChangeMarkup(markupVal: number) {
         this.markUp = markupVal
         this.tableRowData.forEach( eaCountry => {
