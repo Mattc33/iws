@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core'
-import { MatDialog } from '@angular/material'
-import { GridApi } from 'ag-grid'
+import { Component, OnInit }                from '@angular/core'
+import { MatDialog }                        from '@angular/material'
+import { GridApi }                          from 'ag-grid'
 
-import { DeleteRatesComponent } from './dialog/delete-rates/delete-rates.component'
-import { DeleteRateCardsDialogComponent } from './dialog/delete-rate-cards/delete-rate-cards-dialog.component'
-import { DetachTrunksComponent } from './dialog/detach-trunks/detach-trunks.component'
+import { DeleteRatesComponent }             from './dialog/delete-rates/delete-rates.component'
+import { DeleteRateCardsDialogComponent }   from './dialog/delete-rate-cards/delete-rate-cards-dialog.component'
+import { DetachTrunksComponent }            from './dialog/detach-trunks/detach-trunks.component'
 
-import { NestedAgGridService } from '../../../shared/services/global/nestedAgGrid.shared.service'
-import { SnackbarSharedService } from '../../../shared/services/global/snackbar.shared.service'
-import { RateCardsService } from '../../../shared/api-services/ratecard/rate-cards.api.service'
-import { RateCardsSharedService } from '../../../shared/services/ratecard/rate-cards.shared.service'
+import { NestedAgGridService }              from '../../../shared/services/global/nestedAgGrid.shared.service'
+import { SnackbarSharedService }            from '../../../shared/services/global/snackbar.shared.service'
+import { RateCardsService }                 from '../../../shared/api-services/ratecard/rate-cards.api.service'
+import { RateCardsSharedService }           from '../../../shared/services/ratecard/rate-cards.shared.service'
 
 @Component({
     selector: 'app-rate-cards-table',
