@@ -7,7 +7,6 @@ import { RateCardsService } from '../../../shared/api-services/ratecard/rate-car
 import { MainTableSharedService } from '../../../shared/services/ratecard/main-table.shared.service';
 import { MainTableCommonSharedService } from '../../../shared/services/ratecard/main-table-common.shared.service';
 import { RateCardsSharedService } from '../../../shared/services/ratecard/rate-cards.shared.service';
-
 @Component({
     selector: 'app-ratecard-view-carrier',
     templateUrl: './ratecard-view-carrier-s.component.html',

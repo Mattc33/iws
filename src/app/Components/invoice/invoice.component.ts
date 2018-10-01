@@ -1,8 +1,8 @@
-import { Component } from '@angular/core'
-import { PapaParseService } from 'ngx-papaparse'
+import { Component }                from '@angular/core'
+import { PapaParseService }         from 'ngx-papaparse'
 
-import FilesUtils from '../../shared/utils/files/files.utils'
-import { InvoiceService } from './../../shared/api-services/invoice/invoice.api.service'
+import FilesUtils                   from '../../shared/utils/files/files.utils'
+import { InvoiceService }           from './../../shared/api-services/invoice/invoice.api.service'
 
 @Component({
   selector: 'app-invoice',
@@ -11,14 +11,14 @@ import { InvoiceService } from './../../shared/api-services/invoice/invoice.api.
 })
 export class InvoiceComponent {
 
-    prefixLookupArr;
-    groupedData;
-    endResultCsv;
+    prefixLookupTable: Array<{}> // build an interface for this table
+    groupedData
+    endResultCsv
 
-    sumTotalCalls;
-    sumTotalSeconds;
-    sumTotalMinutes;
-    sumTotalCost;
+    sumTotalCalls
+    sumTotalSeconds
+    sumTotalMinutes
+    sumTotalCost
 
     constructor(
         private _papa: PapaParseService,
@@ -32,7 +32,7 @@ export class InvoiceComponent {
     // ================================================================================
     get_prefixLookup(): void {
         this._invoiceService.get_prefixLookup()
-            .subscribe( data => {this.prefixLookupArr = data; console.log(data); } );
+            .subscribe( data => this.prefixLookupTable = data );
     }
 
     uploadBtnHandler(e): void {
@@ -98,7 +98,7 @@ export class InvoiceComponent {
             }
         }
         const json = temp.slice(0 , -1);
-        this.updateWithDestination(json, this.prefixLookupArr);
+        this.updateWithDestination(json, this.prefixLookupTable);
 
         this.sumTotalCalls = this.sumCol(json, 'total_calls');
         this.sumTotalSeconds = this.sumCol(json, 'total_seconds');

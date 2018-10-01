@@ -52,6 +52,12 @@ export class MainTableSharedService {
 
         carrierColumnDefs.push(
             {
+                headerName: '#', width: 70,
+                valueGetter: params => params.node.rowIndex + 1,
+                lockPosition: true, pinned: 'left',
+                cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightgray' },
+            },
+            {
                 headerName: 'Prefix', field: 'prefix', width: 100, colId: 'prefix',
                 cellStyle: { 'border-right': '1px solid #E0E0E0', 'background': 'lightgray' },
                 lockPosition: true, unSortIcon: true, pinned: 'left',
