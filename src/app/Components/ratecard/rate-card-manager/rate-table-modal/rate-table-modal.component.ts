@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { GridApi, ColumnApi } from 'ag-grid'
-import { MainTableCommonSharedService } from './../../../../shared/services/ratecard/main-table-common.shared.service'
+import { MainTableCommonSharedService } from './../../../../shared/common-services/ratecard/main-table-common.shared.service'
 import * as _moment from 'moment'
 @Component({
   selector: 'app-rate-table-modal',

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions} from '@angular/http';
-import { Observable } from 'rxjs';
-import { map, catchError} from 'rxjs/operators';
+import { Injectable }                                   from '@angular/core'
+import { Http, Headers, RequestOptions}                 from '@angular/http'
+import { Observable }                                   from 'rxjs'
+import { map, catchError}                               from 'rxjs/operators'
 
-import { ApiSettingsSharedService } from '../../services/global/api-settings.shared.service';
+import { ApiSettingsSharedService }                     from '../../common-services/api/api-settings.shared.service'
 
 @Injectable()
 export class TrunksService {
@@ -12,10 +12,9 @@ export class TrunksService {
     private options: RequestOptions;
 
     constructor(
-        private _http: Http,
-        private _apiSettings: ApiSettingsSharedService
+        private _http: Http
     ) {
-        this.url = this._apiSettings.getUrl();
+        this.url = ApiSettingsSharedService.getUrl()
     }
 
     get_allTrunks(): Observable<any> {
@@ -24,7 +23,7 @@ export class TrunksService {
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
-            );
+            )
     }
 
     get_specificTrunk(trunkId: number): Observable<any> {
@@ -33,7 +32,7 @@ export class TrunksService {
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
-            );
+            )
     }
 
     post_addTrunk(body: any): Observable<any> {
@@ -41,7 +40,7 @@ export class TrunksService {
             .post(this.url + '/trunks', body)
             .pipe(
                 catchError(this.handleError)
-            );
+            )
     }
 
     del_deleteTrunk(trunkId: number): Observable<any> {
@@ -49,7 +48,7 @@ export class TrunksService {
             .delete(this.url + '/trunks/' + trunkId)
             .pipe(
                 catchError(this.handleError)
-            );
+            )
     }
 
     put_editTrunk(trunkId: number, body): Observable<any> {
@@ -57,10 +56,10 @@ export class TrunksService {
             .put(this.url + '/trunks/' + trunkId, body)
             .pipe(
                 catchError(this.handleError)
-            );
+            )
     }
 
     handleError(error: any): any {
-        console.error(error);
+        console.error(error)
     }
 }

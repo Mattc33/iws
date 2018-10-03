@@ -1,23 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs';
-import { map, catchError} from 'rxjs/operators';
-import { ApiSettingsSharedService } from '../../services/global/api-settings.shared.service';
+import { Injectable }                           from '@angular/core'
+import { Http, Headers, RequestOptions }        from '@angular/http'
+import { Observable }                           from 'rxjs'
+import { map, catchError}                       from 'rxjs/operators'
+import { ApiSettingsSharedService }             from '../../common-services/api/api-settings.shared.service'
 
 @Injectable()
 export class CarrierService {
 
-    private url;
-    private headers: Headers;
-    private options: RequestOptions;
+    private url
+    private headers: Headers
+    private options: RequestOptions
 
     constructor(
-        private _http: Http,
-        private _apiSettings: ApiSettingsSharedService
+        private _http: Http
     ) {
-        this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
-        this.options = new RequestOptions({ headers: this.headers });
-        this.url = this._apiSettings.getUrl();
+        this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' })
+        this.options = new RequestOptions({ headers: this.headers })
+        this.url = ApiSettingsSharedService.getUrl()
     }
 
     get_carriers(): Observable<any> {
@@ -54,6 +53,6 @@ export class CarrierService {
     }
 
     handleError(error: any): any {
-        console.error(error);
+        console.error(error)
     }
 }

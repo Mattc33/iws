@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material'
 import { GridApi } from 'ag-grid'
 
 import { ImporterService } from '../../../../shared/api-services/ratecard/importer.api.service'
-import { ImporterSharedService } from '../../../../shared/services/ratecard/importer.shared.service'
+import { ImporterSharedService } from '../../../../shared/common-services/ratecard/importer.shared.service'
 import { RateCardsService } from '../../../../shared/api-services/ratecard/rate-cards.api.service'
-import { SnackbarSharedService } from '../../../../shared/services/global/snackbar.shared.service'
+import { SnackbarSharedService } from '../../../../shared/common-services/global/snackbar.shared.service'
 import { UploadRatesDialogComponent } from './dialog/upload-rates/upload-rates-dialog.component'
 import ImporterTableGridHelper from './importer-table.grid-helper'
 @Component({

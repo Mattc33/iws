@@ -1,12 +1,12 @@
-import { Component, OnInit, ElementRef, Inject } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit }                                    from '@angular/core'
+import { GridApi, ColumnApi }                                   from 'ag-grid'
+import { MatDialog }                                            from '@angular/material/dialog'
 
-import { IsoCodesSharedService } from '../../../shared/services/ratecard/iso-codes.shared.service';
-import { RateCardsService } from '../../../shared/api-services/ratecard/rate-cards.api.service';
-import { MainTableSharedService } from '../../../shared/services/ratecard/main-table.shared.service';
-import { MainTableCommonSharedService } from '../../../shared/services/ratecard/main-table-common.shared.service';
-import { RateCardsSharedService } from '../../../shared/services/ratecard/rate-cards.shared.service';
+import { IsoCodesSharedService }                                from '../../../shared/common-services/ratecard/iso-codes.shared.service'
+import { RateCardsService }                                     from '../../../shared/api-services/ratecard/rate-cards.api.service'
+import { MainTableSharedService }                               from '../../../shared/common-services/ratecard/main-table.shared.service'
+import { MainTableCommonSharedService }                         from '../../../shared/common-services/ratecard/main-table-common.shared.service'
+import { RateCardsSharedService }                               from '../../../shared/common-services/ratecard/rate-cards.shared.service'
 @Component({
     selector: 'app-ratecard-view-carrier',
     templateUrl: './ratecard-view-carrier-s.component.html',
@@ -14,29 +14,30 @@ import { RateCardsSharedService } from '../../../shared/services/ratecard/rate-c
 })
 export class RatecardViewCarrierSComponent implements OnInit {
 
-    public _elementRef: ElementRef;
+    // ! AG Grid
+    // ? Row Data and Column Defs
+    columnDefsMain
+    rowDataCountry 
+    columnDefsCountry
+    columnDefsCarrier
 
-    // row data and column defs
-    rowDataMain; columnDefsMain;
-    rowDataCountry; columnDefsCountry;
-    columnDefsCarrier;
+    // ? gridApi
+    gridApiMain: GridApi; 
+    columnApiMain: ColumnApi;
+    gridApiCountry: GridApi;
+    gridApiCarrier: GridApi;
 
-    // gridApi
-    private gridApiMain: GridApi; public columnApiMain: ColumnApi;
-    private gridApiCountry: GridApi;
-    private gridApiCarrier: GridApi;
-
-    // gridUi
+    // ? gridUi
     rowSelectionM = 'multiple';
     rowSelectionS = 'single';
 
-    booleanCountryCarrierSidebar = true;
+    // ! Sidebar UI
+    booleanCountryCarrierSidebar: boolean = true
 
     constructor(
         private _isoCodes: IsoCodesSharedService,
         private _rateCardsService: RateCardsService,
         private _mainTable: MainTableSharedService,
-        @Inject(ElementRef) _elementRef: ElementRef,
         public _dialog: MatDialog,
         private _mainTableCommon: MainTableCommonSharedService,
         private _rateCardsShared: RateCardsSharedService
@@ -50,48 +51,46 @@ export class RatecardViewCarrierSComponent implements OnInit {
     }
 
     // ================================================================================
-    // Carrier-View API Services
+    // * Carrier-View API Services
     // ================================================================================
     get_specificCarrierRatesByCountry(isoCode: string) {
         this._rateCardsService.get_ratesByCountry(isoCode)
-            .subscribe(
-                data => { this.processData(data); console.log(data); }
-            );
+            .subscribe( data => this.processData(data) )
     }
 
     get_everyCountryRates() {
-        const countryArr = [];
+        const countryArr = []
         for ( let i = 0; i <= 240; i++ ) {
             this._rateCardsService.get_ratesByCountry(this.rowDataCountry[i].code)
                 .subscribe(
                     rowdata => {
-                        const filteredRowData = this._mainTableCommon.preFilter(rowdata, 'standard');
+                        const filteredRowData = this._mainTableCommon.preFilter(rowdata, 'standard')
 
                         // * combine each result into a new array
                         for ( let x = 0; x < filteredRowData.length; x++ ) {
-                            countryArr.push(filteredRowData[x]);
+                            countryArr.push(filteredRowData[x])
                         }
 
                         if (i >= 239 ) {
                             const hash = Object.create(null);
                             const result = countryArr.filter( (obj) => {
                                 if (!hash[obj.carrier_id]) {
-                                    hash[obj.carrier_id] = obj.rates;
-                                    return true;
+                                    hash[obj.carrier_id] = obj.rates
+                                    return true
                                 }
-                                Array.prototype.push.apply(hash[obj.carrier_id], obj.rates);
+                                Array.prototype.push.apply(hash[obj.carrier_id], obj.rates)
                             });
 
-                            const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(result);
-                            const finalRowData = this._mainTable.createRowData(result);
+                            const carrierGroupHeadersArr = this._mainTable.createColumnGroupHeaders(result)
+                            const finalRowData = this._mainTable.createRowData(result)
 
-                            this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, result);
+                            this.columnDefsMain = this._mainTable.createCarrierColumnDefs(carrierGroupHeadersArr, result)
 
-                            this.gridApiMain.setRowData(finalRowData);
-                            this.setCarrierRowData(carrierGroupHeadersArr);
+                            this.gridApiMain.setRowData(finalRowData)
+                            this.setCarrierRowData(carrierGroupHeadersArr)
                         }
                     }
-                );
+                )
         }
     }
 

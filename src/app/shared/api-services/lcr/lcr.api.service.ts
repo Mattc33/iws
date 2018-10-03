@@ -1,23 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs';
-import { map, catchError} from 'rxjs/operators';
+import { Injectable }                           from '@angular/core'
+import { Http, Headers, RequestOptions }        from '@angular/http'
+import { Observable }                           from 'rxjs'
+import { map, catchError}                       from 'rxjs/operators'
 
-import { ApiSettingsSharedService } from '../../services/global/api-settings.shared.service';
+import { ApiSettingsSharedService }             from '../../common-services/api/api-settings.shared.service'
 
 @Injectable()
 export class LCRService {
-    private url: string;
-    private headers: Headers;
-    private options: RequestOptions;
+    private url: string
+    private headers: Headers
+    private options: RequestOptions
 
     constructor(
-        private _http: Http,
-        private _apiSettings: ApiSettingsSharedService
+        private _http: Http
     ) {
-        this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
-        this.options = new RequestOptions({ headers: this.headers });
-        this.url = this._apiSettings.getUrl();
+        this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' })
+        this.options = new RequestOptions({ headers: this.headers })
+        this.url = ApiSettingsSharedService.getUrl()
     }
 
     get_allOffers(): Observable<any> { // All call plans in LCR
@@ -26,7 +25,7 @@ export class LCRService {
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
-            );
+            )
     }
 
     get_specificOffer(carrier_id: number): Observable<any> {
@@ -35,7 +34,7 @@ export class LCRService {
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
-            );
+            )
     }
 
     get_allCarriers(): Observable<any> { // All carriers in LCR
@@ -44,7 +43,7 @@ export class LCRService {
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
-            );
+            )
     }
 
     get_allTrunks(): Observable<any> {
@@ -53,7 +52,7 @@ export class LCRService {
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
-            );
+            )
     }
 
     get_allRatecards(): Observable<any> {
@@ -71,11 +70,11 @@ export class LCRService {
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
-            );
+            )
     }
 
     handleError(error: any): any {
-        console.error(error);
+        console.error(error)
     }
 }
 

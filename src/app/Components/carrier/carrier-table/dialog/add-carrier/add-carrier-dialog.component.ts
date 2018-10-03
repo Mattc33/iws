@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 
 import { CarrierTableComponent } from '../../carrier-table.component'
 import { CarrierService } from '../../../../../shared/api-services/carrier/carrier.api.service'
-import { SnackbarSharedService } from '../../../../../shared/services/global/snackbar.shared.service'
+import { SnackbarSharedService } from '../../../../../shared/common-services/global/snackbar.shared.service'
 
 @Component({
     selector: 'app-add-carrier-dialog-inner',

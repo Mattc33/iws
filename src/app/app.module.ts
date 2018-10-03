@@ -28,13 +28,13 @@ import { TopNavComponent } from './Containers/top-nav/top-nav.component'
 import { LoginComponent } from './Containers/login/login.component'
 
 // ? Global Services
-import { NestedAgGridService } from './shared/services/global/nestedAgGrid.shared.service'
-import { ToggleButtonStateService } from './shared/services/global/buttonStates.shared.service'
-import { ApiSettingsSharedService } from './shared/services/global/api-settings.shared.service'
-import { CodesSharedService } from './shared/services/global/codes.shared.service'
+import { NestedAgGridService } from './shared/common-services/global/nestedAgGrid.shared.service'
+import { ToggleButtonStateService } from './shared/common-services/global/buttonStates.shared.service'
+import { ApiSettingsSharedService } from './shared/common-services/api/api-settings.shared.service'
+import { CodesSharedService } from './shared/common-services/global/codes.shared.service'
 import { LoginService } from './shared/api-services/login/login.api.service'
 
-import { SnackbarSharedService } from './shared/services/global/snackbar.shared.service'
+import { SnackbarSharedService } from './shared/common-services/global/snackbar.shared.service'
 import { SuccessSnackbarComponent } from './shared/components/snackbars/success/success.snackbar.component'
 import { ErrorSnackbarComponent } from './shared/components/snackbars/error/error.snackbar.component'
 
@@ -49,21 +49,21 @@ import { CarrierTableComponent } from './Components/carrier/carrier-table/carrie
     import { AddCarrierDialogComponent } from './Components/carrier/carrier-table/dialog/add-carrier/add-carrier-dialog.component'
     import { DelCarrierDialogComponent } from './Components/carrier/carrier-table/dialog/del-carrier/del-carrier-dialog.component'
 import { CarrierService } from './shared/api-services/carrier/carrier.api.service'
-import { CarrierSharedService } from './shared/services/carrier/carrier.shared.service'
+import { CarrierSharedService } from './shared/common-services/carrier/carrier.shared.service'
 
 // ? Ratecard
 import { RateCardsTableComponent } from './Components/ratecard/rate-cards-table/rate-cards-table.component'
 import { DeleteRateCardsDialogComponent } from './Components/ratecard/rate-cards-table/dialog/delete-rate-cards/delete-rate-cards-dialog.component'
 import { RateCardsAddTrunksComponent } from './Components/ratecard/rate-cards-add-trunks/rate-cards-add-trunks.component'
 import { RateCardsConvertCsvComponent } from './Components/ratecard/rate-cards-convert-csv/rate-cards-convert-csv.component'
-import { IsoCodesSharedService } from './shared/services/ratecard/iso-codes.shared.service'
+import { IsoCodesSharedService } from './shared/common-services/ratecard/iso-codes.shared.service'
 import { RateCardsService } from './shared/api-services/ratecard/rate-cards.api.service'
-import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.shared.service'
+import { RateCardsSharedService } from './shared/common-services/ratecard/rate-cards.shared.service'
 
     // ? Ratecard Importer
     import { ImporterTableComponent } from './Components/ratecard/ratecard-importer/importer-table/importer-table.component'
     import { ImporterService } from './shared/api-services/ratecard/importer.api.service'
-    import { ImporterSharedService } from './shared/services/ratecard/importer.shared.service'
+    import { ImporterSharedService } from './shared/common-services/ratecard/importer.shared.service'
     import { UploadRatesDialogComponent } from './Components/ratecard/ratecard-importer/importer-table/dialog/upload-rates/upload-rates-dialog.component'
     import { RateCardPreviewerToolbarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-toolbar/rate-card-previewer-toolbar.component'
     import { RateCardPreviewerSidebarComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer-sidebar/rate-card-previewer-sidebar.component'
@@ -72,8 +72,8 @@ import { RateCardsSharedService } from './shared/services/ratecard/rate-cards.sh
     import { RatecardViewCarrierSComponent } from './Components/ratecard/ratecard-view-carrier-s/ratecard-view-carrier-s.component'
     import { RatecardViewCarrierPComponent } from './Components/ratecard/ratecard-view-carrier-p/ratecard-view-carrier-p.component'
 
-    import { MainTableSharedService } from './shared/services/ratecard/main-table.shared.service'
-    import { MainTableCommonSharedService } from './shared/services/ratecard/main-table-common.shared.service'
+    import { MainTableSharedService } from './shared/common-services/ratecard/main-table.shared.service'
+    import { MainTableCommonSharedService } from './shared/common-services/ratecard/main-table-common.shared.service'
 
     // ? Ratecard Manager
     import { RateCardManagerComponent } from './Components/ratecard/rate-card-manager/rate-card-manager.component'
@@ -100,7 +100,7 @@ import { DeleteRatesComponent } from './Components/ratecard/rate-cards-table/dia
 import { DetachTrunksComponent } from './Components/ratecard/rate-cards-table/dialog/detach-trunks/detach-trunks.component'
 
 import { TrunksService } from './shared/api-services/trunk/trunks.api.service'
-import { TrunksSharedService } from './shared/services/trunk/trunks.shared.service'
+import { TrunksSharedService } from './shared/common-services/trunk/trunks.shared.service'
 
 // ? Call Plan
 import { CallPlanTableComponent } from './Components/callplan/call-plan-table/call-plan-table.component'
@@ -115,8 +115,8 @@ import { CallPlanAddRatecardComponent } from './Components/callplan/call-plan-ad
 import { CallPlanAddCodeComponent } from './Components/callplan/call-plan-add-code/call-plan-add-code.component'
 
 import { CallPlanService } from './shared/api-services/callplan/call-plan.api.service'
-import { CallPlanSharedService } from './shared/services/callplan/call-plan.shared.service'
-import { CodesFormSharedService } from './shared/services/callplan/attach-callplan-codes.shared.service'
+import { CallPlanSharedService } from './shared/common-services/callplan/call-plan.shared.service'
+import { CodesFormSharedService } from './shared/common-services/callplan/attach-callplan-codes.shared.service'
 
 // ? LCR
 import { LcrCallPlanTableComponent } from './Components/lcr/lcr-callplan-table/lcr-callplan-table.component'
@@ -125,7 +125,7 @@ import { LcrRatecardTableComponent } from './Components/lcr/lcr-ratecard-table/l
 import { LcrTrunkTableComponent } from './Components/lcr/lcr-trunk-table/lcr-trunk-table.component'
 
 import { LCRService } from './shared/api-services/lcr/lcr.api.service'
-import { LCRSharedService } from './shared/services/lcr/lcr.shared.service'
+import { LCRSharedService } from './shared/common-services/lcr/lcr.shared.service'
 
 // ? Accounts
 import { InvoiceComponent } from './Components/invoice/invoice.component'
@@ -137,7 +137,7 @@ import { AppRoutes } from './Containers/routes/routes'
 import { RateCardsStatusComponent } from './Components/ratecard/rate-cards-status/rate-cards-status.component'
 import { AntdUploadAreaComponent } from './shared/components/uploadarea/antd-upload-area/antd-upload-area.component'
 import { RateCardPreviewerComponent } from './Components/ratecard/rate-card-previewer/rate-card-previewer.component'
-import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component';
+import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewer/effdate-header/effdate-header.component'
 
 @NgModule({
     declarations: [
@@ -187,7 +187,7 @@ import { EffdateHeaderComponent } from './Components/ratecard/rate-card-previewe
 
         // ? Global
         SuccessSnackbarComponent, ErrorSnackbarComponent, ExpandCollaspeComponent, RateTableModalComponent, 
-        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardManagerBotToolbarComponent, 
+        RateCardsStatusComponent, AntdUploadAreaComponent, RateCardManagerBotToolbarComponent,
     ],
     imports: [
         // ? Core Angular Modules

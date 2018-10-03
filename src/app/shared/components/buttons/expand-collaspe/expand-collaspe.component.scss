@@ -6,7 +6,11 @@
 
     .toggle {
         font-size: 1.1rem;
-        cursor: pointer;
+
+        &:hover {
+            cursor: pointer;
+            opacity: .7;
+        }
     }
 
 }

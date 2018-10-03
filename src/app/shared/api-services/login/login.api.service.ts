@@ -1,20 +1,20 @@
-import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { Injectable }                           from '@angular/core'
+import { Http, Headers, RequestOptions }        from '@angular/http'
+import { Observable }                           from 'rxjs'
+import { map, catchError }                      from 'rxjs/operators'
 
-import { ApiSettingsSharedService } from '../../services/global/api-settings.shared.service';
+import { ApiSettingsSharedService }             from '../../common-services/api/api-settings.shared.service'
 
 
 @Injectable()
 export class LoginService {
 
-    url: string;
-    headers: Headers;
-    options: RequestOptions;
+    url: string
+    headers: Headers
+    options: RequestOptions
 
-    X_Application_ID = 'BF3E86D03C63053271B1E6C8582464D4';
-    X_Device_ID = 'web';
+    X_Application_ID = 'BF3E86D03C63053271B1E6C8582464D4'
+    X_Device_ID = 'web'
 
     constructor(
         private _apiSettings: ApiSettingsSharedService,
@@ -27,8 +27,8 @@ export class LoginService {
                 'x-device-id': this.X_Device_ID
             }
         );
-        this.options = new RequestOptions({ headers: this.headers });
-        this.url = this._apiSettings.getLoginUrl();
+        this.options = new RequestOptions({ headers: this.headers })
+        this.url = ApiSettingsSharedService.getLoginUrl()
     }
 
     get_authentication(body: object): Observable<any> {
@@ -37,19 +37,16 @@ export class LoginService {
             .pipe(
                 map(res => res.json()),
                 catchError(this.handleError)
-            );
+            )
     }
 
     get_subscribe(accountId: number, token: string): Observable<any> {
-        const headers = {
-
-        };
         return this._http
-            .get(this.url + '/subscriber/' + accountId);
+            .get(this.url + '/subscriber/' + accountId)
     }
 
     handleError(error: any): any {
-        console.error(error);
+        console.error(error)
     }
 
 }

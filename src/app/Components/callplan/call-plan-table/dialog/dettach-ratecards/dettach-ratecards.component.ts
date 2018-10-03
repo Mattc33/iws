@@ -5,8 +5,8 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { CallPlanTableComponent } from '../../call-plan-table.component';
 
 import { CallPlanService } from '../../../../../shared/api-services/callplan/call-plan.api.service';
-import { CallPlanSharedService } from '../../../../../shared/services/callplan/call-plan.shared.service';
-import { SnackbarSharedService } from '../../../../../shared/services/global/snackbar.shared.service';
+import { CallPlanSharedService } from '../../../../../shared/common-services/callplan/call-plan.shared.service';
+import { SnackbarSharedService } from '../../../../../shared/common-services/global/snackbar.shared.service';
 
 @Component({
   selector: 'app-dettach-ratecards',

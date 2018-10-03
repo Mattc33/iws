@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { GridApi } from 'ag-grid';
 
 import { LCRService } from '../../../shared/api-services/lcr/lcr.api.service';
-import { LCRSharedService } from '../../../shared/services/lcr/lcr.shared.service';
+import { LCRSharedService } from '../../../shared/common-services/lcr/lcr.shared.service';
 
 @Component({
   selector: 'app-lcr-trunk-table',

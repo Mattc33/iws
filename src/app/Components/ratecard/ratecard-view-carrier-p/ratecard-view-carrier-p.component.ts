@@ -2,11 +2,11 @@ import { Component, OnInit, ElementRef, Inject, Renderer, ViewChild } from '@ang
 import { GridApi, ColumnApi, ColumnGroup } from 'ag-grid';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { IsoCodesSharedService } from '../../../shared/services/ratecard/iso-codes.shared.service';
+import { IsoCodesSharedService } from '../../../shared/common-services/ratecard/iso-codes.shared.service';
 import { RateCardsService } from '../../../shared/api-services/ratecard/rate-cards.api.service';
-import { MainTableSharedService } from '../../../shared/services/ratecard/main-table.shared.service';
-import { MainTableCommonSharedService } from '../../../shared/services/ratecard/main-table-common.shared.service';
-import { RateCardsSharedService } from '../../../shared/services/ratecard/rate-cards.shared.service';
+import { MainTableSharedService } from '../../../shared/common-services/ratecard/main-table.shared.service';
+import { MainTableCommonSharedService } from '../../../shared/common-services/ratecard/main-table-common.shared.service';
+import { RateCardsSharedService } from '../../../shared/common-services/ratecard/rate-cards.shared.service';
 
 @Component({
     selector: 'app-ratecard-view-carrier-p',

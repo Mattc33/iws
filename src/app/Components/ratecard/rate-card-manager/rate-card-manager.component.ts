@@ -306,7 +306,11 @@ export class RateCardManagerComponent implements OnInit {
         formattedRatecardList.forEach(eaRatecard => { // for each ratecard call api and insert rate data
             this.getRatecardRates(eaRatecard.carrierId, eaRatecard.ratecardId) // GET, feeding in ea carrierId, ratecardId
                 .subscribe( eaCountry => { 
+                    console.log(eaCountry)
+                    const key = Object.keys(eaCountry)[0].toLowerCase()
+                    console.log(key)
                     const getEaCountryAsArr = eaCountry[Object.keys(eaCountry)[0]]
+                    console.log(getEaCountryAsArr)
                     const colGroup = eaRatecard.colId
                     eaRatecard[`${colGroup}`].rates = getEaCountryAsArr
                     eaRatecard[`${colGroup}`].minRate = RatecardUtils.getMinRate(getEaCountryAsArr)
@@ -324,6 +328,8 @@ export class RateCardManagerComponent implements OnInit {
             }
             return acc
         }, {})
+
+        console.log(lookup)
 
         const insert = this.tableRowData.map( eaCountry => { // if countries field match merge objects else return
             const match = lookup[eaCountry.countries]

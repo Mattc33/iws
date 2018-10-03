@@ -4,7 +4,7 @@ main {
     section {
         height: calc(100vh - 200px);
 
-        /deep/ ag-grid-angular{
+        ag-grid-angular /deep/{
             height: 100%;
 
             .ag-cell-focus, .ag-cell-no-focus {

@@ -6,11 +6,11 @@ import { DeleteRatesComponent }             from './dialog/delete-rates/delete-r
 import { DeleteRateCardsDialogComponent }   from './dialog/delete-rate-cards/delete-rate-cards-dialog.component'
 import { DetachTrunksComponent }            from './dialog/detach-trunks/detach-trunks.component'
 
-import { NestedAgGridService }              from '../../../shared/services/global/nestedAgGrid.shared.service'
-import { SnackbarSharedService }            from '../../../shared/services/global/snackbar.shared.service'
+import { NestedAgGridService }              from '../../../shared/common-services/global/nestedAgGrid.shared.service'
+import { SnackbarSharedService }            from '../../../shared/common-services/global/snackbar.shared.service'
 import { RateCardsService }                 from '../../../shared/api-services/ratecard/rate-cards.api.service'
-import { RateCardsSharedService }           from '../../../shared/services/ratecard/rate-cards.shared.service'
-
+import { RateCardsSharedService }           from '../../../shared/common-services/ratecard/rate-cards.shared.service'
+import { RatecardsTableGridHelper }         from './rate-cards-table.grid-helper'
 @Component({
     selector: 'app-rate-cards-table',
     templateUrl: './rate-cards-table.component.html',
@@ -31,24 +31,25 @@ export class RateCardsTableComponent implements OnInit {
     gridApiRates: GridApi
     gridApiTrunks: GridApi
 
-    // Props for AG Grid
-    rowSelectionTypeM = 'multiple'
-    rowSelectionTypeS = 'single'
-    rowSelectionAll
-    rowSelectionRates
-    rowSelectionTrunks
-    isRowSelectable
+    // * Props for AG Grid
+    rowSelectionTypeM: string = 'multiple'
+    rowSelectionTypeS: string = 'single'
+    rowSelectionRates: Array<any>
+    rowSelectionTrunks: Array<any>
 
-    // Props for button toggle
-    buttonToggleBoolean = true
+    // * Props for button toggle
+    buttonToggleBoolean: boolean = true
     gridSelectionStatus: number
-    buttonToggleBoolean_trunks = true
+    buttonToggleBoolean_trunks: boolean = true
     gridSelectionStatus_trunks: number
+
+    //! Sidebar
+    booleanViewRatesTrunks: boolean = false
 
     // ? Properties for internal service
     rowRatecardObj // ? Obj containing all selected Rows
     rowRatecardId // ? Selected Row's ratecard Id
-    quickSearchValue = ''
+    quickSearchValue: string = ''
     rowIdAll
 
     constructor(
@@ -58,9 +59,9 @@ export class RateCardsTableComponent implements OnInit {
         private dialog: MatDialog,
         private _snackbar: SnackbarSharedService
     ) {
-        this.columnDefs = this.createColumnDefs()
-        this.columnDefsRates = this.createColumnDefsRates()
-        this.columnDefsTrunks = this.createColumnsDefsTrunks()
+        this.columnDefs = RatecardsTableGridHelper.createRatecardColumnDefs()
+        this.columnDefsRates = RatecardsTableGridHelper.createRatesColumnDefs()
+        this.columnDefsTrunks = RatecardsTableGridHelper.createTrunksColumnDefs()
     }
 
     ngOnInit() {
@@ -69,34 +70,40 @@ export class RateCardsTableComponent implements OnInit {
     }
 
     // ================================================================================
+    // * Test
+    // ================================================================================
+    onClickToggleSdiebar(): void {
+        this.booleanViewRatesTrunks = !this.booleanViewRatesTrunks
+    }
+
+    // =========== q=====================================================================
     // * Ratecard API Service
     // ================================================================================
     getAllRatecards(): void {
         this.rateCardsService.get_ratecard()
-            .subscribe(
-                ratecardData => {
+            .subscribe (
+                ratecardData => { 
                     console.log(ratecardData)
-                    this.rowData = this.nestedAgGridService.formatDataToNestedArr(ratecardData)
+                    this.rowData = this.nestedAgGridService.formatDataToNestedArr(ratecardData) 
                 },
                 error => console.log(error)
             )
     }
 
-    get_specificRatecard(ratecardId: number): void {
-        this.rateCardsService.get_ratesInRatecard(ratecardId)
-            .subscribe(
-                data => {
-                    this.gridApiRates.updateRowData({ add: data })
+    getSpecificRatecard(ratecardId: number): void {
+        this.rateCardsService.getRatesInRatecard(ratecardId)
+            .subscribe (
+                ratesData => { 
+                    console.log(ratesData)
+                    this.gridApiRates.updateRowData({ add: ratesData }) 
                 }
             )
     }
 
     get_specificTrunk(ratecardId: number): void {
-        this.rateCardsService.get_specificRatecard(ratecardId)
+        this.rateCardsService.getSpecificRatecard(ratecardId)
             .subscribe (
-                data => {
-                    this.gridApiTrunks.updateRowData({ add: data.trunks })
-                }
+                data => { this.gridApiTrunks.updateRowData({ add: data.trunks }) }
             )
     }
 
@@ -150,177 +157,83 @@ export class RateCardsTableComponent implements OnInit {
         params.api.sizeColumnsToFit();
     }
 
-    private createColumnDefs() {
-        return [
-            {
-                headerName: 'Ratecard Group', field: 'ratecard_bundle',
-                cellRenderer: 'agGroupCellRenderer', checkboxSelection: true,
-                width: 300, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-                sort: 'asc'
-            },
-            {
-                headerName: 'Country', field: 'country', width: 180,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Date Added', editable: true, field: 'dateAdded', width: 100,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Enabled?', field: 'active', filter: 'agNumberColumnFilter', width: 60, editable: true,
-                valueFormatter: function(params) {
-                    return (params.value === 1 ) ? true : false
-                },
-                cellEditor: 'select', cellEditorParams: {values: [true, false]},
-                hide: true
-            }
-        ];
+    // ================================================================================
+    // * Rate Page UI Interactions
+    // ================================================================================
+    gridSizeChanged(params): void {
+        params.api.sizeColumnsToFit()
     }
 
-    private createColumnDefsRates() {
-        return [
-            {
-                headerName: 'Prefix', field: 'prefix',
-                checkboxSelection: true, headerCheckboxSelection: true,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Destination', field: 'destination', width: 300,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Buy Rate', field: 'buy_rate', editable: true,
-                filter: 'agNumberColumnFilter', width: 150,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Sell Rate', field: 'sell_rate', editable: true,
-                filter: 'agNumberColumnFilter', width: 150,
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Difference',
-                valueGetter: function(params) {
-                    const diff = (params.data.sell_rate - params.data.buy_rate)
-                    const percent = ((diff) / params.data.buy_rate) * 100
-                    const diffFixed = diff.toFixed(4)
-                    const percentFixed = percent.toFixed(2)
-                    return `${diffFixed}(${percentFixed}%)`
-                }, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Enabled?', field: 'active', width: 100,
-                valueFormatter: function(params) {
-                    return (params.value === 1) ? true : false
-                }
-            }
-        ];
+    onQuickFilterChanged() { // external global search
+        this.gridApi.setQuickFilter(this.quickSearchValue)
     }
 
-    private createColumnsDefsTrunks() {
-        return [
-            {
-                headerName: 'Trunk Id', field: 'cx_trunk_id',
-                checkboxSelection: true, cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Carrier Name', field: 'carrier_name',
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Trunk IP', field: 'trunk_ip',
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Trunk Port', field: 'trunk_port',
-                cellStyle: { 'border-right': '1px solid #E0E0E0' },
-            },
-            {
-                headerName: 'Meta Data', field: 'metadata',
-            }
-        ]
+    activeFilter(): void { // Trigger this to filter all disabled rows
+        const activeFilterComponent = this.gridApi.getFilterInstance('active')
+        activeFilterComponent.setModel({
+            type: 'greaterThan',
+            filter: 0
+        })
+        this.gridApi.onFilterChanged()
     }
 
-    /*
-        ~~~~~~~~~~ Grid UI Interactions ~~~~~~~~~~
-    */
-        gridSizeChanged(params): void {
-            params.api.sizeColumnsToFit()
-        }
-
-        onQuickFilterChanged() { // external global search
-            this.gridApi.setQuickFilter(this.quickSearchValue)
-        }
-
-        activeFilter(): void { // Trigger this to filter all disabled rows
-            const activeFilterComponent = this.gridApi.getFilterInstance('active')
-            activeFilterComponent.setModel({
-                type: 'greaterThan',
-                filter: 0
-            })
-            this.gridApi.onFilterChanged()
-        }
-
-        expandCollaspeHandler(e: boolean) {
-            console.log(e);
-            this.gridApi.forEachNode((node) => {
-                if ( node.group) {
-                    node.setExpanded(e)
-                }
-            })
-        }
-
-        /*
-            ~~~~~ Selection ~~~~~
-        */
-        aggrid_selectionChanged(): void {
-            this.gridApiRates.setRowData([])
-            this.gridApiTrunks.setRowData([])
-            this.rowRatecardObj = this.gridApi.getSelectedRows()
-            this.rowRatecardId = this.rowRatecardObj[0].id
-
-            if ( this.rowRatecardObj.length === 1 ) {
-                this.get_specificRatecard(this.rowRatecardId)
-                this.get_specificTrunk(this.rowRatecardId)
+    expandCollaspeHandler(e: boolean): void {
+        this.gridApi.forEachNode((node) => {
+            if ( node.group) {
+                node.setExpanded(e)
             }
-        }
+        })
+    }
 
-        aggrid_rates_selectionChanged(): void {
-            this.rowSelectionRates = this.gridApiRates.getSelectedRows()
-        }
+    onClickToggleSidebar(e: any) {
+        console.log(e)
+    }
 
-        aggrid_trunks_selectionChanged(): void {
-            this.rowSelectionTrunks = this.gridApiTrunks.getSelectedRows()
-        }
+    aggrid_selectionChanged(): void {
+        this.gridApiRates.setRowData([])
+        this.gridApiTrunks.setRowData([])
+        this.rowRatecardObj = this.gridApi.getSelectedRows()
+        this.rowRatecardId = this.rowRatecardObj[0].id
 
-        /*
-            ~~~~~~~~~~ Button Toggle ~~~~~~~~~~
-        */
-        rowSelected() {
-            this.gridSelectionStatus = this.gridApi.getSelectedNodes().length
+        if ( this.rowRatecardObj.length === 1 ) {
+            this.getSpecificRatecard(this.rowRatecardId)
+            this.get_specificTrunk(this.rowRatecardId)
         }
+    }
 
-        toggleButtonStates() {
-            if ( this.gridSelectionStatus > 0 ) {
-                this.buttonToggleBoolean = false;
-            } else {
-                this.buttonToggleBoolean = true;
-            }
-            return this.buttonToggleBoolean;
-        }
+    aggrid_rates_selectionChanged(): void {
+        this.rowSelectionRates = this.gridApiRates.getSelectedRows()
+    }
 
-        rowSelected_trunks(params) {
-            this.gridSelectionStatus_trunks = this.gridApiTrunks.getSelectedNodes().length;
-        }
+    aggrid_trunks_selectionChanged(): void {
+        this.rowSelectionTrunks = this.gridApiTrunks.getSelectedRows()
+    }
 
-        toggleButtonStates_trunks() {
-            if ( this.gridSelectionStatus_trunks > 0 ) {
-                this.buttonToggleBoolean_trunks = false
-            } else {
-                this.buttonToggleBoolean_trunks = true
-            }
-            return this.buttonToggleBoolean_trunks
+    rowSelected() {
+        this.gridSelectionStatus = this.gridApi.getSelectedNodes().length
+    }
+
+    toggleButtonStates() {
+        if ( this.gridSelectionStatus > 0 ) {
+            this.buttonToggleBoolean = false;
+        } else {
+            this.buttonToggleBoolean = true;
         }
+        return this.buttonToggleBoolean;
+    }
+
+    rowSelected_trunks(params) {
+        this.gridSelectionStatus_trunks = this.gridApiTrunks.getSelectedNodes().length;
+    }
+
+    toggleButtonStates_trunks() {
+        if ( this.gridSelectionStatus_trunks > 0 ) {
+            this.buttonToggleBoolean_trunks = false
+        } else {
+            this.buttonToggleBoolean_trunks = true
+        }
+        return this.buttonToggleBoolean_trunks
+    }
 
         /*
             ~~~~~ Addition ~~~~~

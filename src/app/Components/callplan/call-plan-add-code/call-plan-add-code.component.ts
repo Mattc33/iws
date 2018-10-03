@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { GridApi } from 'ag-grid';
+import { Component, OnInit }                                    from '@angular/core'
+import { FormGroup, FormBuilder, FormArray, Validators }        from '@angular/forms'
+import { GridApi }                                              from 'ag-grid'
 
-import { CallPlanService } from '../../../shared/api-services/callplan/call-plan.api.service';
-import { CallPlanSharedService } from '../../../shared/services/callplan/call-plan.shared.service';
-import { CarrierService } from '../../../shared/api-services/carrier/carrier.api.service';
-import { CodesSharedService } from '../../../shared/services/global/codes.shared.service';
-import { ToggleButtonStateService } from '../../../shared/services/global/buttonStates.shared.service';
-import { SnackbarSharedService } from '../../../shared/services/global/snackbar.shared.service';
-import { CodesFormSharedService } from '../../../shared/services/callplan/attach-callplan-codes.shared.service';
+import { CallPlanService }                                      from '../../../shared/api-services/callplan/call-plan.api.service'
+import { CarrierService }                                       from '../../../shared/api-services/carrier/carrier.api.service'
+import { CodesSharedService }                                   from '../../../shared/common-services/global/codes.shared.service'
+import { ToggleButtonStateService }                             from '../../../shared/common-services/global/buttonStates.shared.service'
+import { SnackbarSharedService }                                from '../../../shared/common-services/global/snackbar.shared.service'
+import { CodesFormSharedService }                               from '../../../shared/common-services/callplan/attach-callplan-codes.shared.service'
 
 @Component({
   selector: 'app-call-plan-add-code',
@@ -20,8 +19,8 @@ export class CallPlanAddCodeComponent implements OnInit {
     // AG Grid
     rowDataCallplan; columnDefsCallplan;
 
-    gridApiCallplan: GridApi;
-    rowSelectionS = 'single';
+    gridApiCallplan: GridApi
+    rowSelectionS: string = 'single'
 
     gridSelectionStatus: number;
 

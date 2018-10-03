@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
-import { ApiSettingsSharedService } from '../../services/global/api-settings.shared.service';
+import { Injectable }                           from '@angular/core'
+import { Http, Headers, RequestOptions }        from '@angular/http'
+import { Observable }                           from 'rxjs'
+import { map, catchError, tap }                 from 'rxjs/operators';
+import { ApiSettingsSharedService }             from '../../common-services/api/api-settings.shared.service'
 
 @Injectable()
 export class CallPlanService {
@@ -12,12 +12,11 @@ export class CallPlanService {
     private options: RequestOptions;
 
     constructor(
-        private _http: Http,
-        private _apiSettings: ApiSettingsSharedService
+        private _http: Http
     ) {
         this.headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'q=0.8;application/json;q=0.9' });
         this.options = new RequestOptions({ headers: this.headers });
-        this.url = this._apiSettings.getUrl();
+        this.url = ApiSettingsSharedService.getUrl();
     }
 
     get_allCallplan(): Observable<any> {

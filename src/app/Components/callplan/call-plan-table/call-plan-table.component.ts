@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { GridApi } from 'ag-grid';
+import { Component, OnInit }                    from '@angular/core'
+import { MatDialog }                            from '@angular/material'
+import { FormBuilder }                          from '@angular/forms'
+import { GridApi }                              from 'ag-grid'
 
-import { NestedAgGridService } from '../../../shared/services/global/nestedAgGrid.shared.service';
-import { CallPlanService } from '../../../shared/api-services/callplan/call-plan.api.service';
-import { CallPlanSharedService } from '../../../shared/services/callplan/call-plan.shared.service';
-import { SnackbarSharedService } from '../../../shared/services/global/snackbar.shared.service';
-import { ToggleButtonStateService } from '../../../shared/services/global/buttonStates.shared.service';
+import { NestedAgGridService }                  from '../../../shared/common-services/global/nestedAgGrid.shared.service'
+import { CallPlanService }                      from '../../../shared/api-services/callplan/call-plan.api.service'
+import { CallPlanSharedService }                from '../../../shared/common-services/callplan/call-plan.shared.service'
+import { SnackbarSharedService }                from '../../../shared/common-services/global/snackbar.shared.service'
+import { ToggleButtonStateService }             from '../../../shared/common-services/global/buttonStates.shared.service'
 
-import { DelCallPlanComponent } from './dialog/del-callplan/del-callplan.component';
-import { AddCallPlanComponent } from './dialog/add-callplan/add-callplan.component';
-import { AddCodeComponent } from './dialog/add-code/add-code.component';
-import { AddRateCardComponent } from './dialog/add-rate-card/add-rate-card.component';
-import { DettachRatecardsComponent } from './dialog/dettach-ratecards/dettach-ratecards.component';
-import { DettachCodesComponent } from './dialog/dettach-codes/dettach-codes.component';
+import { DelCallPlanComponent }                 from './dialog/del-callplan/del-callplan.component'
+import { AddCallPlanComponent }                 from './dialog/add-callplan/add-callplan.component'
+import { AddCodeComponent }                     from './dialog/add-code/add-code.component'
+import { AddRateCardComponent }                 from './dialog/add-rate-card/add-rate-card.component'
+import { DettachRatecardsComponent }            from './dialog/dettach-ratecards/dettach-ratecards.component'
+import { DettachCodesComponent }                from './dialog/dettach-codes/dettach-codes.component'
 
 @Component({
   selector: 'app-call-plan-table',
@@ -24,10 +24,13 @@ import { DettachCodesComponent } from './dialog/dettach-codes/dettach-codes.comp
 export class CallPlanTableComponent implements OnInit {
 
     // AG grid row/col
-    rowData; columnDefs;
-    columnDefsDetail; columnDefsDetail2;
-    columnDefsRatecards; getNodeChildDetails;
-    columnDefsCodes;
+    rowData
+    columnDefs
+    columnDefsDetail
+    columnDefsDetail2
+    columnDefsRatecards
+    getNodeChildDetails
+    columnDefsCodes
 
     // AG grid controllers
     gridApiCallplan: GridApi; // All

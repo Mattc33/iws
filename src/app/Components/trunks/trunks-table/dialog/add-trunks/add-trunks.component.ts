@@ -6,9 +6,9 @@ import { FormGroup, FormBuilder, Validators, FormControl, FormGroupDirective, Ng
 import { TrunksTableComponent } from '../../trunks-table.component';
 
 import { TrunksService } from '../../../../../shared/api-services/trunk/trunks.api.service';
-import { TrunksSharedService } from '../../../../../shared/services/trunk/trunks.shared.service';
+import { TrunksSharedService } from '../../../../../shared/common-services/trunk/trunks.shared.service';
 import { CarrierService } from '../../../../../shared/api-services/carrier/carrier.api.service';
-import { SnackbarSharedService } from '../../../../../shared/services/global/snackbar.shared.service';
+import { SnackbarSharedService } from '../../../../../shared/common-services/global/snackbar.shared.service';
 
 @Component({
   selector: 'app-add-trunks',

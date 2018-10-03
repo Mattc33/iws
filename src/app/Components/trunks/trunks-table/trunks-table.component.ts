@@ -1,15 +1,15 @@
-import { Component, OnInit} from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { GridApi } from 'ag-grid';
+import { Component, OnInit}                     from '@angular/core'
+import { MatDialog }                            from '@angular/material'
+import { FormBuilder }                          from '@angular/forms'
+import { GridApi }                              from 'ag-grid'
 
-import { DeleteTrunksComponent } from './dialog/delete-trunks/delete-trunks.component';
-import { AddTrunksComponent } from './dialog/add-trunks/add-trunks.component';
+import { DeleteTrunksComponent }                from './dialog/delete-trunks/delete-trunks.component'
+import { AddTrunksComponent }                   from './dialog/add-trunks/add-trunks.component'
 
-import { TrunksService } from '../../../shared/api-services/trunk/trunks.api.service';
-import { TrunksSharedService } from '../../../shared/services/trunk/trunks.shared.service';
-import { ToggleButtonStateService } from '../../../shared/services/global/buttonStates.shared.service';
-import { SnackbarSharedService } from '../../../shared/services/global/snackbar.shared.service';
+import { TrunksService }                        from '../../../shared/api-services/trunk/trunks.api.service'
+import { TrunksSharedService }                  from '../../../shared/common-services/trunk/trunks.shared.service'
+import { ToggleButtonStateService }             from '../../../shared/common-services/global/buttonStates.shared.service'
+import { SnackbarSharedService }                from '../../../shared/common-services/global/snackbar.shared.service'
 
 @Component({
   selector: 'app-trunks-table',
@@ -19,20 +19,20 @@ import { SnackbarSharedService } from '../../../shared/services/global/snackbar.
 export class TrunksTableComponent implements OnInit {
 
     // AG grid
-    rowData;
-    columnDefs;
-    rowSelection = 'multiple';
-    quickSearchValue = '';
+    rowData
+    columnDefs
+    rowSelection: string = 'multiple'
+    quickSearchValue: string = ''
 
     // AG grid controllers
-    gridApi: GridApi;
+    gridApi: GridApi
 
     // Props for button toggle
-    buttonToggleBoolean = true;
-    gridSelectionStatus: number;
+    buttonToggleBoolean: boolean = true
+    gridSelectionStatus: number
 
     // Properties for internal service
-    rowObj: object;
+    rowObj: object
 
     constructor(
         private dialog: MatDialog,
@@ -42,11 +42,11 @@ export class TrunksTableComponent implements OnInit {
         private toggleButtonStateService: ToggleButtonStateService,
         private snackbarSharedService: SnackbarSharedService
     ) {
-        this.columnDefs = this.createColumnDefs();
+        this.columnDefs = this.createColumnDefs()
     }
 
     ngOnInit() {
-        this.get_TrunkData();
+        this.get_TrunkData()
     }
 
     // ================================================================================
@@ -55,16 +55,16 @@ export class TrunksTableComponent implements OnInit {
     get_TrunkData(): void {
         this.trunksService.get_allTrunks()
             .subscribe(
-                data => { this.rowData = data; },
-                error => { console.log(error); }
+                data => { this.rowData = data },
+                error => { console.log(error) }
             );
     }
 
     set_TrunkData(): void {
         this.trunksService.get_allTrunks()
             .subscribe(
-                data => { this.gridApi.setRowData(data); },
-                error => { console.log(error); }
+                data => { this.gridApi.setRowData(data) },
+                error => { console.log(error) }
             );
     }
 
@@ -72,12 +72,12 @@ export class TrunksTableComponent implements OnInit {
         this.trunksService.put_editTrunk(trunkId, body)
             .subscribe(
                 (resp: Response) => {
-                    console.log(resp);
-                    this.snackbarSharedService.snackbar_success('Edit Successful.', 2000);
+                    console.log(resp)
+                    this.snackbarSharedService.snackbar_success('Edit Successful.', 2000)
                 },
                 error => {
-                    console.log(error);
-                    this.snackbarSharedService.snackbar_error('Edit failed.', 2000);
+                    console.log(error)
+                    this.snackbarSharedService.snackbar_error('Edit failed.', 2000)
                 }
             );
     }
@@ -86,8 +86,8 @@ export class TrunksTableComponent implements OnInit {
     // AG Grid Init
     // ================================================================================
     onGridReady(params): void {
-        this.gridApi = params.api;
-        params.api.sizeColumnsToFit();
+        this.gridApi = params.api
+        params.api.sizeColumnsToFit()
     }
 
     createColumnDefs(): object {
@@ -143,18 +143,18 @@ export class TrunksTableComponent implements OnInit {
     // AG Grid UI
     // ================================================================================
     onGridSizeChanged(params): void {
-        params.api.sizeColumnsToFit();
+        params.api.sizeColumnsToFit()
     }
 
     onSelectionChanged(): void {
-        this.rowObj = this.gridApi.getSelectedRows();
+        this.rowObj = this.gridApi.getSelectedRows()
     }
 
     aggrid_onCellValueChanged(params: any) {
-        const id = params.data.id;
-        let active: boolean;
-        if ( params.data.active === 1 || params.data.active === 'true' ) { active = true; }
-        if ( params.data.active === 0 || params.data.active === 'false') { active = false; }
+        const id = params.data.id
+        let active: boolean
+        if ( params.data.active === 1 || params.data.active === 'true' ) { active = true }
+        if ( params.data.active === 0 || params.data.active === 'false') { active = false }
         const trunkObj = {
             carrier_id: params.data.carrier_id,
             trunk_name: params.data.trunk_name,
@@ -166,22 +166,22 @@ export class TrunksTableComponent implements OnInit {
             active: active,
             metadata: params.data.metadata
         };
-        this.put_editTrunks(id, trunkObj);
+        this.put_editTrunks(id, trunkObj)
     }
 
     onQuickFilterChanged() {
-        this.gridApi.setQuickFilter(this.quickSearchValue);
+        this.gridApi.setQuickFilter(this.quickSearchValue)
     }
 
     // ================================================================================
     // Button Toggle
     // ================================================================================
     rowSelected(params) {
-        this.gridSelectionStatus = this.gridApi.getSelectedNodes().length;
+        this.gridSelectionStatus = this.gridApi.getSelectedNodes().length
     }
 
     toggleButtonStates(): boolean {
-        return this.toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus);
+        return this.toggleButtonStateService.toggleButtonStates(this.gridSelectionStatus)
     }
 
     // ================================================================================

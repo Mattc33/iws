@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
 import { RateCardsTableComponent } from '../../rate-cards-table.component';
 
 import { RateCardsService } from '../../../../../shared/api-services/ratecard/rate-cards.api.service';
-import { RateCardsSharedService } from '../../../../../shared/services/ratecard/rate-cards.shared.service';
-import { SnackbarSharedService } from '../../../../../shared/services/global/snackbar.shared.service';
+import { RateCardsSharedService } from '../../../../../shared/common-services/ratecard/rate-cards.shared.service';
+import { SnackbarSharedService } from '../../../../../shared/common-services/global/snackbar.shared.service';
 
 @Component({
     selector: 'app-del-rate-cards-dialog',

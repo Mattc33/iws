@@ -1,11 +1,10 @@
-import { Component, Inject, OnInit, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Component, Inject, OnInit }                from '@angular/core'
+import { MatDialogRef, MAT_DIALOG_DATA }            from '@angular/material'
 
-import { TrunksTableComponent } from '../../trunks-table.component';
+import { TrunksTableComponent }                     from '../../trunks-table.component'
 
-import { TrunksService } from '../../../../../shared/api-services/trunk/trunks.api.service';
-import { TrunksSharedService } from '../../../../../shared/services/trunk/trunks.shared.service';
+import { TrunksService }                            from '../../../../../shared/api-services/trunk/trunks.api.service'
+import { TrunksSharedService }                      from '../../../../../shared/common-services/trunk/trunks.shared.service'
 
 @Component({
   selector: 'app-delete-trunks',
@@ -15,7 +14,7 @@ import { TrunksSharedService } from '../../../../../shared/services/trunk/trunks
 })
 export class DeleteTrunksComponent implements OnInit {
 
-    private rowObj;
+    rowObj
 
     constructor(
         public dialogRef: MatDialogRef <TrunksTableComponent>,

@@ -1,11 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, Inject, OnInit } from '@angular/core'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material'
 
-import { CarrierTableComponent } from '../../carrier-table.component';
+import { CarrierTableComponent } from '../../carrier-table.component'
 
-import { CarrierService } from '../../../../../shared/api-services/carrier/carrier.api.service';
-import { CarrierSharedService } from '../../../../../shared/services/carrier/carrier.shared.service';
-import { SnackbarSharedService } from '../../../../../shared/services/global/snackbar.shared.service';
+import { CarrierService } from '../../../../../shared/api-services/carrier/carrier.api.service'
+import { CarrierSharedService } from '../../../../../shared/common-services/carrier/carrier.shared.service'
+import { SnackbarSharedService } from '../../../../../shared/common-services/global/snackbar.shared.service'
 
 @Component({
     selector: 'app-del-carrier-dialog-inner',

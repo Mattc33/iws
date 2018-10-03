@@ -3,7 +3,7 @@ import { GridApi } from 'ag-grid'
 import { PapaParseService } from 'ngx-papaparse'
 import { saveAs } from 'file-saver/FileSaver'
 
-import { NestedAgGridService } from '../../../shared/services/global/nestedAgGrid.shared.service'
+import { NestedAgGridService } from '../../../shared/common-services/global/nestedAgGrid.shared.service'
 import { RateCardsService } from '../../../shared/api-services/ratecard/rate-cards.api.service'
 
 @Component({
@@ -53,7 +53,7 @@ export class RateCardsConvertCsvComponent implements OnInit {
     }
 
     get_specificRatecardOneFile(ratecard_id: number, fileName: string): void {
-        this.rateCardsService.get_ratesInRatecard(ratecard_id)
+        this.rateCardsService.getRatesInRatecard(ratecard_id)
             .subscribe(
                 data => {
                     this.arrOfRates.push(data);

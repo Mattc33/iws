@@ -4,9 +4,9 @@ import { GridApi } from 'ag-grid'
 import { DelCarrierDialogComponent } from './dialog/del-carrier/del-carrier-dialog.component'
 import { AddCarrierDialogComponent } from './dialog/add-carrier/add-carrier-dialog.component'
 import { CarrierService } from '../../../shared/api-services/carrier/carrier.api.service'
-import { CarrierSharedService } from '../../../shared/services/carrier/carrier.shared.service'
-import { SnackbarSharedService } from '../../../shared/services/global/snackbar.shared.service'
-import { ToggleButtonStateService } from '../../../shared/services/global/buttonStates.shared.service'
+import { CarrierSharedService } from '../../../shared/common-services/carrier/carrier.shared.service'
+import { SnackbarSharedService } from '../../../shared/common-services/global/snackbar.shared.service'
+import { ToggleButtonStateService } from '../../../shared/common-services/global/buttonStates.shared.service'
 @Component({
   selector: 'app-carrier-table',
   templateUrl: './carrier-table.component.html',

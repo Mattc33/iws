@@ -61,29 +61,30 @@ export class InvoiceComponent {
     }
 
     processJson(data): void {
-        const csvData = data;
+        const csvData = data
         const remappedData = csvData.map( obj => {
             return {
                 prefix: obj[4],
                 totalSeconds: obj[7],
-                unitCost: obj[6],
+                unitCost: obj[6], // unit cost is sell_rate
                 totalCost: obj[13]
-            };
-        });
+            }
+        })
 
         const groupedData = this.groupBy(remappedData, 'prefix');
 
         const temp = [];
         for (const key in groupedData) {
             if (groupedData.hasOwnProperty(key)) {
-                const element = groupedData[key];
-                const sumSessionTime = this.sum(element, 'totalSeconds');
-                const total_minute = sumSessionTime / 60;
-                const unit_cost = parseFloat(element[0].unitCost).toFixed(4);
-                const sumTotalCost = this.sum(element, 'totalCost');
+                const element = groupedData[key]
+                const sumSessionTime = this.sum(element, 'totalSeconds')
+                const total_minute = sumSessionTime / 60
+                const unit_cost = parseFloat(element[0].unitCost).toFixed(4)
+                const sumTotalCost = this.sum(element, 'totalCost')
+
                 // const total_cost = parseFloat(parseFloat(sumTotalCost).toFixed(2));
-                    // ! temp fix for a2billing csv with 60/60 billing interval
-                    const total_cost = parseFloat((total_minute * element[0].unitCost).toFixed(2));
+                // ! temp fix for a2billing csv with 60/60 billing interval
+                const total_cost = parseFloat((total_minute * element[0].unitCost).toFixed(2))
                 temp.push(
                     {
                         prefix: key,
@@ -94,31 +95,31 @@ export class InvoiceComponent {
                         unit_cost: unit_cost,
                         total_cost: total_cost
                     }
-                );
+                )
             }
         }
-        const json = temp.slice(0 , -1);
-        this.updateWithDestination(json, this.prefixLookupTable);
+        const json = temp.slice(0 , -1)
+        this.updateWithDestination(json, this.prefixLookupTable)
 
-        this.sumTotalCalls = this.sumCol(json, 'total_calls');
-        this.sumTotalSeconds = this.sumCol(json, 'total_seconds');
-        this.sumTotalCost = this.sumCol(json, 'total_cost');
-        this.sumTotalMinutes = this.sumCol(json, 'total_minutes');
+        this.sumTotalCalls = this.sumCol(json, 'total_calls')
+        this.sumTotalSeconds = this.sumCol(json, 'total_seconds')
+        this.sumTotalCost = this.sumCol(json, 'total_cost')
+        this.sumTotalMinutes = this.sumCol(json, 'total_minutes')
 
-        this.jsonToCsv(json);
+        this.jsonToCsv(json)
     }
 
     updateWithDestination(arr, comparatorArr): Array<any> {
         const lookup = comparatorArr.reduce( (acc, cur) => {
             acc[cur.Prefix] = cur.Destination;
             return acc;
-        }, {});
+        }, {})
 
         return arr.map(item => {
             const match = lookup[item.prefix];
-            (!match) ? item.destination = 'not found update lookup table' : item.destination = match;
+            (!match) ? item.destination = 'not found update lookup table' : item.destination = match
             return item;
-        });
+        })
     }
 
     groupBy(arr, value): Array<any> {

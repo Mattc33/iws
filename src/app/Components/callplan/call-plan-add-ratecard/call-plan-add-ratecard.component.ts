@@ -1,13 +1,13 @@
-import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { GridApi } from 'ag-grid';
+import { Component, OnInit }                    from '@angular/core'
+import { GridApi }                              from 'ag-grid'
 
-import { CallPlanService } from '../../../shared/api-services/callplan/call-plan.api.service';
-import { CallPlanSharedService } from '../../../shared/services/callplan/call-plan.shared.service';
-import { RateCardsService } from '../../../shared/api-services/ratecard/rate-cards.api.service';
+import { CallPlanService }                      from '../../../shared/api-services/callplan/call-plan.api.service'
+import { CallPlanSharedService }                from '../../../shared/common-services/callplan/call-plan.shared.service'
+import { RateCardsService }                     from '../../../shared/api-services/ratecard/rate-cards.api.service'
 
-import { NestedAgGridService } from '../../../shared/services/global/nestedAgGrid.shared.service';
-import { SnackbarSharedService } from '../../../shared/services/global/snackbar.shared.service';
-import { ToggleButtonStateService } from '../../../shared/services/global/buttonStates.shared.service';
+import { NestedAgGridService }                  from '../../../shared/common-services/global/nestedAgGrid.shared.service'
+import { SnackbarSharedService }                from '../../../shared/common-services/global/snackbar.shared.service'
+import { ToggleButtonStateService }             from '../../../shared/common-services/global/buttonStates.shared.service'
 
 @Component({
   selector: 'app-call-plan-add-ratecard',
@@ -16,42 +16,46 @@ import { ToggleButtonStateService } from '../../../shared/services/global/button
 })
 export class CallPlanAddRatecardComponent implements OnInit {
 
-// AG grid setup props
-rowDataCallplan: Array<{}>; columnDefsCallplan: Array<{}>;
-rowDataRatecard; columnDefsRatecard; getNodeChildDetails;
-rowDataReview; columnDefsReview;
+    // AG grid setup props
+    rowDataCallplan: Array<{}>
+    columnDefsCallplan: Array<{}>
+    rowDataRatecard
+    columnDefsRatecard
+    getNodeChildDetails
+    rowDataReview
+    columnDefsReview
 
-// AG grid API props
-gridApiCallPlan: GridApi;
-gridApiRatecard: GridApi;
-gridApiDetails: GridApi;
+    // AG grid API props
+    gridApiCallPlan: GridApi
+    gridApiRatecard: GridApi
+    gridApiDetails: GridApi
 
-// AG grid UI props
-rowSelectionS = 'single';
-rowSelectionM = 'multiple';
-currentSliderValue;
+    // AG grid UI props
+    rowSelectionS = 'single';
+    rowSelectionM = 'multiple';
+    currentSliderValue;
 
-// UI Props
-gridSelectionStatus;
+    // UI Props
+    gridSelectionStatus;
 
-constructor(
-    private callPlanService: CallPlanService,
-    private callPlanSharedService: CallPlanSharedService,
-    private rateCardsService: RateCardsService,
-    private nestedAgGridService: NestedAgGridService,
-    private snackbarSharedService: SnackbarSharedService,
-    private toggleButtonStateService: ToggleButtonStateService
-) {
-    this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups();
-    this.columnDefsCallplan = this.createColumnDefsCallPlan();
-    this.columnDefsRatecard = this.createColumnDefsRatecard();
-    this.columnDefsReview = this.createColumnDefsReview();
-}
+    constructor(
+        private callPlanService: CallPlanService,
+        private callPlanSharedService: CallPlanSharedService,
+        private rateCardsService: RateCardsService,
+        private nestedAgGridService: NestedAgGridService,
+        private snackbarSharedService: SnackbarSharedService,
+        private toggleButtonStateService: ToggleButtonStateService
+    ) {
+        this.getNodeChildDetails = this.nestedAgGridService.returnSetGroups();
+        this.columnDefsCallplan = this.createColumnDefsCallPlan();
+        this.columnDefsRatecard = this.createColumnDefsRatecard();
+        this.columnDefsReview = this.createColumnDefsReview();
+    }
 
-ngOnInit() {
-    this.get_CallPlans();
-    this.get_RateCards();
-}
+    ngOnInit() {
+        this.get_CallPlans();
+        this.get_RateCards();
+    }
 
 // ================================================================================
 // API Service

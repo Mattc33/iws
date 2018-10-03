@@ -7,9 +7,9 @@ import { ImporterService } from '../../../../../../shared/api-services/ratecard/
 import { CarrierService } from '../../../../../../shared/api-services/carrier/carrier.api.service'
 import { TrunksService } from '../../../../../../shared/api-services/trunk/trunks.api.service'
 import { ImporterTableComponent } from '../../importer-table.component'
-import { ImporterSharedService } from '../../../../../../shared/services/ratecard/importer.shared.service'
-import { SnackbarSharedService } from '../../../../../../shared/services/global/snackbar.shared.service'
-import { ToggleButtonStateService } from '../../../../../../shared/services/global/buttonStates.shared.service'
+import { ImporterSharedService } from '../../../../../../shared/common-services/ratecard/importer.shared.service'
+import { SnackbarSharedService } from '../../../../../../shared/common-services/global/snackbar.shared.service'
+import { ToggleButtonStateService } from '../../../../../../shared/common-services/global/buttonStates.shared.service'
 
 import DateUtils from '../../../../../../shared/utils/date/date.utils'
 @Component({

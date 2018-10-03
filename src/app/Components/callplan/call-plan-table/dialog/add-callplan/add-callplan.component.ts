@@ -5,10 +5,10 @@ import { FormGroup, FormBuilder, FormArray, Validators, FormControl, FormGroupDi
 import { CallPlanTableComponent } from '../../call-plan-table.component';
 
 import { CallPlanService } from '../../../../../shared/api-services/callplan/call-plan.api.service';
-import { CallPlanSharedService } from '../../../../../shared/services/callplan/call-plan.shared.service';
+import { CallPlanSharedService } from '../../../../../shared/common-services/callplan/call-plan.shared.service';
 import { CarrierService } from '../../../../../shared/api-services/carrier/carrier.api.service';
-import { CodesSharedService } from '../../../../../shared/services/global/codes.shared.service';
-import { CodesFormSharedService } from '../../../../../shared/services/callplan/attach-callplan-codes.shared.service';
+import { CodesSharedService } from '../../../../../shared/common-services/global/codes.shared.service';
+import { CodesFormSharedService } from '../../../../../shared/common-services/callplan/attach-callplan-codes.shared.service';
 
 @Component({
   selector: 'app-add-callplan',

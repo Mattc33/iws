@@ -774,7 +774,7 @@ export default class CountryUtils {
                 'code': 'sg'
             },
             {
-                'countries': 'Sint Maarten',
+                'countries': 'SintMaarten',
                 'code': 'sx'
             },
             {
@@ -786,7 +786,7 @@ export default class CountryUtils {
                 'code': 'si'
             },
             {
-                'countries': 'Solomon Islands',
+                'countries': 'SolomonIslands',
                 'code': 'sb'
             },
             {
@@ -794,15 +794,15 @@ export default class CountryUtils {
                 'code': 'so'
             },
             {
-                'countries': 'South Africa',
+                'countries': 'SouthAfrica',
                 'code': 'za'
             },
             {
-                'countries': 'South Korea',
+                'countries': 'SouthKorea',
                 'code': 'kr'
             },
             {
-                'countries': 'South Sudan',
+                'countries': 'SouthSudan',
                 'code': 'ss'
             },
             {
@@ -810,7 +810,7 @@ export default class CountryUtils {
                 'code': 'es'
             },
             {
-                'countries': 'Sri Lanka',
+                'countries': 'SriLanka',
                 'code': 'lk'
             },
             {
@@ -822,7 +822,7 @@ export default class CountryUtils {
                 'code': 'sr'
             },
             {
-                'countries': 'Svalbard and Jan Mayen',
+                'countries': 'SvalbardandJanMayen',
                 'code': 'sj'
             },
             {
@@ -870,7 +870,7 @@ export default class CountryUtils {
                 'code': 'to'
             },
             {
-                'countries': 'Trinidad and Tobago',
+                'countries': 'TrinidadandTobago',
                 'code': 'tt'
             },
             {
@@ -886,7 +886,7 @@ export default class CountryUtils {
                 'code': 'tm'
             },
             {
-                'countries': 'Turks and Caicos Islands',
+                'countries': 'TurksandCaicosIslands',
                 'code': 'tc'
             },
             {
@@ -906,15 +906,15 @@ export default class CountryUtils {
                 'code': 'ua'
             },
             {
-                'countries': 'United Arab Emirates',
+                'countries': 'UnitedArabEmirates',
                 'code': 'ae'
             },
             {
-                'countries': 'United Kingdom',
+                'countries': 'UnitedKingdom',
                 'code': 'gb'
             },
             {
-                'countries': 'United States',
+                'countries': 'UnitedStates',
                 'code': 'us'
             },
             {
@@ -942,11 +942,11 @@ export default class CountryUtils {
                 'code': 'vn'
             },
             {
-                'countries': 'Wallis and Futuna',
+                'countries': 'WallisandFutuna',
                 'code': 'wf'
             },
             {
-                'countries': 'Western Sahara',
+                'countries': 'WesternSahara',
                 'code': 'eh'
             },
             {
